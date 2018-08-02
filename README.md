@@ -1,4 +1,4 @@
-[![Van Valen Lab, Caltech](docs/caltech.png)](http://www.vanvalen.caltech.edu/)
+[![Van Valen Lab, Caltech](https://upload.wikimedia.org/wikipedia/commons/7/75/Caltech_Logo.svg)](http://www.vanvalen.caltech.edu/)
 
 # Deepcell Kiosk
 
