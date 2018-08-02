@@ -1,10 +1,13 @@
 include /build-harness/templates/Makefile.build-harness
 
-include Makefile.*
+include tasks/Makefile.*
 
 create: \
-	terraform/create/all \
-	kops/create/all
+  terraform/create/all \
+  kops/create/all \
+  kops/wait \
+  helm/create/all \
+  helmfile/create/all
 	@echo "Cluster created"
 
 destroy: \

@@ -1,0 +1,3 @@
+helmfile/create/all:
+	@helmfile sync
+	@echo "Helmfiles deployed"
