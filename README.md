@@ -1,4 +1,8 @@
-# Deepcell Kiosk
+[![Van Valen Lab, Caltech](docs/caltech.png)](http://www.vanvalen.caltech.edu/)
+
+# Van Valen Lab
+
+## Introduction
 
 This deepcell distribution designed to easily spin up an end-to-end Deepcell environment on Kubernetes.
 
