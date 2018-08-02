@@ -1,4 +1,4 @@
-export CLUSTER ?= deepcell
+export CLUSTER ?= kiosk
 export DOCKER_ORG ?= vanvalenlab
 export DOCKER_IMAGE ?= $(DOCKER_ORG)/$(CLUSTER)
 export DOCKER_TAG ?= latest

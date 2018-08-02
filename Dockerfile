@@ -2,7 +2,9 @@ FROM cloudposse/terraform-root-modules:0.5.0 as terraform-root-modules
 
 FROM cloudposse/geodesic:0.12.3
 
-ENV DOCKER_IMAGE="vanvalenlab/deepcell"
+RUN apk add --update dialog
+
+ENV DOCKER_IMAGE="vanvalenlab/kiosk"
 ENV DOCKER_TAG="latest"
 
 # Geodesic banner
@@ -29,8 +31,11 @@ COPY --from=terraform-root-modules /aws/tfstate-backend/ /conf/tfstate-backend/
 COPY --from=terraform-root-modules /aws/account-dns/ /conf/account-dns/
 COPY --from=terraform-root-modules /aws/kops/ /conf/kops/
 
-# Place configuration in 'conf/' directory
+# Place configurations in 'conf/' directory
 COPY conf/ /conf/
+
+# Add scripts to /usr/local/bin
+COPY scripts/ /usr/local/bin/
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
@@ -47,6 +52,9 @@ ENV MASTER_MACHINE_TYPE="t2.medium"
 ENV NODE_MACHINE_TYPE="t2.medium"
 ENV NODE_MAX_SIZE="2"
 ENV NODE_MIN_SIZE="2"
+
+# We do not need to access private git repos, so we can disable agent
+RUN rm -f /etc/profile.d/ssh-agent.sh
 
 # Generate kops manifest
 RUN build-kops-manifest
