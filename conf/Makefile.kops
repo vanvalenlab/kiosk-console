@@ -1,0 +1,35 @@
+## Provision kops remote state backend
+kops/create/state-backend:
+	@$(SELF) -C /conf/kops init apply
+
+## Destroy kops remote state backend
+kops/destroy/state-backend:
+	@$(SELF) -C /conf/kops init destroy
+
+## Provision kops master SSH keys
+kops/create/ssh-keys:
+	@kops create secret sshpublickey admin -i /localhost/.geodesic/example-staging-kops-us-west-2.pub
+
+## Provision kops cluster
+kops/create/cluster:
+	@kops create cluster cluster.k8s.local --zones us-west-2 --yes
+	@kops update cluster cluster.k8s.local --yes
+
+## Provision all kops resources
+kops/create/all: \
+  kops/create/state-backend \
+  kops/create/ssh-keys \
+  kops/create/cluster
+	@echo "Kops created"
+
+## Destroy kops cluster
+kops/destroy/cluster:
+	kops delete cluster cluster.k8s.local --yes
+
+## Destroy all kops resources
+kops/destroy/all: \
+  kops/destroy/cluster \
+  kops/destroy/state-backend
+	@echo "Kops destroyed"
+
+

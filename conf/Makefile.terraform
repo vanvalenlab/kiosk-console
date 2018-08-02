@@ -1,0 +1,17 @@
+## Provision remote state backend for terraform
+terraform/create/state-backend:
+	@$(MAKE) -C /conf/aws/tfstate-backend init
+
+## Destroy remote state backend for terraform
+terraform/destroy/state-backend:
+	@$(MAKE) -C /conf/aws/tfstate-backend destroy
+
+## Provision all terraform resources
+terraform/create/all: \
+  terraform/create/state-backend
+	@echo "Terraform provisioned"
+
+## Destroy all terraform resources
+terraform/destroy/all: \
+  terraform/destroy/state-backend
+	@echo "Terraform destroyed"
