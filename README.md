@@ -8,7 +8,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 ### Windows Users
 
-1. Install WSL (Windows Subsystem for Linux)
+1. [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux)
 
 ### All Users
 
