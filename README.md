@@ -21,6 +21,6 @@ This deepcell distribution designed to easily spin up an end-to-end Deepcell env
 2. Initialize `build-harness`: `make init`
 3. Build the container: `make docker/build`
 4. Install wrapper script: `make install`
-5. Start the kiosk. `make run``
+5. Start the kiosk. `make run`
 
 
