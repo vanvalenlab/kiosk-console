@@ -6,25 +6,21 @@ kops/create/state-backend:
 kops/destroy/state-backend:
 	@$(SELF) -C /conf/kops init destroy
 
-## Provision kops master SSH keys
-kops/create/ssh-keys:
-	@kops create secret sshpublickey admin -i $(CACHE_PATH)/example-staging-kops-us-west-2.pub
-
 ## Provision kops cluster
 kops/create/cluster:
-	@kops create cluster $(KOPS_CLUSTER_NAME) --zones $(AWS_REGION) --yes
-	@kops update cluster $(KOPS_CLUSTER_NAME) --yes
+	@kops create cluster --name $(KOPS_CLUSTER_NAME) --zones $(KOPS_AVAILABILITY_ZONES) --cloud aws --yes
+	@kops create secret --name $(KOPS_CLUSTER_NAME) sshpublickey admin -i $(CACHE_PATH)/ctvv-kiosk-kops-us-west-2.pub
+	@kops update cluster --name $(KOPS_CLUSTER_NAME) --yes
 
 ## Provision all kops resources
 kops/create/all: \
   kops/create/state-backend \
-  kops/create/ssh-keys \
   kops/create/cluster
 	@echo "Kops created"
 
 ## Destroy kops cluster
 kops/destroy/cluster:
-	kops delete cluster $(KOPS_CLUSTER_NAME) --yes
+	kops delete cluster --name $(KOPS_CLUSTER_NAME) --yes
 
 ## Destroy all kops resources
 kops/destroy/all: \
