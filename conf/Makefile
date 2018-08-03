@@ -1,3 +1,5 @@
+export TERRAFORM_ARGS ?= -auto-approve
+
 include /build-harness/templates/Makefile.build-harness
 
 include tasks/Makefile.*

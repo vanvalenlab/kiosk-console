@@ -2,7 +2,7 @@ FROM cloudposse/terraform-root-modules:0.5.0 as terraform-root-modules
 
 FROM cloudposse/build-harness:0.6.14 as build-harness
 
-FROM cloudposse/geodesic:0.12.4
+FROM cloudposse/geodesic:0.12.5
 
 RUN apk add --update dialog
 
@@ -25,7 +25,9 @@ ENV AWS_REGION="us-west-2"
 ENV TF_VAR_region="${AWS_REGION}"
 ENV TF_VAR_namespace="ctvv"
 ENV TF_VAR_stage="kiosk"
+ENV TF_VAR_zone_name="cluster.k8s.local"
 ENV TF_VAR_domain_enabled="false"
+ENV TF_VAR_force_destroy="true"
 ENV TF_VAR_ssh_public_key_path="/localhost/.geodesic"
 
 # Terraform State Bucket
