@@ -12,7 +12,7 @@ kops/create/cluster:
 	  --name $(KOPS_CLUSTER_NAME) \
 	  --zones $(KOPS_AVAILABILITY_ZONES) \
 	  --cloud aws \
-	  --ssh-public-key $(CACHE_PATH)/ctvv-kiosk-kops-us-west-2.pub \
+	  --ssh-public-key $(CACHE_PATH)/$(TF_VAR_namespace)-$(TF_VAR_stage)-kops-$(AWS_REGION).pub \
 	  --yes
 
 ## Provision all kops resources
