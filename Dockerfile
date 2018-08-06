@@ -1,4 +1,4 @@
-FROM cloudposse/terraform-root-modules:0.5.0 as terraform-root-modules
+FROM cloudposse/terraform-root-modules:0.5.3 as terraform-root-modules
 
 FROM cloudposse/build-harness:0.6.14 as build-harness
 

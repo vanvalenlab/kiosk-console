@@ -1,10 +1,10 @@
 ## Provision remote state backend for terraform
 terraform/create/state-backend:
-	@$(MAKE) -C /conf/aws/tfstate-backend init
+	@$(MAKE) -C /conf/tfstate-backend init
 
 ## Destroy remote state backend for terraform
 terraform/destroy/state-backend:
-	@$(MAKE) -C /conf/aws/tfstate-backend destroy
+	@$(MAKE) -C /conf/tfstate-backend destroy
 
 ## Provision all terraform resources
 terraform/create/all: \
