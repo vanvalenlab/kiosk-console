@@ -1,5 +1,3 @@
-FROM cloudposse/terraform-root-modules:0.5.3 as terraform-root-modules
-
 FROM cloudposse/build-harness:0.6.14 as build-harness
 
 FROM cloudposse/geodesic:0.12.5
@@ -59,10 +57,6 @@ RUN rm -f /etc/profile.d/ssh-agent.sh
 
 # Copy from build-harness
 COPY --from=build-harness /build-harness/ /build-harness/
-
-# Copy root modules
-COPY --from=terraform-root-modules /aws/tfstate-backend/ /conf/tfstate-backend/
-COPY --from=terraform-root-modules /aws/kops/ /conf/kops/
 
 # Place configurations in 'conf/' directory
 COPY conf/ /conf/
