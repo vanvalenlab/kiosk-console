@@ -1,6 +1,6 @@
 FROM cloudposse/build-harness:0.6.14 as build-harness
 
-FROM cloudposse/geodesic:0.12.5
+FROM cloudposse/geodesic:0.13.0
 
 RUN apk add --update dialog
 
