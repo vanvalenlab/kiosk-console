@@ -12,9 +12,9 @@ make init
 Follow the instructions at the end. Ensure the environment variables have been set in the `Dockerfile`.
 They look something like this:
 ```
-ENV TF_BUCKET="cpco-staging-terraform-state"
+ENV TF_BUCKET="ctvv-kiosk-terraform-state"
 ENV TF_BUCKET_REGION="us-west-2"
-ENV TF_DYNAMODB_TABLE="cpco-staging-terraform-state-lock"
+ENV TF_DYNAMODB_TABLE="ctvv-kiosk-terraform-state-lock"
 ```
 
 ## Destroy
