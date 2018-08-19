@@ -1,0 +1,10 @@
+## Provision RBAC cluster role binding
+kubectl/create/rbac:
+	@kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+
+## Provision all extra resources with kubectl
+kubectl/create/all: \
+  kubectl/create/rbac
+	@echo "Kubectl provisioned"
+
+

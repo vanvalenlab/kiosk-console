@@ -1,0 +1,37 @@
+## Provision kops remote state backend
+kops/create/state-backend:
+	@$(SELF) -C /conf/kops apply
+
+## Destroy kops remote state backend
+kops/destroy/state-backend:
+	@$(SELF) -C /conf/kops destroy
+
+## Provision kops cluster
+kops/create/cluster:
+	kops create cluster \
+	  --name $(KOPS_CLUSTER_NAME) \
+	  --zones $(KOPS_AVAILABILITY_ZONES) \
+	  --cloud aws \
+	  --ssh-public-key $(CACHE_PATH)/$(TF_VAR_namespace)-$(TF_VAR_stage)-kops-$(AWS_REGION).pub \
+	  --yes
+
+## Provision all kops resources
+kops/create/all: \
+  kops/create/state-backend \
+  kops/create/cluster
+	@echo "Kops created"
+
+## Destroy kops cluster
+kops/destroy/cluster:
+	kops delete cluster --name $(KOPS_CLUSTER_NAME) --yes
+
+## Destroy all kops resources
+kops/destroy/all: \
+  kops/destroy/cluster \
+  kops/destroy/state-backend
+	@echo "Kops destroyed"
+
+## Wait for kops cluster to come online
+kops/wait:
+	@time until kops validate cluster; do sleep 15; done
+
