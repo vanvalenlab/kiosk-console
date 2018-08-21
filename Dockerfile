@@ -19,10 +19,6 @@ ENV MAKE="make -s"
 # AWS Region
 ENV AWS_REGION="us-west-2"
 
-# Default AWS Profile name
-ENV AWS_DEFAULT_PROFILE="default"
-ENV AWS_PROFILE="default"
-
 # kops config
 ENV KOPS_CLUSTER_NAME="cluster.k8s.local"
 ENV KOPS_DNS_ZONE=${KOPS_CLUSTER_NAME}
