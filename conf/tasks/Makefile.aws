@@ -1,0 +1,17 @@
+# https://github.com/kubernetes/kops/blob/master/docs/aws.md
+
+## Create AWS S3 bucket
+aws/create/bucket:
+	aws s3 mb "${KOPS_STATE_STORE}" --region "${KOPS_STATE_STORE_REGION}"
+
+## Create everything on AWS
+aws/create/all: aws/create/bucket
+	@exit 0
+
+## Destroy AWS S3 bucket
+aws/destroy/bucket:
+	aws s3 rb "${KOPS_STATE_STORE}" --force
+
+## Destroy everything on AWS
+aws/destroy/all: aws/destroy/bucket
+	@exit 0
