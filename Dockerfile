@@ -1,6 +1,6 @@
-FROM cloudposse/build-harness:0.7.1 as build-harness
+FROM cloudposse/build-harness:0.9.0 as build-harness
 
-FROM cloudposse/geodesic:0.13.0
+FROM cloudposse/geodesic:0.16.4
 
 RUN apk add --update dialog
 
@@ -19,27 +19,10 @@ ENV MAKE="make -s"
 # AWS Region
 ENV AWS_REGION="us-west-2"
 
-# Terraform vars
-ENV TF_VAR_region="${AWS_REGION}"
-ENV TF_VAR_namespace="ctvv"
-ENV TF_VAR_stage="kiosk"
-ENV TF_VAR_zone_name="cluster.k8s.local"
-ENV TF_VAR_domain_enabled="false"
-ENV TF_VAR_force_destroy="true"
-ENV TF_VAR_ssh_public_key_path="/localhost/.geodesic"
-
-# Terraform State Bucket
-ENV TF_BUCKET_REGION="${AWS_REGION}"
-ENV TF_BUCKET="${TF_VAR_namespace}-${TF_VAR_stage}-terraform-state"
-ENV TF_DYNAMODB_TABLE="${TF_VAR_namespace}-${TF_VAR_stage}-terraform-state-lock"
-
-# Default AWS Profile name
-ENV AWS_DEFAULT_PROFILE="${TF_VAR_namespace}-${TF_VAR_stage}-admin"
-
 # kops config
 ENV KOPS_CLUSTER_NAME="cluster.k8s.local"
 ENV KOPS_DNS_ZONE=${KOPS_CLUSTER_NAME}
-ENV KOPS_STATE_STORE="s3://${TF_VAR_namespace}-${TF_VAR_stage}-kops-state"
+ENV KOPS_STATE_STORE="s3://undefined"
 ENV KOPS_STATE_STORE_REGION="us-west-2"
 ENV KOPS_AVAILABILITY_ZONES="us-west-2a,us-west-2b,us-west-2c"
 ENV KOPS_BASTION_PUBLIC_NAME="bastion"
@@ -50,7 +33,7 @@ ENV NODE_MAX_SIZE="2"
 ENV NODE_MIN_SIZE="2"
 
 # Filesystem entry for tfstate
-RUN s3 fstab '${TF_BUCKET}' '/' '/secrets/tf'
+RUN s3 fstab '${KOPS_STATE_STORE}' '/' '/s3'
 
 # We do not need to access private git repos, so we can disable agent
 RUN rm -f /etc/profile.d/ssh-agent.sh

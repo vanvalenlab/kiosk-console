@@ -1,11 +1,12 @@
-export TERRAFORM_ARGS ?= -auto-approve
+export CLOUD_PROVIDER ?= aws
 
 include /build-harness/templates/Makefile.build-harness
 
 include tasks/Makefile.*
 
+## Create cluster
 create: \
-  terraform/create/all \
+  $(CLOUD_PROVIDER)/create/all \
   kops/create/all \
   kops/wait \
   kubectl/create/all \
@@ -13,7 +14,8 @@ create: \
   helmfile/create/all
 	@echo "Cluster created"
 
+## Destroy cluster
 destroy: \
   kops/destroy/all \
-  terraform/destroy/all
+  $(CLOUD_PROVIDER)/destroy/all
 	@echo "Cluster destroyed"
