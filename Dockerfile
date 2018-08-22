@@ -50,4 +50,7 @@ COPY scripts/ /usr/local/bin/
 # Copy rootfs overrides
 COPY rootfs/ /
 
+# Enable the menu
+RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/99.menu.sh
+
 WORKDIR /conf/

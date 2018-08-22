@@ -1,6 +1,14 @@
+#!/usr/bin/env bash
+
 export BRAND="Caltech Van Valen Lab"
 
 #dialog --print-maxsize
+
+trap ctrl_c SIGINT
+
+function ctrl_c() {
+  killall dialog
+}
 
 function retval() {
   case $1 in
@@ -13,20 +21,22 @@ function retval() {
 }
 
 function msgbox() {
-  local message=$1
-  dialog --title "$BRAND" --clear --msgbox "$message" 10 41
+  local title=$1
+  local message=$2
+  dialog --backtitle "$BRAND" --title "$title" --clear --msgbox "$message" 10 41
   retval $?
 }
 
 function inputbox() {
   local value
-  local label=$1
-  local w=${2:-60}
-  local h=${3:-8}
+  local title=$1
+  local label=$2
+  local w=${3:-60}
+  local h=${4:-8}
   shift
-  value=$(dialog --title "$BRAND" \
-            --backtitle "Linux Shell Script Tutorial Example" \
+  value=$(dialog --title "$title" \
             --inputbox "$label " $h $w \
+            --backtitle "${BRAND}" \
             --output-fd 1)
   retval $?
   echo $value
@@ -44,23 +54,20 @@ function tailcmd() {
   local completed_mesage=${2:-">>> Done!\n"}
   local tmpfile=$(mktemp /tmp/setup.XXXXXX)
   shift
+  shift
   :> $tmpfile
   {
     $* 2>&1
     printf "${completed_message}"
+    sleep 20
   } > $tmpfile &
 
   dialog --clear \
          --begin 0 0 \
          --title "$title" \
+         --backtitle "${BRAND}" \
          --begin 3 1 \
-         --tailboxbg $tmpfile 20 80 \
-         --and-widget \
-         --begin 23 10 \
-         --msgbox "Press OK " 5 30
-  kill %1 
-  wait >/dev/null 2>&1
-  rm -f $tmpfile
+         --tailbox "${tmpfile}" $((LINES-5)) $((COLUMNS-3)) 
 }
 
 function menu() {
@@ -72,7 +79,7 @@ function menu() {
   value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
             --title "[ M A I N - M E N U ]" \
             --menu "${help[*]}" 15 50 5 \
-                Setup "Setup AWS Credentials" \
+                Setup "Configure AWS Credentials" \
                 Create "Create Cluster" \
                 Destroy "Destroy Cluster" \
                 Shell "Drop to the shell" \
@@ -83,13 +90,52 @@ function menu() {
   echo $value
 }
 
-#msgbox "Welcome to the Deepcell Kiosk"
 
-#AWS_ACCESS_KEY_ID=$(inputbox "AWS Access Key ID")
-#AWS_SECRET_KEY=$(inputbox "AWS Secret Key")
+function setup() {
+  export AWS_ACCESS_KEY_ID=$(inputbox "Amazon Web Services" "Access Key ID")
+  export AWS_SECRET_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key")
+  
+  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_KEY > env
+}
 
-#echo "[$AWS_ACCESS_KEY_ID]"
-#echo "[$AWS_SECRET_KEY]"
-ACTION=$(menu)
-tailcmd "Directories" ls -l /
-infobox "Good bye!"
+function shell() {
+  clear
+  echo "Type 'exit' to return to the menu."
+  bash -l
+}
+
+function create() {
+  tailcmd "Create Cluster" "---COMPLETE---" make create
+}
+
+function destroy() {
+  tailcmd "Destroy Cluster" "---COMPLETE--" make destroy
+}
+
+function main() {
+  export MENU=true
+  msgbox "Welcome!" "Welcome to the Deepcell Kiosk"
+
+  while true; do
+    ACTION=$(menu)
+    if [ $? -ne 0 ]; then
+      break
+    fi
+
+    case $ACTION in
+      "Shell") shell ;;
+      "Setup") setup ;;
+      "Create") create ;;
+      "Destroy") destroy;;
+      "Exit") break ;;
+    esac
+  done
+
+  infobox "Good bye!"
+  sleep 0.5
+  clear
+
+  exit 0
+}
+
+[ -n "$MENU" ] || main
