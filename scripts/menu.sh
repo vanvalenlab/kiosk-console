@@ -98,7 +98,7 @@ function setup() {
   fi
 
   export AWS_ACCESS_KEY_ID=$(inputbox "Amazon Web Services" "Access Key ID" "${AWS_ACCESS_KEY_ID}")
-  export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_KEY}")
+  export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY}")
   export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE}")
 
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
