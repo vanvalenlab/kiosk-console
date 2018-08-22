@@ -31,14 +31,14 @@ function inputbox() {
   local value
   local title=$1
   local label=$2
-  local w=${3:-60}
-  local h=${4:-8}
+  local default=$3
+  local w=${4:-60}
+  local h=${5:-8}
   shift
   value=$(dialog --title "$title" \
-            --inputbox "$label " $h $w \
+            --inputbox "$label " "$h" "$w" "$default" \
             --backtitle "${BRAND}" \
             --output-fd 1)
-  retval $?
   echo $value
 }
 
@@ -51,16 +51,16 @@ function infobox() {
 
 function tailcmd() {
   local title=$1
-  local completed_mesage=${2:-">>> Done!\n"}
+  local completed_message=${2:-">>> Done!\n"}
   local tmpfile=$(mktemp /tmp/setup.XXXXXX)
   shift
   shift
   :> $tmpfile
-  {
+  (
     $* 2>&1
-    printf "${completed_message}"
-    sleep 20
-  } > $tmpfile &
+    echo
+    echo "${completed_message}"
+  ) > $tmpfile &
 
   dialog --clear \
          --begin 0 0 \
@@ -92,10 +92,20 @@ function menu() {
 
 
 function setup() {
-  export AWS_ACCESS_KEY_ID=$(inputbox "Amazon Web Services" "Access Key ID")
-  export AWS_SECRET_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key")
+  if [ -z "${NAMESPACE}" ]; then
+    # Generate a friendly human readable name
+    export NAMESPACE="$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
+  fi
+
+  export AWS_ACCESS_KEY_ID=$(inputbox "Amazon Web Services" "Access Key ID" "${AWS_ACCESS_KEY_ID}")
+  export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_KEY}")
+  export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE}")
+
+  export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
+  export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
+  export KOPS_STATE_STORE=s3://${NAMESPACE}
   
-  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_KEY > env
+  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env
 }
 
 function shell() {
