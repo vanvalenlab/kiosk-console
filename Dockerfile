@@ -1,6 +1,6 @@
 FROM cloudposse/build-harness:0.9.0 as build-harness
 
-FROM cloudposse/geodesic:0.16.4
+FROM cloudposse/geodesic:0.16.7
 
 RUN apk add --update dialog
 
@@ -49,5 +49,8 @@ COPY scripts/ /usr/local/bin/
 
 # Copy rootfs overrides
 COPY rootfs/ /
+
+# Enable the menu
+RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/99.menu.sh
 
 WORKDIR /conf/
