@@ -13,11 +13,11 @@ while true; do
   OUTPUT=$(kops validate cluster -o json 2>${LOG_FILE})
   EXIT_CODE=$?
   if [ $EXIT_CODE -eq 0 ]; then
-    echo "Cluster ready"
+    echo -e "\nCluster ready"
     break;
   elif [[ $(cat ${LOG_FILE}) =~ RequestExpired ]]; then
     cat ${LOG_FILE}
-    echo "Aborting"
+    echo -e "\nAborting"
     exit 1
   else
     ERROR=$(echo "${OUTPUT}" | jq -r '.failures[] | .message' | tail -1)

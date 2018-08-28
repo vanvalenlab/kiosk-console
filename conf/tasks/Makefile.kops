@@ -15,6 +15,8 @@ kops/create/cluster:
 	  --name $(KOPS_CLUSTER_NAME) \
 	  --zones $(KOPS_AVAILABILITY_ZONES) \
 	  --cloud $(CLOUD_PROVIDER)  \
+	  --master-size $(MASTER_MACHINE_TYPE) \
+	  --node-size $(NODE_MACHINE_TYPE) \
 	  --ssh-public-key $(SSH_PUBLIC_KEY) \
 	  --yes
 
