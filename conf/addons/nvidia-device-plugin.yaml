@@ -1,3 +1,4 @@
+# Based on https://github.com/NVIDIA/k8s-device-plugin
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
@@ -22,6 +23,7 @@ spec:
       - key: CriticalAddonsOnly
         operator: Exists
       - key: nvidia.com/gpu
+        operator: Exists
         effect: NoSchedule
       containers:
       - image: nvidia/k8s-device-plugin:1.9

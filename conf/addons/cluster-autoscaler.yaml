@@ -198,7 +198,7 @@ spec:
       serviceAccountName: cluster-autoscaler
       containers:
         - name: cluster-autoscaler
-          image: {{ getenv "IMAGE" | default "k8s.gcr.io/cluster-autoscaler:v1.1.0" }}
+          image: '{{ getenv "IMAGE" | default "k8s.gcr.io/cluster-autoscaler:v1.2.0" }}'
           livenessProbe:
             httpGet:
               path: /health-check

@@ -69,11 +69,21 @@ verify_nvidia_installation() {
 }
 
 install_nvidia_docker2() {
+  systemctl stop docker
+  rm -rf /var/lib/docker/overlay
+  apt-get install -y software-properties-common python-software-properties
+  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+
   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
   distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
   curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
   apt-get update
-  apt-get install -y nvidia-docker2=2.0.3+docker17.03.2-1 nvidia-container-runtime=2.0.0+docker17.03.2-1
+  # apt list -a nvidia-container-runtime
+  # apt list -a nvidia-docker2
+  docker_version="17.06.2"
+  apt-get install -y nvidia-docker2=2.0.3+docker${docker_version}-1 nvidia-container-runtime=2.0.0+docker${docker_version}-1 docker-ce=${docker_version}~ce-0~debian
+  systemctl start docker
 }
 
 set_nvidia_container_runtime() {
