@@ -1,4 +1,7 @@
 spec:
+  docker:
+    logDriver: json-file
+    version: 17.03.2
   additionalPolicies:
       nodes: |
         [
@@ -16,8 +19,10 @@ spec:
               "autoscaling:DescribeAutoScalingGroups",
               "autoscaling:DescribeAutoScalingInstances",
               "autoscaling:DescribeTags",
+              "autoscaling:DescribeLaunchConfigurations",
               "autoscaling:SetDesiredCapacity",
-              "autoscaling:TerminateInstanceInAutoScalingGroup"
+              "autoscaling:TerminateInstanceInAutoScalingGroup",
+              "ec2:DescribeLaunchTemplateVersions"
             ],
             "Resource": "*"
           }

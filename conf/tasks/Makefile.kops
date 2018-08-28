@@ -36,7 +36,7 @@ kops/create/all: \
   kops/create/ssh-key \
   kops/create/cluster \
   kops/create/$(CLOUD_PROVIDER) \
-  kops/create/gpu-nodes \
+  kops/create/gpu-nodes 
 	@echo "Kops created"
 
 ## Destroy kops cluster

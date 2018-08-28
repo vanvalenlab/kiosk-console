@@ -219,8 +219,10 @@ spec:
             - --v=4
             - --stderrthreshold=info
             - --cloud-provider={{ getenv "CLOUD_PROVIDER" | default "aws" }}
+            - --scale-down-delay-after-add={{ getenv "GPU_SCALE_DOWN_DELAY_AFTER_ADD" | default "30m" }}
+            - --scale-down-delay-after-delete={{ getenv "GPU_SCALE_DOWN_DELAY_AFTER_DELETE" | default "10m" }}
             - --skip-nodes-with-local-storage=false
-            - --nodes={{ getenv "GPU_MIN_NODES" | default "0" }}:{{ getenv "GPU_MAX_NODES" | default "1" }}:{{ getenv "GPU_GROUP_NAME" | default "gpu-nodes" }}
+            - --nodes={{ getenv "GPU_MIN_NODES" | default "0" }}:{{ getenv "GPU_MAX_NODES" | default "2" }}:{{ getenv "GPU_GROUP_NAME" | default "gpu-nodes" }}.{{getenv "KOPS_CLUSTER_NAME"}}
           env:
             - name: AWS_REGION
               value: {{ getenv "AWS_REGION" }}

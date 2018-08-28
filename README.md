@@ -28,6 +28,11 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 4. Install wrapper script: `make install`
 5. Start the kiosk. `make run`
 
+## References
+- [Cluster Autoscaler for AWS](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
+- [Cluster Autoscaler for Kops](https://github.com/kubernetes/kops/blob/master/addons/cluster-autoscaler/)
+- [Running GPU Intances on Kops](https://github.com/brunsgaard/kops-nvidia-docker-installer)
+
 ## Copyright
 
 Copyright © 2018 [The Van Valen Lab](http://www.vanvalen.caltech.edu/)

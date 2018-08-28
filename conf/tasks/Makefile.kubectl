@@ -2,9 +2,19 @@
 kubectl/create/rbac:
 	@kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
 
+## Provision cluster autoscaler
+kubectl/create/autoscaler:
+	gomplate -f addons/cluster-autoscaler.yaml | kubectl apply -f -
+
+## Provision cluster autoscaler
+kubectl/create/nvidia-drivers:
+	gomplate -f addons/nvidia-device-plugin.yaml | kubectl apply -f -
+
 ## Provision all extra resources with kubectl
 kubectl/create/all: \
-  kubectl/create/rbac
+  kubectl/create/rbac \
+  kubectl/create/autoscaler \
+  kubectl/create/nvidia-drivers
 	@echo "Kubectl provisioned"
 
 
