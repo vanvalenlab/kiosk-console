@@ -20,14 +20,14 @@ kops/create/cluster:
 
 kops/create/aws:
 	kops get cluster -o yaml > /tmp/cluster-template.yaml
-	yq merge patches/aws.yaml /tmp/cluster-template.yaml > /tmp/cluster.yaml
+	yq merge -x /tmp/cluster-template.yaml patches/aws.yaml > /tmp/cluster.yaml
 	kops replace -f /tmp/cluster.yaml
 	kops update cluster --yes
 
 ## Provision GPU instance group
 kops/create/gpu-nodes:
 	kops create ig gpu-nodes -o yaml --dry-run > /tmp/gpu-nodes-template.yaml
-	yq merge patches/gpu-nodes.yaml /tmp/gpu-nodes-template.yaml > /tmp/gpu-nodes.yaml
+	yq merge -x /tmp/gpu-nodes-template.yaml patches/gpu-nodes.yaml > /tmp/gpu-nodes.yaml
 	kops create -f /tmp/gpu-nodes.yaml
 	kops update cluster --yes
 
