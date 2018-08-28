@@ -4,10 +4,11 @@ export BRAND="Caltech Van Valen Lab"
 
 #dialog --print-maxsize
 
-trap ctrl_c SIGINT
+#trap ctrl_c SIGINT
 
 function ctrl_c() {
   killall dialog
+  trap - SIGINT
 }
 
 function retval() {

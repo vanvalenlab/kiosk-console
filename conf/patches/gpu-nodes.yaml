@@ -1,0 +1,13 @@
+spec:
+  machineType: p2.xlarge
+  taints:
+  - nvidia.com/gpu=:NoSchedule
+  hooks:
+  - before:
+    - docker.service
+    manifest: |
+      Type=oneshot
+      ExecStart=/bin/bash -c '/usr/bin/curl -L -S -f https://raw.githubusercontent.com/brunsgaard/kops-nvidia-docker-installer/master/nvidia-docker-installer.sh | /bin/bash'
+    name: nvidia-docker-install.service
+  maxSize: 1
+  minSize: 1

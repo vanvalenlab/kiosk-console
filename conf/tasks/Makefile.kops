@@ -18,10 +18,25 @@ kops/create/cluster:
 	  --ssh-public-key $(SSH_PUBLIC_KEY) \
 	  --yes
 
+kops/create/aws:
+	kops get cluster -o yaml > /tmp/cluster-template.yaml
+	yq merge patches/aws.yaml /tmp/cluster-template.yaml > /tmp/cluster.yaml
+	kops replace -f /tmp/cluster.yaml
+	kops update cluster --yes
+
+## Provision GPU instance group
+kops/create/gpu-nodes:
+	kops create ig gpu-nodes -o yaml --dry-run > /tmp/gpu-nodes-template.yaml
+	yq merge patches/gpu-nodes.yaml /tmp/gpu-nodes-template.yaml > /tmp/gpu-nodes.yaml
+	kops create -f /tmp/gpu-nodes.yaml
+	kops update cluster --yes
+
 ## Provision all kops resources
 kops/create/all: \
   kops/create/ssh-key \
-  kops/create/cluster
+  kops/create/cluster \
+  kops/create/$(CLOUD_PROVIDER) \
+  kops/create/gpu-nodes \
 	@echo "Kops created"
 
 ## Destroy kops cluster
@@ -36,5 +51,6 @@ kops/destroy/all: \
 
 ## Wait for kops cluster to come online
 kops/wait:
-	@time until kops validate cluster; do sleep 15; done
+	@echo "Waiting for kops cluster to come online..."
+	@time wait-for-kops
 

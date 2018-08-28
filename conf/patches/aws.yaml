@@ -1,0 +1,24 @@
+spec:
+  additionalPolicies:
+      nodes: |
+        [
+          {
+            "Sid": "assumeClusterRole",
+            "Action": [
+              "sts:AssumeRole"
+            ],
+            "Effect": "Allow",
+            "Resource": ["*"]
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "autoscaling:DescribeAutoScalingGroups",
+              "autoscaling:DescribeAutoScalingInstances",
+              "autoscaling:DescribeTags",
+              "autoscaling:SetDesiredCapacity",
+              "autoscaling:TerminateInstanceInAutoScalingGroup"
+            ],
+            "Resource": "*"
+          }
+        ]
