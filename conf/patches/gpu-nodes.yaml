@@ -11,7 +11,7 @@ spec:
       Type=oneshot
       ExecStart=/bin/bash -c '/usr/bin/curl -L -S -f https://raw.githubusercontent.com/vanvalenlab/kiosk/gpus/scripts/nvidia-docker-installer.sh | /bin/bash -x'
     name: nvidia-docker-install.service
-  minSize: 1
+  minSize: 0
   maxSize: 2
   # https://github.com/kubernetes/autoscaler/issues/903#issuecomment-392885606
   kubelet:
