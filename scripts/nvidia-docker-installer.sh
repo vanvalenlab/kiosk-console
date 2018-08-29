@@ -5,7 +5,6 @@
 # Original script: https://raw.githubusercontent.com/brunsgaard/kops-nvidia-docker-installer/master/nvidia-docker-installer.sh
 #
 
-
 set -o errexit
 set -o pipefail
 set -u
@@ -80,8 +79,8 @@ install_nvidia_docker2() {
   add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 
   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
-  distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-  curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
+  distribution=$(. /etc/os-release;echo ${ID}${VERSION_ID})
+  curl -s -L https://nvidia.github.io/nvidia-docker/${distribution}/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
   apt-get update
   # apt list -a nvidia-container-runtime
   # apt list -a nvidia-docker2
@@ -123,7 +122,7 @@ enable_install_flag() {
 
 main() {
   check_install_flag
-  stop_docker
+  #stop_docker
   download_kernel_src
   download_nvidia_installer
   run_nvidia_installer
@@ -131,8 +130,8 @@ main() {
   verify_nvidia_installation
   install_nvidia_docker2
   set_nvidia_container_runtime
-  start_docker
   enable_install_flag
+  #start_docker
 }
 
 main "$@"
