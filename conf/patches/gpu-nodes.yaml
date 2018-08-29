@@ -7,7 +7,7 @@ spec:
     - docker.service
     manifest: |
       Type=oneshot
-      ExecStart=/bin/bash -c '/usr/bin/curl -L -S -f https://raw.githubusercontent.com/vanvalenlab/kiosk/gpus/scripts/nvidia-docker-installer.sh | /bin/bash'
+      ExecStart=/bin/bash -c '/usr/bin/curl -L -S -f https://raw.githubusercontent.com/vanvalenlab/kiosk/gpus/scripts/nvidia-docker-installer.sh | /bin/bash -x'
     name: nvidia-docker-install.service
   minSize: 0
   maxSize: 2
