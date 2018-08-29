@@ -3,6 +3,7 @@ spec:
   taints:
   - nvidia.com/gpu=:NoSchedule
   hooks:
+  # Before is just advisory; `docker-healthcheck.service` appears to get started by `kops-configuration.service`
   - before:
     - docker.service
     - docker-healthcheck.service
