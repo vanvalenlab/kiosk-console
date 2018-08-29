@@ -10,19 +10,24 @@ set -o errexit
 set -o pipefail
 set -u
 
-set -x
-NVIDIA_DRIVER_VERSION="${NVIDIA_DRIVER_VERSION:-384.125}"
-NVIDIA_DRIVER_DOWNLOAD_URL_DEFAULT="https://us.download.nvidia.com/tesla/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
-NVIDIA_DRIVER_DOWNLOAD_URL="${NVIDIA_DRIVER_DOWNLOAD_URL:-$NVIDIA_DRIVER_DOWNLOAD_URL_DEFAULT}"
-NVIDIA_INSTALLER_RUNFILE="$(basename "${NVIDIA_DRIVER_DOWNLOAD_URL}")"
-NVIDIA_INSTALL_DIR="${NVIDIA_INSTALL_DIR:-/tmp}"
-set -x
-
+export NVIDIA_DRIVER_VERSION="${NVIDIA_DRIVER_VERSION:-384.125}"
+export NVIDIA_DRIVER_DOWNLOAD_URL_DEFAULT="https://us.download.nvidia.com/tesla/${NVIDIA_DRIVER_VERSION}/NVIDIA-Linux-x86_64-${NVIDIA_DRIVER_VERSION}.run"
+export NVIDIA_DRIVER_DOWNLOAD_URL="${NVIDIA_DRIVER_DOWNLOAD_URL:-$NVIDIA_DRIVER_DOWNLOAD_URL_DEFAULT}"
+export NVIDIA_INSTALLER_RUNFILE="$(basename "${NVIDIA_DRIVER_DOWNLOAD_URL}")"
+export NVIDIA_INSTALL_DIR="${NVIDIA_INSTALL_DIR:-/tmp}"
+export DEBIAN_FRONTEND="noninteractive"
+export INSTALL_FLAG="/.nvidia-docker-installer"
 
 RETCODE_SUCCESS=0
 RETCODE_ERROR=1
 RETRY_COUNT=5
 
+check_install_flag() {
+  if [ -f "${INSTALL_FLAG}" ]; then
+    echo "System already configured for nvidia-docker"
+    exit 0
+  fi
+}
 
 download_kernel_src() {
   echo "Downloading kernel sources..."
@@ -69,7 +74,6 @@ verify_nvidia_installation() {
 }
 
 install_nvidia_docker2() {
-  systemctl stop docker
   rm -rf /var/lib/docker/overlay
   apt-get install -y software-properties-common python-software-properties
   curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
@@ -83,7 +87,6 @@ install_nvidia_docker2() {
   # apt list -a nvidia-docker2
   docker_version="17.06.2"
   apt-get install -y nvidia-docker2=2.0.3+docker${docker_version}-1 nvidia-container-runtime=2.0.0+docker${docker_version}-1 docker-ce=${docker_version}~ce-0~debian
-  systemctl start docker
 }
 
 set_nvidia_container_runtime() {
@@ -100,7 +103,27 @@ set_nvidia_container_runtime() {
 EOL
 }
 
+stop_docker() {
+  # Prevent process monitors from reactivating the service (`docker-healthcheck`)
+  systemctl mask docker
+  # Stop docker process
+  systemctl stop docker
+}
+
+start_docker() {
+  # Re-enable docker service
+  systemctl unmask docker
+  # Start docker process
+  systemctl start docker
+}
+
+enable_install_flag() {
+  touch "${INSTALL_FLAG}"
+}
+
 main() {
+  check_install_flag
+  stop_docker
   download_kernel_src
   download_nvidia_installer
   run_nvidia_installer
@@ -108,6 +131,8 @@ main() {
   verify_nvidia_installation
   install_nvidia_docker2
   set_nvidia_container_runtime
+  start_docker
+  enable_install_flag
 }
 
 main "$@"

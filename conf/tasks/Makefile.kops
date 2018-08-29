@@ -33,6 +33,11 @@ kops/create/gpu-nodes:
 	kops create -f /tmp/gpu-nodes.yaml
 	kops update cluster --yes
 
+## Destroy GPU instance group
+kops/destroy/gpu-nodes:
+	kops delete ig gpu-nodes --yes
+	kops update cluster --yes
+
 ## Provision all kops resources
 kops/create/all: \
   kops/create/ssh-key \
