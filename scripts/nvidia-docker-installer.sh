@@ -102,26 +102,6 @@ set_nvidia_container_runtime() {
 EOL
 }
 
-disable_docker() {
-  # Prevent process monitors from reactivating the service (`docker-healthcheck`)
-  systemctl mask docker
-}
-
-stop_docker() {
-  # Stop docker process
-  systemctl stop docker
-}
-
-enable_docker() {
-  # Re-enable docker service
-  systemctl unmask docker
-}
-
-start_docker() {
-  # Start docker process
-  systemctl start docker
-}
-
 enable_install_flag() {
   touch "${INSTALL_FLAG}"
 }
@@ -129,12 +109,6 @@ enable_install_flag() {
 main() {
   # Check if we've already installed nvidia drivers
   check_install_flag
-
-  # Disable docker during this process
-  disable_docker
-
-  # Stop it if it's running (shouldn't be since we run before docker, but `docker-healthcheck` may start it)
-  stop_docker
 
   # Start installation
   download_kernel_src
@@ -147,12 +121,6 @@ main() {
 
   # Mark that we've set everything up
   enable_install_flag
-
-  # Unmask docker so it can be started
-  enable_docker
-
-  # do not start docker, that's the job of systemd
-  #start_docker
 }
 
 main "$@"

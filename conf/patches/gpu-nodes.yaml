@@ -5,6 +5,7 @@ spec:
   hooks:
   - before:
     - docker.service
+    - docker-healthcheck.service
     manifest: |
       Type=oneshot
       ExecStart=/bin/bash -c '/usr/bin/curl -L -S -f https://raw.githubusercontent.com/vanvalenlab/kiosk/gpus/scripts/nvidia-docker-installer.sh | /bin/bash -x'
