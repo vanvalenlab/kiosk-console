@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment_name }}
+  labels:
+    app: {{ .Values.app_name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+    spec:
+      restartPolicy: "Always"
+      nodeSelector:
+        beta.kubernetes.io/instance-type: "p2.xlarge"
+      tolerations:
+      - key: "nvidia.com/gpu"
+        effect: "NoSchedule"
+      containers:
+      - name: {{ .Values.container_name }}
+        image: {{ .Values.image_name }}:{{ .Values.image_version }}
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+        ports:
+        - containerPort: {{ .Values.deployment_port }}
+        env:
+        - name: RPC_PORT
+          value: "8500"
+        - name: REST_PORT
+          value: "8501"
+        - name: REST_TIMEOUT
+          value: "180000"
+        - name: MODEL_PREFIX
+          value: "models"
+{{- range $name, $value := .Values.env.secret }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          valueFrom:
+            secretKeyRef:
+              name: tf-serving-env-variables
+              key: {{ $name | lower }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,42 @@
+helmDefaults:
+  args:
+    - "--wait"
+    - "--timeout=600"
+    - "--force"
+    - "--reset-values"
+
+releases:
+
+################################################################################
+## Redis-poller ################################################################
+################################################################################
+
+#
+# References:
+#   - [web address of Helm chart's YAML file]
+#
+- name: "rp"
+  namespace: "deepcell"
+  labels:
+    chart: "redis-poller"
+    component: "redis-poller"
+    namespace: "deepcell"
+    vendor: "vanvalenlab"
+    default: "true"
+  chart: "/localhost/projects/vanvalen_kiosk/kiosk/conf/charts/redis-poller"
+  #chart: "/conf/charts/redis-poller"
+  version: "0.1.0"
+  values:
+    - app_name: "redis-poller"
+      deployment_name: "redis-poller-deployment"
+      replicas: 1
+      image_name: "vanvalenlab/redis-poller"
+      image_version: "latest"
+      container_name: "redis-poller-container"
+      service_account_name: "redis-poller-service-account"
+      env:
+        DEBUG: "true"
+        INTERVAL: "5"
+        REDIS_HOST: "redis-master"
+        REDIS_PORT: "6379"
+        AUTOSCALING: "0|1|5|deepcell|tf-serving-deployment; 0|1|5|deepcell|tf-rd-deployment"

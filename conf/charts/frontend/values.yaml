@@ -1,0 +1,36 @@
+app_name: "frontend"
+
+#deployment.yaml
+replicas: 1
+image_name: "vanvalenlab/react_interface"
+image_version: "latest"
+deployment_name: "frontend-deployment"
+deployment_port: 3000
+container_name: "frontend-container"
+
+# service.yaml
+service_name: "frontend-service"
+service_port: 3000
+service_type: "ClusterIP"
+
+# ingress.yaml
+ingress_name: "frontend-ingress"
+ingress_path: "/"
+
+# secrets.yaml and hemlfile.d/frontend.yaml
+env:
+  REDIS_HOST: "redis-master"
+  REDIS_PORT: "6379"
+  EXPRESS_HOST: "fe-rd-service"
+  EXPRESS_PORT: "8080"
+  MODEL_NAME: "mibi"
+  MODEL_VERSION: "99"
+  AWS_REGION: "us-east-1"
+  secret:
+    AWS_ACCESS_KEY_ID: "change_me"
+    AWS_SECRET_ACCESS_KEY: "change_me"
+    AWS_S3_BUCKET: "change_me"
+secrets:
+  aws_access_key_id: "NA"
+  aws_secret_access_key: "NA"
+  aws_s3_bucket: "NA"

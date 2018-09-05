@@ -1,0 +1,8 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: {{ .Values.app_name }}
+rules:
+  - apiGroups: ["*"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "update"]

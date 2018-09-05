@@ -1,0 +1,18 @@
+apiVersion: v1
+name: frontend
+version: 0.1.0
+kubeVersion: ^1.9.8
+description: This project provides the frontend interface for the Tensorflow-serving backend of Deepcell.
+keywords:
+  - react
+home: https://www.github.com/vanvalenlab/react_interface
+sources:
+    - https://hub.docker.com/vanvalenlab/react_interface
+maintainers:
+  - name: Dylan Bannon
+    email: bbannon@caltech.edu
+    url: vanvalen.caltech.edu
+engine: gotpl
+appVersion: 0.1.0
+deprecated: false
+tillerVersion: ^2.9.1

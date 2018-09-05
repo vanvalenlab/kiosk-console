@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment_name }}
+  labels:
+    app: {{ .Values.app_name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+    spec:
+      containers:
+      - name: {{ .Values.container_name }}
+        image: {{ .Values.image_name }}:{{ .Values.image_tag }}
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: {{ .Values.deployment_port }}
+        env:
+        - name: REDIS_PORT
+          value: {{ .Values.REDIS_PORT | quote }}
+        - name: REDIS_HOST
+          value: {{ .Values.REDIS_HOST }}
+        - name: TF_PORT
+          value: {{ .Values.TF_PORT | quote }}
+        - name: TF_HOST
+          value: {{ .Values.TF_HOST }}
+        - name: AWS_REGION
+          value: {{ .Values.AWS_REGION }}
+        - name: DEBUG
+          value: {{ .Values.DEBUG | quote }}
+{{- range $name, $value := .Values.env.secret }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          valueFrom:
+            secretKeyRef:
+              name: tf-rd-env-variables
+              key: {{ $name | lower }}
+{{- end }}
+{{- end }}

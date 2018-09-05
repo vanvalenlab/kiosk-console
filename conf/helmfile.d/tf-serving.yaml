@@ -1,0 +1,43 @@
+helmDefaults:
+  args:
+    - "--wait"
+    - "--timeout=600"
+    - "--force"
+    - "--reset-values"
+
+releases:
+
+################################################################################
+## Tensorflow-Serving ##########################################################
+################################################################################
+
+#
+# References:
+#   - [web address of Helm chart's YAML file]
+#
+- name: "tf"
+  namespace: "deepcell"
+  labels:
+    chart: "tf-serving"
+    component: "deepcell"
+    namespace: "deepcell"
+    vendor: "vanvalenlab"
+    default: "true"
+  chart: "/localhost/projects/vanvalen_kiosk/kiosk/conf/charts/tf-serving"
+  #chart: "/conf/charts/tf-serving"
+  version: "0.1.0"
+  values:
+    - app_name: "tf-serving"
+      replicas: 0
+      image_name: "vanvalenlab/tf_serving"
+      image_version: "latest"
+      deployment_name: "tf-serving-deployment"
+      deployment_port: 8501
+      container_name: "tf-serving-container"
+      service_name: "tf-serving-service"
+      service_port: 1337
+      service_type: "ClusterIP"
+      secrets:
+        aws_access_key_id: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+        aws_secret_access_key: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+        aws_s3_bucket: '{{ env "AWS_S3_BUCKET" | default "NA" }}'

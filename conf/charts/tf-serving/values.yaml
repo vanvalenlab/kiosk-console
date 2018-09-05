@@ -1,0 +1,25 @@
+app_name: "tf-serving"
+
+# deployment.yaml
+replicas: 0
+image_name: "vanvalenlab/tf_serving"
+image_version: "latest"
+deployment_name: "tf-serving-deployment"
+deployment_port: 8501
+container_name: "tf-serving-container"
+
+# service.yaml
+service_name: "tf-serving-service"
+service_port: 1337
+service_type: "ClusterIP"
+
+# secrets.yaml and hemlfile.d/frontend.yaml
+env:
+  secret:
+    AWS_ACCESS_KEY_ID: "change_me"
+    AWS_SECRET_ACCESS_KEY: "change_me"
+    AWS_S3_BUCKET: "change_me"
+secrets:
+  aws_access_key_id: "NA"
+  aws_secret_access_key: "NA"
+  aws_s3_bucket: "NA"
