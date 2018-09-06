@@ -23,6 +23,7 @@ spec:
       containers:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_version }}
+        imagePullPolicy: "Always"
         resources:
           limits:
             nvidia.com/gpu: 1
