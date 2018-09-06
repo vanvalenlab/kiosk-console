@@ -1,0 +1,29 @@
+spec:
+  docker:
+    logDriver: json-file
+    version: 17.03.2
+  additionalPolicies:
+      nodes: |
+        [
+          {
+            "Sid": "assumeClusterRole",
+            "Action": [
+              "sts:AssumeRole"
+            ],
+            "Effect": "Allow",
+            "Resource": ["*"]
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+              "autoscaling:DescribeAutoScalingGroups",
+              "autoscaling:DescribeAutoScalingInstances",
+              "autoscaling:DescribeTags",
+              "autoscaling:DescribeLaunchConfigurations",
+              "autoscaling:SetDesiredCapacity",
+              "autoscaling:TerminateInstanceInAutoScalingGroup",
+              "ec2:DescribeLaunchTemplateVersions"
+            ],
+            "Resource": "*"
+          }
+        ]

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+SLEEP=${SLEEP:-1}
+LOG_FILE="/tmp/$(basename $0).log"
+EXIT_CODE=0
+set -o pipefail 
+
+SPINNER_TEMPLATE='-\|/'
+COLOR_GREEN="\033[32;01m"
+COLOR_RESET="\033[0m"
+
+while true; do
+  OUTPUT=$(kops validate cluster -o json 2>${LOG_FILE})
+  EXIT_CODE=$?
+  if [ $EXIT_CODE -eq 0 ]; then
+    echo -e "\nCluster ready"
+    break;
+  elif [[ $(cat ${LOG_FILE}) =~ RequestExpired ]]; then
+    cat ${LOG_FILE}
+    echo -e "\nAborting"
+    exit 1
+  else
+    ERROR=$(echo "${OUTPUT}" | jq -r '.failures[] | .message' | tail -1)
+    printf "\r%b%c%b %-100s" "${COLOR_GREEN}" "${SPINNER_TEMPLATE:$i}" "${COLOR_RESET}" "${ERROR}";
+    sleep ${SLEEP}
+  fi
+  i=$(( (i+1)%4 ))
+done
+
+echo
+
+exit $EXIT_CODE
