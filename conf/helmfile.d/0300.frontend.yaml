@@ -45,7 +45,7 @@ releases:
         EXPRESS_HOST: "fe-rd-service"
         EXPRESS_PORT: "8080"
         MODEL_NAME: "mibi"
-        MODEL_VERSION: "99"
+        MODEL_VERSION: "0"
         AWS_REGION: "us-east-1"
       secrets:
         aws_access_key_id: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
