@@ -1,8 +1,12 @@
 # FIXME: coldstart problem with creating new projects. Need to associate billing account and activate GKE api
 # FIXME: GPU AZs and GKE AZ might not be same
 # FIXME: Update wizard to configure GKE
+<<<<<<< HEAD
 
 export KUBERNETES_VERSION=1.10
+=======
+# FIXME: cluster fails to create GPU nodes; `gcloud` cli throws exception 
+>>>>>>> Add GKE support
 
 export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
