@@ -1,0 +1,116 @@
+# FIXME: coldstart problem with creating new projects. Need to associate billing account and activate GKE api
+# FIXME: GPU AZs and GKE AZ might not be same
+# FIXME: Update wizard to configure GKE
+# FIXME: cluster fails to create GPU nodes; `gcloud` cli throws exception 
+
+export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
+
+# https://cloud.google.com/kubernetes-engine/docs/quickstart
+# https://cloud.google.com/compute/docs/machine-types
+# https://cloud.google.com/compute/pricing
+#
+# Increase quotas: https://console.cloud.google.com/iam-admin/quotas
+
+export CLOUDSDK_CORE_PROJECT ?= deepcell-12
+export CLOUDSDK_CONTAINER_CLUSTER ?= deepcell
+
+export CLUSTER_NAME ?= deepcell
+export GPU_TYPE ?= nvidia-tesla-k80
+export GPU_NODE_MIN_SIZE ?= 0
+export GPU_NODE_MAX_SIZE ?= 3
+# Not all GPU types are available in all regions/availability zones
+export GPU_COMPUTE_ZONE ?= us-west1-b
+export GKE_COMPUTE_REGION ?= us-west1
+export GKE_COMPUTE_ZONE ?= us-west1-b
+export GKE_MACHINE_TYPE ?= n1-standard-2
+
+
+## Login to Google Cloud
+gke/login:
+	@gcloud auth login --no-launch-browser
+
+## Create a new project
+gke/create/project:
+	@gcloud projects create $(CLOUDSDK_CORE_PROJECT)
+#	@gcloud alpha billing accounts projects link $(CLOUDSDK_CORE_PROJECT --account-id=$(BILLING_ACCOUNT_ID)
+
+## Destroy project
+gke/destroy/project:
+	@gcloud projects delete $(CLOUDSDK_CORE_PROJECT)
+
+## Create a new GKE cluster
+gke/create/cluster:
+	@gcloud container clusters create $(CLUSTER_NAME) \
+		--enable-autoscaling \
+		--max-nodes=$(NODE_MAX_SIZE) \
+		--min-nodes=$(NODE_MIN_SIZE) \
+		--enable-autoupgrade \
+		--zone=$(GKE_COMPUTE_ZONE) \
+		--machine-type=$(GKE_MACHINE_TYPE) \
+
+## Destroy GKE cluster
+gke/destroy/cluster:
+	@gcloud container clusters delete $(CLUSTER_NAME) --quiet
+
+## Set context to use GKE cluster (e.g. with kubectl)
+gke/use/cluster:
+	@gcloud config set project $(CLOUDSDK_CORE_PROJECT)
+	@gcloud config set compute/zone $(GKE_COMPUTE_ZONE)
+	@gcloud config set compute/region $(GKE_COMPUTE_REGION)
+	@gcloud container clusters get-credentials $(CLUSTER_NAME)
+
+## List all GKE projects
+gke/list/projects:
+	@gcloud projects list
+
+## List all availability zones
+gke/list/zones:
+	@gcloud compute zones list
+
+## List all accelerator machine types
+gke/list/accelerator-types:
+	@gcloud compute accelerator-types list
+
+## List all billing accounts
+gke/list/billing-accounts:
+	@gcloud alpha billing accounts list
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
+## Create GKE GPU node pool
+gke/create/gpus:
+	@gcloud container node-pools create gpu \
+		--accelerator type=$(GPU_TYPE),count=1 \
+		--zone $(GPU_COMPUTE_ZONE) \
+		--cluster $(CLUSTER_NAME) \
+		--num-nodes $(GPU_NODE_MIN_SIZE) \
+		--min-nodes $(GPU_NODE_MIN_SIZE) \
+		--max-nodes $(GPU_NODE_MAX_SIZE) \
+		--enable-autoscaling\
+		--enable-autorepair \
+		--enable-autoupgrade
+#		--accelerator type=$(GPU_TYPE),count=$(GPU_NODE_MIN_SIZE) \
+
+## Destroy GKE GPU node pool
+gke/destroy/gpus:
+	@gcloud container node-pools delete gpu
+
+## Deploy GKE Nvidia drivers
+gke/deploy/nvidia:
+	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml
+
+## Create Cluster
+gke/create/all: \
+	gke/create/project \
+	gke/create/cluster \
+	gke/create/gpus \
+	gke/deploy/nvidia
+	@echo "GKE cluster created"
+	@exit 0
+
+## Destroy Cluster
+gke/destroy/all: \
+	fke/delete/gpus \
+	gke/delete/cluster \
+	gke/delete/project
+	@echo "GKE cluster destroyed"
+	@exit 0
