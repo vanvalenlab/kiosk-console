@@ -15,6 +15,11 @@ service_type: "ClusterIP"
 
 # secrets.yaml and hemlfile.d/frontend.yaml
 env:
+  RPC_PORT: "8500"
+  REST_PORT: "8501"
+  REST_TIMEOUT: "180000"
+  MODEL_PREFIX: "models"
+  LOG_LEVEL: "3"
   secret:
     AWS_ACCESS_KEY_ID: "change_me"
     AWS_SECRET_ACCESS_KEY: "change_me"

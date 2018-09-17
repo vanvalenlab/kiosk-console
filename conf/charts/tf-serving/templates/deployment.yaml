@@ -31,13 +31,15 @@ spec:
         - containerPort: {{ .Values.deployment_port }}
         env:
         - name: RPC_PORT
-          value: "8500"
+          value: {{ .Values.env.RPC_PORT | quote }}
         - name: REST_PORT
-          value: "8501"
+          value: {{ .Values.env.REST_PORT | quote }}
         - name: REST_TIMEOUT
-          value: "180000"
+          value: {{ .Values.env.REST_TIMEOUT | quote }}
         - name: MODEL_PREFIX
-          value: "models"
+          value: {{ .Values.env.MODEL_PREFIX }}
+        - name: LOG_LEVEL
+          value: {{ .Values.env.LOG_LEVEL | quote }}
 {{- range $name, $value := .Values.env.secret }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
