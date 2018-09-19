@@ -86,8 +86,8 @@ function menu() {
             --menu "${help[*]}" 16 50 6 \
                 "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                 "GKE"     "Configure Google ${cloud_providers[gke]}" \
-                "Create"  "Create Cluster" \
-                "Destroy" "Destroy Cluster" \
+                "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+                "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
                 "Shell"   "Drop to the shell" \
                 "Exit"    "Exit this kiosk" \
             --output-fd 1 \
