@@ -77,14 +77,19 @@ function menu() {
               "letter of the choice as a hot key, or the\n"
               "number keys 1-9 to choose an option.\n"
               "Choose a task.")
+
+  declare -A cloud_providers
+  cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
+
   value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
             --title "[ M A I N - M E N U ]" \
-            --menu "${help[*]}" 15 50 5 \
-                Setup "Configure AWS Credentials" \
-                Create "Create Cluster" \
-                Destroy "Destroy Cluster" \
-                Shell "Drop to the shell" \
-                Exit "Exit this kiosk" \
+            --menu "${help[*]}" 16 50 6 \
+                "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
+                "GKE"     "Configure Google ${cloud_providers[gke]}" \
+                "Create"  "Create Cluster" \
+                "Destroy" "Destroy Cluster" \
+                "Shell"   "Drop to the shell" \
+                "Exit"    "Exit this kiosk" \
             --output-fd 1 \
           )
   retval $?
@@ -92,7 +97,7 @@ function menu() {
 }
 
 
-function setup() {
+function configure_aws() {
   if [ -z "${NAMESPACE}" ]; then
     # Generate a friendly human readable name
     export NAMESPACE="$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
@@ -106,9 +111,21 @@ function setup() {
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
   export KOPS_STATE_STORE=s3://${NAMESPACE}
+  export CLOUD_PROVIDER=aws
   
-  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env
+  printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
+  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
 }
+
+function configure_gke() {
+  export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT}")
+  export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
+  export CLOUD_PROVIDER=gke
+  
+  printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
+  printenv | grep -e PROJECT -e CLUSTER_NAME > ${CACHE_PATH}/env.gke
+}
+
 
 function shell() {
   clear
@@ -136,7 +153,8 @@ function main() {
 
     case $ACTION in
       "Shell") shell ;;
-      "Setup") setup ;;
+      "AWS") configure_aws ;;
+      "GKE") configure_gke ;;
       "Create") create ;;
       "Destroy") destroy;;
       "Exit") break ;;
