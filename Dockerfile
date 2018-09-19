@@ -1,7 +1,6 @@
 FROM cloudposse/build-harness:0.9.0 as build-harness
 
-FROM cloudposse/geodesic:0.28.2
-#FROM cloudposse/geodesic:dev
+FROM cloudposse/geodesic:0.30.0
 
 RUN apk add --update dialog
 
@@ -36,8 +35,8 @@ ENV NODE_MIN_SIZE="2"
 # Filesystem entry for tfstate
 RUN s3 fstab '${KOPS_STATE_STORE}' '/' '/s3'
 
-# We do not need to access private git repos, so we can disable agent
-RUN rm -f /etc/profile.d/ssh-agent.sh
+# We do not need to access private git repos, so we can disable agent.
+RUN rm -f /etc/profile.d/ssh-agent.sh /etc/profile.d/aws-vault.sh
 
 # Copy from build-harness
 COPY --from=build-harness /build-harness/ /build-harness/

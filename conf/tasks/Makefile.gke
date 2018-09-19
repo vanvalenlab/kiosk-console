@@ -1,7 +1,8 @@
 # FIXME: coldstart problem with creating new projects. Need to associate billing account and activate GKE api
 # FIXME: GPU AZs and GKE AZ might not be same
 # FIXME: Update wizard to configure GKE
-# FIXME: cluster fails to create GPU nodes; `gcloud` cli throws exception 
+
+export KUBERNETES_VERSION=1.10
 
 export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
@@ -11,19 +12,24 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 #
 # Increase quotas: https://console.cloud.google.com/iam-admin/quotas
 
-export CLOUDSDK_CORE_PROJECT ?= deepcell-12
-export CLOUDSDK_CONTAINER_CLUSTER ?= deepcell
-
 export CLUSTER_NAME ?= deepcell
 export GPU_TYPE ?= nvidia-tesla-k80
 export GPU_NODE_MIN_SIZE ?= 0
 export GPU_NODE_MAX_SIZE ?= 3
+export GPU_PER_NODE ?= 1
+
 # Not all GPU types are available in all regions/availability zones
 export GPU_COMPUTE_ZONE ?= us-west1-b
 export GKE_COMPUTE_REGION ?= us-west1
 export GKE_COMPUTE_ZONE ?= us-west1-b
 export GKE_MACHINE_TYPE ?= n1-standard-2
+export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
+# Project name must be globally unique
+export CLOUDSDK_CORE_PROJECT ?= deepcell-12
+
+# Cluster name ust be unique within the project
+export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
 
 ## Login to Google Cloud
 gke/login:
@@ -41,12 +47,14 @@ gke/destroy/project:
 ## Create a new GKE cluster
 gke/create/cluster:
 	@gcloud container clusters create $(CLUSTER_NAME) \
-		--enable-autoscaling \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--zone=$(GKE_COMPUTE_ZONE) \
 		--max-nodes=$(NODE_MAX_SIZE) \
 		--min-nodes=$(NODE_MIN_SIZE) \
-		--enable-autoupgrade \
-		--zone=$(GKE_COMPUTE_ZONE) \
 		--machine-type=$(GKE_MACHINE_TYPE) \
+		--cluster-version $(KUBERNETES_VERSION) \
+		--enable-autoscaling \
+		--enable-autoupgrade
 
 ## Destroy GKE cluster
 gke/destroy/cluster:
@@ -78,21 +86,43 @@ gke/list/billing-accounts:
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
 gke/create/gpus:
-	@gcloud container node-pools create gpu \
-		--accelerator type=$(GPU_TYPE),count=1 \
+	gcloud container node-pools create gpu \
+		--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--zone $(GPU_COMPUTE_ZONE) \
 		--cluster $(CLUSTER_NAME) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
 		--max-nodes $(GPU_NODE_MAX_SIZE) \
-		--enable-autoscaling\
+		--enable-autoscaling \
 		--enable-autorepair \
 		--enable-autoupgrade
-#		--accelerator type=$(GPU_TYPE),count=$(GPU_NODE_MIN_SIZE) \
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
+# When you add a GPU node pool to an existing cluster that already runs a non-GPU node pool, GKE automatically taints the GPU nodes with the following node taint
+#		--node-taints "nvidia.com/gpu=:NoSchedule"
 
 ## Destroy GKE GPU node pool
 gke/destroy/gpus:
-	@gcloud container node-pools delete gpu
+	gcloud container node-pools delete gpu
+
+# https://cloud.google.com/storage/docs/access-control/iam-roles
+## Create Service Account used by deepcell
+gke/create/service-account:
+	gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell"
+	gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
+
+## Delete Service Account used by deepcell
+gke/destroy/service-account:
+	gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL)
+
+## Create bucket used by deepcell
+gke/create/bucket:
+	gsutil mb gs://$(CLOUDSDK_CORE_PROJECT)
+
+## Destroy bucket used by deepcell
+gke/destroy/bucket:
+	gsutil rb -f gs://$(CLOUDSDK_CORE_PROJECT)
 
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
@@ -100,17 +130,19 @@ gke/deploy/nvidia:
 
 ## Create Cluster
 gke/create/all: \
-	gke/create/project \
+	gke/create/service-account \
 	gke/create/cluster \
 	gke/create/gpus \
+	gke/create/bucket \
 	gke/deploy/nvidia
 	@echo "GKE cluster created"
 	@exit 0
 
 ## Destroy Cluster
 gke/destroy/all: \
-	fke/delete/gpus \
-	gke/delete/cluster \
-	gke/delete/project
+	gke/destroy/bucket \
+	gke/destroy/gpus \
+	gke/destroy/cluster \
+	gke/destroy/service-account \
 	@echo "GKE cluster destroyed"
 	@exit 0

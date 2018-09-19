@@ -5,7 +5,11 @@ aws/create/bucket:
 	aws s3 mb "${KOPS_STATE_STORE}" --region "${KOPS_STATE_STORE_REGION}"
 
 ## Create everything on AWS
-aws/create/all: aws/create/bucket
+aws/create/all: \
+  aws/create/bucket \
+  kops/create/all \
+  kops/wait \
+  kubectl/create/all
 	@exit 0
 
 ## Destroy AWS S3 bucket
