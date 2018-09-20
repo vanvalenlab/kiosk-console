@@ -1,5 +1,12 @@
 [![Van Valen Lab, Caltech](https://upload.wikimedia.org/wikipedia/commons/7/75/Caltech_Logo.svg)](http://www.vanvalen.caltech.edu/)
 
+# Disclaimer
+
+This repository is under heavy active development and not ready for use yet. 
+
+Don't expect anything to work for the time being.
+
+
 # Deepcell Kiosk
 
 This deepcell distribution designed to easily spin up an end-to-end Deepcell environment on Kubernetes.
