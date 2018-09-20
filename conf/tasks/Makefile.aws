@@ -9,7 +9,8 @@ aws/create/all: \
   aws/create/bucket \
   kops/create/all \
   kops/wait \
-  kubectl/create/all
+  kubectl/create/all \
+  helm/create/all
 	@exit 0
 
 ## Destroy AWS S3 bucket
@@ -17,5 +18,7 @@ aws/destroy/bucket:
 	aws s3 rb "${KOPS_STATE_STORE}" --force
 
 ## Destroy everything on AWS
-aws/destroy/all: aws/destroy/bucket
+aws/destroy/all: \
+  kops/destroy/all \
+  aws/destroy/bucket
 	@exit 0
