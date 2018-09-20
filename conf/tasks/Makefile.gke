@@ -124,6 +124,13 @@ gke/create/bucket:
 gke/destroy/bucket:
 	gsutil rb -f gs://$(CLOUDSDK_CORE_PROJECT)
 
+
+gke/deploy/helm:
+	kubectl create serviceaccount --namespace kube-system tiller
+	kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+	kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'      
+	helm init --service-account tiller --upgrade
+
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
 	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml
@@ -134,6 +141,7 @@ gke/create/all: \
 	gke/create/cluster \
 	gke/create/gpus \
 	gke/create/bucket \
+	gke/deploy/helm \
 	gke/deploy/nvidia
 	@echo "GKE cluster created"
 	@exit 0
