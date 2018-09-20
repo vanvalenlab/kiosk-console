@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment_name }}
+  labels:
+    app: {{ .Values.app_name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+    spec:
+      containers:
+      - name: {{ .Values.container_name }}
+        image: {{ .Values.image_name }}:{{ .Values.image_version }}
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: {{ .Values.deployment_port }}
+        env:
+        - name: REDIS_HOST
+          value: {{ .Values.env.REDIS_HOST }}
+        - name: REDIS_PORT
+          value: {{ .Values.env.REDIS_PORT | quote }}
+        - name: EXPRESS_HOST
+          value: {{ .Values.env.EXPRESS_HOST }}
+        - name: EXPRESS_PORT
+          value: {{ .Values.env.EXPRESS_PORT | quote }}
+        - name: AWS_REGION
+          value: {{ .Values.env.AWS_REGION }}
+        - name: MODEL_NAME
+          value: {{ .Values.env.MODEL_NAME }}
+        - name: MODEL_VERSION
+          value: {{ .Values.env.MODEL_VERSION | quote }}
+{{- range $name, $value := .Values.env.secret }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          valueFrom:
+            secretKeyRef:
+              name: frontend-env-variables
+              key: {{ $name | lower }}
+{{- end }}
+{{- end }}

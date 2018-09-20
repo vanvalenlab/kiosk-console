@@ -1,0 +1,55 @@
+helmDefaults:
+  args:
+    - "--wait"
+    - "--timeout=600"
+    - "--force"
+    - "--reset-values"
+
+releases:
+
+################################################################################
+## Frontend ####################################################################
+################################################################################
+
+#
+# References:
+#   - [web address of Helm chart's YAML file]
+#
+- name: "fe"
+  namespace: "deepcell"
+  labels:
+    chart: "frontend"
+    component: "deepcell"
+    namespace: "deepcell"
+    vendor: "vanvalenlab"
+    default: "true"
+  chart: "/localhost/projects/vanvalen_kiosk/kiosk/conf/charts/frontend"
+  #chart: "/conf/charts/frontend"
+  version: "0.1.0"
+  values:
+    - app_name: "frontend"
+      replicas: 1
+      image_name: "vanvalenlab/react_interface"
+      image_version: "0.1dev"
+      deployment_name: "frontend-deployment"
+      deployment_port: 3000
+      container_name: "frontend-container"
+      service_name: "frontend-service"
+      service_port: 3000
+      service_type: "ClusterIP"
+      ingress_name: "frontend-ingress"
+      ingress_path: "/" 
+      env:
+        REDIS_HOST: "redis-master"
+        REDIS_PORT: "6379"
+        EXPRESS_HOST: "fe-rd-service"
+        EXPRESS_PORT: "8080"
+        MODEL_NAME: "mibi"
+        #MODEL_NAME: "HeLa_S3_deepcell"
+        #MODEL_NAME: "HeLa_S3_watershed"
+        MODEL_VERSION: "0"
+        AWS_REGION: "us-east-1"
+      secrets:
+        aws_access_key_id: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+        aws_secret_access_key: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+        aws_s3_bucket: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
