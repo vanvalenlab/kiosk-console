@@ -26,7 +26,7 @@ export GKE_MACHINE_TYPE ?= n1-standard-2
 export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
 # Project name must be globally unique
-export CLOUDSDK_CORE_PROJECT ?= deepcell-12
+export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
 
 # Cluster name ust be unique within the project
 export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
