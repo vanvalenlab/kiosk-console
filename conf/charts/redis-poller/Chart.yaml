@@ -1,7 +1,7 @@
 apiVersion: v1
 name: redis-poller
 version: 0.1.0
-kubeVersion: ^1.9.8
+#kubeVersion: ^1.9.8
 description: This project monitors the Redis database to scale the GPU nodes and tf-serving and flask containers as necessary.
 keywords:
   - redis-poller

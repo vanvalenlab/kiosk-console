@@ -30,22 +30,18 @@ spec:
         ports:
         - containerPort: {{ .Values.deployment_port }}
         env:
-        - name: RPC_PORT
-          value: {{ .Values.env.RPC_PORT | quote }}
-        - name: REST_PORT
-          value: {{ .Values.env.REST_PORT | quote }}
-        - name: REST_TIMEOUT
-          value: {{ .Values.env.REST_TIMEOUT | quote }}
-        - name: MODEL_PREFIX
-          value: {{ .Values.env.MODEL_PREFIX }}
-        - name: LOG_LEVEL
-          value: {{ .Values.env.LOG_LEVEL | quote }}
-{{- range $name, $value := .Values.env.secret }}
+{{- range $name, $value := .Values.env }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:
             secretKeyRef:
               name: tf-serving-env-variables
-              key: {{ $name | lower }}
+              key: {{ $name }}
 {{- end }}
 {{- end }}

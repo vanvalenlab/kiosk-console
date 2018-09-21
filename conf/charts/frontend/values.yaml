@@ -26,11 +26,7 @@ env:
   MODEL_NAME: "mibi"
   MODEL_VERSION: "0"
   AWS_REGION: "us-east-1"
-  secret:
-    AWS_ACCESS_KEY_ID: "change_me"
-    AWS_SECRET_ACCESS_KEY: "change_me"
-    AWS_S3_BUCKET: "change_me"
 secrets:
-  aws_access_key_id: "NA"
-  aws_secret_access_key: "NA"
-  aws_s3_bucket: "NA"
+  AWS_ACCESS_KEY_ID: "change_me"
+  AWS_SECRET_ACCESS_KEY: "change_me"
+  AWS_S3_BUCKET: "change_me"
