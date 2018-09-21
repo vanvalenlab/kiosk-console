@@ -35,7 +35,7 @@ spec:
           value: {{ .Values.env.MODEL_NAME }}
         - name: MODEL_VERSION
           value: {{ .Values.env.MODEL_VERSION | quote }}
-{{- range $name, $value := .Values.env.secret }}
+{{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:

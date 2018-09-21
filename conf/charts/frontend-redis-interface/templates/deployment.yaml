@@ -27,7 +27,7 @@ spec:
           value: {{ .Values.env.REDIS_HOST }}
         - name: REDIS_PORT
           value: {{ .Values.env.REDIS_PORT | quote }}
-{{- range $name, $value := .Values.env.secret }}
+{{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:

@@ -40,7 +40,7 @@ spec:
           value: {{ .Values.env.MODEL_PREFIX }}
         - name: LOG_LEVEL
           value: {{ .Values.env.LOG_LEVEL | quote }}
-{{- range $name, $value := .Values.env.secret }}
+{{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:

@@ -33,12 +33,12 @@ spec:
           value: {{ .Values.AWS_REGION }}
         - name: DEBUG
           value: {{ .Values.DEBUG | quote }}
-{{- range $name, $value := .Values.env.secret }}
+{{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:
             secretKeyRef:
               name: tf-rd-env-variables
-              key: {{ $name | lower }}
+              key: {{ $name }}
 {{- end }}
 {{- end }}
