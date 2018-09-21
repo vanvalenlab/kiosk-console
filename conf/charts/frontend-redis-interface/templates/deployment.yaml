@@ -21,12 +21,12 @@ spec:
         ports:
         - containerPort: {{ .Values.deployment_port }}
         env:
-        - name: PORT
-          value: {{ .Values.deployment_port | quote }}
-        - name: REDIS_HOST
-          value: {{ .Values.env.REDIS_HOST }}
-        - name: REDIS_PORT
-          value: {{ .Values.env.REDIS_PORT | quote }}
+{{- range $name, $value := .Values.env }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
 {{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}

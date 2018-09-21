@@ -21,20 +21,12 @@ spec:
         ports:
         - containerPort: {{ .Values.deployment_port }}
         env:
-        - name: REDIS_HOST
-          value: {{ .Values.env.REDIS_HOST }}
-        - name: REDIS_PORT
-          value: {{ .Values.env.REDIS_PORT | quote }}
-        - name: EXPRESS_HOST
-          value: {{ .Values.env.EXPRESS_HOST }}
-        - name: EXPRESS_PORT
-          value: {{ .Values.env.EXPRESS_PORT | quote }}
-        - name: AWS_REGION
-          value: {{ .Values.env.AWS_REGION }}
-        - name: MODEL_NAME
-          value: {{ .Values.env.MODEL_NAME }}
-        - name: MODEL_VERSION
-          value: {{ .Values.env.MODEL_VERSION | quote }}
+{{- range $name, $value := .Values.env }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
 {{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
