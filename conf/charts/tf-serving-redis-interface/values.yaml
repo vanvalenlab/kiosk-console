@@ -8,8 +8,8 @@ image_tag: "latest"
 deployment_port: 8080
 container_name: "tf-rd-container"
 env:
-  REDIS_HOST: "overwrite_this"
-  REDIS_PORT: "sepcify_me"
+  REDIS_HOST: "redis-master-0"
+  REDIS_PORT: "6379"
   TF_HOST: "overwrite_this"
   TF_PORT: "sepcify_me"
   AWS_REGION: "us-east-1"
