@@ -31,6 +31,9 @@ export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
 # Cluster name ust be unique within the project
 export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
 
+# Bucket name need not be unique
+export CLOUDSDK_BUCKET ?= $(GKE_BUCKET)
+
 ## Login to Google Cloud
 gke/login:
 	@gcloud auth login --no-launch-browser
@@ -118,11 +121,11 @@ gke/destroy/service-account:
 
 ## Create bucket used by deepcell
 gke/create/bucket:
-	gsutil mb gs://$(CLOUDSDK_CORE_PROJECT)
+	gsutil mb gs://$(CLOUDSDK_BUCKET) || echo "No need to create bucket."
 
 ## Destroy bucket used by deepcell
 gke/destroy/bucket:
-	gsutil rb -f gs://$(CLOUDSDK_CORE_PROJECT)
+	gsutil rb -f gs://$(CLOUDSDK_BUCKET)
 
 
 gke/deploy/helm:
