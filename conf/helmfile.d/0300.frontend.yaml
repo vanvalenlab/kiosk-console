@@ -49,7 +49,10 @@ releases:
         #MODEL_NAME: "HeLa_S3_watershed"
         MODEL_VERSION: "0"
         AWS_REGION: "us-east-1"
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+        GKE_COMPUTE_REGION: '{{ env "GKE_COMPUTE_REGION" | default "us-west1-b" }}'
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'

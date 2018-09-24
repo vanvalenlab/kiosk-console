@@ -26,7 +26,10 @@ env:
   MODEL_NAME: "mibi"
   MODEL_VERSION: "0"
   AWS_REGION: "us-east-1"
+  CLOUD_PROVIDER: "aws"
+  GKE_COMPUTE_ZONE: "us-west1-b"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"
   AWS_S3_BUCKET: "change_me"
+  GKE_BUCKET: "change_me"
