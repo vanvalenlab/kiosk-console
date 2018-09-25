@@ -1,7 +1,7 @@
 apiVersion: v1
 name: frontend
 version: 0.1.0
-kubeVersion: ^1.9.8
+#kubeVersion: ^1.9.8
 description: This project provides the frontend interface for the Tensorflow-serving backend of Deepcell.
 keywords:
   - react

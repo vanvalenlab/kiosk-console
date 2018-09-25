@@ -41,7 +41,7 @@ releases:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
       secrets:
-        aws_access_key_id: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
-        aws_secret_access_key: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-        aws_s3_bucket: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+        AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+        AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+        AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
 

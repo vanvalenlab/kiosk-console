@@ -7,25 +7,24 @@ image_name: "vanvalenlab/tf-serving-redis-interface"
 image_tag: "latest"
 deployment_port: 8080
 container_name: "tf-rd-container"
-REDIS_HOST: "overwrite_this"
-REDIS_PORT: "sepcify_me"
-TF_HOST: "overwrite_this"
-TF_PORT: "sepcify_me"
-AWS_REGION: "us-east-1"
-DEBUG: "True"
+env:
+  REDIS_HOST: "redis-master-0"
+  REDIS_PORT: "6379"
+  TF_HOST: "overwrite_this"
+  TF_PORT: "sepcify_me"
+  AWS_REGION: "us-east-1"
+  DEBUG: "True"
+  CLOUD_PROVIDER: "aws"
+  GKE_COMPUTE_ZONE: "us-west1-b"
 
 # service.yaml
 service_name: "tf-rd-service"
 service_port: 8080
 service_type: "ClusterIP"
 
-# secrets.yaml and hemlfile.d/frontend.yaml
-env:
-  secret:
-    AWS_ACCESS_KEY_ID: "change_me"
-    AWS_SECRET_ACCESS_KEY: "change_me"
-    AWS_S3_BUCKET: "change_me"
+# secrets.yaml
 secrets:
-  aws_access_key_id: "NA"
-  aws_secret_access_key: "NA"
-  aws_s3_bucket: "NA"
+  AWS_ACCESS_KEY_ID: "change_me"
+  AWS_SECRET_ACCESS_KEY: "change_me"
+  AWS_S3_BUCKET: "change_me"
+  GKE_BUCKET: "change_me"

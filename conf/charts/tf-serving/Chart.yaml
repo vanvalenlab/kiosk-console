@@ -1,7 +1,7 @@
 apiVersion: v1
 name: tf-serving
 version: 0.1.0
-kubeVersion: ^1.9.8
+#kubeVersion: ^1.9.8
 description: This helm chart provides the Tensorflow-serving backend functionality of the Deepcell application.
 keywords:
   - tensorflow-serving

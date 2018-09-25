@@ -8,7 +8,7 @@ image_version: "latest"
 container_name: "redis-poller-container"
 env:
   DEBUG: "true"
-  INTERVAL: "specify_me"
+  INTERVAL: 10
   REDIS_HOST: "overwrite_this"
   REDIS_PORT: "specify_me"
   AUTOSCALING: "3|10|5|deployment|example; 3|5|3|development|example2"

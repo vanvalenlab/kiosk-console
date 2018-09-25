@@ -1,7 +1,7 @@
 apiVersion: v1
 name: flask-middleman
 version: 0.1.0
-kubeVersion: ^1.9.8
+#kubeVersion: ^1.9.8
 description: This project provides the interface between the frontend and the Tensorflow-serving backend.
 keywords:
   - flask

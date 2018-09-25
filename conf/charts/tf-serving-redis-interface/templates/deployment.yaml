@@ -21,24 +21,18 @@ spec:
         ports:
         - containerPort: {{ .Values.deployment_port }}
         env:
-        - name: REDIS_PORT
-          value: {{ .Values.REDIS_PORT | quote }}
-        - name: REDIS_HOST
-          value: {{ .Values.REDIS_HOST }}
-        - name: TF_PORT
-          value: {{ .Values.TF_PORT | quote }}
-        - name: TF_HOST
-          value: {{ .Values.TF_HOST }}
-        - name: AWS_REGION
-          value: {{ .Values.AWS_REGION }}
-        - name: DEBUG
-          value: {{ .Values.DEBUG | quote }}
-{{- range $name, $value := .Values.env.secret }}
+{{- range $name, $value := .Values.env }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:
             secretKeyRef:
               name: tf-rd-env-variables
-              key: {{ $name | lower }}
+              key: {{ $name }}
 {{- end }}
 {{- end }}
