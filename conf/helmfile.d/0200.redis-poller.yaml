@@ -23,8 +23,7 @@ releases:
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: "/localhost/projects/vanvalen_kiosk/kiosk/conf/charts/redis-poller"
-  #chart: "/conf/charts/redis-poller"
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-poller'
   version: "0.1.0"
   values:
     - app_name: "redis-poller"
