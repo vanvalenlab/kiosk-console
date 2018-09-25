@@ -61,7 +61,7 @@ gke/create/cluster:
 
 ## Destroy GKE cluster
 gke/destroy/cluster:
-	@gcloud container clusters delete $(CLUSTER_NAME) --quiet
+	@gcloud container clusters --zone $(GKE_COMPUTE_ZONE) delete $(CLUSTER_NAME) --quiet
 
 ## Set context to use GKE cluster (e.g. with kubectl)
 gke/use/cluster:
@@ -107,7 +107,7 @@ gke/create/gpus:
 
 ## Destroy GKE GPU node pool
 gke/destroy/gpus:
-	gcloud container node-pools delete gpu
+	gcloud container node-pools delete gpu --quiet --zone $(GPU_COMPUTE_ZONE)
 
 # https://cloud.google.com/storage/docs/access-control/iam-roles
 ## Create Service Account used by deepcell
@@ -117,7 +117,7 @@ gke/create/service-account:
 
 ## Delete Service Account used by deepcell
 gke/destroy/service-account:
-	gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL)
+	gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --quiet
 
 ## Create bucket used by deepcell
 gke/create/bucket:
@@ -131,8 +131,8 @@ gke/destroy/bucket:
 gke/deploy/helm:
 	kubectl create serviceaccount --namespace kube-system tiller
 	kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-	kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'      
 	helm init --service-account tiller --upgrade
+#kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'      
 
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
