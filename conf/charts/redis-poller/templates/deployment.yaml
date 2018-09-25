@@ -11,11 +11,11 @@ spec:
       labels:
         app: {{ .Values.app_name }}
     spec:
-      nodeSelector:
-        kubernetes.io/role: master
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
+#      nodeSelector:
+#        kubernetes.io/role: master
+#      tolerations:
+#      - effect: NoSchedule
+#        key: node-role.kubernetes.io/master
       serviceAccountName: {{ .Values.service_account_name }}
       containers:
       - name: {{ .Values.container_name }}
