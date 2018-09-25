@@ -23,8 +23,7 @@ releases:
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: "/localhost/projects/vanvalen_kiosk/kiosk/conf/charts/frontend-redis-interface"
-  #chart: "/conf/charts/frontend"
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend-redis-interface'
   version: "0.1.0"
   values:
     - app_name: "fe-rd-interface"
