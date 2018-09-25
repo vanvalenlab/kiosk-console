@@ -105,7 +105,7 @@ gke/create/gpus:
 
 ## Destroy GKE GPU node pool
 gke/destroy/gpus:
-	gcloud container node-pools delete gpu --quiet --zone $(GPU_COMPUTE_ZONE)
+	-gcloud container node-pools delete gpu --quiet --zone $(GPU_COMPUTE_ZONE)
 
 # https://cloud.google.com/storage/docs/access-control/iam-roles
 ## Create Service Account used by deepcell
@@ -123,7 +123,7 @@ gke/create/bucket:
 
 ## Destroy bucket used by deepcell
 gke/destroy/bucket:
-	gsutil rb -f gs://$(CLOUDSDK_BUCKET)
+	gsutil rb -f gs://$(CLOUDSDK_BUCKET) || echo "Bucket not destroyed"
 
 ## Deploy helm tiller with service account
 gke/deploy/helm:
@@ -133,9 +133,9 @@ gke/deploy/helm:
 
 
 gke/destroy/helm:
-	helm reset --force --tiller-connection-timeout=2
-	kubectl delete clusterrolebinding tiller-cluster-rule
-	kubectl delete serviceaccount --namespace kube-system tiller
+	-helm reset --force --tiller-connection-timeout=2
+	-kubectl delete clusterrolebinding tiller-cluster-rule
+	-kubectl delete serviceaccount --namespace kube-system tiller
 	
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
@@ -154,9 +154,9 @@ gke/create/all: \
 
 ## Destroy Cluster
 gke/destroy/all: \
-	gke/destroy/bucket \
 	gke/destroy/gpus \
 	gke/destroy/cluster \
-	gke/destroy/service-account
+	gke/destroy/service-account \
+	gke/destroy/bucket
 	@echo "GKE cluster destroyed"
 	@exit 0
