@@ -33,7 +33,7 @@ export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
 
 ## Login to Google Cloud
 gke/login:
-	@gcloud auth login --no-launch-browser
+	@gcloud-login.sh
 
 ## Create a new project
 gke/create/project:
