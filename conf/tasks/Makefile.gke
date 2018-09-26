@@ -120,6 +120,7 @@ gke/destroy/service-account:
 ## Create bucket used by deepcell
 gke/create/bucket:
 	gsutil mb gs://$(CLOUDSDK_BUCKET) || echo "No need to create bucket."
+	gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET)
 
 ## Destroy bucket used by deepcell
 gke/destroy/bucket:
