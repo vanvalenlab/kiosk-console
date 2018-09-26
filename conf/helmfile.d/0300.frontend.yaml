@@ -30,8 +30,10 @@ releases:
       replicas: 1
       image_name: "vanvalenlab/react_interface"
       image_version: "0.1dev"
+      #image_name: "k8s.gcr.io/echoserver"
+      #image_version: "1.4"
       deployment_name: "frontend-deployment"
-      deployment_port: 3000
+      deployment_port: 8080
       container_name: "frontend-container"
       service_name: "frontend-service"
       service_port: 3000
@@ -49,6 +51,7 @@ releases:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GCLOUD_STORAGE_BUCKET: '{{ env "GCLOUD_STORAGE_BUCKET" | default "NA" }}'
-        GCLOUD_PROJECT_ID: '{{ env "GCLOUD_PROJECT_ID" | default "NA" }}'
-        GCLOUD_KEY_FILE: '{{ env "GCLOUD_KEY_FILE" | default "NA" }}'
+        GCLOUD_STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+        GCLOUD_PROJECT_ID: '{{ env "PROJECT" | default "NA" }}'
+        GCLOUD_KEY_FILE: "/key_file.json"
+        #GCLOUD_KEY_FILE: '{{ env "GCLOUD_KEY_FILE" | default "NA" }}'
