@@ -24,6 +24,7 @@ env:
   REST_TIMEOUT: "180000"
   MODEL_PREFIX: "models"
   LOG_LEVEL: "3"
+  CLOUD_PROVIDER: "aws"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"

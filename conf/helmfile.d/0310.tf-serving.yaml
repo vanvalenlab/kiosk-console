@@ -48,6 +48,7 @@ releases:
         REST_TIMEOUT: "90000"
         MODEL_PREFIX: "models"
         LOG_LEVEL: "3"
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
