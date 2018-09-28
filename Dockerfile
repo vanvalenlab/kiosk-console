@@ -53,4 +53,7 @@ COPY rootfs/ /
 # Enable the menu
 RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/99.menu.sh
 
+# Grab debugged version of helmfile
+RUN make -C /packages/install helmfile HELMFILE_VERSION=0.40.0
+
 WORKDIR /conf/
