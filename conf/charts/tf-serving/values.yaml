@@ -13,6 +13,10 @@ service_name: "tf-serving-service"
 service_port: 1337
 service_type: "ClusterIP"
 
+nodeSelector:
+  #  cloud.google.com/gke-accelerator: "nvidia-tesla-k80"
+  #  beta.kubernetes.io/instance-type: "p2.xlarge"
+
 # secrets.yaml and hemlfile.d/frontend.yaml
 env:
   RPC_PORT: "8500"

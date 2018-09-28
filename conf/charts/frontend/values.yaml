@@ -7,7 +7,7 @@ image_version: "latest"
 #image_name: "k8s.gcr.io/echoserver"
 #image_version: "1.4"
 deployment_name: "frontend-deployment"
-deployment_port: 3000
+deployment_port: 3001
 container_name: "frontend-container"
 
 # service.yaml
@@ -18,6 +18,12 @@ service_type: "ClusterIP"
 # ingress.yaml
 ingress_name: "frontend-ingress"
 ingress_path: "/"
+ingress:
+  annotations:
+    #kubernetes.io/ingress.class: "nginx"
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+    #nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    #nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 
 # secrets.yaml and hemlfile.d/frontend.yaml
 env:
@@ -33,4 +39,3 @@ secrets:
   AWS_S3_BUCKET: "change_me"
   GCLOUD_STORAGE_BUCKET: "change_me"
   GCLOUD_PROJECT_ID: "change_me"
-  GCLOUD_KEY_FILE: "change_me"

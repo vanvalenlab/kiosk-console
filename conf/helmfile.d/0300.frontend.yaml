@@ -40,6 +40,21 @@ releases:
       service_type: "ClusterIP"
       ingress_name: "frontend-ingress"
       ingress_path: "/" 
+      ingress:
+        annotations:
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+          # aws
+          kubernetes.io/ingress.class: "nginx"
+          nginx.ingress.kubernetes.io/rewrite-target: /
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          nginx.ingress.kubernetes.io/proxy-body-size: "25m"
+{{ else }}
+          # google
+          kubernetes.io/ingress.class: "nginx"
+          nginx.ingress.kubernetes.io/rewrite-target: /
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          nginx.ingress.kubernetes.io/proxy-body-size: "25m"
+{{ end }}
       env:
         PORT: "8080"
         REDIS_HOST: "redis-master"
@@ -53,5 +68,3 @@ releases:
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
         GCLOUD_STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
         GCLOUD_PROJECT_ID: '{{ env "PROJECT" | default "NA" }}'
-        GCLOUD_KEY_FILE: "/key_file.json"
-        #GCLOUD_KEY_FILE: '{{ env "GCLOUD_KEY_FILE" | default "NA" }}'
