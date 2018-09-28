@@ -4,6 +4,8 @@ app_name: "frontend"
 replicas: 1
 image_name: "vanvalenlab/react_interface"
 image_version: "latest"
+#image_name: "k8s.gcr.io/echoserver"
+#image_version: "1.4"
 deployment_name: "frontend-deployment"
 deployment_port: 3001
 container_name: "frontend-container"

@@ -1,6 +1,6 @@
 FROM cloudposse/build-harness:0.9.0 as build-harness
 
-FROM cloudposse/geodesic:0.30.0
+FROM cloudposse/geodesic:0.32.5
 
 RUN apk add --update dialog libqrencode
 

@@ -30,6 +30,8 @@ releases:
       replicas: 1
       image_name: "vanvalenlab/react_interface"
       image_version: "0.1dev"
+      #image_name: "k8s.gcr.io/echoserver"
+      #image_version: "1.4"
       deployment_name: "frontend-deployment"
       deployment_port: 8080
       container_name: "frontend-container"
