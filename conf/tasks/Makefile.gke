@@ -12,6 +12,7 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
 export CLUSTER_NAME ?= deepcell
 export GPU_TYPE ?= nvidia-tesla-k80
+export GPU_MACHINE_TYPE ?= n1-standard-4
 export GPU_NODE_MIN_SIZE ?= 0
 export GPU_NODE_MAX_SIZE ?= 3
 export GPU_PER_NODE ?= 1
@@ -95,6 +96,7 @@ gke/create/gpus:
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
 		--max-nodes $(GPU_NODE_MAX_SIZE) \
+		--machine-type=$(GPU_MACHINE_TYPE) \
 		--enable-autoscaling \
 		--enable-autorepair \
 		--enable-autoupgrade
