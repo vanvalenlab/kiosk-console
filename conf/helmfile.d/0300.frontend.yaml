@@ -28,7 +28,7 @@ releases:
   values:
     - app_name: "frontend"
       replicas: 1
-      image_name: "vanvalenlab/react_interface"
+      image_name: "vanvalenlab/kiosk-frontend"
       image_version: "0.1dev"
       #image_name: "k8s.gcr.io/echoserver"
       #image_version: "1.4"
@@ -42,18 +42,15 @@ releases:
       ingress_path: "/" 
       ingress:
         annotations:
+          nginx.ingress.kubernetes.io/rewrite-target: /
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          nginx.ingress.kubernetes.io/proxy-body-size: "1g"
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
           # aws
           kubernetes.io/ingress.class: "nginx"
-          nginx.ingress.kubernetes.io/rewrite-target: /
-          nginx.ingress.kubernetes.io/ssl-redirect: "false"
-          nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 {{ else }}
           # google
           kubernetes.io/ingress.class: "nginx"
-          nginx.ingress.kubernetes.io/rewrite-target: /
-          nginx.ingress.kubernetes.io/ssl-redirect: "false"
-          nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 {{ end }}
       env:
         PORT: "8080"

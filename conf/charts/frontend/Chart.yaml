@@ -5,9 +5,9 @@ version: 0.1.0
 description: This project provides the frontend interface for the Tensorflow-serving backend of Deepcell.
 keywords:
   - react
-home: https://www.github.com/vanvalenlab/react_interface
+home: https://www.github.com/vanvalenlab/kiosk-frontend
 sources:
-    - https://hub.docker.com/vanvalenlab/react_interface
+    - https://hub.docker.com/vanvalenlab/kiosk-frontend
 maintainers:
   - name: Dylan Bannon
     email: bbannon@caltech.edu

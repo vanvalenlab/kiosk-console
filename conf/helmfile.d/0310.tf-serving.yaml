@@ -28,7 +28,7 @@ releases:
   values:
     - app_name: "tf-serving"
       replicas: 0
-      image_name: "vanvalenlab/tf_serving_s3"
+      image_name: "vanvalenlab/kiosk-tf-serving"
       image_version: "0.1dev"
       deployment_name: "tf-serving-deployment"
       deployment_port: 8501
@@ -47,10 +47,11 @@ releases:
         REST_PORT: "8501"
         REST_TIMEOUT: "90000"
         MODEL_PREFIX: "models"
-        LOG_LEVEL: "3"
+        TF_SERVING_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+        LOG_LEVEL: "3"
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+        GCLOUD_STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
