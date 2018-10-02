@@ -23,8 +23,11 @@ env:
   REST_PORT: "8501"
   REST_TIMEOUT: "180000"
   MODEL_PREFIX: "models"
+  CLOUD_PROVIDER: "aws"
+  TF_SERVING_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
   LOG_LEVEL: "3"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"
   AWS_S3_BUCKET: "change_me"
+  GCLOUD_STORAGE_BUCKET: "change_me"
