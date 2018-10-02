@@ -28,7 +28,7 @@ releases:
   values:
     - app_name: "frontend"
       replicas: 1
-      image_name: "vanvalenlab/react_interface"
+      image_name: "vanvalenlab/kiosk-frontend"
       image_version: "0.1dev"
       #image_name: "k8s.gcr.io/echoserver"
       #image_version: "1.4"

@@ -2,7 +2,7 @@ app_name: "frontend"
 
 #deployment.yaml
 replicas: 1
-image_name: "vanvalenlab/react_interface"
+image_name: "vanvalenlab/kiosk-frontend"
 image_version: "latest"
 #image_name: "k8s.gcr.io/echoserver"
 #image_version: "1.4"
