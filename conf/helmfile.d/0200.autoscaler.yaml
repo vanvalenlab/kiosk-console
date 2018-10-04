@@ -8,34 +8,34 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Redis-poller ################################################################
+## AutoScaler ################################################################
 ################################################################################
 
 #
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "rp"
+- name: "as"
   namespace: "deepcell"
   labels:
-    chart: "redis-poller"
-    component: "redis-poller"
+    chart: "autoscaler"
+    component: "autoscaler"
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-poller'
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/autoscaler'
   version: "0.1.0"
   values:
-    - app_name: "redis-poller"
-      deployment_name: "redis-poller-deployment"
+    - app_name: "autoscaler"
+      deployment_name: "autoscaler-deployment"
       replicas: 1
-      image_name: "vanvalenlab/redis-poller"
-      image_version: "latest"
-      container_name: "redis-poller-container"
-      service_account_name: "redis-poller-service-account"
+      image_name: "vanvalenlab/kiosk-autoscaler"
+      image_version: "0.1dev"
+      container_name: "autoscaler-container"
+      service_account_name: "autoscaler-service-account"
       env:
         DEBUG: "true"
         INTERVAL: "5"
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
-        AUTOSCALING: "0|1|5|deepcell|tf-serving-deployment; 0|1|5|deepcell|tf-rd-deployment"
+        AUTOSCALING: "0|1|5|deepcell|tf-serving-deployment; 0|1|5|deepcell|redis-consumer-deployment"

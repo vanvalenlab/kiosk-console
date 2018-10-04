@@ -1,12 +1,12 @@
-app_name: "tf-rd-interface"
+app_name: "redis-consumer"
 
 # deployment.yaml
-deployment_name: "tf-rd-deployment"
+deployment_name: "redis-consumer-deployment"
 replicas: 1
-image_name: "vanvalenlab/tf-serving-redis-interface"
+image_name: "vanvalenlab/kiosk-redis-consumer"
 image_tag: "latest"
 deployment_port: 8080
-container_name: "tf-rd-container"
+container_name: "redis-consumer-container"
 env:
   REDIS_HOST: "redis-master-0"
   REDIS_PORT: "6379"
@@ -18,7 +18,7 @@ env:
   GKE_COMPUTE_ZONE: "us-west1-b"
 
 # service.yaml
-service_name: "tf-rd-service"
+service_name: "redis-consumer-service"
 service_port: 8080
 service_type: "ClusterIP"
 

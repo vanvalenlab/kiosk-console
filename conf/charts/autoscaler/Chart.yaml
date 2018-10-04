@@ -1,13 +1,13 @@
 apiVersion: v1
-name: redis-poller
+name: autoscaler
 version: 0.1.0
 #kubeVersion: ^1.10.0
 description: This project monitors the Redis database to scale the GPU nodes and tf-serving and flask containers as necessary.
 keywords:
-  - redis-poller
-home: https://www.github.com/vanvalenlab/redis-poller
+  - kiosk-autoscaler
+home: https://www.github.com/vanvalenlab/kiosk-autoscaler
 sources:
-    - https://hub.docker.com/vanvalenlab/redis-poller
+    - https://hub.docker.com/vanvalenlab/kiosk-autoscaler
 maintainers:
   - name: Dylan Bannon
     email: bbannon@caltech.edu

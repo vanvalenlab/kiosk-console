@@ -32,7 +32,7 @@ spec:
         - name: {{ $name }}
           valueFrom:
             secretKeyRef:
-              name: tf-rd-env-variables
+              name: redis-consumer-env-variables
               key: {{ $name }}
 {{- end }}
 {{- end }}

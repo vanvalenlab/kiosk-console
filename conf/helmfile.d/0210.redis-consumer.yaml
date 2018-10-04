@@ -8,32 +8,32 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Tf-serving-redis-interface ##################################################
+## redis-consumer ##################################################
 ################################################################################
 
 #
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "tf-rd"
+- name: "rc"
   namespace: "deepcell"
   labels:
-    chart: "tf-serving-redis-interface"
+    chart: "redis-consumer"
     component: "deepcell"
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving-redis-interface'
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
   version: "0.1.0"
   values:
-    - app_name: "tf-rd-interface"
-      deployment_name: "tf-rd-deployment"
+    - app_name: "redis-consumer-interface"
+      deployment_name: "redis-consumer-deployment"
       replicas: 0
-      image_name: "vanvalenlab/tf-serving-redis-interface"
+      image_name: "vanvalenlab/kiosk-redis-consumer"
       image_tag: "0.1dev"
       deployment_port: 8080
-      container_name: "tf-rd-container"
-      service_name: "tf-rd-service"
+      container_name: "redis-consumer-container"
+      service_name: "redis-consumer-service"
       service_port: 8080
       service_type: "ClusterIP"
       env:
