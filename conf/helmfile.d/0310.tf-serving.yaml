@@ -29,7 +29,7 @@ releases:
     - app_name: "tf-serving"
       replicas: 0
       image_name: "vanvalenlab/kiosk-tf-serving"
-      image_version: "0.1dev"
+      image_version: "0.1"
       deployment_name: "tf-serving-deployment"
       deployment_port: 8501
       container_name: "tf-serving-container"
