@@ -58,7 +58,8 @@ releases:
         REDIS_PORT: "6379"
         MODEL_PREFIX: "models/"
         AWS_REGION: "us-east-1"
-        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "gce" }}'
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "gke" }}'
+        UPLOAD_PREFIX: "uploads/"
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
