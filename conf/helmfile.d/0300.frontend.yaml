@@ -23,33 +23,46 @@ releases:
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: "/localhost/projects/vanvalen_kiosk/kiosk/conf/charts/frontend"
-  #chart: "/conf/charts/frontend"
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend'
   version: "0.1.0"
   values:
     - app_name: "frontend"
       replicas: 1
-      image_name: "vanvalenlab/react_interface"
-      image_version: "0.1dev"
+      image_name: "vanvalenlab/kiosk-frontend"
+      image_version: "0.1"
+      #image_name: "k8s.gcr.io/echoserver"
+      #image_version: "1.4"
       deployment_name: "frontend-deployment"
-      deployment_port: 3000
+      deployment_port: 8080
       container_name: "frontend-container"
       service_name: "frontend-service"
       service_port: 3000
       service_type: "ClusterIP"
       ingress_name: "frontend-ingress"
       ingress_path: "/" 
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/rewrite-target: /
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          nginx.ingress.kubernetes.io/proxy-body-size: "1g"
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+          # aws
+          kubernetes.io/ingress.class: "nginx"
+{{ else }}
+          # google
+          kubernetes.io/ingress.class: "nginx"
+{{ end }}
       env:
+        PORT: "8080"
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
-        EXPRESS_HOST: "fe-rd-service"
-        EXPRESS_PORT: "8080"
-        MODEL_NAME: "mibi"
-        #MODEL_NAME: "HeLa_S3_deepcell"
-        #MODEL_NAME: "HeLa_S3_watershed"
-        MODEL_VERSION: "0"
+        MODEL_PREFIX: "models/"
         AWS_REGION: "us-east-1"
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "gke" }}'
+        UPLOAD_PREFIX: "uploads/"
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+        GCLOUD_STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+        GCLOUD_PROJECT_ID: '{{ env "PROJECT" | default "NA" }}'

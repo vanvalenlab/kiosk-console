@@ -5,9 +5,9 @@ version: 0.1.0
 description: This helm chart provides the Tensorflow-serving backend functionality of the Deepcell application.
 keywords:
   - tensorflow-serving
-home: https://www.github.com/vanvalenlab/model_server
+home: https://www.github.com/vanvalenlab/kiosk-tf-serving
 sources:
-    - https://hub.docker.com/vanvalenlab/tf_serving
+    - https://hub.docker.com/vanvalenlab/kiosk-tf-serving
 maintainers:
   - name: Dylan Bannon
     email: bbannon@caltech.edu

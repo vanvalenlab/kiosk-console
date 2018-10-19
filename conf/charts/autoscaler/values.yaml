@@ -1,11 +1,11 @@
 app_name: "redis-poller"
 
 # deployment.yaml
-deployment_name: "redis-poller-deployment"
+deployment_name: "autoscaler-deployment"
 replicas: 1
-image_name: "vanvalenlab/redis-poller"
+image_name: "vanvalenlab/kiosk-autoscaler"
 image_version: "latest"
-container_name: "redis-poller-container"
+container_name: "autoscaler-container"
 env:
   DEBUG: "true"
   INTERVAL: 10
@@ -14,4 +14,4 @@ env:
   AUTOSCALING: "3|10|5|deployment|example; 3|5|3|development|example2"
 
 # serviceAccount
-service_account_name: "redis-poller-service-account"
+service_account_name: "autoscaler-service-account"

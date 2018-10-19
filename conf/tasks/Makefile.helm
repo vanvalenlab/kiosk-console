@@ -1,5 +1,5 @@
 helm/create/tiller:
-	@$(MAKE) -C /build-harness helm/toolbox/upsert
+	helm init --upgrade --wait
 
 helm/create/all: \
   helm/create/tiller

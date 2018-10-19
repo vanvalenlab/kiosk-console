@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: {{ .Values.container_name }}
-        image: {{ .Values.image_name }}:{{ .Values.image_version }}
+        image: {{ .Values.image_name }}:{{ .Values.image_tag }}
         imagePullPolicy: "Always"
         ports:
         - containerPort: {{ .Values.deployment_port }}
@@ -32,8 +32,7 @@ spec:
         - name: {{ $name }}
           valueFrom:
             secretKeyRef:
-              name: fe-rd-env-variables
+              name: redis-consumer-env-variables
               key: {{ $name }}
 {{- end }}
 {{- end }}
-

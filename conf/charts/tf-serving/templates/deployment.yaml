@@ -16,9 +16,14 @@ spec:
     spec:
       restartPolicy: "Always"
       nodeSelector:
-        beta.kubernetes.io/instance-type: "p2.xlarge"
+{{- range $name, $value := .Values.nodeSelector }}
+{{- if not ( empty $value) }}
+        {{ $name }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
       tolerations:
       - key: "nvidia.com/gpu"
+        operator: "Exists"
         effect: "NoSchedule"
       containers:
       - name: {{ .Values.container_name }}
