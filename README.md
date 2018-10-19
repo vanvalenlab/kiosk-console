@@ -23,7 +23,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 1. Install [Docker for your OS](https://www.docker.com/community-edition) (*FREE Community Edition*). 
 2. Start a terminal shell
-3. Install the Deepcell kiosk wrapper script: `docker run vanvalenlab/kiosk:1.0.0 | sudo -E bash -s 1.0.0`
+3. Install the Deepcell kiosk wrapper script: `docker run vanvalenlab/kiosk:0.3.0 | sudo -E bash -s 0.3.0`
 4. Start the kiosk. Just run: `kiosk`
 5. Follow setup instructions, when prompted
 
