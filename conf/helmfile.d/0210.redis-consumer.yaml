@@ -8,40 +8,45 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Frontend-redis-interface ####################################################
+## redis-consumer ##################################################
 ################################################################################
 
 #
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "fe-rd"
+- name: "rc"
   namespace: "deepcell"
   labels:
-    chart: "frontend-redis-interface"
+    chart: "redis-consumer"
     component: "deepcell"
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: "/localhost/projects/vanvalen_kiosk/kiosk/conf/charts/frontend-redis-interface"
-  #chart: "/conf/charts/frontend"
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
   version: "0.1.0"
   values:
-    - app_name: "fe-rd-interface"
-      replicas: 1
-      image_name: "vanvalenlab/frontend-redis-interface"
-      dmage_version: "0.1dev"
-      deployment_name: "fe-rd-deployment"
+    - app_name: "redis-consumer-interface"
+      deployment_name: "redis-consumer-deployment"
+      replicas: 0
+      image_name: "vanvalenlab/kiosk-redis-consumer"
+      image_tag: "0.1"
       deployment_port: 8080
-      container_name: "fe-rd-container"
-      service_name: "fe-rd-service"
+      container_name: "redis-consumer-container"
+      service_name: "redis-consumer-service"
       service_port: 8080
       service_type: "ClusterIP"
       env:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
+        TF_HOST: "tf-serving-service"
+        TF_PORT: "1337"
+        AWS_REGION: "us-east-1"
+        DEBUG: "True"
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+        GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-
+        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'

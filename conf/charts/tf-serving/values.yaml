@@ -13,14 +13,21 @@ service_name: "tf-serving-service"
 service_port: 1337
 service_type: "ClusterIP"
 
+nodeSelector:
+  #  cloud.google.com/gke-accelerator: "nvidia-tesla-k80"
+  #  beta.kubernetes.io/instance-type: "p2.xlarge"
+
 # secrets.yaml and hemlfile.d/frontend.yaml
 env:
   RPC_PORT: "8500"
   REST_PORT: "8501"
   REST_TIMEOUT: "180000"
   MODEL_PREFIX: "models"
+  CLOUD_PROVIDER: "aws"
+  TF_SERVING_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
   LOG_LEVEL: "3"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"
   AWS_S3_BUCKET: "change_me"
+  GCLOUD_STORAGE_BUCKET: "change_me"

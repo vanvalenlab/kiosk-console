@@ -1,8 +1,8 @@
 FROM cloudposse/build-harness:0.9.0 as build-harness
 
-FROM cloudposse/geodesic:0.18.1
+FROM cloudposse/geodesic:0.32.5
 
-RUN apk add --update dialog
+RUN apk add --update dialog libqrencode
 
 ENV DOCKER_IMAGE="vanvalenlab/kiosk"
 ENV DOCKER_TAG="latest"
@@ -35,8 +35,8 @@ ENV NODE_MIN_SIZE="2"
 # Filesystem entry for tfstate
 RUN s3 fstab '${KOPS_STATE_STORE}' '/' '/s3'
 
-# We do not need to access private git repos, so we can disable agent
-RUN rm -f /etc/profile.d/ssh-agent.sh
+# We do not need to access private git repos, so we can disable agent.
+RUN rm -f /etc/profile.d/ssh-agent.sh /etc/profile.d/aws-vault.sh
 
 # Copy from build-harness
 COPY --from=build-harness /build-harness/ /build-harness/
@@ -52,5 +52,8 @@ COPY rootfs/ /
 
 # Enable the menu
 RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/99.menu.sh
+
+# Grab debugged version of helmfile
+RUN make -C /packages/install helmfile HELMFILE_VERSION=0.40.0
 
 WORKDIR /conf/

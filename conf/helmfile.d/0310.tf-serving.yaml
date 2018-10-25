@@ -23,27 +23,35 @@ releases:
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: "/localhost/projects/vanvalen_kiosk/kiosk/conf/charts/tf-serving"
-  #chart: "/conf/charts/tf-serving"
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
   version: "0.1.0"
   values:
     - app_name: "tf-serving"
       replicas: 0
-      image_name: "vanvalenlab/tf_serving_s3"
-      image_version: "0.1dev"
+      image_name: "vanvalenlab/kiosk-tf-serving"
+      image_version: "0.1"
       deployment_name: "tf-serving-deployment"
       deployment_port: 8501
       container_name: "tf-serving-container"
       service_name: "tf-serving-service"
       service_port: 1337
       service_type: "ClusterIP"
+      nodeSelector:
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+        beta.kubernetes.io/instance-type: "p2.xlarge"
+{{ else }}
+        cloud.google.com/gke-accelerator: "nvidia-tesla-k80"
+{{ end }}
       env:
         RPC_PORT: "8500"
         REST_PORT: "8501"
         REST_TIMEOUT: "90000"
         MODEL_PREFIX: "models"
+        TF_SERVING_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         LOG_LEVEL: "3"
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+        GCLOUD_STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
