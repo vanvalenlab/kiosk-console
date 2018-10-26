@@ -15,7 +15,7 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "rc"
+- name: "rc-pre"
   namespace: "deepcell"
   labels:
     chart: "redis-consumer"
@@ -27,19 +27,20 @@ releases:
   version: "0.1.0"
   values:
     - app_name: "redis-consumer-interface"
-      deployment_name: "redis-consumer-deployment"
+      deployment_name: "redis-consumer-pre-deployment"
       replicas: 0
       image_name: "vanvalenlab/kiosk-redis-consumer"
       image_tag: "0.1dev"
       deployment_port: 8080
-      container_name: "redis-consumer-container"
-      service_name: "redis-consumer-service"
+      container_name: "redis-consumer-pre-container"
+      service_name: "redis-consumer-pre-service"
       service_port: 8080
       service_type: "ClusterIP"
-      secrets_name: "redis-consumer-env-variables"
+      secrets_name: "redis-consumer-pre-env-secrets"
       env:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
+        CONSUMER_TYPE: "pre"
         TF_HOST: "tf-serving-service"
         TF_PORT: "1337"
         AWS_REGION: "us-east-1"
