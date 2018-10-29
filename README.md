@@ -2,9 +2,7 @@
 
 # Disclaimer
 
-This repository is under heavy active development and not ready for use yet. 
-
-Don't expect anything to work for the time being.
+This repository is under heavy active development and, despite hainvg a 0.1 version tag, may still have bugs.
 
 
 # Deepcell Kiosk
@@ -19,7 +17,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 1. [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux)
 
-### All Users
+### All Users (Windows and otherwise)
 
 1. Install [Docker for your OS](https://www.docker.com/community-edition) (*FREE Community Edition*). 
 2. Start a terminal shell
