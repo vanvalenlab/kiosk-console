@@ -66,6 +66,7 @@ The preparation steps vary depending on which cloud provider you plan on deployi
 
 When you're done using the cluster, you may want to shutdown the cluster, and perhaps the kiosk itself.
 1. To shutdown the cluster, select `Destroy` from the Kiosk's main menu. Cluster destruction is complete when you see `Cluster destroyed` followed by `---COMPLETE---` printed to the screen. However, if the screen shows error output immediately before the `---COMPLETE---` indicator, cluster destruction failed and some components may remain. In this case, it may be best to delete resources manually though the cloud provider's web interface.
+2. After shutting down the cluster, if you wish to shut down the kiosk, simply select `Exit` form the Kiosk's main menu. The Kiosk is now completely shut down.
 
 ## Notes
 
