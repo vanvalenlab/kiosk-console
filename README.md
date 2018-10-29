@@ -21,7 +21,7 @@ The preparation steps vary depending on which cloud provider you plan on deployi
 
 ### Google Cloud
 
-1. Create an account at (Google Cloud)[cloud.google.com].
+1. Create an account at [Google Cloud](cloud.google.com).
 2. Create a Google Cloud project.
 3. Make sure you have at least one account with the `Owner` role.
 4. Make sure you have a storage bucket with public access.
