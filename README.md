@@ -58,17 +58,18 @@ The preparation steps vary depending on which cloud provider you plan on deployi
 
 ## Kiosk usage
 
-Go to the cluster frontpage in your browser. (Currently, the most efficient way to find the public IP address of your cluster is to select `Shell` form the Kiosk's main menu and paste the following command into the terminal: `kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller` and then find the IP address listed in the `LoadBalancer Ingress` field of the output.)
+1. Once the Kiosk has started, select the configuration option for your chosen cloud provider, either Amazon or Google, and fill out the configuration values as needed. ( If using Google, follow the provided link in a browser.) Once the Kiosk has been configured for a cloud provider, the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
+2. With the Kiosk configured for the appropriate cloud provider, select the `Create` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see `Cluster Created` followed by `---COMPLETE---` printed to the terminal. If you see `---COMPLETE---` with some error text immediately preceding it, cluster creation failed.
+3. Go to the cluster frontpage in your browser. (Currently, the most efficient way to find the public IP address of your cluster is to select `Shell` form the Kiosk's main menu and paste the following command into the terminal: `kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller` and then find the IP address listed in the `LoadBalancer Ingress` field of the output.)
 
 ## Kiosk shutdown
 
-When you're done using the cluster, you may want ot shutdown...
+When you're done using the cluster, you may want to shutdown the cluster, and perhaps the kiosk itself.
+1. To shutdown the cluster, select `Destroy` from the Kiosk's main menu. Cluster destruction is complete when you see `Cluster destroyed` followed by `---COMPLETE---` printed to the screen. However, if the screen shows error output immediately before the `---COMPLETE---` indicator, cluster destruction failed and some components may remain. In this case, it may be best to delete resources manually though the cloud provider's web interface.
 
 ## Notes
 
-- Cluster creation may take up to 10 minutes.
-- Cluster creation is done when you see "---COMPLETE---" printed to the terminal.
-- When using the Predict functionality, the first image will take a while to process (up to 10 minutes) because the cluster will need to requisition more computing resources. (This is because the cluster is designed to use as few resources as possible in its resting state.)
+- When using the `Predict` functionality, the first image will take a while to process (up to 10 minutes) because the cluster will need to requisition more computing resources. (This is because the cluster is designed to use as few resources as possible in its resting state.)
 
 ## References
 - [Cluster Autoscaler for AWS](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
