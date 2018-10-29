@@ -11,7 +11,30 @@ This deepcell distribution designed to easily spin up an end-to-end Deepcell env
 
 It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
-## Quickstart
+## Hello new users!
+
+While this project might seem a little overwhelming at first, rest assured that it is all manageable. Just follow the relevant instructions under the `Before starting the Kiosk` and `Kiosk startup for Non-developers` sections and you'll be unclogging that backed-up data pipeline in no time!
+
+## Before starting the Kiosk
+
+The preparation steps vary depending on which cloud provider you plan on deploying with:
+
+### Google Cloud
+
+1. Create an account at `cloud.google.com`.
+2. Create a Google Cloud project.
+3. Make sure you have at least one account with the `Owner` role.
+4. Make sure you have a storage bucket with public access.
+5. Make sure that any files you upload to the bucket (such as pre-trained Tensorflow models) have public access. (Google cloud uses a permission system that may be unfamiliar to Linux users. File permissions are not inherited from buckets; they are set individually on each file.)
+
+### Amazon Web Services
+
+1. Create an account at `aws.amazon.com`.
+2. Make sure you have at least one account which is a member of the `admin` group.
+3. You should generate an access key pair for this `admin` account using the instruciton found here: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
+4. Make sure you have a S3 bucket with public access.
+
+## Kiosk startup for Non-developers
 
 ### Windows Users
 
@@ -25,13 +48,27 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 4. Start the kiosk. Just run: `kiosk`
 5. Follow setup instructions, when prompted
 
-## Developers
+## Kiosk startup for Developers
 
 1. Clone this repo: `git clone git@github.com:vanvalenlab/kiosk.git`
-2. Initialize `build-harness`: `make init`
+2. Initialize the "build-harness": `make init`
 3. Build the container: `make docker/build`
 4. Install wrapper script: `make install`
 5. Start the kiosk. `make run`
+
+## Kiosk usage
+
+Go to the cluster frontpage in your browser. (Currently, the most efficient way to find the public IP address of your cluster is to select `Shell` form the Kiosk's main menu and paste the following command into the terminal: `kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller` and then find the IP address listed in the `LoadBalancer Ingress` field of the output.)
+
+## Kiosk shutdown
+
+When you're done using the cluster, you may want ot shutdown...
+
+## Notes
+
+- Cluster creation may take up to 10 minutes.
+- Cluster creation is done when you see "---COMPLETE---" printed to the terminal.
+- When using the Predict functionality, the first image will take a while to process (up to 10 minutes) because the cluster will need to requisition more computing resources. (This is because the cluster is designed to use as few resources as possible in its resting state.)
 
 ## References
 - [Cluster Autoscaler for AWS](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
