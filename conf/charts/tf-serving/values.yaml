@@ -26,6 +26,7 @@ env:
   CLOUD_PROVIDER: "aws"
   TF_SERVING_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
   LOG_LEVEL: "3"
+  DEBUG: "FALSE"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"
