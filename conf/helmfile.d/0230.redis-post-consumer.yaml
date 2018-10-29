@@ -30,7 +30,7 @@ releases:
       deployment_name: "redis-consumer-post-deployment"
       replicas: 0
       image_name: "vanvalenlab/kiosk-redis-consumer"
-      image_tag: "0.1dev"
+      image_tag: "0.1"
       deployment_port: 8080
       container_name: "redis-consumer-post-container"
       service_name: "redis-consumer-post-service"
