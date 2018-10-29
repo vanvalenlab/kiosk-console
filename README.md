@@ -29,9 +29,9 @@ The preparation steps vary depending on which cloud provider you plan on deployi
 
 ### Amazon Web Services
 
-1. Create an account at `aws.amazon.com`.
+1. Create an account at [Amazon Web Services](aws.amazon.com).
 2. Make sure you have at least one account which is a member of the `admin` group.
-3. You should generate an access key pair for this `admin` account using the instruciton found here: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
+3. You should generate an access key pair for this `admin` account using the instructions found [here] (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html).
 4. Make sure you have a S3 bucket with public access.
 
 ## Kiosk startup for Non-developers
