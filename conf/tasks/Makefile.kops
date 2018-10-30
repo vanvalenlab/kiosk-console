@@ -3,6 +3,10 @@ SSH_PUBLIC_KEY ?= $(SSH_KEY).pub
 
 ## Create SSH key for Kops cluster
 kops/create/ssh-key:
+	@if [ ! -d "$(CACHE_PATH)" ] \
+	then \
+		mkdir $(CACHE_PATH) \
+	fi
 	@ssh-keygen -t rsa -f $(SSH_KEY) -N ""
 
 ## Destroy SSH key for Kops cluster
