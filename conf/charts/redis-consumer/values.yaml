@@ -23,6 +23,7 @@ service_port: 8080
 service_type: "ClusterIP"
 
 # secrets.yaml
+secrets_name: "redis-consumer-env-variables"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"
