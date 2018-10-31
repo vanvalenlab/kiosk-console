@@ -73,17 +73,20 @@ function tailcmd() {
 
 function menu() {
   local value
-  local help=("You can use the UP/DOWN arrow keys, the first\n"
-              "letter of the choice as a hot key, or the\n"
-              "number keys 1-9 to choose an option.\n"
-              "Choose a task.")
+  local header_text=("You can use the UP/DOWN arrow keys, the first\n"
+                     "letter of the choice as a hot key, or the\n"
+                     "number keys 1-9 to choose an option.\n"
+                     "Choose a task.\n\n"
+		     "Cluster address: ${cluster_address}"
+		     " \n"
+		     " \n")
 
   declare -A cloud_providers
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
-
+  cluster_address="(none)"
   value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
             --title "[ M A I N - M E N U ]" \
-            --menu "${help[*]}" 16 50 6 \
+            --menu "${header_text[*]}" 18 50 6 \
                 "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                 "GKE"     "Configure Google ${cloud_providers[gke]}" \
                 "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \

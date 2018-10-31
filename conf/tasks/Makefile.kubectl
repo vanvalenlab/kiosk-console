@@ -17,4 +17,6 @@ kubectl/create/all: \
   kubectl/create/nvidia-drivers
 	@echo "Kubectl provisioned"
 
-
+## Display the cluster IP or URL
+kubectl/display/ip: \
+	kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller | grep "Load"
