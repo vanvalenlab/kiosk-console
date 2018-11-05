@@ -73,25 +73,21 @@ function tailcmd() {
 
 function menu() {
   local value
-  source ./cluster_address
-  cluster_address=${CLUSTER_IP_TESTT:-(none)}
   local header_text=("You can use the UP/DOWN arrow keys, the first\n"
                      "letter of the choice as a hot key, or the\n"
                      "number keys 1-9 to choose an option.\n"
-                     "Choose a task.\n\n"
-		     "    Cluster address:   ${cluster_address}"
-		     " \n"
-		     " \n")
+                     "Choose a task.")
 
   declare -A cloud_providers
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
   value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
             --title "[ M A I N - M E N U ]" \
-            --menu "${header_text[*]}" 19 50 6 \
+            --menu "${header_text[*]}" 17 50 7 \
                 "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                 "GKE"     "Configure Google ${cloud_providers[gke]}" \
-                "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
                 "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
+		"View"    "View Cluster Address" \
                 "Shell"   "Drop to the shell" \
                 "Exit"    "Exit this kiosk" \
             --output-fd 1 \
@@ -147,6 +143,18 @@ function destroy() {
   tailcmd "Destroy Cluster" "---COMPLETE--" make destroy
 }
 
+function view() {
+  local title="Deepcell Cluster Address"
+  source ./cluster_address
+  local cluster_address=${CLUSTER_IP_TEST:-(no current address)}
+  dialog --clear \
+         --begin 0 0 \
+         --title "$title" \
+         --backtitle "${BRAND}" \
+         --begin 3 1 \
+         --msgbox "${cluster_address}" $((LINES-5)) $((COLUMNS-3))
+}
+
 function main() {
   export MENU=true
   msgbox "Welcome!" "Welcome to the Deepcell Kiosk"
@@ -163,6 +171,7 @@ function main() {
       "GKE") configure_gke ;;
       "Create") create ;;
       "Destroy") destroy;;
+      "View") view;;
       "Exit") break ;;
     esac
   done

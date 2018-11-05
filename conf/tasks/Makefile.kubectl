@@ -19,11 +19,11 @@ kubectl/create/all: \
 
 
 ## Display the cluster IP or URL
-kubectl/display/ip: IP_VAR = $(shell sh -c "kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller | grep 'LoadBalancer Ingress:' | sed 's/\([[:graph:]]\+[[:space:]]\+\)\+\([0-9.]\+\)/\2/'")
+kubectl/display/ip: IP_VAR = $(shell sh -c "kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller | grep 'LoadBalancer Ingress:' | sed 's/\([[:graph:]]\+[[:space:]]\+\)\+\([0-9.]\+\|[[:graph:]]\+amazon[[:graph:]]\+\)/\2/'")
 kubectl/display/ip:
 	@echo " "
 	@echo " "
 	@echo Cluster address: ${IP_VAR}
 	@echo " "
 	@echo " "
-	@echo export CLUSTER_IP_TESTT=${IP_VAR} > ./cluster_address
+	@echo export CLUSTER_IP_TEST=${IP_VAR} > ./cluster_address
