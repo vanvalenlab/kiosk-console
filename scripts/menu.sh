@@ -153,14 +153,6 @@ function view() {
   clear
   echo "The cluster's address is: " ${cluster_address}
   read -p "Press enter to return to main menu"
-  #source ./cluster_address
-  #local cluster_address=${CLUSTER_IP_TEST:-(no current address)}
-  #dialog --clear \
-  #       --begin 0 0 \
-  #       --title "$title" \
-  #       --backtitle "${BRAND}" \
-  #       --begin 3 1 \
-  #       --msgbox "${cluster_address}" $((LINES-5)) $((COLUMNS-3))
 }
 
 function main() {
