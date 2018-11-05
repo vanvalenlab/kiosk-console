@@ -26,4 +26,4 @@ kubectl/display/ip:
 	@echo Cluster address: ${IP_VAR}
 	@echo " "
 	@echo " "
-	@echo export CLUSTER_IP_TEST=${IP_VAR} > ./cluster_address
+	@echo export CLUSTER_ADDRESS=${IP_VAR} > ./cluster_address

@@ -145,14 +145,22 @@ function destroy() {
 
 function view() {
   local title="Deepcell Cluster Address"
-  source ./cluster_address
-  local cluster_address=${CLUSTER_IP_TEST:-(no current address)}
-  dialog --clear \
-         --begin 0 0 \
-         --title "$title" \
-         --backtitle "${BRAND}" \
-         --begin 3 1 \
-         --msgbox "${cluster_address}" $((LINES-5)) $((COLUMNS-3))
+  if [ -f ./cluster_address ]; then
+	  local cluster_address=$(cat ./cluster_address | sed 's/export CLUSTER_ADDRESS=\([[:graph:]]\+\)/\1/')
+  else
+	  local cluster_address="No current address -- no cluster has been started yet."
+  fi
+  clear
+  echo "The cluster's address is: " ${cluster_address}
+  read -p "Press enter to return to main menu"
+  #source ./cluster_address
+  #local cluster_address=${CLUSTER_IP_TEST:-(no current address)}
+  #dialog --clear \
+  #       --begin 0 0 \
+  #       --title "$title" \
+  #       --backtitle "${BRAND}" \
+  #       --begin 3 1 \
+  #       --msgbox "${cluster_address}" $((LINES-5)) $((COLUMNS-3))
 }
 
 function main() {
