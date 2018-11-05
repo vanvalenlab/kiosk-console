@@ -58,9 +58,11 @@ The preparation steps vary depending on which cloud provider you plan on deployi
 
 ## Kiosk usage
 
-1. Once the Kiosk has started, select the configuration option for your chosen cloud provider, either Amazon or Google, and fill out the configuration values as needed. ( If using Google, follow the provided link in a browser.) Once the Kiosk has been configured for a cloud provider, the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
+1. Once the Kiosk has started, select the configuration option for your chosen cloud provider, either Amazon or Google, and fill out the configuration values as needed. ( If using Google, follow the link provided during the configuration process in a web browser.) Once the Kiosk has been configured for a cloud provider, the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
 2. With the Kiosk configured for the appropriate cloud provider, select the `Create` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see `Cluster Created` followed by `---COMPLETE---` printed to the terminal. If you see `---COMPLETE---` with some error text immediately preceding it, cluster creation failed.
-3. Go to the cluster frontpage in your browser. (Currently, the most efficient way to find the public IP address or URL of your cluster is to select `Shell` form the Kiosk's main menu and paste the following command into the terminal: `kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller` and then find the IP address or URL listed in the `LoadBalancer Ingress` field of the output.)
+3. Find the cluster's web address by choosing the `View` option form the Kiosk's main menu. (Depending on your chosne cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".
+4. Go to the cluster address in your web browser to find the Deepcell frontpage.
+5. Enjoy!
 
 ## Kiosk shutdown
 
