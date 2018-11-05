@@ -27,7 +27,7 @@ push:
 
 ## Install wrapper script from geodesic container
 install:
-	@docker run --rm $(DOCKER_IMAGE_NAME) | sudo -E bash -s $(DOCKER_TAG)
+	@docker run --rm $(DOCKER_IMAGE_NAME) | bash -s $(DOCKER_TAG)
 
 ## Start the geodesic shell by calling wrapper script
 run:
