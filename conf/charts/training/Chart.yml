@@ -1,0 +1,20 @@
+apiVersion: v1
+name: training
+version: 0.1.0
+#kubeVersion: ^1.9.8
+description: This helm chart runs a training job based on deepcell generated notebooks.
+keywords:
+  - tensorflow
+  - deepcell-tf
+  - kiosk-training
+home: https://www.github.com/vanvalenlab/kiosk-training
+sources:
+    - https://hub.docker.com/vanvalenlab/kiosk-training
+maintainers:
+  - name: Dylan Bannon
+    email: bbannon@caltech.edu
+    url: vanvalen.caltech.edu
+engine: gotpl
+appVersion: 0.1.0
+deprecated: false
+tillerVersion: ^2.9.1

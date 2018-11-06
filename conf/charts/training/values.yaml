@@ -1,0 +1,45 @@
+app_name: "training"
+
+# job.yaml
+replicas: 0
+image_name: "vanvalenlab/kiosk-training"
+image_version: "latest"
+job_name: "training-deployment"
+job_port: 7241
+container_name: "training-container"
+
+# service.yaml
+service_name: "training-service"
+service_port: 7241
+service_type: "ClusterIP"
+
+nodeSelector:
+  #  cloud.google.com/gke-accelerator: "nvidia-tesla-k80"
+  #  beta.kubernetes.io/instance-type: "p2.xlarge"
+
+# secrets.yaml and hemlfile.d/training.yaml
+env:
+  TRAIN_TYPE: "conv"
+  FIELD_SIZE: "61"
+  NDIM: "2"
+  TRANSFORM: ""
+  NORM_METHOD: "std"
+  OPTIMIZER: "sgd"
+  EPOCHS: "10"
+  NSKIPS: "1"
+  CLOUD_PROVIDER: "aws"
+  LOG_PREFIX: "tensorboard_logs"
+  LOG_LEVEL: "3"
+  DEBUG: "FALSE"
+  # Optional Transform Arugments
+  DILATION_RADIUS: "1"
+  EROSION_WIDTH: "0"
+  DISTANCE_BINS: "4"
+
+secrets_name: "redis-consumer-env-variables"
+secrets:
+  DATA_PATH: "change_me"
+  AWS_ACCESS_KEY_ID: "change_me"
+  AWS_SECRET_ACCESS_KEY: "change_me"
+  AWS_S3_BUCKET: "change_me"
+  GCLOUD_STORAGE_BUCKET: "change_me"
