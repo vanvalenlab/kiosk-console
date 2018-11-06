@@ -3,7 +3,7 @@
 ## Kiosk Installation
 
 
-### `make docker/build`
+### * `make docker/build`
 
 ---
 
@@ -54,9 +54,9 @@ You probably just added yourself to the `docker` user group but haven't logged a
 
 ---
 
+
 ## Kiosk Usage
 
----
 
 Kiosk shows up with letters all over the borders. Very weird.
 
