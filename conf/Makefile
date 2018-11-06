@@ -14,3 +14,10 @@ create: \
 destroy: \
   $(CLOUD_PROVIDER)/destroy/all
 	@echo "Cluster destroyed"
+
+## Create $CACHE_PATH directory, if it doesn't already exist
+create_cache_path:
+	@if [ ! -d "$(CACHE_PATH)" ]; \
+	then \
+	    mkdir $(CACHE_PATH); \
+	fi

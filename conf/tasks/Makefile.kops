@@ -5,7 +5,9 @@ SSH_PUBLIC_KEY ?= $(SSH_KEY).pub
 kops/create/ssh-key:
 	@if [ ! -d "$(CACHE_PATH)" ]; \
 	then \
-	    mkdir $(CACHE_PATH); \
+	    echo "It looks like you haven't run a cloud provider configuration yet."; \
+	    echo "At the very least the CACHE_PATH directory, " $(CACHE_PATH) ", does not exist."; \
+	    exit 1; \
 	fi
 	@ssh-keygen -t rsa -f $(SSH_KEY) -N ""
 

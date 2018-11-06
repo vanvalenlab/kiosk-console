@@ -113,8 +113,10 @@ function configure_aws() {
   export KOPS_STATE_STORE=s3://${NAMESPACE}
   export CLOUD_PROVIDER=aws
   
+  make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
+  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE > ${CACHE_PATH}/env.aws
+  #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
 }
 
 function configure_gke() {
@@ -124,6 +126,7 @@ function configure_gke() {
   export CLOUD_PROVIDER=gke
   make gke/login
   
+  make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET > ${CACHE_PATH}/env.gke
 }
