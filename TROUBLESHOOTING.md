@@ -5,12 +5,20 @@
 
 ### `make docker/build`
 
-___ERROR___
-DOCKER not defined in docker/build
+---
+
+<b>ERROR</b>
+```DOCKER not defined in docker/build
 [directory]/kiosk/build-harness/modules/docker/Makefile.build:9: recipe for target 'docker/build' failed
 make: \*\*\* [docker/build] Error 1
+```
 
+<b>EXPLANATION</b>
 This means that you do not have Docker installed.
+
+<b>SOLUTION</b>
+
+---
 
 
 Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post h
