@@ -3,7 +3,7 @@
 ## Kiosk Installation
 
 
-### * `make docker/build`
+* ### `make docker/build`
 
 ---
 
