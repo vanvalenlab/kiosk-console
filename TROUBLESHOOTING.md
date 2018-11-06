@@ -5,6 +5,7 @@
 
 ### `make docker/build`
 
+___ERROR___
 DOCKER not defined in docker/build
 [directory]/kiosk/build-harness/modules/docker/Makefile.build:9: recipe for target 'docker/build' failed
 make: \*\*\* [docker/build] Error 1
@@ -31,3 +32,10 @@ context canceled
 make: \*\*\* [docker/build] Error 1
 
 You probably just added yourself to the `docker` user group but haven't logged and logged back in yet. 
+
+
+## Kiosk Usage
+
+Kiosk shows up with letters all over the borders. Very weird.
+
+This could be cause by several different misconfigurations, either on your machine or within the terminal itself. This is a known issue when using Google Cloud's browser-based SSH interface.
