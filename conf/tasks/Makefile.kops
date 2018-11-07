@@ -9,7 +9,9 @@ kops/create/ssh-key:
 	    echo "At the very least the CACHE_PATH directory, " $(CACHE_PATH) ", does not exist."; \
 	    exit 1; \
 	fi
-	@ssh-keygen -t rsa -f $(SSH_KEY) -N ""
+	@echo "Generating public/private RSA key pair..."
+	@ssh-keygen -t rsa -f $(SSH_KEY) -N "" > /dev/null || echo "Nevermind. The keys probably already exist."
+	@echo " "
 
 ## Destroy SSH key for Kops cluster
 kops/destroy/ssh-key:
@@ -17,27 +19,50 @@ kops/destroy/ssh-key:
 
 ## Provision kops cluster
 kops/create/cluster:
-	kops create cluster \
+	@echo "Requisitioning cloud resources using kops (Kubernetes Operations)..."
+	@echo "Using the following command:"
+	@echo "  kops create cluster \\"
+	@echo "    --name $(KOPS_CLUSTER_NAME) \\"
+	@echo "    --zones $(KOPS_AVAILABILITY_ZONES) \\"
+	@echo "    --cloud $(CLOUD_PROVIDER) \\"
+	@echo "    --master-size $(MASTER_MACHINE_TYPE) \\"
+	@echo "    --node-size $(NODE_MACHINE_TYPE) \\"
+	@echo "    --ssh-public-key $(SSH_PUBLIC_KEY) \\"
+	@echo "    --yes"
+	@kops create cluster \
 	  --name $(KOPS_CLUSTER_NAME) \
 	  --zones $(KOPS_AVAILABILITY_ZONES) \
 	  --cloud $(CLOUD_PROVIDER)  \
 	  --master-size $(MASTER_MACHINE_TYPE) \
 	  --node-size $(NODE_MACHINE_TYPE) \
 	  --ssh-public-key $(SSH_PUBLIC_KEY) \
-	  --yes
+	  --yes \
+	  2> /dev/null || echo "Well, I guess this cluster already exists, so we're not recreating it."
+	@echo " "
 
 kops/create/aws:
-	kops get cluster -o yaml > /tmp/cluster-template.yaml
-	yq merge -x /tmp/cluster-template.yaml patches/aws.yaml > /tmp/cluster.yaml
-	kops replace -f /tmp/cluster.yaml
-	kops update cluster --yes
+	@echo "Briefly restarting the AWS cluster in order to add some necessary permissions to it..."
+	@kops get cluster -o yaml > /tmp/cluster-template.yaml
+	@yq merge -x /tmp/cluster-template.yaml patches/aws.yaml > /tmp/cluster.yaml
+	@kops replace -f /tmp/cluster.yaml
+	@kops update cluster --yes &> /dev/null
+	@echo "Done."
+	@echo " "
 
 ## Provision GPU instance group
+kops/create/gpu-nodes: GPU_NODES_EXIST = $(shell sh -c "kops get ig | grep 'gpu-nodes'" )
 kops/create/gpu-nodes:
-	kops create ig gpu-nodes -o yaml --dry-run > /tmp/gpu-nodes-template.yaml
-	yq merge -x /tmp/gpu-nodes-template.yaml patches/gpu-nodes.yaml > /tmp/gpu-nodes.yaml
-	kops create -f /tmp/gpu-nodes.yaml
-	kops update cluster --yes
+	@echo "Creating GPU node pool."
+	@echo "(Not requisitioning GPUs now, just granting Kubernetes the ability to get them once they're needed.)"
+	@if [[ -z "${GPU_NODES_EXIST}" ]]; then \
+		kops create ig gpu-nodes -o yaml --dry-run > /tmp/gpu-nodes-template.yaml; \
+		yq merge -x /tmp/gpu-nodes-template.yaml patches/gpu-nodes.yaml > /tmp/gpu-nodes.yaml; \
+		kops create -f /tmp/gpu-nodes.yaml; \
+		kops update cluster --yes; \
+	else \
+		echo "GPU node pool already exists. Moving on."; \
+	fi
+	@echo " "
 
 ## Destroy GPU instance group
 kops/destroy/gpu-nodes:
