@@ -48,6 +48,17 @@ gke/destroy/project:
 
 ## Create a new GKE cluster
 gke/create/cluster:
+	@echo "Creating GKE cluster."
+	@echo "Using the following command: "
+	@echo "    gcloud container clusters create $(CLUSTER_NAME) \ "
+	@echo "  	--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \ "
+	@echo " 	--zone=$(GKE_COMPUTE_ZONE) \ "
+	@echo " 	--max-nodes=$(NODE_MAX_SIZE) \ "
+	@echo " 	--min-nodes=$(NODE_MIN_SIZE) \ "
+	@echo " 	--machine-type=$(GKE_MACHINE_TYPE) \ "
+	@echo " 	--cluster-version $(KUBERNETES_VERSION) \ "
+	@echo " 	--enable-autoscaling \ "
+	@echo " 	--enable-autoupgrade 2> /dev/null"
 	@gcloud container clusters create $(CLUSTER_NAME) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--zone=$(GKE_COMPUTE_ZONE) \
@@ -56,7 +67,11 @@ gke/create/cluster:
 		--machine-type=$(GKE_MACHINE_TYPE) \
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
-		--enable-autoupgrade
+		--enable-autoupgrade \
+		2> /dev/null \
+		|| echo "Apparently, the cluster already exists."
+	@echo "GKE cluster creation complete."
+	@echo " "
 
 ## Destroy GKE cluster
 gke/destroy/cluster:
@@ -88,7 +103,22 @@ gke/list/billing-accounts:
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
 gke/create/gpus:
-	gcloud container node-pools create gpu \
+	@echo "Creating GPU node pool."
+	@echo "Using the following command: "
+	@echo "    gcloud container node-pools create gpu \ "
+	@echo " 	--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \ "
+	@echo " 	--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \ "
+	@echo " 	--zone $(GPU_COMPUTE_ZONE) \ "
+	@echo " 	--cluster $(CLUSTER_NAME) \ "
+	@echo " 	--num-nodes $(GPU_NODE_MIN_SIZE) \ "
+	@echo " 	--min-nodes $(GPU_NODE_MIN_SIZE) \ "
+	@echo " 	--max-nodes $(GPU_NODE_MAX_SIZE) \ "
+	@echo " 	--machine-type=$(GPU_MACHINE_TYPE) \ "
+	@echo " 	--enable-autoscaling \ "
+	@echo " 	--enable-autorepair \ "
+	@echo " 	--enable-autoupgrade \ "
+	@echo "         2> /dev/null "
+	@gcloud container node-pools create gpu \
 		--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--zone $(GPU_COMPUTE_ZONE) \
@@ -99,7 +129,11 @@ gke/create/gpus:
 		--machine-type=$(GPU_MACHINE_TYPE) \
 		--enable-autoscaling \
 		--enable-autorepair \
-		--enable-autoupgrade
+		--enable-autoupgrade \
+		2> /dev/null \
+		|| echo "GPU node pool already exists."
+	@echo "GPU node pool completion finished."
+	@echo " "
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
 # When you add a GPU node pool to an existing cluster that already runs a non-GPU node pool, GKE automatically taints the GPU nodes with the following node taint
@@ -112,8 +146,12 @@ gke/destroy/gpus:
 # https://cloud.google.com/storage/docs/access-control/iam-roles
 ## Create Service Account used by deepcell
 gke/create/service-account:
-	gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" || echo "No need to create bucket."
-	gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
+	@echo "Creating GKE service account..."
+	@gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" 2> /dev/null || \
+		echo "No need to create service account; it probably already exists."
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin > /dev/null
+	@echo "GKE service account creation complete."
+	@echo " "
 
 ## Delete Service Account used by deepcell
 gke/destroy/service-account:
@@ -121,8 +159,12 @@ gke/destroy/service-account:
 
 ## Create bucket used by deepcell
 gke/create/bucket:
-	gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) || echo "No need to create bucket."
-	gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET)
+	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}."
+	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) 2> /dev/null \
+		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
+	@gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET) 2> /dev/null
+	@echo "Google Cloud Storage Bucket creation finished."
+	@echo " "
 
 ## Destroy bucket used by deepcell
 gke/destroy/bucket:
