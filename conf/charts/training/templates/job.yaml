@@ -8,7 +8,7 @@ spec:
   selector:
       matchLabels:
         app: {{ .Values.app_name }}
-  parallelism: 1
+  parallelism: 0
   completions: null
   template:
     metadata:
