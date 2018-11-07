@@ -2,7 +2,11 @@
 
 ## Create AWS S3 bucket
 aws/create/bucket:
-	aws s3 mb "${KOPS_STATE_STORE}" --region "${KOPS_STATE_STORE_REGION}"
+	@echo "Creating AWS S3 bucket..."
+	@aws s3 mb "${KOPS_STATE_STORE}" --region "${KOPS_STATE_STORE_REGION}" 2> /dev/null || \
+		echo "No bucket created. Bucket ${KOPS_STATE_STORE} in region ${KOPS_STATE_STORE_REGION} already exists."
+	@echo " "
+
 
 ## Create everything on AWS
 aws/create/all: \
