@@ -1,0 +1,26 @@
+app_name: "tensorboard"
+
+# deployment.yaml
+deployment_name: "tensorboard-deployment"
+replicas: 1
+image_name: "tensorflow/tensorflow"
+image_tag: "latest"
+deployment_port: 8080
+container_name: "tensorboard-container"
+env:
+  LOG_PREFIX: "tensorboard_logs"
+  CLOUD_PROVIDER: "aws"
+  GKE_COMPUTE_ZONE: "us-west1-b"
+
+# service.yaml
+service_name: "tensorboard-service"
+service_port: 8080
+service_type: "ClusterIP"
+
+# secrets.yaml
+secrets_name: "tensorboard-env-variables"
+secrets:
+  AWS_ACCESS_KEY_ID: "change_me"
+  AWS_SECRET_ACCESS_KEY: "change_me"
+  AWS_S3_BUCKET: "change_me"
+  GKE_BUCKET: "change_me"
