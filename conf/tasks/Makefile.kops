@@ -15,7 +15,9 @@ kops/create/ssh-key:
 
 ## Destroy SSH key for Kops cluster
 kops/destroy/ssh-key:
-	@rm -f $(SSH_KEY) $(SSH_PUBLIC_KEY)
+	@echo "Deleting cluster SSH key pair."
+	@rm -f $(SSH_KEY) $(SSH_PUBLIC_KEY) || echo "It looks like no SSH key pair was found in the first place?"
+	@echo " "
 
 ## Provision kops cluster
 kops/create/cluster:
@@ -76,16 +78,21 @@ kops/create/all: \
   kops/create/$(CLOUD_PROVIDER) \
   kops/create/gpu-nodes 
 	@echo "Kops created"
+	@echo " "
 
 ## Destroy kops cluster
 kops/destroy/cluster:
-	kops delete cluster --name $(KOPS_CLUSTER_NAME) --yes
+	@echo "Destroying kops cluster ${KOPS_CLUSTER_NAME}."
+	@kops delete cluster --name $(KOPS_CLUSTER_NAME) --yes 2> /dev/null || \
+		echo "Apparently, the cluster is already nonexistent."
+	@echo " "
 
 ## Destroy all kops resources
 kops/destroy/all: \
   kops/destroy/cluster \
   kops/destroy/ssh-key
 	@echo "Kops destroyed"
+	@echo " "
 
 ## Wait for kops cluster to come online
 kops/wait:
