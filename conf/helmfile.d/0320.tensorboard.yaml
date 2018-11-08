@@ -37,7 +37,7 @@ releases:
       service_port: 6006
       service_type: "ClusterIP"
       ingress_name: "tensorboard-ingress"
-      ingress_path: "/" 
+      ingress_path: "/tensorboard" 
       ingress:
         annotations:
           nginx.ingress.kubernetes.io/rewrite-target: /
