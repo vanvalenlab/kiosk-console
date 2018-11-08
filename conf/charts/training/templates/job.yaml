@@ -16,7 +16,6 @@ spec:
       labels:
         app: {{ .Values.app_name }}
     spec:
-      volumes: [{name: shared, emptyDir: {}}]
       restartPolicy: Never
       nodeSelector:
 {{- range $name, $value := .Values.nodeSelector }}
@@ -28,13 +27,11 @@ spec:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_version }}
         imagePullPolicy: "Always"
-        command: ["sh","-c","[ -f /data/done.txt ] && exit 0; echo all done with `cat /data/item.txt`; sleep 1; exit 1"]
         resources:
           limits:
             nvidia.com/gpu: 1
         ports:
         - containerPort: {{ .Values.job_port }}
-        volumeMounts: [{name: shared, mountPath: /data}]
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}
