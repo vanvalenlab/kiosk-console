@@ -31,7 +31,7 @@ releases:
       image_name: "tensorflow/tensorflow"
       image_version: "1.10"
       deployment_name: "tensorboard-deployment"
-      deployment_port: 8080
+      deployment_port: 6006
       container_name: "tensorboard-container"
       service_name: "tensorboard-service"
       service_port: 8080
