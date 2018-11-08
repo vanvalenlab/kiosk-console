@@ -18,6 +18,13 @@ spec:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_tag }}
         command: ['if [ "$CLOUD_PROVIDER" = "aws" ]; then export LOG_DIR="s3://${AWS_S3_BUCKET}"; else export LOG_DIR="gs://${GKE_BUCKET}"; fi; tensorboard --log-dir=${LOG_DIR}/${LOG_PREFIX}']
+        command:
+          - tensorboard
+        args:
+          - --log-dir
+          - '[[ $CLOUD_PROVIDER = "aws" ]] && "s3://${AWS_S3_BUCKET}/${LOG_PREFIX}" || "gs://${GKE_BUCKET}/${LOG_PREFIX}"'
+          - --host
+          - 0.0.0.0
         imagePullPolicy: "Always"
         ports:
         - containerPort: {{ .Values.deployment_port }}
