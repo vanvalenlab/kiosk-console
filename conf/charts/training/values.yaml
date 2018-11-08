@@ -1,10 +1,10 @@
 app_name: "training"
 
 # job.yaml
-replicas: 0
+parallelism: 0
 image_name: "vanvalenlab/kiosk-training"
 image_version: "latest"
-job_name: "training-deployment"
+job_name: "training-job"
 job_port: 7241
 container_name: "training-container"
 

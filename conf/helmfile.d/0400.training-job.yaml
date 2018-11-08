@@ -27,11 +27,11 @@ releases:
   version: "0.1.0"
   values:
     - app_name: "training"
-      replicas: 1
+      parallelism: 1
       image_name: "vanvalenlab/deepcell-tf"
       image_version: "0.1dev"
-      deployment_name: "training-deployment"
-      deployment_port: 7241
+      job_name: "training-job"
+      job_port: 7241
       container_name: "training-container"
       service_name: "training-service"
       service_port: 7241
