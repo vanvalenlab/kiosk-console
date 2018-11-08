@@ -75,7 +75,11 @@ gke/create/cluster:
 
 ## Destroy GKE cluster
 gke/destroy/cluster:
-	@gcloud container clusters --zone $(GKE_COMPUTE_ZONE) delete $(CLUSTER_NAME) --quiet
+	@echo "Destroying cluster..."
+	@-gcloud container clusters --zone $(GKE_COMPUTE_ZONE) delete $(CLUSTER_NAME) --quiet
+	@echo "Cluster destruction finished."
+	@echo " "
+	@echo " "
 
 ## Set context to use GKE cluster (e.g. with kubectl)
 gke/use/cluster:
@@ -141,7 +145,11 @@ gke/create/gpus:
 
 ## Destroy GKE GPU node pool
 gke/destroy/gpus:
-	-gcloud container node-pools delete gpu --quiet --zone $(GPU_COMPUTE_ZONE)
+	@echo "Destroying GPU node pool..."
+	@-gcloud container node-pools delete gpu --quiet --zone $(GPU_COMPUTE_ZONE)
+	@echo "GPU node pool destruction finished."
+	@echo " "
+	@echo " "
 
 # https://cloud.google.com/storage/docs/access-control/iam-roles
 ## Create Service Account used by deepcell
@@ -155,7 +163,11 @@ gke/create/service-account:
 
 ## Delete Service Account used by deepcell
 gke/destroy/service-account:
-	gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --quiet
+	@echo "Destroying GKE service-account..."
+	@-gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --quiet
+	@echo "GKE service-account destruction finished."
+	@echo " "
+	@echo " "
 
 ## Create bucket used by deepcell
 gke/create/bucket:
