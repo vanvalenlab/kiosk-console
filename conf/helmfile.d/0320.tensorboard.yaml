@@ -8,7 +8,7 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Frontend ####################################################################
+## TensorBoard #################################################################
 ################################################################################
 
 #
@@ -29,9 +29,7 @@ releases:
     - app_name: "tensorboard"
       replicas: 1
       image_name: "tensorflow/tensorflow"
-      image_version: "latest"
-      #image_name: "k8s.gcr.io/echoserver"
-      #image_version: "1.4"
+      image_version: "1.10"
       deployment_name: "tensorboard-deployment"
       deployment_port: 8080
       container_name: "tensorboard-container"
