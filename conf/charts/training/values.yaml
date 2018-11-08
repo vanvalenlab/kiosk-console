@@ -21,6 +21,7 @@ nodeSelector:
 env:
   CLOUD_PROVIDER: "aws"
   DEBUG: "True"
+  LOG_PREFIX: "tensorboard_logs"
   REDIS_HOST: "redis-master-0"
   REDIS_PORT: "6379"
   STATUS: "new_training"
