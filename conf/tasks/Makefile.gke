@@ -48,7 +48,7 @@ gke/destroy/project:
 
 ## Create a new GKE cluster
 gke/create/cluster:
-	@echo "Creating GKE cluster."
+	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
 	@echo "    gcloud container clusters create $(CLUSTER_NAME) \ "
 	@echo "  	--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \ "
@@ -103,7 +103,7 @@ gke/list/billing-accounts:
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
 gke/create/gpus:
-	@echo "Creating GPU node pool."
+	@echo "Creating GPU node pool..."
 	@echo "Using the following command: "
 	@echo "    gcloud container node-pools create gpu \ "
 	@echo " 	--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \ "
@@ -159,7 +159,7 @@ gke/destroy/service-account:
 
 ## Create bucket used by deepcell
 gke/create/bucket:
-	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}."
+	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
 	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) 2> /dev/null \
 		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
 	@gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET) 2> /dev/null
@@ -172,10 +172,12 @@ gke/destroy/bucket:
 
 ## Deploy helm tiller with service account
 gke/deploy/helm:
-	kubectl create serviceaccount --namespace kube-system tiller
-	kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-	helm init --service-account tiller --upgrade --wait
-
+	@echo "Deploying kubernetes resources..."
+	@kubectl create serviceaccount --namespace kube-system tiller 2> /dev/null || echo "Kubernetes already appears to be deployed."
+	@kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller 2> /dev/null || :
+	@helm init --service-account tiller --upgrade --wait &> /dev/null || :
+	@echo "Kubernetes resource deployment finished."
+	@echo " "
 
 gke/destroy/helm:
 	-helm reset --force --tiller-connection-timeout=2
@@ -184,7 +186,11 @@ gke/destroy/helm:
 	
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
-	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml
+	@echo "Deploying NVIDIA drivers for GPU instances..."
+	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
+		echo "These drivers are not being installed. They may already be installed."
+	@echo "NVIDIA GPU driver deployment finished."
+	@echo " "
 
 ## Create Cluster
 gke/create/all: \
