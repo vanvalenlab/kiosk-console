@@ -15,9 +15,9 @@ spec:
         app: {{ .Values.app_name }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}
-        image: "{{ .Values.image_name }}:{{ .Values.image_tag }}"
-        command: "[[ $CLOUD_PROVIDER = "aws" ]] && LOG_DIR="s3://${AWS_S3_BUCKET}" || LOG_DIR="gs://${GKE_BUCKET}"; tensorboard --log-dir=${LOG_DIR}/${LOG_PREFIX};"
+      - name: {{ .Values.container_name }}
+        image: {{ .Values.image_name }}:{{ .Values.image_tag }}
+        command: 'if [ "$CLOUD_PROVIDER" = "aws" ]; then export LOG_DIR="s3://${AWS_S3_BUCKET}"; export else LOG_DIR="gs://${GKE_BUCKET}"; fi; tensorboard --log-dir=${LOG_DIR}/${LOG_PREFIX}'
         imagePullPolicy: "Always"
         ports:
         - containerPort: {{ .Values.deployment_port }}

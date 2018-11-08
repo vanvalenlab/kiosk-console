@@ -17,6 +17,16 @@ service_name: "tensorboard-service"
 service_port: 8080
 service_type: "ClusterIP"
 
+# ingress.yaml
+ingress_name: "tensorboard-ingress"
+ingress_path: "/tensorboard"
+ingress:
+  annotations:
+    #kubernetes.io/ingress.class: "nginx"
+    #nginx.ingress.kubernetes.io/rewrite-target: /
+    #nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    #nginx.ingress.kubernetes.io/proxy-body-size: "25m"
+
 # secrets.yaml
 secrets_name: "tensorboard-env-variables"
 secrets:
