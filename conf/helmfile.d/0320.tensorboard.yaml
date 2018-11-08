@@ -34,7 +34,7 @@ releases:
       deployment_port: 6006
       container_name: "tensorboard-container"
       service_name: "tensorboard-service"
-      service_port: 8080
+      service_port: 6006
       service_type: "ClusterIP"
       ingress_name: "tensorboard-ingress"
       ingress_path: "/" 

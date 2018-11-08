@@ -14,7 +14,7 @@ env:
 
 # service.yaml
 service_name: "tensorboard-service"
-service_port: 8080
+service_port: 6006
 service_type: "ClusterIP"
 
 # ingress.yaml
