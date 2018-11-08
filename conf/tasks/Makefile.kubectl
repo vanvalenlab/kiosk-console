@@ -1,6 +1,12 @@
 ## Provision RBAC cluster role binding
 kubectl/create/rbac:
-	@kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+	@echo " "
+	@echo "Finalizing Kubernetes RBAC roles and bindings."
+	@kubectl create clusterrolebinding add-on-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default 2> /dev/null || \
+		echo "Kubernetes RBAC binding is already under control. No changes made."
+	@echo "Kubernetes RBAC roles creation and binding finished."
+	@echo " "
+	@echo " "
 
 ## Provision cluster autoscaler
 kubectl/create/autoscaler:

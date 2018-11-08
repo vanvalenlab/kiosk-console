@@ -2,7 +2,12 @@
 
 ## Create AWS S3 bucket
 aws/create/bucket:
-	aws s3 mb "${KOPS_STATE_STORE}" --region "${KOPS_STATE_STORE_REGION}"
+	@echo "Creating AWS S3 bucket ${KOPS_STATE_STORE} in region ${KOPS_STATE_STORE_REGION} to act as storage for kops state files..."
+	@aws s3 mb "${KOPS_STATE_STORE}" --region "${KOPS_STATE_STORE_REGION}" || \
+		echo "No bucket created. Bucket ${KOPS_STATE_STORE} in region ${KOPS_STATE_STORE_REGION} already exists."
+	@echo " "
+	@echo " "
+
 
 ## Create everything on AWS
 aws/create/all: \
@@ -15,7 +20,11 @@ aws/create/all: \
 
 ## Destroy AWS S3 bucket
 aws/destroy/bucket:
-	aws s3 rb "${KOPS_STATE_STORE}" --force
+	@echo "Deleting kops state store AWS S3 bucket ${KOPS_STATE_STORE} in region ${KOPS_STATE_STORE_REGION}."
+	@aws s3 rb "${KOPS_STATE_STORE}" --force || \
+		echo "Apparently, the bucket ${KOPS_STATE_STORE} didn't even exist."
+	@echo " "
+	@echo " "
 
 ## Destroy everything on AWS
 aws/destroy/all: \
