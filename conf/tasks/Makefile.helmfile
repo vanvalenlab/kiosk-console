@@ -1,6 +1,7 @@
 helmfile/create/all:
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
-	@helmfile sync &> /dev/null || echo "Services couldn't be synced."
+	@helmfile sync || echo "Services couldn't be synced."
 	@echo "Helmfile deployment finished."
+	@echo " "
 	@echo " "

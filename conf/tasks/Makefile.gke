@@ -50,16 +50,7 @@ gke/destroy/project:
 gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
-	@echo "    gcloud container clusters create $(CLUSTER_NAME) \ "
-	@echo "  	--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \ "
-	@echo " 	--zone=$(GKE_COMPUTE_ZONE) \ "
-	@echo " 	--max-nodes=$(NODE_MAX_SIZE) \ "
-	@echo " 	--min-nodes=$(NODE_MIN_SIZE) \ "
-	@echo " 	--machine-type=$(GKE_MACHINE_TYPE) \ "
-	@echo " 	--cluster-version $(KUBERNETES_VERSION) \ "
-	@echo " 	--enable-autoscaling \ "
-	@echo " 	--enable-autoupgrade 2> /dev/null"
-	@gcloud container clusters create $(CLUSTER_NAME) \
+	gcloud container clusters create $(CLUSTER_NAME) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--zone=$(GKE_COMPUTE_ZONE) \
 		--max-nodes=$(NODE_MAX_SIZE) \
@@ -68,9 +59,9 @@ gke/create/cluster:
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
 		--enable-autoupgrade \
-		2> /dev/null \
 		|| echo "Apparently, the cluster already exists."
 	@echo "GKE cluster creation complete."
+	@echo " "
 	@echo " "
 
 ## Destroy GKE cluster
@@ -109,20 +100,7 @@ gke/list/billing-accounts:
 gke/create/gpus:
 	@echo "Creating GPU node pool..."
 	@echo "Using the following command: "
-	@echo "    gcloud container node-pools create gpu \ "
-	@echo " 	--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \ "
-	@echo " 	--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \ "
-	@echo " 	--zone $(GPU_COMPUTE_ZONE) \ "
-	@echo " 	--cluster $(CLUSTER_NAME) \ "
-	@echo " 	--num-nodes $(GPU_NODE_MIN_SIZE) \ "
-	@echo " 	--min-nodes $(GPU_NODE_MIN_SIZE) \ "
-	@echo " 	--max-nodes $(GPU_NODE_MAX_SIZE) \ "
-	@echo " 	--machine-type=$(GPU_MACHINE_TYPE) \ "
-	@echo " 	--enable-autoscaling \ "
-	@echo " 	--enable-autorepair \ "
-	@echo " 	--enable-autoupgrade \ "
-	@echo "         2> /dev/null "
-	@gcloud container node-pools create gpu \
+	gcloud container node-pools create gpu \
 		--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--zone $(GPU_COMPUTE_ZONE) \
@@ -134,9 +112,9 @@ gke/create/gpus:
 		--enable-autoscaling \
 		--enable-autorepair \
 		--enable-autoupgrade \
-		2> /dev/null \
 		|| echo "GPU node pool already exists."
 	@echo "GPU node pool completion finished."
+	@echo " "
 	@echo " "
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
@@ -155,10 +133,11 @@ gke/destroy/gpus:
 ## Create Service Account used by deepcell
 gke/create/service-account:
 	@echo "Creating GKE service account..."
-	@gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" 2> /dev/null || \
+	@gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin > /dev/null
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
 	@echo "GKE service account creation complete."
+	@echo " "
 	@echo " "
 
 ## Delete Service Account used by deepcell
@@ -172,10 +151,11 @@ gke/destroy/service-account:
 ## Create bucket used by deepcell
 gke/create/bucket:
 	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
-	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) 2> /dev/null \
+	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) \
 		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
-	@gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET) 2> /dev/null
+	@-gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET)
 	@echo "Google Cloud Storage Bucket creation finished."
+	@echo " "
 	@echo " "
 
 ## Destroy bucket used by deepcell
@@ -186,9 +166,10 @@ gke/destroy/bucket:
 gke/deploy/helm:
 	@echo "Deploying kubernetes resources..."
 	@kubectl create serviceaccount --namespace kube-system tiller 2> /dev/null || echo "Kubernetes already appears to be deployed."
-	@kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller 2> /dev/null || :
-	@helm init --service-account tiller --upgrade --wait &> /dev/null || :
+	@-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+	@-helm init --service-account tiller --upgrade --wait
 	@echo "Kubernetes resource deployment finished."
+	@echo " "
 	@echo " "
 
 gke/destroy/helm:
@@ -202,6 +183,7 @@ gke/deploy/nvidia:
 	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
 		echo "These drivers are not being installed. They may already be installed."
 	@echo "NVIDIA GPU driver deployment finished."
+	@echo " "
 	@echo " "
 
 ## Create Cluster
