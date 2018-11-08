@@ -7,7 +7,8 @@ include tasks/Makefile.*
 ## Create cluster
 create: \
   $(CLOUD_PROVIDER)/create/all \
-  helmfile/create/all
+  helmfile/create/all \
+  kubectl/display/ip
 	@echo "Cluster created"
 
 ## Destroy cluster
