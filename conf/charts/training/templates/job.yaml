@@ -1,0 +1,54 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.job_name }}
+  labels:
+    app: {{ .Values.app_name }}
+spec:
+  selector:
+      matchLabels:
+        app: {{ .Values.app_name }}
+  parallelism: 0
+  completions: null
+  template:
+    metadata:
+      name: {{ .Values.job_name }}
+      labels:
+        app: {{ .Values.app_name }}
+    spec:
+      volumes: [{name: shared, emptyDir: {}}]
+      restartPolicy: Never
+      nodeSelector:
+{{- range $name, $value := .Values.nodeSelector }}
+{{- if not ( empty $value) }}
+        {{ $name }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
+      containers:
+      - name: {{ .Values.container_name }}
+        image: {{ .Values.image_name }}:{{ .Values.image_version }}
+        imagePullPolicy: "Always"
+        command: ["sh","-c","[ -f /data/done.txt ] && exit 0; echo all done with `cat /data/item.txt`; sleep 1; exit 1"]
+        resources:
+          limits:
+            nvidia.com/gpu: 1
+        ports:
+        - containerPort: {{ .Values.job_port }}
+        volumeMounts: [{name: shared, mountPath: /data}]
+        env:
+{{- range $name, $value := .Values.env }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{ $secrets_name := .Values.secrets_name }}
+{{- range $name, $value := .Values.secrets }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $secrets_name }}
+              key: {{ $name }}
+{{- end }}
+{{- end }}

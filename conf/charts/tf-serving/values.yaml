@@ -2,7 +2,7 @@ app_name: "tf-serving"
 
 # deployment.yaml
 replicas: 0
-image_name: "vanvalenlab/tf_serving"
+image_name: "vanvalenlab/kiosk-tf-serving"
 image_version: "latest"
 deployment_name: "tf-serving-deployment"
 deployment_port: 8501

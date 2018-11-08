@@ -1,0 +1,61 @@
+helmDefaults:
+  args:
+    - "--wait"
+    - "--timeout=600"
+    - "--force"
+    - "--reset-values"
+
+releases:
+
+################################################################################
+## TensorBoard #################################################################
+################################################################################
+
+#
+# References:
+#   - [web address of Helm chart's YAML file]
+#
+- name: "tb"
+  namespace: "deepcell"
+  labels:
+    chart: "tensorboard"
+    component: "deepcell"
+    namespace: "deepcell"
+    vendor: "vanvalenlab"
+    default: "true"
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tensorboard'
+  version: "0.1.0"
+  values:
+    - app_name: "tensorboard"
+      replicas: 1
+      image_name: "tensorflow/tensorflow"
+      image_version: "1.10"
+      deployment_name: "tensorboard-deployment"
+      deployment_port: 6006
+      container_name: "tensorboard-container"
+      service_name: "tensorboard-service"
+      service_port: 6006
+      service_type: "ClusterIP"
+      ingress_name: "tensorboard-ingress"
+      ingress_path: "/tensorboard" 
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/rewrite-target: /
+          nginx.ingress.kubernetes.io/ssl-redirect: "false"
+          nginx.ingress.kubernetes.io/proxy-body-size: "1g"
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+          # aws
+          kubernetes.io/ingress.class: "nginx"
+{{ else }}
+          # google
+          kubernetes.io/ingress.class: "nginx"
+{{ end }}
+      env:
+        LOG_PREFIX: "tensorboard_logs"
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+        GKE_COMPUTE_ZONE: "us-west1-b"
+      secrets:
+        AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+        AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+        AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'

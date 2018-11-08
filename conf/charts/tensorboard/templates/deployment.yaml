@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment_name }}
+  labels:
+    app: {{ .Values.app_name }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app_name }}
+    spec:
+      containers:
+      - name: {{ .Values.container_name }}
+        image: {{ .Values.image_name }}:{{ .Values.image_tag }}
+        command:
+          - tensorboard
+        args:
+          - --logdir
+          - $([[ $CLOUD_PROVIDER = aws ]] && echo s3://${AWS_S3_BUCKET}/${LOG_PREFIX} || echo gs://${GKE_BUCKET}/${LOG_PREFIX})
+          - --host
+          - 0.0.0.0
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: {{ .Values.deployment_port }}
+        env:
+{{- range $name, $value := .Values.env }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{ $secrets_name := .Values.secrets_name }}
+{{- range $name, $value := .Values.secrets }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $secrets_name }}
+              key: {{ $name }}
+{{- end }}
+{{- end }}
