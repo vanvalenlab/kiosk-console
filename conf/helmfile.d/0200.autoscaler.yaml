@@ -38,4 +38,4 @@ releases:
         INTERVAL: "5"
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
-        AUTOSCALING: "0|1|5|deepcell|deployment|predict|tf-serving-deployment; 0|1|5|deepcell|deployment|predict|redis-consumer-deployment; 0|1|5|deepcell|deployment|predict|redis-consumer-post-deployment; 0|1|5|deepcell|deployment|predict|redis-consumer    -pre-deployment; 0|4|1|deepcell|job|train|training-job"
+        AUTOSCALING: "0|1|5|deepcell|deployment|predict|tf-serving-deployment; 0|1|5|deepcell|deployment|predict|redis-consumer-deployment; 0|1|5|deepcell|deployment|predict|redis-consumer-post-deployment; 0|1|5|deepcell|deployment|predict|redis-consumer-pre-deployment; 0|4|1|deepcell|job|train|training-job"
