@@ -4,5 +4,5 @@ metadata:
   name: {{ .Values.app_name }}
 rules:
   - apiGroups: ["*"]
-    resources: ["deployments"]
+    resources: ["deployments", "jobs"]
     verbs: ["get", "list", "update"]
