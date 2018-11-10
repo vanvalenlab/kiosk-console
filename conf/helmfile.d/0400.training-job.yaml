@@ -37,15 +37,15 @@ releases:
       service_port: 7241
       service_type: "ClusterIP"
       env:
-        CLOUD_PROVIDER: "aws"
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         DEBUG: "True"
         EXPORT_PREFIX: "models"
         LOG_PREFIX: "tensorboard_logs"
         REDIS_HOST: "redis-master-0"
         REDIS_PORT: "6379"
         STATUS: "new"
-        AWS_REGION: "us-east-1"
-        GKE_COMPUTE_ZONE: "us-west1-b"
+        AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
+        GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
