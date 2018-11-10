@@ -57,8 +57,8 @@ releases:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
         MODEL_PREFIX: "models/"
-        AWS_REGION: "us-east-1"
-        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "gke" }}'
+        AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         UPLOAD_PREFIX: "uploads/"
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
