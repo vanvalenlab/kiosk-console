@@ -1,5 +1,5 @@
 helm/create/tiller:
-	@echo "Deplying Kubernetes resources using Helm...
+	@echo "Deplying Kubernetes resources using Helm..."
 	helm init --upgrade --wait
 
 helm/create/all: \
