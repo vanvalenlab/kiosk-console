@@ -43,6 +43,7 @@ kops/create/aws:
 	@echo "Briefly restarting the AWS cluster in order to add some necessary permissions to it..."
 	@kops get cluster -o yaml > /tmp/cluster-template.yaml
 	@yq merge -x /tmp/cluster-template.yaml patches/aws.yaml > /tmp/cluster.yaml
+	@cat /tmp/cluster.yaml | envsubst > /tmp/cluster.yaml
 	@kops replace -f /tmp/cluster.yaml
 	@kops update cluster --yes || echo "Restart and update didn't happen."
 	@echo "Permission addition finished."
@@ -57,6 +58,7 @@ kops/create/gpu-nodes:
 	@if [[ -z "${GPU_NODES_EXIST}" ]]; then \
 		kops create ig gpu-nodes -o yaml --dry-run > /tmp/gpu-nodes-template.yaml; \
 		yq merge -x /tmp/gpu-nodes-template.yaml patches/gpu-nodes.yaml > /tmp/gpu-nodes.yaml; \
+		cat /tmp/gpu-nodes.yaml | envsubst > /tmp/gpu-nodes.yaml; \
 		kops create -f /tmp/gpu-nodes.yaml; \
 		kops update cluster --yes; \
 	else \
