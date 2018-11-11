@@ -11,18 +11,18 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 # Increase quotas: https://console.cloud.google.com/iam-admin/quotas
 
 export CLUSTER_NAME ?= deepcell
+export GKE_COMPUTE_REGION ?= us-west1
+export GKE_COMPUTE_ZONE ?= us-west1-b
+export GKE_MACHINE_TYPE ?= n1-standard-2
+export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
+
+# Not all GPU types are available in all regions/availability zones
+export GPU_COMPUTE_ZONE ?= $(GKE_COMPUTE_ZONE)
 export GPU_TYPE ?= nvidia-tesla-p100
 export GPU_MACHINE_TYPE ?= n1-standard-4
 export GPU_NODE_MIN_SIZE ?= 0
 export GPU_NODE_MAX_SIZE ?= 4
 export GPU_PER_NODE ?= 1
-
-# Not all GPU types are available in all regions/availability zones
-export GPU_COMPUTE_ZONE ?= us-west1-b
-export GKE_COMPUTE_REGION ?= us-west1
-export GKE_COMPUTE_ZONE ?= us-west1-b
-export GKE_MACHINE_TYPE ?= n1-standard-2
-export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
 # Project name must be globally unique
 export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
