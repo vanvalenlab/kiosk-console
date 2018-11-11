@@ -107,6 +107,10 @@ function configure_aws() {
   export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY}")
   export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET}")
   export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE}")
+  export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "m4.large")
+  export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "m4.large")
+  export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "0")
+  export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "4")
 
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
@@ -123,6 +127,14 @@ function configure_gke() {
   export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT}")
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
   export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET}")
+  export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "us-west1")
+  export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "us-west1-b")
+  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "n1-standard-2")
+  export GPU_TYPE=$(inputbox "Google Cloud" "GPU type" "nvidia-tesla-p100")
+  export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "1")
+  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "n1-standard-4")
+  export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "0")
+  export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "4")
   export CLOUD_PROVIDER=gke
   make gke/login
   
