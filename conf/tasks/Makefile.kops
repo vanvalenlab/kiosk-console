@@ -54,7 +54,7 @@ kops/create/aws:
 	@kops replace -f /tmp/cluster-envsubst.yaml
 	@kops update cluster --yes || echo "Restart and update didn't happen."
 	@echo "Permission addition finished."
-	@echo " "
+	@echo
 	@echo " "
 
 ## Provision GPU instance group
