@@ -101,3 +101,32 @@ kops/wait:
 	@echo "Waiting for kops cluster to come online..."
 	@time wait-for-kops
 
+## Pause kops cluster
+kops/pause: \
+  kops/get_instance_groups
+	@for (( i=1; i<${igs_array_length}; i++ )); do \
+	  echo "${igs_array[i]}"; \
+	  export tmp_ig="${igs_array[i]}"; \
+	  kops get ig ${tmp_ig} -o yaml > ./${tmp_ig}_old.yaml; \
+	  cat  ./${tmp_ig}_old.yaml | sed 's/\(min\|max\)Size: [[:digit:]]\+/\1Size: 0/' > ./${tmp_ig}_new.yaml; \
+	  echo "-----"; \
+	  kops replace -f ./${tmp_ig}_new.yaml; \
+	done
+	@kops update cluster --yes
+
+## Restart paused cluster
+kops/restart: \
+  kops/get_instance_groups
+	@for (( i=1; i<${igs_array_length}; i++ )); do \
+	  echo "${igs_array[i]}"; \
+	  export tmp_ig="${igs_array[i]}"; \
+	  echo "-----"; \
+	  kops replace -f ./${tmp_ig}_old.yaml; \
+	done
+	@kops update cluster --yes
+
+## Get instance groups of kops cluster and assign them to an array
+kops/get_instance_groups:
+	@export igs=$(kops get ig | awk '{print $1}')
+	@IFS=${'\n'} read -rd '' -a igs_array <<< "${igs}"
+	@export igs_array_length="${#igs_array[@]}"
