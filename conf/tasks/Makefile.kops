@@ -65,7 +65,7 @@ kops/create/gpu-nodes:
 	@if [[ -z "${GPU_NODES_EXIST}" ]]; then \
 		kops create ig gpu-nodes -o yaml --dry-run > /tmp/gpu-nodes-template.yaml; \
 		yq merge -x /tmp/gpu-nodes-template.yaml patches/gpu-nodes.yaml > /tmp/gpu-nodes.yaml; \
-		cat /tmp/gpu-nodes.yaml | envsubst > /tmp/gpu-nodes-envsubst.yaml; \
+		envsubst <  /tmp/gpu-nodes.yaml  > /tmp/gpu-nodes-envsubst.yaml; \
 		kops create -f /tmp/gpu-nodes-envsubst.yaml; \
 		kops update cluster --yes; \
 	else \
