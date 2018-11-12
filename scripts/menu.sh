@@ -82,7 +82,7 @@ function menu() {
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
   value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
             --title "[ M A I N - M E N U ]" \
-            --menu "${header_text[*]}" 17 50 7 \
+            --menu "${header_text[*]}" 19 50 9 \
                 "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                 "GKE"     "Configure Google ${cloud_providers[gke]}" \
 		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
@@ -115,8 +115,8 @@ function configure_aws() {
   
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE > ${CACHE_PATH}/env.aws
-  #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
+  #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE > ${CACHE_PATH}/env.aws
+  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
 }
 
 function configure_gke() {
@@ -146,6 +146,14 @@ function destroy() {
   tailcmd "Destroy Cluster" "---COMPLETE--" make destroy
 }
 
+function pause_cluster() {
+    tailcmd "Pause Cluster" "---COMPLETE---" make kops/pause
+}
+
+function restart_cluster() {
+    tailcmd "Restart Cluster" "---COMPLETE---" make kops/restart
+}
+
 function view() {
   local title="Deepcell Cluster Address"
   if [ -f ./cluster_address ]; then
@@ -173,6 +181,8 @@ function main() {
       "AWS") configure_aws ;;
       "GKE") configure_gke ;;
       "Create") create ;;
+      "Pause") pause_cluster ;;
+      "Restart") restart_cluster ;;
       "Destroy") destroy;;
       "View") view;;
       "Exit") break ;;
