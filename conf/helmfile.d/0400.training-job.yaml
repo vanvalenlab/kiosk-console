@@ -41,7 +41,7 @@ releases:
         DEBUG: "True"
         EXPORT_PREFIX: "models"
         LOG_PREFIX: "tensorboard_logs"
-        REDIS_HOST: "redis-master-0"
+        REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
         STATUS: "new"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
