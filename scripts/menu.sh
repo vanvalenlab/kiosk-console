@@ -37,7 +37,29 @@ function inputbox() {
   local h=${5:-8}
   shift
   value=$(dialog --title "$title" \
-            --inputbox "$label " "$h" "$w" "$default" \
+            --inputbox "$label" "$h" "$w" "$default" \
+            --backtitle "${BRAND}" \
+            --output-fd 1)
+  echo $value
+}
+
+function radiobox() {
+  local value
+  local title=$1
+  local label=$2
+  local h=${3:-8}
+  local w=${4:-60}
+  local menu_h=${5:-3}
+  local text_fields=$6
+  echo "menu_h: " ${menu_h}
+  
+  local strngs='doood1 dood2 dood3 dood4 dood5 dood6'
+  #local strngs='"doood1" "dood2" "dood3" "dood4" "dood5" "dood6"'
+  IFS=$'\n' read -r -a gpu_array <<< "$text_fields"
+  shift
+  value=$(dialog --title "$title" \
+            --radiolist "$label" "$h" "$w" "$menu_h" \
+	    	$text_fields \
             --backtitle "${BRAND}" \
             --output-fd 1)
   echo $value
@@ -88,7 +110,8 @@ function menu() {
 		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
                 "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
 		"View"    "View Cluster Address" \
-                "Shell"   "Drop to the shell" \
+		"Radio"   "Radio buttons test" \
+		"Shell"   "Drop to the shell" \
                 "Exit"    "Exit this kiosk" \
             --output-fd 1 \
           )
@@ -130,17 +153,28 @@ function configure_gke() {
   export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "us-west1")
   export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "us-west1-b")
   export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "n1-standard-2")
-  export GPU_TYPE=$(inputbox "Google Cloud" "GPU type" "nvidia-tesla-p100")
+
+  local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " " $1 " " $1}')
+  local base_box_height=7
+  local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
+  local total_lines=$(($base_box_height + $selector_box_lines))
+  export GPU_TYPE=$(radiobox "Google Cloud" "Choose from the GPU types available in your region:" $total_lines 60 $selector_box_lines "$gpus_in_region")
+
   export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "1")
   export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "n1-standard-4")
   export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "0")
   export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "4")
   export CLOUD_PROVIDER=gke
+
   make gke/login
   
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET > ${CACHE_PATH}/env.gke
+  printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
+	  -e GKE_COMPUTE_REGION -e GKE_COMPUTE_ZONE \
+	  -e GKE_MACHINE_TYPE -e GPU_TYPE -e GPU_PER_NODE \
+	  -e GPU_MACHINE_TYPE -e GPU_NODE_MIN_SIZE \
+	  -e GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.gke
 }
 
 
@@ -170,6 +204,20 @@ function view() {
   read -p "Press enter to return to main menu"
 }
 
+function radio() {
+  local GKE_COMPUTE_ZONE='us-west1-b'
+  local GPUS_IN_REGION=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " " $1 " " $1}')
+  local base_box_height=7
+  local selector_box_lines=$(echo "${GPUS_IN_REGION}" | tr -cd '\n' | wc -c)
+  local total_lines=$(($base_box_height + $selector_box_lines))
+  local RADIO_TEST=$(radiobox "Google Cloud" "GPU Type" $total_lines 60 $selector_box_lines "$GPUS_IN_REGION")
+  echo $RADIO_TEST
+  echo "base_box_height: " $base_box_height
+  echo "selector_box_lines: " $selector_box_lines
+  echo "total_lines: " $total_lines
+  sleep 5s
+}
+
 function main() {
   export MENU=true
   msgbox "Welcome!" "Welcome to the Deepcell Kiosk"
@@ -187,6 +235,7 @@ function main() {
       "Create") create ;;
       "Destroy") destroy;;
       "View") view;;
+      "Radio") radio;;
       "Exit") break ;;
     esac
   done
