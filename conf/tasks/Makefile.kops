@@ -50,11 +50,11 @@ kops/create/aws:
 	@echo "Briefly restarting the AWS cluster in order to add some necessary permissions to it..."
 	@kops get cluster -o yaml > /tmp/cluster-template.yaml
 	@yq merge -x /tmp/cluster-template.yaml patches/aws.yaml > /tmp/cluster.yaml
-	@cat /tmp/cluster.yaml | envsubst > /tmp/cluster-envsubst.yaml
+	@envsubst <  /tmp/cluster.yaml > /tmp/cluster-envsubst.yaml
 	@kops replace -f /tmp/cluster-envsubst.yaml
 	@kops update cluster --yes || echo "Restart and update didn't happen."
 	@echo "Permission addition finished."
-	@echo " "
+	@echo
 	@echo " "
 
 ## Provision GPU instance group
@@ -65,7 +65,7 @@ kops/create/gpu-nodes:
 	@if [[ -z "${GPU_NODES_EXIST}" ]]; then \
 		kops create ig gpu-nodes -o yaml --dry-run > /tmp/gpu-nodes-template.yaml; \
 		yq merge -x /tmp/gpu-nodes-template.yaml patches/gpu-nodes.yaml > /tmp/gpu-nodes.yaml; \
-		cat /tmp/gpu-nodes.yaml | envsubst > /tmp/gpu-nodes-envsubst.yaml; \
+		envsubst <  /tmp/gpu-nodes.yaml  > /tmp/gpu-nodes-envsubst.yaml; \
 		kops create -f /tmp/gpu-nodes-envsubst.yaml; \
 		kops update cluster --yes; \
 	else \
