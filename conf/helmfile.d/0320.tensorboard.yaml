@@ -29,7 +29,7 @@ releases:
     - app_name: "tensorboard"
       replicas: 1
       image_name: "tensorflow/tensorflow"
-      image_version: "1.10"
+      image_tag: "1.10"
       deployment_name: "tensorboard-deployment"
       deployment_port: 6006
       container_name: "tensorboard-container"

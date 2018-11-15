@@ -3,7 +3,7 @@ app_name: "training"
 # job.yaml
 parallelism: 0
 image_name: "vanvalenlab/kiosk-training"
-image_version: "latest"
+image_tag: "latest"
 job_name: "training-job"
 job_port: 7241
 container_name: "training-container"

@@ -29,7 +29,7 @@ releases:
     - app_name: "training"
       parallelism: 1
       image_name: "vanvalenlab/kiosk-training"
-      image_version: "0.1"
+      image_tag: "0.1"
       job_name: "training-job"
       job_port: 7241
       container_name: "training-container"

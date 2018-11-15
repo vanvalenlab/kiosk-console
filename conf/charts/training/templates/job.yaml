@@ -6,7 +6,7 @@ metadata:
     app: {{ .Values.app_name }}
 spec:
   parallelism: {{ .Values.parallelism }}
-  completions: null
+  completions: 2147483647
   template:
     metadata:
       name: {{ .Values.job_name }}
@@ -22,7 +22,7 @@ spec:
 {{- end }}
       containers:
       - name: {{ .Values.container_name }}
-        image: {{ .Values.image_name }}:{{ .Values.image_version }}
+        image: {{ .Values.image_name }}:{{ .Values.image_tag }}
         imagePullPolicy: "Always"
         resources:
           limits:
