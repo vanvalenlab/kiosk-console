@@ -125,8 +125,8 @@ function configure_aws() {
   export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY}")
   export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET}")
   export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE}")
-  export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "m4.large")
-  export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "m4.large")
+  export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "${MASTER_MACHINE_TYPE:-m4.large}")
+  export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "${NODE_MACHINE_TYPE:-m4.large}")
 
   # let's just hardcode the menu, since all instance types are apparently available in all regions
   # and there's no built-in way to list type in the aws-cli
@@ -143,8 +143,8 @@ function configure_aws() {
   export AWS_GPU_MACHINE_TYPE=$(radiobox "Amazon Web Services" \
 	  "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
   
-  export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "0")
-  export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "4")
+  export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "${AWS_MIN_GPU_NODES:-0}")
+  export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "${AWS_MAX_GPU_NODES:-4}")
 
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
@@ -161,9 +161,9 @@ function configure_gke() {
   export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT}")
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
   export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET}")
-  export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "us-west1")
-  export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "us-west1-b")
-  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "n1-standard-2")
+  export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "${GPU_COMPUTE_REGION:-us-west1}")
+  export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
+  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-2}")
 
   local gpus_in_region=$(gcloud compute accelerator-types list | \
 	  grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " _ OFF"}')
@@ -174,10 +174,10 @@ function configure_gke() {
 	  "Choose from the GPU types available in your region:" \
 	  $total_lines 60 $selector_box_lines "$gpus_in_region")
   
-  export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "1")
-  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "n1-standard-4")
-  export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "0")
-  export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "4")
+  export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
+  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-standard-4}")
+  export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
+  export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "${GPU_NODE_MAX_SIZE:-4}")
   export CLOUD_PROVIDER=gke
 
   make gke/login
