@@ -51,10 +51,6 @@ function radiobox() {
   local w=${4:-60}
   local menu_h=${5:-3}
   local text_fields=$6
-  echo "menu_h: " ${menu_h}
-  
-  local strngs='doood1 dood2 dood3 dood4 dood5 dood6'
-  #local strngs='"doood1" "dood2" "dood3" "dood4" "dood5" "dood6"'
   IFS=$'\n' read -r -a gpu_array <<< "$text_fields"
   shift
   value=$(dialog --title "$title" \
@@ -110,7 +106,6 @@ function menu() {
 		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
                 "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
 		"View"    "View Cluster Address" \
-		"Radio"   "Radio buttons test" \
 		"Shell"   "Drop to the shell" \
                 "Exit"    "Exit this kiosk" \
             --output-fd 1 \
@@ -132,6 +127,22 @@ function configure_aws() {
   export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE}")
   export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "m4.large")
   export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "m4.large")
+
+  # let's just hardcode the menu, since all instance types are apparently available in all regions
+  # and there's no built-in way to list type in the aws-cli
+  local gpu_types="g3s.xlarge 1GPU OFF
+	  g3.4xlarge 1GPU OFF
+	  g3.8xlarge 2GPUs OFF
+	  g3.16xlarge 4GPUs OFF
+	  p2.xlarge 1GPU OFF
+	  p2.8xlarge 8GPUs OFF
+	  p2.16xlarge 16GPUs OFF
+	  p3.2xlarge 1GPU OFF
+	  p3.8xlarge 4GPUs OFF
+	  p3.16xlarge 8GPUs OFF"
+  export AWS_GPU_MACHINE_TYPE=$(radiobox "Amazon Web Services" \
+	  "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
+  
   export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "0")
   export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "4")
 
@@ -154,12 +165,15 @@ function configure_gke() {
   export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "us-west1-b")
   export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "n1-standard-2")
 
-  local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " " $1 " " $1}')
+  local gpus_in_region=$(gcloud compute accelerator-types list | \
+	  grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " _ OFF"}')
   local base_box_height=7
   local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
   local total_lines=$(($base_box_height + $selector_box_lines))
-  export GPU_TYPE=$(radiobox "Google Cloud" "Choose from the GPU types available in your region:" $total_lines 60 $selector_box_lines "$gpus_in_region")
-
+  export GPU_TYPE=$(radiobox "Google Cloud" \
+	  "Choose from the GPU types available in your region:" \
+	  $total_lines 60 $selector_box_lines "$gpus_in_region")
+  
   export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "1")
   export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "n1-standard-4")
   export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "0")
@@ -204,20 +218,6 @@ function view() {
   read -p "Press enter to return to main menu"
 }
 
-function radio() {
-  local GKE_COMPUTE_ZONE='us-west1-b'
-  local GPUS_IN_REGION=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " " $1 " " $1}')
-  local base_box_height=7
-  local selector_box_lines=$(echo "${GPUS_IN_REGION}" | tr -cd '\n' | wc -c)
-  local total_lines=$(($base_box_height + $selector_box_lines))
-  local RADIO_TEST=$(radiobox "Google Cloud" "GPU Type" $total_lines 60 $selector_box_lines "$GPUS_IN_REGION")
-  echo $RADIO_TEST
-  echo "base_box_height: " $base_box_height
-  echo "selector_box_lines: " $selector_box_lines
-  echo "total_lines: " $total_lines
-  sleep 5s
-}
-
 function main() {
   export MENU=true
   msgbox "Welcome!" "Welcome to the Deepcell Kiosk"
@@ -235,7 +235,6 @@ function main() {
       "Create") create ;;
       "Destroy") destroy;;
       "View") view;;
-      "Radio") radio;;
       "Exit") break ;;
     esac
   done

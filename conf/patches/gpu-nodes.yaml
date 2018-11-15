@@ -1,5 +1,5 @@
 spec:
-  machineType: p2.xlarge
+  machineType: $AWS_GPU_MACHINE_TYPE
   taints:
   - nvidia.com/gpu=:NoSchedule
   hooks:
