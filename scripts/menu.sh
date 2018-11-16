@@ -134,7 +134,7 @@ function configure_aws() {
 	  g3.4xlarge 1GPU OFF
 	  g3.8xlarge 2GPUs OFF
 	  g3.16xlarge 4GPUs OFF
-	  p2.xlarge 1GPU OFF
+	  p2.xlarge 1GPU ON
 	  p2.8xlarge 8GPUs OFF
 	  p2.16xlarge 16GPUs OFF
 	  p3.2xlarge 1GPU OFF
@@ -169,12 +169,13 @@ function configure_gke() {
   gcloud config set project ${PROJECT}
   local gpus_in_region=$(gcloud compute accelerator-types list | \
 	  grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " _ OFF"}')
+  local gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
   local base_box_height=7
   local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
   local total_lines=$(($base_box_height + $selector_box_lines))
   export GPU_TYPE=$(radiobox "Google Cloud" \
 	  "Choose from the GPU types available in your region:" \
-	  $total_lines 60 $selector_box_lines "$gpus_in_region")
+	  $total_lines 60 $selector_box_lines "$gpus_with_default")
   
   export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
   export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-standard-4}")
