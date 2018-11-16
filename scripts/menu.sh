@@ -37,7 +37,25 @@ function inputbox() {
   local h=${5:-8}
   shift
   value=$(dialog --title "$title" \
-            --inputbox "$label " "$h" "$w" "$default" \
+            --inputbox "$label" "$h" "$w" "$default" \
+            --backtitle "${BRAND}" \
+            --output-fd 1)
+  echo $value
+}
+
+function radiobox() {
+  local value
+  local title=$1
+  local label=$2
+  local h=${3:-8}
+  local w=${4:-60}
+  local menu_h=${5:-3}
+  local text_fields=$6
+  IFS=$'\n' read -r -a gpu_array <<< "$text_fields"
+  shift
+  value=$(dialog --title "$title" \
+            --radiolist "$label" "$h" "$w" "$menu_h" \
+	    	$text_fields \
             --backtitle "${BRAND}" \
             --output-fd 1)
   echo $value
@@ -88,7 +106,7 @@ function menu() {
 		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
                 "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
 		"View"    "View Cluster Address" \
-                "Shell"   "Drop to the shell" \
+		"Shell"   "Drop to the shell" \
                 "Exit"    "Exit this kiosk" \
             --output-fd 1 \
           )
@@ -107,6 +125,26 @@ function configure_aws() {
   export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY}")
   export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET}")
   export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE}")
+  export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "${MASTER_MACHINE_TYPE:-m4.large}")
+  export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "${NODE_MACHINE_TYPE:-m4.large}")
+
+  # let's just hardcode the menu, since all instance types are apparently available in all regions
+  # and there's no built-in way to list type in the aws-cli
+  local gpu_types="g3s.xlarge 1GPU OFF
+	  g3.4xlarge 1GPU OFF
+	  g3.8xlarge 2GPUs OFF
+	  g3.16xlarge 4GPUs OFF
+	  p2.xlarge 1GPU ON
+	  p2.8xlarge 8GPUs OFF
+	  p2.16xlarge 16GPUs OFF
+	  p3.2xlarge 1GPU OFF
+	  p3.8xlarge 4GPUs OFF
+	  p3.16xlarge 8GPUs OFF"
+  export AWS_GPU_MACHINE_TYPE=$(radiobox "Amazon Web Services" \
+	  "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
+  
+  export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "${AWS_MIN_GPU_NODES:-0}")
+  export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "${AWS_MAX_GPU_NODES:-4}")
 
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
@@ -121,14 +159,38 @@ function configure_aws() {
 
 function configure_gke() {
   export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT}")
+  make gke/login
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
   export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET}")
+  export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "${GPU_COMPUTE_REGION:-us-west1}")
+  export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
+  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-2}")
+
+  gcloud config set project ${PROJECT}
+  local gpus_in_region=$(gcloud compute accelerator-types list | \
+	  grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " _ OFF"}')
+  local gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
+  local base_box_height=7
+  local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
+  local total_lines=$(($base_box_height + $selector_box_lines))
+  export GPU_TYPE=$(radiobox "Google Cloud" \
+	  "Choose from the GPU types available in your region:" \
+	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+  
+  export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
+  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-standard-4}")
+  export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
+  export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "${GPU_NODE_MAX_SIZE:-4}")
   export CLOUD_PROVIDER=gke
-  make gke/login
+
   
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET > ${CACHE_PATH}/env.gke
+  printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
+	  -e GKE_COMPUTE_REGION -e GKE_COMPUTE_ZONE \
+	  -e GKE_MACHINE_TYPE -e GPU_TYPE -e GPU_PER_NODE \
+	  -e GPU_MACHINE_TYPE -e GPU_NODE_MIN_SIZE \
+	  -e GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.gke
 }
 
 

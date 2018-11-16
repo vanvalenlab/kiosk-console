@@ -29,7 +29,7 @@ env:
   AWS_REGION: "us-east-1"
   GKE_COMPUTE_ZONE: "us-west1-b"
 
-secrets_name: "training-variables"
+secrets_name: "training-env-variables"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"
