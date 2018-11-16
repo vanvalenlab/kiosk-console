@@ -17,13 +17,6 @@ spec:
       containers:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_tag }}
-        command:
-          - tensorboard
-        args:
-          - --logdir
-          - $([[ $CLOUD_PROVIDER = aws ]] && echo s3://${AWS_S3_BUCKET}/${LOG_PREFIX} || echo gs://${GKE_BUCKET}/${LOG_PREFIX})
-          - --host
-          - 0.0.0.0
         imagePullPolicy: "Always"
         ports:
         - containerPort: {{ .Values.deployment_port }}

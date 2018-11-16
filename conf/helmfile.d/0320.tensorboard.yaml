@@ -28,8 +28,8 @@ releases:
   values:
     - app_name: "tensorboard"
       replicas: 1
-      image_name: "tensorflow/tensorflow"
-      image_tag: "1.10"
+      image_name: "vanvalenlab/kiosk-tensorboard"
+      image_tag: "0.1"
       deployment_name: "tensorboard-deployment"
       deployment_port: 6006
       container_name: "tensorboard-container"

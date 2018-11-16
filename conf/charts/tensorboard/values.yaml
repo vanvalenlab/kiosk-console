@@ -3,7 +3,7 @@ app_name: "tensorboard"
 # deployment.yaml
 deployment_name: "tensorboard-deployment"
 replicas: 1
-image_name: "tensorflow/tensorflow"
+image_name: "vanvalenlab/kiosk-tensorboard"
 image_tag: "latest"
 deployment_port: 6006
 container_name: "tensorboard-container"
