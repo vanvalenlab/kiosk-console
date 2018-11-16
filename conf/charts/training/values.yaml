@@ -36,7 +36,7 @@ env:
   EROSION_WIDTH: "0"
   DISTANCE_BINS: "4"
 
-secrets_name: "redis-consumer-env-variables"
+secrets_name: "training-env-variables"
 secrets:
   DATA_PATH: "change_me"
   AWS_ACCESS_KEY_ID: "change_me"
