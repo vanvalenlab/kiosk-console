@@ -5,9 +5,6 @@ metadata:
   labels:
     app: {{ .Values.app_name }}
 spec:
-  selector:
-      matchLabels:
-        app: {{ .Values.app_name }}
   parallelism: 0
   completions: null
   template:
