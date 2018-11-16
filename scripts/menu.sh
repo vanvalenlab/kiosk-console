@@ -130,7 +130,7 @@ function configure_aws() {
 
   # let's just hardcode the menu, since all instance types are apparently available in all regions
   # and there's no built-in way to list type in the aws-cli
-  local gpu_types="g3s.xlarge 1GPU OFF
+  local gpu_types="g3.xlarge 1GPU OFF
 	  g3.4xlarge 1GPU OFF
 	  g3.8xlarge 2GPUs OFF
 	  g3.16xlarge 4GPUs OFF
