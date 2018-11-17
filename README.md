@@ -4,6 +4,7 @@
 
 This repository is under heavy active development and, despite hainvg a 0.1 version tag, may still have bugs.
 
+If you are experiencing issues with the Deepcell kiosk, please consult the [Troubleshooting document](docs/TROUBLESHOOTING.md) in the `docs` folder.
 
 # Deepcell Kiosk
 
