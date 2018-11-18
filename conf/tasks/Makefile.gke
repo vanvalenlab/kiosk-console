@@ -143,6 +143,7 @@ gke/create/service-account:
 ## Delete Service Account used by deepcell
 gke/destroy/service-account:
 	@echo "Destroying GKE service-account..."
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
 	@-gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --quiet
 	@echo "GKE service-account destruction finished."
 	@echo " "
