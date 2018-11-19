@@ -9,6 +9,7 @@ ENV DOCKER_TAG="latest"
 
 # Geodesic banner
 ENV BANNER="deepcell"
+ENV BANNER_FONT="Electronic.flf"
 
 # Disable cloudposse motd
 ENV MOTD_URL=""
