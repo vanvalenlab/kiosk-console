@@ -161,6 +161,7 @@ function configure_gke() {
   export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT}")
   make gke/login
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
+  export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | sed -E 's/[^a-zA-Z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET}")
   export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "${GPU_COMPUTE_REGION:-us-west1}")
   export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
