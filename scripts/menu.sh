@@ -121,13 +121,31 @@ function configure_aws() {
     export NAMESPACE="$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
   fi
 
-  export AWS_ACCESS_KEY_ID=$(inputbox "Amazon Web Services" "Access Key ID" "${AWS_ACCESS_KEY_ID}")
-  export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY}")
-  export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET}")
-  export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE}")
+  export AWS_ACCESS_KEY_ID=$(inputbox "Amazon Web Services" "Access Key ID" "${AWS_ACCESS_KEY_ID:-invalid_default}")
+  if [ "$AWS_ACCESS_KEY_ID" = "" ]; then
+	  return 0
+  fi
+  export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY:-invalid_default}")
+  if [ "$AWS_SECRET_ACCESS_KEY" = "" ]; then
+	  return 0
+  fi
+  export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET:-invalid_default}")
+  if [ "$AWS_S3_BUCKET" = "" ]; then
+	  return 0
+  fi
+  export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE:-deepcell-aws-cluster}")
   export NAMESPACE=$(echo ${NAMESPACE} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
+  if [ "$NAMESPACE" = "" ]; then
+	  return 0
+  fi
   export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "${MASTER_MACHINE_TYPE:-m4.large}")
+  if [ "$MASTER_MACHINE_TYPE" = "" ]; then
+	  return 0
+  fi
   export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "${NODE_MACHINE_TYPE:-m4.large}")
+  if [ "$NODE_MACHINE_TYPE" = "" ]; then
+	  return 0
+  fi
 
   # let's just hardcode the menu, since all instance types are apparently available in all regions
   # and there's no built-in way to list type in the aws-cli
@@ -145,7 +163,13 @@ function configure_aws() {
 	  "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
   
   export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "${AWS_MIN_GPU_NODES:-0}")
+  if [ "$AWS_MIN_GPU_NODES" = "" ]; then
+	  return 0
+  fi
   export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "${AWS_MAX_GPU_NODES:-4}")
+  if [ "$AWS_MAX_GPU_NODES" = "" ]; then
+	  return 0
+  fi
 
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
@@ -159,14 +183,32 @@ function configure_aws() {
 }
 
 function configure_gke() {
-  export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT}")
+  export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT:-invalid_default}")
+  if [ "$PROJECT" = "" ]; then
+	  return 0
+  fi
   make gke/login
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET}")
+  if [ "$CLUSTER_NAME" = "" ]; then
+	  return 0
+  fi
+  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET:-invalid_default}")
+  if [ "$GKE_BUCKET" = "" ]; then
+	  return 0
+  fi
   export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "${GPU_COMPUTE_REGION:-us-west1}")
+  if [ "$GKE_COMPUTE_REGION" = "" ]; then
+	  return 0
+  fi
   export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
+  if [ "$GKE_COMPUTE_ZONE" = "" ]; then
+	  return 0
+  fi
   export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-2}")
+  if [ "$GKE_MACHINE_TYPE" = "" ]; then
+	  return 0
+  fi
 
   gcloud config set project ${PROJECT}
   local gpus_in_region=$(gcloud compute accelerator-types list | \
@@ -180,9 +222,21 @@ function configure_gke() {
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
   
   export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
+  if [ "$GPU_PER_NODE" = "" ]; then
+	  return 0
+  fi
   export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-standard-4}")
+  if [ "$GPU_MACHINE_TYPE" = "" ]; then
+	  return 0
+  fi
   export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
+  if [ "$GPU_NODE_MIN_SIZE" = "" ]; then
+	  return 0
+  fi
   export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "${GPU_NODE_MAX_SIZE:-4}")
+  if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
+	  return 0
+  fi
   export CLOUD_PROVIDER=gke
 
   
