@@ -125,6 +125,7 @@ function configure_aws() {
   export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY}")
   export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET}")
   export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE}")
+  export NAMESPACE=$(echo ${NAMESPACE} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "${MASTER_MACHINE_TYPE:-m4.large}")
   export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "${NODE_MACHINE_TYPE:-m4.large}")
 
@@ -161,7 +162,7 @@ function configure_gke() {
   export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT}")
   make gke/login
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
-  export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | sed -E 's/[^a-zA-Z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
+  export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET}")
   export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "${GPU_COMPUTE_REGION:-us-west1}")
   export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
