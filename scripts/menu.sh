@@ -24,7 +24,7 @@ function retval() {
 function msgbox() {
   local title=$1
   local message=$2
-  dialog --backtitle "$BRAND" --title "$title" --clear --msgbox "$message" 10 41
+  dialog --backtitle "$BRAND" --title "$title" --clear --msgbox "$message" 12 60
   retval $?
 }
 
@@ -276,7 +276,12 @@ function view() {
 
 function main() {
   export MENU=true
-  msgbox "Welcome!" "Welcome to the Deepcell Kiosk"
+  msgbox "Welcome!" \
+	 "Welcome to the Deepcell Kiosk!
+
+This Kiosk was developed by the Van Valen Lab at the California Institute of Technology.
+
+https://vanvalenlab.caltech.edu"
 
   while true; do
     ACTION=$(menu)
