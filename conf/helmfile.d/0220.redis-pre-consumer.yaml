@@ -43,8 +43,8 @@ releases:
         CONSUMER_TYPE: "pre"
         TF_HOST: "tf-serving-service"
         TF_PORT: "1337"
-        AWS_REGION: "us-east-1"
         DEBUG: "True"
+        AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
       secrets:

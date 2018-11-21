@@ -36,6 +36,12 @@ releases:
       service_name: "training-service"
       service_port: 7241
       service_type: "ClusterIP"
+      nodeSelector:
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+        beta.kubernetes.io/instance-type: '{{ env "AWS_GPU_MACHINE_TYPE" | default "p2.xlarge" }}'
+{{ else }}
+        cloud.google.com/gke-accelerator: '{{ env "GPU_TYPE" | default "nvidia-tesla-k80" }}'
+{{ end }}
       env:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         DEBUG: "True"
