@@ -20,6 +20,10 @@ spec:
         {{ $name }}: {{ $value | quote }}
 {{- end }}
 {{- end }}
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
       containers:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_tag }}
