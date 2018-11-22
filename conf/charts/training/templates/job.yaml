@@ -12,6 +12,8 @@ spec:
       name: {{ .Values.job_name }}
       labels:
         app: {{ .Values.app_name }}
+      annotations:
+        tf-version.cloud-tpus.google.com: "1.9"
     spec:
       restartPolicy: Never
       nodeSelector:
@@ -30,7 +32,7 @@ spec:
         imagePullPolicy: "Always"
         resources:
           limits:
-            nvidia.com/gpu: 1
+            cloud-tpus.google.com/v2: 8
         ports:
         - containerPort: {{ .Values.job_port }}
         env:
