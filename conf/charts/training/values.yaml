@@ -26,7 +26,6 @@ env:
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
   STATUS: "new"
-  AWS_REGION: "us-east-1"
   GKE_COMPUTE_ZONE: "us-west1-b"
 
 secrets_name: "training-env-variables"

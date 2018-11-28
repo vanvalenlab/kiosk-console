@@ -50,7 +50,6 @@ releases:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
         STATUS: "new"
-        AWS_REGION: "us-east-1"
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
