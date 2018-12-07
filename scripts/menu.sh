@@ -210,11 +210,14 @@ function configure_gke() {
 	  return 0
   fi
 
+  local base_box_height=7
+  local total_lines=$(($base_box_height+2))
+  export GPUS_OR_TPUS=$(radiobox "Google Cloud" "Would you like to use GPUs or TPUs in your cluster?" \
+      $total_lines 60 2 "GPUs _ ON TPUs _ OFF")
   gcloud config set project ${PROJECT}
   local gpus_in_region=$(gcloud compute accelerator-types list | \
 	  grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " _ OFF"}')
   local gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
-  local base_box_height=7
   local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
   local total_lines=$(($base_box_height + $selector_box_lines))
   export GPU_TYPE=$(radiobox "Google Cloud" \
