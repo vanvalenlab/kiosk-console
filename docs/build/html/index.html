@@ -81,6 +81,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme_link.html">Disclaimer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="readme_link.html#deepcell-kiosk">Deepcell Kiosk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TROUBLESHOOTING.html">Troubleshooting</a></li>
 </ul>
 
             
@@ -166,60 +167,12 @@
 <li class="toctree-l2"><a class="reference internal" href="readme_link.html#credits">Credits</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="TROUBLESHOOTING.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="TROUBLESHOOTING.html#kiosk-installation">Kiosk Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="TROUBLESHOOTING.html#kiosk-usage">Kiosk Usage</a></li>
 </ul>
-</div>
-</div>
-<div class="section" id="troubleshooting">
-<h1>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="kiosk-installation">
-<h2>Kiosk Installation<a class="headerlink" href="#kiosk-installation" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li>### <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docker/build</span></code></li>
+</li>
 </ul>
-<hr class="docutils" />
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>DOCKER not defined in docker/build
-[directory]/kiosk/build-harness/modules/docker/Makefile.build:9: recipe for target &#39;docker/build&#39; failed
-make: *** [docker/build] Error 1
-</pre></div>
-</div>
-<p><span class="raw-html-m2r"><b>EXPLANATION</b></span>
-This means that you do not have Docker installed.</p>
-<p><span class="raw-html-m2r"><b>SOLUTION</b></span></p>
-<hr class="docutils" />
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Post h
-ttp://%2Fvar%2Frun%2Fdocker.sock/v1.35/build?buildargs=%7B%7D&amp;cachefrom=%5B%5D&amp;cgroupparent=&amp;cpuperiod=0&amp;cpuquot
-a=0&amp;cpusetcpus=&amp;cpusetmems=&amp;cpushares=0&amp;dockerfile=Dockerfile&amp;labels=%7B%7D&amp;memory=0&amp;memswap=0&amp;networkmode=defau
-lt&amp;rm=1&amp;session=57da952107578b7cdaa0d35d533aefc8af001e6be3cb06960fe651a7f7990217&amp;shmsize=0&amp;t=vanvalenlab%2Fkiosk
-%3Alatest&amp;target=&amp;ulimits=null: dial unix /var/run/docker.sock: connect: permission denied
-[directory]/kiosk/build-harness/modules/docker/Makefile.build:9: recipe for target &#39;docker/build&#39; failed
-make: \*\*\* [docker/build] Error 1
-</pre></div>
-</div>
-<p><span class="raw-html-m2r"><b>EXPLANATION</b></span>
-This means that your current user is not a member of the <code class="docutils literal notranslate"><span class="pre">docker</span></code> user group.</p>
-<p><span class="raw-html-m2r"><b>SOLUTION</b></span>
-If you are running Linux, you can add yourself to the <code class="docutils literal notranslate"><span class="pre">docker</span></code> user group with the following command: <code class="docutils literal notranslate"><span class="pre">usermod</span> <span class="pre">-a</span> <span class="pre">-G</span> <span class="pre">docker</span> <span class="pre">$(whoami)</span></code>. Then log out and log back in.</p>
-<p>If that command returns an error, you may not be on Linux. If you are on Linux, you may need to prepend that command with <code class="docutils literal notranslate"><span class="pre">sudo</span></code>. In order for the sudo command to work, though, your current user must have root privileges.</p>
-<hr class="docutils" />
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>Building vanvalenlab/kiosk:latest from ./Dockerfile with [] build args...
-ERRO[0000] failed to dial gRPC: cannot connect to the Docker daemon. Is &#39;docker daemon&#39; running on this host?: d
-ial unix /var/run/docker.sock: connect: permission denied
-context canceled
-[directory]/kiosk/build-harness/modules/docker/Makefile.build:9: recipe for target &#39;docker/build&#39; failed
-make: *** [docker/build] Error 1
-</pre></div>
-</div>
-<p><span class="raw-html-m2r"><b>EXPLANATION</b></span>
-You probably just added yourself to the <code class="docutils literal notranslate"><span class="pre">docker</span></code> user group but haven’t logged and logged back in yet.</p>
-<p><span class="raw-html-m2r"><b>SOLUTION</b></span></p>
-</div>
-<hr class="docutils" />
-<div class="section" id="kiosk-usage">
-<h2>Kiosk Usage<a class="headerlink" href="#kiosk-usage" title="Permalink to this headline">¶</a></h2>
-<p>Kiosk shows up with letters all over the borders. Very weird.</p>
-<p><span class="raw-html-m2r"><b>EXPLANATION</b></span>
-This could be cause by several different misconfigurations, either on your machine or within the terminal itself. This is a known issue when using Google Cloud’s browser-based SSH interface.</p>
-<p><span class="raw-html-m2r"><b>SOLUTION</b></span></p>
 </div>
 </div>
 <div class="section" id="indices-and-tables">

@@ -8,12 +8,8 @@ Welcome to the doumentation for DeepCell's Kiosk
    :caption: Contents:
 
    readme_link
+   TROUBLESHOOTING
 
-.. mdinclude:: TROUBLESHOOTING.md
-
-
-Indices and tables
-==================
 
 * :ref:`genindex`
 * :ref:`modindex`
