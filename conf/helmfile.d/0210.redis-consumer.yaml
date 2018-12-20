@@ -30,7 +30,7 @@ releases:
       deployment_name: "redis-consumer-deployment"
       replicas: 0
       image_name: "vanvalenlab/kiosk-redis-consumer"
-      image_tag: "0.1"
+      image_tag: "0.1grpc"
       deployment_port: 8080
       container_name: "redis-consumer-container"
       service_name: "redis-consumer-service"
@@ -41,7 +41,7 @@ releases:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
         TF_HOST: "tf-serving-service"
-        TF_PORT: "1337"
+        TF_PORT: "8500"
         DEBUG: "True"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
