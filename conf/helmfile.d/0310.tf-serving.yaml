@@ -31,10 +31,10 @@ releases:
       image_name: "vanvalenlab/kiosk-tf-serving"
       image_version: "0.1"
       deployment_name: "tf-serving-deployment"
-      deployment_port: 8501
+      deployment_port: 8500
       container_name: "tf-serving-container"
       service_name: "tf-serving-service"
-      service_port: 1337
+      service_port: 8500
       service_type: "ClusterIP"
       nodeSelector:
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
