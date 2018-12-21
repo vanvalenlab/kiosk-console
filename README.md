@@ -8,7 +8,7 @@ Once running, the Kiosk iniates a web portal that has access to cluster of compu
 
 The scalability of the software is enabled by cloud computing. As such, the preparation steps vary depending on which cloud provider you plan on deploying with:
 
-### Google Cloud
+#### Google Cloud
 
 1. Create an account at [Google Cloud](https://cloud.google.com).
 2. Create a Google Cloud project.
@@ -16,20 +16,20 @@ The scalability of the software is enabled by cloud computing. As such, the prep
 4. Make sure you have a storage bucket with public access.
 5. Make sure that any files you upload to the bucket (such as pre-trained Tensorflow models) have public access. (Google cloud uses a permission system that may be unfamiliar to Linux users. File permissions are not inherited from buckets; they are set individually on each file.)
 
-### Amazon Web Services
+#### Amazon Web Services
 
 1. Create an account at [Amazon Web Services](https://aws.amazon.com).
 2. Make sure you have at least one account which is a member of the `admin` group.
 3. You should generate an access key pair for this `admin` account using the instructions found [here](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html).
 4. Make sure you have a S3 bucket with public access.
 
-## Kiosk startup for Non-developers
+## Kiosk startup
 
-### Windows Users
+#### Windows Users
 
 1. [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux)
 
-### All Users (Windows and otherwise)
+#### All Users (Windows and otherwise)
 
 1. Install [Docker for your OS](https://www.docker.com/community-edition) (*FREE Community Edition*). 
 2. Start a terminal shell

@@ -186,5 +186,9 @@ autodoc_mock_imports=["tensorflow", "sklearn", "skimage", "nbformat", "cv2", "ke
 
 # -- Options for intersphinx extension ---------------------------------------
 
-# Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {
+    'deepcell': ('https://deepcell.readthedocs.io/en/documentation/', None),
+}
+
+intersphinx_cache_limit = 0
+

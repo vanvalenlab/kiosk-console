@@ -9,7 +9,7 @@ Welcome to the doumentation for DeepCell's Kiosk
 
    readme_link
    TROUBLESHOOTING
-
+   :doc:`DeepCell documentation <deepcell:index>`
 
 * :ref:`genindex`
 * :ref:`modindex`
