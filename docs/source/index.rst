@@ -1,6 +1,6 @@
 .. DeepCell Kiosk documentation master file
 
-Welcome to the doumentation for DeepCell's Kiosk
+Deploying DeepCell - The Kiosk
 ==================================================
 
 .. toctree::
@@ -9,7 +9,8 @@ Welcome to the doumentation for DeepCell's Kiosk
 
    readme_link
    TROUBLESHOOTING
-   :doc:`DeepCell documentation <deepcell:index>`
+
+:doc:`DeepCell documentation <deepcell:index>`
 
 * :ref:`genindex`
 * :ref:`modindex`
