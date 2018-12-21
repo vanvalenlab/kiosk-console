@@ -11,9 +11,6 @@ Welcome to the doumentation for DeepCell's Kiosk
    TROUBLESHOOTING
 
 
-Indices and tables
-==================
-
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`

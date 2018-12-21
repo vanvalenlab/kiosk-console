@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Disclaimer &mdash; DeepCell Kiosk 1.0.0 documentation</title>
+  <title>DeepCell Kiosk: Deploying a Scalable Solution for Biological Image Analysis &mdash; DeepCell Kiosk 1.0.0 documentation</title>
   
 
   
@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="kiosk" href="modules.html" />
+    <link rel="next" title="Troubleshooting" href="TROUBLESHOOTING.html" />
     <link rel="prev" title="Welcome to the doumentation for DeepCell’s Kiosk" href="index.html" /> 
 
   
@@ -80,9 +80,7 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Disclaimer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#deepcell-kiosk">Deepcell Kiosk</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#hello-new-users">Hello new users!</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DeepCell Kiosk: Deploying a Scalable Solution for Biological Image Analysis</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#before-starting-the-kiosk">Before starting the Kiosk</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#google-cloud">Google Cloud</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#amazon-web-services">Amazon Web Services</a></li>
@@ -93,7 +91,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#all-users-windows-and-otherwise">All Users (Windows and otherwise)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#kiosk-startup-for-developers">Kiosk startup for Developers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kiosk-usage">Kiosk usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kiosk-shutdown">Kiosk shutdown</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
@@ -104,7 +101,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#credits">Credits</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">kiosk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="TROUBLESHOOTING.html">Troubleshooting</a></li>
 </ul>
 
             
@@ -150,7 +147,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Disclaimer</li>
+      <li>DeepCell Kiosk: Deploying a Scalable Solution for Biological Image Analysis</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -169,23 +166,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <a class="reference external image-reference" href="http://www.vanvalen.caltech.edu/"><img alt="Van Valen Lab, Caltech" src="https://upload.wikimedia.org/wikipedia/commons/7/75/Caltech_Logo.svg" /></a>
-<div class="section" id="disclaimer">
-<h1>Disclaimer<a class="headerlink" href="#disclaimer" title="Permalink to this headline">¶</a></h1>
-<p>This repository is under heavy active development and, despite hainvg a 0.1 version tag, may still have bugs.</p>
-<p>If you are experiencing issues with the Deepcell kiosk, please consult the <a class="reference external" href="docs/TROUBLESHOOTING.md">Troubleshooting document</a> in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> folder.</p>
-</div>
-<div class="section" id="deepcell-kiosk">
-<h1>Deepcell Kiosk<a class="headerlink" href="#deepcell-kiosk" title="Permalink to this headline">¶</a></h1>
-<p>This deepcell distribution designed to easily spin up an end-to-end Deepcell environment on Kubernetes.</p>
-<p>It’s 100% Open Source and licensed under the <a class="reference external" href="LICENSE">APACHE2</a>.</p>
-<div class="section" id="hello-new-users">
-<h2>Hello new users!<a class="headerlink" href="#hello-new-users" title="Permalink to this headline">¶</a></h2>
-<p>While this project might seem a little overwhelming at first, rest assured that it is all manageable. Just follow the relevant instructions under the <code class="docutils literal notranslate"><span class="pre">Before</span> <span class="pre">starting</span> <span class="pre">the</span> <span class="pre">Kiosk</span></code> and <code class="docutils literal notranslate"><span class="pre">Kiosk</span> <span class="pre">startup</span> <span class="pre">for</span> <span class="pre">Non-developers</span></code> sections and you’ll be unclogging that backed-up data pipeline in no time!</p>
-</div>
+  <div class="section" id="deepcell-kiosk-deploying-a-scalable-solution-for-biological-image-analysis">
+<h1>DeepCell Kiosk: Deploying a Scalable Solution for Biological Image Analysis<a class="headerlink" href="#deepcell-kiosk-deploying-a-scalable-solution-for-biological-image-analysis" title="Permalink to this headline">¶</a></h1>
+<p>This DeepCell distribution is designed to easily spin up an end-to-end DeepCell environment on Kubernetes. The repository contains shell scripts and configuration files that follow the infrastructure-as-code model to easily manage and scale a deep learning solution for biological image analysis.</p>
+<p>Once running, the Kiosk iniates a web portal that has access to cluster of computers in the cloud. This distribution is managed automatically by Kubernetes, deployment software also launched by the Kiosk at run-time. The web portal allows multiple users to upload mulitple images (in the form of zip files) and download the resulting segmentation and classification of these images automatically.</p>
 <div class="section" id="before-starting-the-kiosk">
 <h2>Before starting the Kiosk<a class="headerlink" href="#before-starting-the-kiosk" title="Permalink to this headline">¶</a></h2>
-<p>The preparation steps vary depending on which cloud provider you plan on deploying with:</p>
+<p>The scalability of the software is enabled by cloud computing. As such, the preparation steps vary depending on which cloud provider you plan on deploying with:</p>
 <div class="section" id="google-cloud">
 <h3>Google Cloud<a class="headerlink" href="#google-cloud" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
@@ -225,16 +212,6 @@
 </ol>
 </div>
 </div>
-<div class="section" id="kiosk-startup-for-developers">
-<h2>Kiosk startup for Developers<a class="headerlink" href="#kiosk-startup-for-developers" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li>Clone this repo: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:vanvalenlab/kiosk.git</span></code></li>
-<li>Initialize the “build-harness”: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">init</span></code></li>
-<li>Build the container: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docker/build</span></code></li>
-<li>Install wrapper script: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code></li>
-<li>Start the kiosk. <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">run</span></code></li>
-</ol>
-</div>
 <div class="section" id="kiosk-usage">
 <h2>Kiosk usage<a class="headerlink" href="#kiosk-usage" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
@@ -257,6 +234,15 @@
 <h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li>When using the <code class="docutils literal notranslate"><span class="pre">Predict</span></code> functionality, the first image will take a while to process (up to 10 minutes) because the cluster will need to requisition more computing resources. (This is because the cluster is designed to use as few resources as possible in its resting state.)</li>
+<li>This repository is being actively developed. If you are experiencing issues with the Deepcell kiosk, please consult the <a class="reference external" href="docs/TROUBLESHOOTING.md">Troubleshooting document</a> in the <code class="docutils literal notranslate"><span class="pre">docs</span></code> folder.</li>
+<li>Those interested in Kiosk developement should follow a different path to start the Kiosk:<ol class="arabic">
+<li>Clone this repo: <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">git&#64;github.com:vanvalenlab/kiosk.git</span></code></li>
+<li>Initialize the “build-harness”: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">init</span></code></li>
+<li>Build the container: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">docker/build</span></code></li>
+<li>Install wrapper script: <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code></li>
+<li>Start the kiosk. <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">run</span></code></li>
+</ol>
+</li>
 </ul>
 </div>
 <div class="section" id="references">
@@ -266,6 +252,7 @@
 <li><a class="reference external" href="https://github.com/kubernetes/kops/blob/master/addons/cluster-autoscaler/">Cluster Autoscaler for Kops</a></li>
 <li><a class="reference external" href="https://github.com/brunsgaard/kops-nvidia-docker-installer">Running GPU Intances on Kops</a></li>
 </ul>
+<a class="reference external image-reference" href="http://www.vanvalen.caltech.edu/"><img alt="Van Valen Lab, Caltech" src="https://upload.wikimedia.org/wikipedia/commons/7/75/Caltech_Logo.svg" /></a>
 </div>
 <div class="section" id="copyright">
 <h2>Copyright<a class="headerlink" href="#copyright" title="Permalink to this headline">¶</a></h2>
@@ -273,6 +260,7 @@
 </div>
 <div class="section" id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p>This software is licensed under a modified <a class="reference external" href="LICENSE">APACHE2</a>.</p>
 <a class="reference external image-reference" href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a>
 <p>See <a class="reference external" href="LICENSE">LICENSE</a> for full details.</p>
 <div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>Licensed to the Apache Software Foundation (ASF) under one
@@ -314,7 +302,7 @@ under the License.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="modules.html" class="btn btn-neutral float-right" title="kiosk" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="TROUBLESHOOTING.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="index.html" class="btn btn-neutral" title="Welcome to the doumentation for DeepCell’s Kiosk" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

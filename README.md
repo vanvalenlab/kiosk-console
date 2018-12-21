@@ -1,24 +1,12 @@
-[![Van Valen Lab, Caltech](https://upload.wikimedia.org/wikipedia/commons/7/75/Caltech_Logo.svg)](http://www.vanvalen.caltech.edu/)
+# DeepCell Kiosk: Deploying a Scalable Solution for Biological Image Analysis
 
-# Disclaimer
+This DeepCell distribution is designed to easily spin up an end-to-end DeepCell environment on Kubernetes. The repository contains shell scripts and configuration files that follow the infrastructure-as-code model to easily manage and scale a deep learning solution for biological image analysis.  
 
-This repository is under heavy active development and, despite hainvg a 0.1 version tag, may still have bugs.
-
-If you are experiencing issues with the Deepcell kiosk, please consult the [Troubleshooting document](docs/TROUBLESHOOTING.md) in the `docs` folder.
-
-# Deepcell Kiosk
-
-This deepcell distribution designed to easily spin up an end-to-end Deepcell environment on Kubernetes.
-
-It's 100% Open Source and licensed under the [APACHE2](LICENSE).
-
-## Hello new users!
-
-While this project might seem a little overwhelming at first, rest assured that it is all manageable. Just follow the relevant instructions under the `Before starting the Kiosk` and `Kiosk startup for Non-developers` sections and you'll be unclogging that backed-up data pipeline in no time!
+Once running, the Kiosk iniates a web portal that has access to cluster of computers in the cloud. This distribution is managed automatically by Kubernetes, deployment software also launched by the Kiosk at run-time. The web portal allows multiple users to upload mulitple images (in the form of zip files) and download the resulting segmentation and classification of these images automatically.    
 
 ## Before starting the Kiosk
 
-The preparation steps vary depending on which cloud provider you plan on deploying with:
+The scalability of the software is enabled by cloud computing. As such, the preparation steps vary depending on which cloud provider you plan on deploying with:
 
 ### Google Cloud
 
@@ -49,14 +37,6 @@ The preparation steps vary depending on which cloud provider you plan on deployi
 4. Start the kiosk. Just run: `kiosk`
 5. Follow setup instructions, when prompted
 
-## Kiosk startup for Developers
-
-1. Clone this repo: `git clone git@github.com:vanvalenlab/kiosk.git`
-2. Initialize the "build-harness": `make init`
-3. Build the container: `make docker/build`
-4. Install wrapper script: `make install`
-5. Start the kiosk. `make run`
-
 ## Kiosk usage
 
 1. Once the Kiosk has started, select the configuration option for your chosen cloud provider, either Amazon or Google, and fill out the configuration values as needed. ( If using Google, follow the link provided during the configuration process in a web browser.) Once the Kiosk has been configured for a cloud provider, the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
@@ -74,17 +54,28 @@ When you're done using the cluster, you may want to shutdown the cluster, and pe
 ## Notes
 
 - When using the `Predict` functionality, the first image will take a while to process (up to 10 minutes) because the cluster will need to requisition more computing resources. (This is because the cluster is designed to use as few resources as possible in its resting state.)
+- This repository is being actively developed. If you are experiencing issues with the Deepcell kiosk, please consult the [Troubleshooting document](docs/TROUBLESHOOTING.md) in the `docs` folder.
+- Those interested in Kiosk developement should follow a different path to start the Kiosk: 
+    1. Clone this repo: `git clone git@github.com:vanvalenlab/kiosk.git`
+    2. Initialize the "build-harness": `make init`
+    3. Build the container: `make docker/build`
+    4. Install wrapper script: `make install`
+    5. Start the kiosk. `make run`
 
 ## References
 - [Cluster Autoscaler for AWS](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
 - [Cluster Autoscaler for Kops](https://github.com/kubernetes/kops/blob/master/addons/cluster-autoscaler/)
 - [Running GPU Intances on Kops](https://github.com/brunsgaard/kops-nvidia-docker-installer)
 
+[![Van Valen Lab, Caltech](https://upload.wikimedia.org/wikipedia/commons/7/75/Caltech_Logo.svg)](http://www.vanvalen.caltech.edu/)
+
 ## Copyright
 
 Copyright © 2018 [The Van Valen Lab](http://www.vanvalen.caltech.edu/)
 
 ## License 
+
+This software is licensed under a modified [APACHE2](LICENSE).
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
 
@@ -114,7 +105,7 @@ All other trademarks referenced herein are the property of their respective owne
 
 ## Credits
 
-This kiosk was developed by [Cloud Posse, LLC](https://cloudposse.com). Like it? Please let us know at <hello@cloudposse.com>
+This kiosk was developed with [Cloud Posse, LLC](https://cloudposse.com). They can be reached at <hello@cloudposse.com>
 
 [![Cloud Posse](https://cloudposse.com/logo-300x69.svg)](https://cloudposse.com)
 
