@@ -2,7 +2,7 @@
 
 This DeepCell distribution is designed to easily spin up an end-to-end DeepCell environment on Kubernetes. The repository contains shell scripts and configuration files that follow the infrastructure-as-code model to easily manage and scale a deep learning solution for biological image analysis.  
 
-Once running, the Kiosk iniates a web portal that has access to cluster of computers in the cloud. This distribution is managed automatically by Kubernetes, deployment software also launched by the Kiosk at run-time. The web portal allows multiple users to upload mulitple images (in the form of zip files) and download the resulting segmentation and classification of these images automatically.    
+Once running, the Kiosk iniates a web portal that has access to a cluster of computers in the cloud. This distribution is managed automatically by Kubernetes (deployment software also launched by the Kiosk at run-time). The web portal allows multiple users to upload mulitple images (in the form of zip files) and download the resulting segmentation and classification of these images automatically.    
 
 ## Before starting the Kiosk
 
@@ -14,7 +14,7 @@ The scalability of the software is enabled by cloud computing. As such, the prep
 2. Create a Google Cloud project.
 3. Make sure you have at least one account with the `Owner` role.
 4. Make sure you have a storage bucket with public access.
-5. Make sure that any files you upload to the bucket (such as pre-trained Tensorflow models) have public access. (Google cloud uses a permission system that may be unfamiliar to Linux users. File permissions are not inherited from buckets; they are set individually on each file.)
+5. Make sure that any files you upload to the bucket (such as pre-trained Tensorflow models) have public access. (Google Cloud uses a permission system that may be unfamiliar to Linux users. File permissions are not inherited from buckets; they are set individually on each file.)
 
 #### Amazon Web Services
 
@@ -41,9 +41,8 @@ The scalability of the software is enabled by cloud computing. As such, the prep
 
 1. Once the Kiosk has started, select the configuration option for your chosen cloud provider, either Amazon or Google, and fill out the configuration values as needed. ( If using Google, follow the link provided during the configuration process in a web browser.) Once the Kiosk has been configured for a cloud provider, the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
 2. With the Kiosk configured for the appropriate cloud provider, select the `Create` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see `Cluster Created` followed by `---COMPLETE---` printed to the terminal. If you see `---COMPLETE---` with some error text immediately preceding it, cluster creation failed.
-3. Find the cluster's web address by choosing the `View` option form the Kiosk's main menu. (Depending on your chosne cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".
+3. Find the cluster's web address by choosing the `View` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".
 4. Go to the cluster address in your web browser to find the Deepcell frontpage.
-5. Enjoy!
 
 ## Kiosk shutdown
 
@@ -67,11 +66,10 @@ When you're done using the cluster, you may want to shutdown the cluster, and pe
 - [Cluster Autoscaler for Kops](https://github.com/kubernetes/kops/blob/master/addons/cluster-autoscaler/)
 - [Running GPU Intances on Kops](https://github.com/brunsgaard/kops-nvidia-docker-installer)
 
-[![Van Valen Lab, Caltech](https://upload.wikimedia.org/wikipedia/commons/7/75/Caltech_Logo.svg)](http://www.vanvalen.caltech.edu/)
-
 ## Copyright
 
-Copyright © 2018 [The Van Valen Lab](http://www.vanvalen.caltech.edu/)
+Copyright © 2018-2019 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.  
+All rights reserved.
 
 ## License 
 
@@ -81,34 +79,16 @@ This software is licensed under a modified [APACHE2](LICENSE).
 
 See [LICENSE](LICENSE) for full details.
 
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-
-      https://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
-
-
 ## Trademarks
 
 All other trademarks referenced herein are the property of their respective owners.
 
 ## Credits
 
+[![Van Valen Lab, Caltech](https://upload.wikimedia.org/wikipedia/commons/7/75/Caltech_Logo.svg)](http://www.vanvalen.caltech.edu/)
+
 This kiosk was developed with [Cloud Posse, LLC](https://cloudposse.com). They can be reached at <hello@cloudposse.com>
 
 [![Cloud Posse](https://cloudposse.com/logo-300x69.svg)](https://cloudposse.com)
 
 We're a [DevOps Professional Services](https://cloudposse.com) company based in Los Angeles, CA. We love [Open Source Software](https://github.com/cloudposse/)!
-
-
