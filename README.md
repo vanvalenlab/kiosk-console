@@ -2,7 +2,7 @@
 
 This DeepCell distribution is designed to easily spin up an end-to-end DeepCell environment on Kubernetes. The repository contains shell scripts and configuration files that follow the infrastructure-as-code model to easily manage and scale a deep learning solution for biological image analysis.  
 
-Once running, the Kiosk iniates a web portal that has access to a cluster of computers in the cloud. This distribution is managed automatically by Kubernetes (deployment software also launched by the Kiosk at run-time). The web portal allows multiple users to upload mulitple images (in the form of zip files) and download the resulting segmentation and classification of these images automatically. An example of this deployment and web portal is at [deepcell.org](https://deepcell.org)
+Once running, the Kiosk iniates a web portal that has access to a cluster of computers in the cloud. This distribution is managed automatically by Kubernetes (deployment software also launched by the Kiosk at run-time). The web portal allows multiple users to upload mulitple images (in the form of zip files) and download the resulting segmentation and classification of these images automatically. An example of this deployment and web portal is at [deepcell.org](https://deepcell.org).
 
 ## Before starting the Kiosk
 
