@@ -1,0 +1,16 @@
+app_name: "data-processing"
+
+# deployment.yaml
+deployment_name: "data-processing-deployment"
+replicas: 1
+image_name: "vanvalenlab/kiosk-data-processing"
+image_tag: "latest"
+deployment_port: 8080
+container_name: "data-processing-container"
+env:
+  LISTEN_PORT: 8080
+
+# service.yaml
+service_name: "data-processing-service"
+service_port: 8080
+service_type: "ClusterIP"
