@@ -42,6 +42,8 @@ releases:
         REDIS_PORT: "6379"
         TF_HOST: "tf-serving-service"
         TF_PORT: "8500"
+        DP_HOST: "data-processing-service"
+        DP_PORT: "8080"
         DEBUG: "True"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'

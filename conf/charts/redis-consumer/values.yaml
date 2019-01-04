@@ -12,6 +12,8 @@ env:
   REDIS_PORT: "6379"
   TF_HOST: "overwrite_this"
   TF_PORT: "sepcify_me"
+  DP_HOST: "overwrite_this"
+  DP_PORT: "sepcify_me"
   AWS_REGION: "us-east-1"
   DEBUG: "True"
   CLOUD_PROVIDER: "aws"
