@@ -27,11 +27,11 @@ releases:
   version: "0.1.0"
   values:
     - app_name: "data-processing"
-      parallelism: 1
+      replicas: 1
       image_name: "vanvalenlab/kiosk-data-processing"
       image_tag: "grpc"
-      job_name: "data-processing-job"
-      job_port: 8080
+      deployment_name: "data-processing-deployment"
+      deployment_port: 8080
       container_name: "data-processing-container"
       service_name: "data-processing-service"
       service_port: 8080
