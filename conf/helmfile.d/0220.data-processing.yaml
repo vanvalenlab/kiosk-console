@@ -29,7 +29,7 @@ releases:
     - app_name: "data-processing"
       replicas: 1
       image_name: "vanvalenlab/kiosk-data-processing"
-      image_tag: "grpc"
+      image_tag: "0.1"
       deployment_name: "data-processing-deployment"
       deployment_port: 8080
       container_name: "data-processing-container"
