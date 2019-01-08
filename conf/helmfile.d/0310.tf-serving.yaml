@@ -41,6 +41,7 @@ releases:
         beta.kubernetes.io/instance-type: '{{ env "AWS_GPU_MACHINE_TYPE" | default "p2.xlarge" }}'
 {{ else }}
         cloud.google.com/gke-accelerator: '{{ env "GPU_TYPE" | default "nvidia-tesla-k80" }}'
+        cloud.google.com/gke-preemptible: "true"
 {{ end }}
       env:
         RPC_PORT: "8500"

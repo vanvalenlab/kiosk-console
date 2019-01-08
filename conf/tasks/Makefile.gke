@@ -100,7 +100,7 @@ gke/list/billing-accounts:
 gke/create/gpus:
 	@echo "Creating GPU node pool..."
 	@echo "Using the following command: "
-	gcloud container node-pools create gpu \
+	gcloud beta container node-pools create gpu \
 		--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--zone $(GPU_COMPUTE_ZONE) \
@@ -112,6 +112,7 @@ gke/create/gpus:
 		--enable-autoscaling \
 		--enable-autorepair \
 		--enable-autoupgrade \
+		--preemptible \
 		|| echo "GPU node pool already exists."
 	@echo "GPU node pool completion finished."
 	@echo " "
