@@ -98,6 +98,7 @@ gke/list/billing-accounts:
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
 gke/create/gpus:
+	@gcloud components install beta --quiet
 	@echo "Creating GPU node pool..."
 	@echo "Using the following command: "
 	gcloud beta container node-pools create gpu \
