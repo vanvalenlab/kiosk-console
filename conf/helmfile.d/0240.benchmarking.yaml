@@ -42,3 +42,4 @@ releases:
         BENCHMARK_POSTPROCESSING: '{{ env "BENCHMARK_POSTPROCESSING" | default "NA" }}'
         BENCHMARK_CUTS: '{{ env "BENCHMARK_CUTS" | default "NA" }}'
         GPU_TYPE: '{{ env "GPU_TYPE" | default "NA" }}'
+        CLUSTER_ADDRESS: '{{ env "CLUSTER_ADDRESS" | default "NA" }}'
