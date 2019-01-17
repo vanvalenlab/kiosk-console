@@ -325,7 +325,10 @@ function benchmarking() {
   export BENCHMARKING_PU_TYPE_AND_NUMBER=$(echo $BENCHMARK_TYPE | cut -f2 -d',' | sed 's/-/ /')
   export BENCHMARKING_PU_TYPE=$(echo $BENCHMARKING_PU_TYPE_AND_NUMBER | cut -f2 -d' ')
   export IMG_NUM=$(echo $BENCHMARK_TYPE | grep -o '[0-9]\+-image' | grep -o '[0-9]\+')
-  # scale up number of benchmarking pods from 0 to 1?
+  export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
+  # redeploy benchmarking pod, now that environmental variables have been set
+  helm delete bm --purge
+  helmfile --selector name=bm sync
 }
 
 function main() {
