@@ -103,10 +103,11 @@ function menu() {
             --menu "${header_text[*]}" 17 50 7 \
                 "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                 "GKE"     "Configure Google ${cloud_providers[gke]}" \
-		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+        		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
                 "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
-		"View"    "View Cluster Address" \
-		"Shell"   "Drop to the shell" \
+		        "View"    "View Cluster Address" \
+		        "Shell"   "Drop to the shell" \
+                "Benchmark" "Benchmark Image Processing" \
                 "Exit"    "Exit this kiosk" \
             --output-fd 1 \
           )
