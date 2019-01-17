@@ -345,9 +345,9 @@ https://vanvalenlab.caltech.edu"
       "AWS") configure_aws ;;
       "GKE") configure_gke ;;
       "Create") create ;;
-      "Destroy") destroy;;
-      "View") view;;
-      "Benchmarking") benchmarking;;
+      "Destroy") destroy ;;
+      "View") view ;;
+      "Benchmark") benchmarking ;;
       "Exit") break ;;
     esac
   done
