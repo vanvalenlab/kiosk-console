@@ -322,7 +322,10 @@ function benchmarking() {
 	  1000000-images,16-GPU _ OFF"
   export BENCHMARK_TYPE=$(radiobox "Deepcell" \
 	  "Choose your Benchmark Type:" 15 60 7 "$benchmark_types")
-  ./benchmarking/benchmarking.sh
+  export BENCHMARKING_PU_TYPE_AND_NUMBER=$(echo $BENCHMARK_TYPE | cut -f2 -d',' | sed 's/-/ /')
+  export BENCHMARKING_PU_TYPE=$(echo $BENCHMARKING_PU_TYPE_AND_NUMBER | cut -f2 -d' ')
+  export IMG_NUM=$(echo $BENCHMARK_TYPE | grep -o '[0-9]\+-image' | grep -o '[0-9]\+')
+  # scale up number of benchmarking pods from 0 to 1?
 }
 
 function main() {
