@@ -322,7 +322,7 @@ function benchmarking() {
 	  1000000-images,16-GPU _ OFF"
   export BENCHMARK_TYPE=$(radiobox "Deepcell" \
 	  "Choose your Benchmark Type:" 15 60 7 "$benchmark_types")
-  ./scripts/benchmarking.sh
+  ./benchmarking/benchmarking.sh
 }
 
 function main() {
