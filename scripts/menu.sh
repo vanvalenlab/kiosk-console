@@ -276,6 +276,54 @@ function view() {
   read -p "Press enter to return to main menu"
 }
 
+function benchmarking() {
+  local benchmark_types="1-image,1-CPU _ ON
+	  10-images,1-CPU _ OFF
+	  100-images,1-CPU _ OFF
+	  1000-images,1-CPU _ OFF
+	  10000-images,1-CPU _ OFF
+	  100000-images,1-CPU _ OFF
+	  1000000-images,1-CPU _ OFF
+	  1-image,1-GPU _ OFF
+      10-images,1-GPU _ OFF
+	  100-images,1-GPU _ OFF
+	  1000-images,1-GPU _ OFF
+	  10000-images,1-GPU _ OFF
+	  100000-images,1-GPU _ OFF
+	  1000000-images,1-GPU _ OFF
+	  1-image,2-GPU _ OFF
+      10-images,2-GPU _ OFF
+	  100-images,2-GPU _ OFF
+	  1000-images,2-GPU _ OFF
+	  10000-images,2-GPU _ OFF
+	  100000-images,2-GPU _ OFF
+	  1000000-images,2-GPU _ OFF
+	  1-image,4-GPU _ OFF
+      10-images,4-GPU _ OFF
+	  100-images,4-GPU _ OFF
+	  1000-images,4-GPU _ OFF
+	  10000-images,4-GPU _ OFF
+	  100000-images,4-GPU _ OFF
+	  1000000-images,4-GPU _ OFF
+	  1-image,8-GPU _ OFF
+      10-images,8-GPU _ OFF
+	  100-images,8-GPU _ OFF
+	  1000-images,8-GPU _ OFF
+	  10000-images,8-GPU _ OFF
+	  100000-images,8-GPU _ OFF
+	  1000000-images,8-GPU _ OFF
+	  1-image,16-GPU _ OFF
+      10-images,16-GPU _ OFF
+	  100-images,16-GPU _ OFF
+	  1000-images,16-GPU _ OFF
+	  10000-images,16-GPU _ OFF
+	  100000-images,16-GPU _ OFF
+	  1000000-images,16-GPU _ OFF"
+  export BENCHMARK_TYPE=$(radiobox "Deepcell" \
+	  "Choose your Benchmark Type:" 15 60 7 "$benchmark_types")
+  ./scripts/benchmarking.sh
+}
+
 function main() {
   export MENU=true
   msgbox "Welcome!" \
@@ -298,6 +346,7 @@ https://vanvalenlab.caltech.edu"
       "Create") create ;;
       "Destroy") destroy;;
       "View") view;;
+      "Benchmarking") benchmarking;;
       "Exit") break ;;
     esac
   done

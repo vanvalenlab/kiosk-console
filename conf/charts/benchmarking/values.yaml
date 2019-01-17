@@ -1,0 +1,20 @@
+app_name: "kiosk-benchmarking"
+
+# deployment.yaml
+deployment_name: "benchmarking-deployment"
+replicas: 1
+image_name: "vanvalenlab/kiosk-benchmarking"
+image_version: "latest"
+container_name: "benchmarking-container"
+env:
+  BENCHMARKING_PU_TYPE_AND_NUMBER: "specify_me"
+  BENCHMARKING_PU_TYPE: "specify_me"
+  IMG_NUM: 0
+  BENCHMARK_MODEL: "specify_me"
+  BENCHMARK_MODEL_VERSION: "specify_me"
+  BENCHMARK_POSTPROCESSING: "specify_me"
+  BENCHMARK_CUTS: 0
+  GPU_TYPE: "specify_me"
+  
+# serviceAccount
+service_account_name: "benchmarking-service-account"
