@@ -36,7 +36,7 @@ releases:
       service_name: "zip-consumer-service"
       service_port: 8080
       service_type: "ClusterIP"
-      secrets_name: "redis-consumer-env-variables"
+      secrets_name: "zip-consumer-env-variables"
       resources:
         requests:
           cpu: 100m
