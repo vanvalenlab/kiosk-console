@@ -8,12 +8,12 @@ image_tag: "latest"
 deployment_port: 8080
 container_name: "data-processing-container"
 resources:
-  requests:
-    cpu: 100m
-    memory: 512Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 512Mi
   # limits:
   #   cpu: 100m
-  #   memory: 2Gi
+  #   memory: 512Mi
 env:
   LISTEN_PORT: 8080
 
