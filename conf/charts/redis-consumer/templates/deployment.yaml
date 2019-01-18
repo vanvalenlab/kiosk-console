@@ -20,6 +20,10 @@ spec:
         imagePullPolicy: "Always"
         ports:
         - containerPort: {{ .Values.deployment_port }}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}
