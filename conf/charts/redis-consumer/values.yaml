@@ -7,6 +7,13 @@ image_name: "vanvalenlab/kiosk-redis-consumer"
 image_tag: "latest"
 deployment_port: 8080
 container_name: "redis-consumer-container"
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
 env:
   REDIS_HOST: "redis-master-0"
   REDIS_PORT: "6379"

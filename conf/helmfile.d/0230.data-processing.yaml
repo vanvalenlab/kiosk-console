@@ -36,5 +36,9 @@ releases:
       service_name: "data-processing-service"
       service_port: 8080
       service_type: "ClusterIP"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 512Mi
       env:
         LISTEN_PORT: 8080
