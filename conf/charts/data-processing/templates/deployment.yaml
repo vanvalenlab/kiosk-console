@@ -29,13 +29,3 @@ spec:
           value: {{ $value | quote }}
 {{- end }}
 {{- end }}
-{{ $secrets_name := .Values.secrets_name }}
-{{- range $name, $value := .Values.secrets }}
-{{- if not ( empty $value) }}
-        - name: {{ $name }}
-          valueFrom:
-            secretKeyRef:
-              name: {{ $secrets_name }}
-              key: {{ $name }}
-{{- end }}
-{{- end }}

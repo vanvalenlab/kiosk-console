@@ -1,0 +1,44 @@
+helmDefaults:
+  args:
+    - "--wait"
+    - "--timeout=600"
+    - "--force"
+    - "--reset-values"
+
+releases:
+
+################################################################################
+## Data-Processing #############################################################
+################################################################################
+
+#
+# References:
+#   - [web address of Helm chart's YAML file]
+#
+- name: "dp"
+  namespace: "deepcell"
+  labels:
+    chart: "data-processing"
+    component: "deepcell"
+    namespace: "deepcell"
+    vendor: "vanvalenlab"
+    default: "true"
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/data-processing'
+  version: "0.1.0"
+  values:
+    - app_name: "data-processing"
+      replicas: 1
+      image_name: "vanvalenlab/kiosk-data-processing"
+      image_tag: "0.1"
+      deployment_name: "data-processing-deployment"
+      deployment_port: 8080
+      container_name: "data-processing-container"
+      service_name: "data-processing-service"
+      service_port: 8080
+      service_type: "ClusterIP"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 1024Mi
+      env:
+        LISTEN_PORT: 8080
