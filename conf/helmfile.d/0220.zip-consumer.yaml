@@ -30,7 +30,7 @@ releases:
       deployment_name: "zip-consumer-deployment"
       replicas: 0
       image_name: "vanvalenlab/kiosk-redis-consumer"
-      image_tag: "zip"
+      image_tag: "0.1"
       deployment_port: 8080
       container_name: "zip-consumer-container"
       service_name: "zip-consumer-service"
