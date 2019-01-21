@@ -103,7 +103,7 @@ function menu() {
   if [ -z "${CLUSTER_ADDRESS}" ]; then
     value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
-              --menu "${header_text[*]}" 17 50 7 \
+              --menu "${header_text[*]}" 15 50 5 \
                   "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                   "GKE"     "Configure Google ${cloud_providers[gke]}" \
           		  "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
