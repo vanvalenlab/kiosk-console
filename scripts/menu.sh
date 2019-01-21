@@ -286,6 +286,7 @@ function create() {
 
 function destroy() {
   tailcmd "Destroy Cluster" "---COMPLETE--" make destroy
+  export CLUSTER_ADDRESS=""
 }
 
 function view() {
