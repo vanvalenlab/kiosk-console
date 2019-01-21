@@ -51,4 +51,3 @@ releases:
             0|5|1|deepcell|deployment|predict|zip-consumer-deployment;
             0|4|1|deepcell|job|train|training-job
 {{ end }}
-
