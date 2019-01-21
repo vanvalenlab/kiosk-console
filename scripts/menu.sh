@@ -89,6 +89,8 @@ function tailcmd() {
          --tailbox "${tmpfile}" $((LINES-5)) $((COLUMNS-3)) 
 }
 
+# Show different functions in the main menu depending on whether the 
+# cluster has been created yet.
 function menu() {
   local value
   local header_text=("You can use the UP/DOWN arrow keys, the first\n"
@@ -98,19 +100,31 @@ function menu() {
 
   declare -A cloud_providers
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
-  value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
-            --title "[ M A I N - M E N U ]" \
-            --menu "${header_text[*]}" 17 50 7 \
-                "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
-                "GKE"     "Configure Google ${cloud_providers[gke]}" \
-        		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
-                "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
-		        "View"    "View Cluster Address" \
-		        "Shell"   "Drop to the shell" \
-                "Benchmark" "Benchmark Image Processing" \
-                "Exit"    "Exit this kiosk" \
-            --output-fd 1 \
-          )
+  if [ -z "${CLUSTER_ADDRESS}" ]; then
+    value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
+              --title "[ M A I N - M E N U ]" \
+              --menu "${header_text[*]}" 17 50 7 \
+                  "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
+                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
+          		  "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+  		          "Shell"   "Drop to the shell" \
+                  "Exit"    "Exit this kiosk" \
+              --output-fd 1 \
+            )
+  else
+    value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
+              --title "[ M A I N - M E N U ]" \
+              --menu "${header_text[*]}" 17 50 7 \
+                  "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
+                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
+                  "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
+  		          "View"    "View Cluster Address" \
+                  "Benchmark" "Benchmark Image Processing" \
+  		          "Shell"   "Drop to the shell" \
+                  "Exit"    "Exit this kiosk" \
+              --output-fd 1 \
+            )
+  fi
   retval $?
   echo $value
 }
@@ -259,6 +273,7 @@ function shell() {
 
 function create() {
   tailcmd "Create Cluster" "---COMPLETE---" make create
+  export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
 }
 
 function destroy() {
