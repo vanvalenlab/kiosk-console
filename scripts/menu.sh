@@ -186,6 +186,11 @@ function configure_aws() {
 	  return 0
   fi
 
+  # create some derivative GPU-related variables for use in autoscaling
+  export GPU_MAX_TIMES_TWO=(($AWS_MAX_GPU_NODES*2))
+  export GPU_MAX_TIMES_THREE=(($AWS_MAX_GPU_NODES*3))
+  export GPU_MAX_TIMES_FOUR=(($AWS_MAX_GPU_NODES*4))
+
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
   export KOPS_STATE_STORE=s3://${NAMESPACE}
@@ -193,7 +198,12 @@ function configure_aws() {
   
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE > ${CACHE_PATH}/env.aws
+  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE \
+	  -e AWS_MIN_GPU_NODES \
+	  -e AWS_MAX_GPU_NODES \
+	  -e GPU_MAX_TIMES_TWO \
+	  -e GPU_MAX_TIMES_THREE \
+	  -e GPU_MAX_TIMES_FOUR > ${CACHE_PATH}/env.aws
   #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
 }
 
@@ -262,14 +272,21 @@ function configure_gke() {
   fi
   export CLOUD_PROVIDER=gke
 
-  
+  # create some derivative GPU-related variables for use in autoscaling
+  export GPU_MAX_TIMES_TWO=(($GPU_NODE_MAX_SIZE*2))
+  export GPU_MAX_TIMES_THREE=(($GPU_NODE_MAX_SIZE*3))
+  export GPU_MAX_TIMES_FOUR=(($GPU_NODE_MAX_SIZE*4))
+
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
 	  -e GKE_COMPUTE_REGION -e GKE_COMPUTE_ZONE \
 	  -e GKE_MACHINE_TYPE -e GPU_TYPE -e GPU_PER_NODE \
 	  -e GPU_MACHINE_TYPE -e GPU_NODE_MIN_SIZE \
-	  -e GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.gke
+	  -e GPU_NODE_MAX_SIZE \
+	  -e GPU_MAX_TIMES_TWO \
+	  -e GPU_MAX_TIMES_THREE \
+	  -e GPU_MAX_TIMES_FOUR > ${CACHE_PATH}/env.gke
 }
 
 
