@@ -187,9 +187,9 @@ function configure_aws() {
   fi
 
   # create some derivative GPU-related variables for use in autoscaling
-  export GPU_MAX_TIMES_TWO=(($AWS_MAX_GPU_NODES*2))
-  export GPU_MAX_TIMES_THREE=(($AWS_MAX_GPU_NODES*3))
-  export GPU_MAX_TIMES_FOUR=(($AWS_MAX_GPU_NODES*4))
+  export GPU_MAX_TIMES_TWO=$(($AWS_MAX_GPU_NODES*2))
+  export GPU_MAX_TIMES_THREE=$(($AWS_MAX_GPU_NODES*3))
+  export GPU_MAX_TIMES_FOUR=$(($AWS_MAX_GPU_NODES*4))
 
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
@@ -273,9 +273,9 @@ function configure_gke() {
   export CLOUD_PROVIDER=gke
 
   # create some derivative GPU-related variables for use in autoscaling
-  export GPU_MAX_TIMES_TWO=(($GPU_NODE_MAX_SIZE*2))
-  export GPU_MAX_TIMES_THREE=(($GPU_NODE_MAX_SIZE*3))
-  export GPU_MAX_TIMES_FOUR=(($GPU_NODE_MAX_SIZE*4))
+  export GPU_MAX_TIMES_TWO=$(($GPU_NODE_MAX_SIZE*2))
+  export GPU_MAX_TIMES_THREE=$(($GPU_NODE_MAX_SIZE*3))
+  export GPU_MAX_TIMES_FOUR=$(($GPU_NODE_MAX_SIZE*4))
 
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
