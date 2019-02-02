@@ -205,7 +205,7 @@ function configure_gke() {
   if [ "$GKE_COMPUTE_ZONE" = "" ]; then
 	  return 0
   fi
-  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-2}")
+  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-highmem-2}")
   if [ "$GKE_MACHINE_TYPE" = "" ]; then
 	  return 0
   fi
@@ -225,7 +225,7 @@ function configure_gke() {
   if [ "$GPU_PER_NODE" = "" ]; then
 	  return 0
   fi
-  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-standard-4}")
+  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
   if [ "$GPU_MACHINE_TYPE" = "" ]; then
 	  return 0
   fi
