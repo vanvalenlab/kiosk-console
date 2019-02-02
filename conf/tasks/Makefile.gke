@@ -192,7 +192,7 @@ gke/deploy/nvidia:
 	@echo " "
 
 ## deploy resources for Elasticsearch logging
-gke/depoy/logging:
+gke/deploy/logging:
 	@echo "Deploying resources for Elasticsearch logging."
 	@sed -i "s/asia-southeast1-a/${GKE_COMPUTE_ZONE}/" /conf/addons/elasticsearch-volume-gke.yaml
 	@kubectl apply -f /conf/addons/elasticsearch-volume-gke.yaml
