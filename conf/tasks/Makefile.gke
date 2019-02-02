@@ -189,6 +189,15 @@ gke/deploy/nvidia:
 	@echo " "
 	@echo " "
 
+## deploy resources for Elasticsearch logging
+gke/depoy/logging:
+	@echo "Deploying resources for Elasticsearch logging."
+	@sed -i "s/asia-southeast1-a/${GKE_COMPUTE_ZONE}/" /conf/addons/elasticsearch-volume-gke.yaml
+	@kubectl apply -f /conf/addons/elasticsearch-volume-gke.yaml
+	@echo "Logging resource deployment finised."
+	@echo ""
+	@echo ""
+
 ## Create Cluster
 gke/create/all: \
 	gke/create/service-account \
@@ -196,7 +205,8 @@ gke/create/all: \
 	gke/create/gpus \
 	gke/create/bucket \
 	gke/deploy/helm \
-	gke/deploy/nvidia 
+	gke/deploy/nvidia \
+	gke/deploy/logging
 	@echo "GKE cluster created" 
 	@exit 0
 
