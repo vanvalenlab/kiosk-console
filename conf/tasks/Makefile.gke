@@ -197,6 +197,7 @@ gke/deploy/logging:
 	@sed -i "s/asia-southeast1-a/${GKE_COMPUTE_ZONE}/" /conf/addons/elasticsearch-volume-gke.yaml
 	@kubectl apply -f /conf/addons/elasticsearch-volume-gke.yaml
 	@kubectl apply -f /conf/addons/elasticsearch-service.yaml
+	@kubectl apply -f /conf/addons/elasticsearch-statefulset.yaml
 	@echo "Logging resource deployment finised."
 	@echo ""
 	@echo ""
