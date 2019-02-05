@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: elasticsearch
   labels:
-    service: elasticsearch
+    service: {{ .Values.service_name }}
 spec:
   serviceName: es
   # NOTE: This is number of nodes that we want to run
@@ -11,7 +11,7 @@ spec:
   replicas: 5
   selector:
     matchLabels:
-      service: elasticsearch
+      service: {{ .Values.service_name }}
   template:
     metadata:
       labels:
