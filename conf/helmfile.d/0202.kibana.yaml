@@ -36,8 +36,8 @@ releases:
       files:
         kibana.yml:
           server.name: kibana
-          server.host: "ki-kibana"
-          elasticsearch.url: es-elasticsearch-client:9200
+          server.host: "0"
+          elasticsearch.url: http://es-elasticsearch-client:9200
       deployment:
         annotations: {}
       service:
@@ -48,8 +48,8 @@ releases:
         labels: {}
       ingress:
         enabled: true
-        host:
-          - " /kibana" # leading space necessary
+        hosts:
+          - "dev.logging.deepcell.org"
         annotations:
           kubernetes.io/ingress.class: nginx
           nginx.ingress.kubernetes.io/proxy-body-size: 1g
