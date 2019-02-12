@@ -23,8 +23,8 @@ releases:
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/kibana'
-  version: "0.1.0"
+  chart: 'stable/kibana'
+  version: "1.5.0"
   values:
     - image:
         repository: "docker.elastic.co/kibana/kibana-oss"

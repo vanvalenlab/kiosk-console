@@ -23,8 +23,8 @@ releases:
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/elasticsearch'
-  version: "0.1.0"
+  chart: 'stable/elasticsearch'
+  version: "1.19.1"
   values:
     - appVersion: "6.6.0"
       serviceAccounts:
