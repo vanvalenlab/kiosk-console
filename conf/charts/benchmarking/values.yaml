@@ -15,6 +15,3 @@ env:
   BENCHMARK_POSTPROCESSING: "specify_me"
   BENCHMARK_CUTS: 0
   GPU_TYPE: "specify_me"
-  
-# serviceAccount
-service_account_name: "benchmarking-service-account"
