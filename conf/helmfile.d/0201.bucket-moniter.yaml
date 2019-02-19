@@ -15,7 +15,7 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "bm"
+- name: "bm2"
   namespace: "deepcell"
   labels:
     chart: "bucket-monitor"
