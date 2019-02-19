@@ -1,0 +1,15 @@
+app_name: "redis-poller"
+
+# deployment.yaml
+deployment_name: "bucket-monitor-deployment"
+replicas: 1
+image_name: "vanvalenlab/kiosk-bucket-monitor"
+image_version: "latest"
+container_name: "bucket-monitor-container"
+env:
+  DEBUG: "true"
+  INTERVAL: 10
+  CLOUD_PROVIDER: "overwrite_this"
+  BUCKET: "overwrite_this"
+  REDIS_HOST: "overwrite_this"
+  REDIS_PORT: "specify_me"
