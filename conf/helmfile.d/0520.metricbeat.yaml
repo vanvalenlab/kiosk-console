@@ -32,6 +32,13 @@ releases:
         pullPolicy: "Always"
       # The instances created by daemonset retrieve most metrics from the host
       daemonset:
+        tolerations:
+          - key: node-role.kubernetes.io/master
+            operator: Exists
+            effect: NoSchedule
+          - key: nvidia.com/gpu
+            operator: Exists
+            effect: NoSchedule
         config:
           output.elasticsearch:
             enabled: true
@@ -48,84 +55,3 @@ releases:
           - add_cloud_metadata:
           output.file:
             enabled: false
-        modules:
-          system:
-            enabled: true
-            config:
-              - module: system
-                period: 10s
-                metricsets:
-                  - cpu
-                  - load
-                  - memory
-                  - network
-                  - process
-                  - process_summary
-                  # - core
-                  # - diskio
-                  # - socket
-                processes: ['.*']
-                process.include_top_n:
-                  by_cpu: 5      # include top 5 processes by CPU
-                  by_memory: 5   # include top 5 processes by memory
-              - module: system
-                period: 1m
-                metricsets:
-                  - filesystem
-                  - fsstat
-                processors:
-                - drop_event.when.regexp:
-                    system.filesystem.mount_point: '^/(sys|cgroup|proc|dev|etc|host|lib)($|/)'
-          kubernetes:
-            enabled: true
-            config:
-              - module: kubernetes
-                metricsets:
-                  - node
-                  - system
-                  - pod
-                  - container
-                  - volume
-                period: 10s
-                host: ${NODE_NAME}
-                hosts: ["localhost:10255"]
-                # If using Red Hat OpenShift remove the previous hosts entry and
-                # uncomment these settings:
-                # hosts: ["https://${HOSTNAME}:10250"]
-                # bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
-                # ssl.certificate_authorities:
-                  # - /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
-      # The instance created by deployment retrieves metrics that are unique for the whole cluster, like Kubernetes events or kube-state-metrics
-      deployment:
-        podAnnotations: []
-        tolerations: []
-        nodeSelector: {}
-        config:
-          output.elasticsearch:
-            enabled: true
-            hosts: ["http://es-elasticsearch-client:9200"]
-            username: "elastic"
-            password: "changeme"
-          metricbeat.config:
-            modules:
-              path: ${path.config}/modules.d/*.yml
-              reload.enabled: false
-          processors:
-          - add_cloud_metadata:
-          output.file:
-            enabled: false
-        modules:
-          kubernetes:
-            enabled: true
-            config:
-              - module: kubernetes
-                metricsets:
-                  - state_node
-                  - state_deployment
-                  - state_replicaset
-                  - state_pod
-                  - state_container
-                  # Uncomment this to get k8s events:
-                  # - event
-                period: 10s
-                hosts: ["kube-state-metrics:8080"]
