@@ -1,6 +1,6 @@
 # FIXME: GPU AZs and GKE AZ might not be same
 
-export KUBERNETES_VERSION=1.10
+export KUBERNETES_VERSION=1.11
 
 export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
