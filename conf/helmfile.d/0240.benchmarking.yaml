@@ -43,3 +43,11 @@ releases:
         BENCHMARK_CUTS: '{{ env "BENCHMARK_CUTS" | default "NA" }}'
         GPU_TYPE: '{{ env "GPU_TYPE" | default "NA" }}'
         CLUSTER_ADDRESS: '{{ env "CLUSTER_ADDRESS" | default "NA" }}'
+        UPLOAD_METHOD: '{{ env "UPLOAD_METHOD" | default "direct" }}'
+        IMAGES_PER_ZIP: '{{ env "IMAGES_PER_ZIP" | default "100" }}'
+{{ if eq (env "CLOUD_PROVIDER" | default "gke") "gke" }}
+        BUCKET: '{{ env "GKE_BUCKET" | default "invalid-bucket" }}'
+{{ else }}
+        BUCKET: '{{ env "AWS_BUCKET" | default "invalid-bucket" }}'
+{{ end }}
+        BUCKET_FOLDER: '{{ env "BUCKET_UPLOAD_FOLDER" | default "uploads" }}'

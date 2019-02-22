@@ -15,3 +15,7 @@ env:
   BENCHMARK_POSTPROCESSING: "specify_me"
   BENCHMARK_CUTS: 0
   GPU_TYPE: "specify_me"
+  UPLOAD_METHOD: "specify_me"
+  IMAGES_PER_ZIP: 0
+  BUCKET: "specify_me"
+  BUCKET_FOLDER: "specify_me"
