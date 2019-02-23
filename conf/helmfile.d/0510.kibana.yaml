@@ -15,7 +15,7 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "ki"
+- name: "kibana"
   namespace: "deepcell"
   labels:
     chart: "kibana"

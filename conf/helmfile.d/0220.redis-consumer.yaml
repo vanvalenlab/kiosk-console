@@ -1,0 +1,63 @@
+helmDefaults:
+  args:
+    - "--wait"
+    - "--timeout=600"
+    - "--force"
+    - "--reset-values"
+
+releases:
+
+################################################################################
+## redis-consumer ##################################################
+################################################################################
+
+#
+# References:
+#   - [web address of Helm chart's YAML file]
+#
+- name: "redis-consumer"
+  namespace: "deepcell"
+  labels:
+    chart: "redis-consumer"
+    component: "deepcell"
+    namespace: "deepcell"
+    vendor: "vanvalenlab"
+    default: "true"
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
+  version: "0.1.0"
+  values:
+    - app_name: "redis-consumer-interface"
+      deployment_name: "redis-consumer-deployment"
+      replicas: 0
+      image_name: "vanvalenlab/kiosk-redis-consumer"
+      image_tag: "storage-retry"
+      deployment_port: 8080
+      container_name: "redis-consumer-container"
+      service_name: "redis-consumer-service"
+      service_port: 8080
+      service_type: "ClusterIP"
+      secrets_name: "redis-consumer-env-variables"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 2048Mi
+        # limits:
+        #   cpu: 100m
+        #   memory: 2Gi
+      env:
+        REDIS_HOST: "redis-master"
+        REDIS_PORT: "6379"
+        TF_HOST: "tf-serving-service"
+        TF_PORT: "8500"
+        DP_HOST: "data-processing-service"
+        DP_PORT: "8080"
+        DEBUG: "True"
+        AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
+        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+        GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
+        CONSUMER_TYPE: "image"
+      secrets:
+        AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+        AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+        AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'

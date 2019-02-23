@@ -15,7 +15,7 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "tf"
+- name: "tf-serving"
   namespace: "deepcell"
   labels:
     chart: "tf-serving"
