@@ -368,8 +368,8 @@ function benchmarking() {
   export IMG_NUM=$(echo $BENCHMARK_TYPE | grep -o '[0-9]\+-image' | grep -o '[0-9]\+')
   export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
   # redeploy benchmarking pod, now that environmental variables have been set
-  helm delete bm --purge
-  helmfile --selector name=bm sync
+  helm delete benchmarking --purge
+  helmfile --selector name=benchmarking sync
 }
 
 function main() {
