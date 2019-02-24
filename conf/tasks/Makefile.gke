@@ -49,6 +49,7 @@ gke/destroy/project:
 	@gcloud projects delete $(CLOUDSDK_CORE_PROJECT)
 
 ## Create a new GKE cluster
+#		--enable-autoupgrade
 gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
@@ -60,7 +61,6 @@ gke/create/cluster:
 		--machine-type=$(GKE_MACHINE_TYPE) \
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
-		--enable-autoupgrade \
 		|| echo "Apparently, the cluster already exists."
 	@echo "GKE cluster creation complete."
 	@echo " "
@@ -99,6 +99,7 @@ gke/list/billing-accounts:
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
+#		--enable-autoupgrade
 gke/create/gpus:
 	@gcloud components install beta --quiet
 	@echo "Creating GPU node pool..."
@@ -114,7 +115,6 @@ gke/create/gpus:
 		--machine-type=$(GPU_MACHINE_TYPE) \
 		--enable-autoscaling \
 		--enable-autorepair \
-		--enable-autoupgrade \
 		--preemptible \
 		|| echo "GPU node pool already exists."
 	@echo "GPU node pool completion finished."
