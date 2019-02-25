@@ -68,7 +68,7 @@ releases:
           number_of_files: 5
         output.elasticsearch:
           enabled: true
-          hosts: ["http://es-elasticsearch-client:9200"]
+          hosts: ["http://elasticsearch-client:9200"]
           #index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
           username: "elastic"
           password: "changeme"

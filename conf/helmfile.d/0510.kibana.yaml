@@ -37,7 +37,7 @@ releases:
         kibana.yml:
           server.name: kibana
           server.host: "0"
-          elasticsearch.url: http://es-elasticsearch-client:9200
+          elasticsearch.url: http://elasticsearch-client:9200
       deployment:
         annotations: {}
       service:

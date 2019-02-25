@@ -42,11 +42,11 @@ releases:
         config:
           output.elasticsearch:
             enabled: true
-            hosts: ["http://es-elasticsearch-client:9200"]
+            hosts: ["http://elasticsearch-client:9200"]
             username: "elastic"
             password: "changeme"
           setup.kibana:
-            host: "http://ki-kibana:443"
+            host: "http://kibana:443"
           metricbeat.config:
             modules:
               path: ${path.config}/modules.d/*.yml
