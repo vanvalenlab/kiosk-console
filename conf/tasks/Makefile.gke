@@ -61,6 +61,7 @@ gke/create/cluster:
 		--machine-type=$(GKE_MACHINE_TYPE) \
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
+		--enable-autoupgrade \
 		|| echo "Apparently, the cluster already exists."
 	gcloud container clusters upgrade ${CLUSTER_NAME} --master \
 		|| echo "An upgrade of the cluster would be superfluous."
@@ -117,6 +118,7 @@ gke/create/gpus:
 		--machine-type=$(GPU_MACHINE_TYPE) \
 		--enable-autoscaling \
 		--enable-autorepair \
+		--enable-autoupgrade \
 		--preemptible \
 		|| echo "GPU node pool already exists."
 	@echo "GPU node pool completion finished."
