@@ -62,6 +62,8 @@ gke/create/cluster:
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
 		|| echo "Apparently, the cluster already exists."
+	gcloud container clusters upgrade ${CLUSTER_NAME} --master \
+		|| echo "An upgrade of the cluster would be superfluous."
 	@echo "GKE cluster creation complete."
 	@echo " "
 	@echo " "
