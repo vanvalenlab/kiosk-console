@@ -63,7 +63,8 @@ gke/create/cluster:
 		--enable-autoscaling \
 		--enable-autoupgrade \
 		|| echo "Apparently, the cluster already exists."
-	gcloud container clusters upgrade ${CLUSTER_NAME} --master \
+	gcloud container clusters upgrade ${CLUSTER_NAME} --quiet --master \
+		--zone=${GKE_COMPUTE_ZONE} \
 		|| echo "An upgrade of the cluster would be superfluous."
 	@echo "GKE cluster creation complete."
 	@echo " "
