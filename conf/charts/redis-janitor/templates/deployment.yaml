@@ -16,6 +16,7 @@ spec:
 #      tolerations:
 #      - effect: NoSchedule
 #        key: node-role.kubernetes.io/master
+      serviceAccountName: {{ .Values.service_account.name }}
       containers:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_version }}

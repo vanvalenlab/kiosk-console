@@ -3,6 +3,6 @@ kind: ClusterRole
 metadata:
   name: {{ .Values.app_name }}
 rules:
-  - apiGroups: ["*"]
+  - apiGroups: [""]
     resources: ["pods"]
-    verbs: ["get", "delete"]
+    verbs: ["delete", "get", "list"]
