@@ -74,7 +74,7 @@ gke/create/cluster:
 ## Destroy GKE cluster
 gke/destroy/cluster:
 	@echo "Destroying cluster..."
-	@-gcloud container clusters --zone $(GKE_COMPUTE_ZONE) delete $(CLUSTER_NAME) --quiet
+	@-gcloud container clusters --region $(GKE_COMPUTE_REGION) delete $(CLUSTER_NAME) --quiet
 	@echo "Cluster destruction finished."
 	@echo " "
 	@echo " "
@@ -134,7 +134,7 @@ gke/create/gpus:
 ## Destroy GKE GPU node pool
 gke/destroy/gpus:
 	@echo "Destroying GPU node pool..."
-	@-gcloud container node-pools delete gpu --quiet --zone $(GPU_COMPUTE_ZONE)
+	@-gcloud container node-pools delete gpu --quiet --region $(GPU_COMPUTE_REGION)
 	@echo "GPU node pool destruction finished."
 	@echo " "
 	@echo " "
