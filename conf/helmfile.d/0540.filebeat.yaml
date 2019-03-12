@@ -66,9 +66,15 @@ releases:
           filename: filebeat
           rotate_every_kb: 10000
           number_of_files: 5
-        output.elasticsearch:
+        # output.elasticsearch:
+        #   enabled: true
+        #   hosts: ["http://elasticsearch-client:9200"]
+        #   #index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
+        #   username: "elastic"
+        #   password: "changeme"
+        output.logstash:
           enabled: true
-          hosts: ["http://elasticsearch-client:9200"]
+          hosts: ["logstash.cluster.local:5044"]
           #index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
           username: "elastic"
           password: "changeme"

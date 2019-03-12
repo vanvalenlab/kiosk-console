@@ -40,9 +40,10 @@ releases:
             operator: Exists
             effect: NoSchedule
         config:
-          output.elasticsearch:
+          output.logstash:
             enabled: true
-            hosts: ["http://elasticsearch-client:9200"]
+            hosts: ["logstash.cluster.local:5044"]
+            #index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
             username: "elastic"
             password: "changeme"
           setup.kibana:
