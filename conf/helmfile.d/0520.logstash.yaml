@@ -24,7 +24,7 @@ releases:
     vendor: "vanvalenlab"
     default: "true"
   chart: 'stable/logstash'
-  version: "1.19.1"
+  version: "1.5.2"
   values:
     - appVersion: "6.6.0"
 
@@ -225,9 +225,8 @@ releases:
           output {
             # stdout { codec => rubydebug }
             elasticsearch {
-              hosts => ["elasticsearch-client:9200"]
+              hosts => ["${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}"]
               manage_template => false
               index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
-              document_type => "%{[@metadata][type]}"
             }
           }
