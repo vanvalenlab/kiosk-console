@@ -29,7 +29,7 @@ releases:
     - app_name: "frontend"
       replicas: 1
       image_name: "vanvalenlab/kiosk-frontend"
-      image_version: "redis_interface_rewrite"
+      image_version: "0.1"
       #image_name: "k8s.gcr.io/echoserver"
       #image_version: "1.4"
       deployment_name: "frontend-deployment"
@@ -39,7 +39,7 @@ releases:
       service_port: 3000
       service_type: "ClusterIP"
       ingress_name: "frontend-ingress"
-      ingress_path: "/" 
+      ingress_path: "/"
       ingress:
         annotations:
           nginx.ingress.kubernetes.io/rewrite-target: /
