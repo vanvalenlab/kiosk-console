@@ -42,8 +42,7 @@ releases:
         config:
           output.logstash:
             enabled: true
-            hosts: ["logstash.cluster.local:5044"]
-            #index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
+            hosts: ["logstash:5044"]
             username: "elastic"
             password: "changeme"
           setup.kibana:
