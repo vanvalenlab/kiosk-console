@@ -74,8 +74,7 @@ releases:
         #   password: "changeme"
         output.logstash:
           enabled: true
-          hosts: ["logstash.cluster.local:5044"]
-          #index: "filebeat-%{[beat.version]}-%{+yyyy.MM.dd}"
+          hosts: ["logstash:5044"]
           username: "elastic"
           password: "changeme"
         # When a key contains a period, use this format for setting values on the command line:
