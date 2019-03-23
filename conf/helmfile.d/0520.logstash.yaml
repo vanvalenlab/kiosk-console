@@ -205,17 +205,28 @@ releases:
             }
           }
 
+      ## Examples for grok matches, in order:
+      ## [2019-03-23 17:14:40,182]:[DEBUG]:[ImageFileConsumer]: Consumed key predict_5f86ff3296c644b884cf21e93dc52b94_directupload_watershednuclearnofgbg41f16_0_watershed_0_qwbenchmarking100000special_image_079560.png in 8.07767105103 seconds.
+      ## [2019-03-23 17:15:43,245]:[DEBUG]:[ImageFileConsumer]: Segmented image with model watershednuclearnofgbg41f16:0 (0 retries) in 2.75492811203 seconds.
+      ## [2019-03-23 01:52:57,449]:[DEBUG]:[PredictClient]: Actual PredictRequest took: 8.60852217674 seconds.
+      ## [2019-03-23 17:17:21,588]:[DEBUG]:[PredictClient]: Converted PredictResponse to dict in 3.07414197922 seconds.
+      ## [2019-03-23 17:17:34,156]:[DEBUG]:[ImageFileConsumer]: Finished watershed post-processing (0 retries) in 0.649527072906 seconds.
+      ## [2019-03-23 17:18:06,843]:[DEBUG]:[GoogleStorage]: Uploaded /tmp/tmphg20JL/98cc8875c04d14c43f61742928cdb0b4.zip to bucket deepcell-output-benchmarking3 in 0.379716157913 seconds.
+      ## [2019-03-23 17:19:06,214]:[DEBUG]:[GoogleStorage]: Downloaded /tmp/tmp5d6cLr/directupload_watershednuclearnofgbg41f16_0_watershed_0_qwbenchmarking100000special_image_0.png in 0.165134191513 seconds.
       filters:
         main: |-
           filter {
-            if [system][process] {
-              if [system][process][cmdline] {
-                grok {
-                  match => {
-                    "[system][process][cmdline]" => "^%{PATH:[system][process][cmdline_path]}"
-                  }
-                  remove_field => "[system][process][cmdline]"
-                }
+            grok {
+              match => {
+                "message" => [
+                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} key %{NOTSPACE:redis_consumer_key} in %{NUMBER:redis_consumer_seconds} seconds.",
+                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} image with model %{NOTSPACE:redis_consumer_segmenting_model} \(%{NUMBER:redis_consumer_retries} retries\) in %{NUMBER:redis_consumer_seconds} seconds.",
+                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: Actual %{NOTSPACE:redis_consumer_action} took %{NUMBER:redis_consumer_seconds} seconds.",
+                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} PredictResponse to dict in %{NUMBER:redis_consumer_seconds} seconds.",
+                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: Finished %{NOTSPACE:redis_consumer_postprocessing_model} %{NOTSPACE:redis_consumer_action} \(%{NUMBER:redis_consumer_retries} retries\) in %{NUMBER:redis_consumer_seconds} seconds.",
+                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} %{NOTSPACE:redis_consumer_output_file} to bucket %{NOTSPACE:redis_consumer_output_bucket} in %{NUMBER:redis_consumer_seconds} seconds.",
+                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} %{NOTSPACE:redis_consumer_input_file} in %{NUMBER:redis_consumer_seconds} seconds."
+                ]
               }
             }
           }
