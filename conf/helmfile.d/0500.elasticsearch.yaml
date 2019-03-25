@@ -178,8 +178,12 @@ releases:
         terminationGracePeriodSeconds: 3600
         antiAffinity: "soft"
         nodeAffinity: {}
-        nodeSelector: {}
-        tolerations: []
+        nodeSelector:
+          elasticsearch_data: yes
+        tolerations:
+        - key: "elasticsearch_data"
+          value: "yes"
+          effect: "NoSchedule"
         initResources: {}
           # limits:
           #   cpu: "25m"
