@@ -105,7 +105,7 @@ gke/list/billing-accounts:
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
 #		--enable-autoupgrade
-gke/create/gpus:
+gke/create/node-pools:
 	@gcloud components install beta --quiet
 	@echo "Creating prediction GPU node pool..."
 	@echo "Using the following command: "
@@ -168,10 +168,16 @@ gke/create/gpus:
 #		--node-taints "nvidia.com/gpu=:NoSchedule"
 
 ## Destroy GKE GPU node pool
-gke/destroy/gpus:
-	@echo "Destroying GPU node pool..."
-	@-gcloud container node-pools delete gpu --quiet --region $(GPU_COMPUTE_REGION)
-	@echo "GPU node pool destruction finished."
+gke/destroy/node-pools:
+	@echo "Destroying prediction GPU node pool..."
+	@-gcloud container node-pools delete prediction-gpu --quiet --region $(GPU_COMPUTE_REGION)
+	@echo "Prediction GPU node pool destruction finished."
+	@echo "Destroying training GPU node pool..."
+	@-gcloud container node-pools delete training-gpu --quiet --region $(GPU_COMPUTE_REGION)
+	@echo "Training GPU node pool destruction finished."
+	@echo "Destroying elasticsearch CPU node pool..."
+	@-gcloud container node-pools delete elasticsearch-cpu --quiet --region $(GKE_COMPUTE_REGION)
+	@echo "Elasticsearch CPU node pool destruction finished."
 	@echo " "
 	@echo " "
 
@@ -237,7 +243,7 @@ gke/deploy/nvidia:
 gke/create/all: \
 	gke/create/service-account \
 	gke/create/cluster \
-	gke/create/gpus \
+	gke/create/node-pools \
 	gke/create/bucket \
 	gke/deploy/helm \
 	gke/deploy/nvidia
@@ -246,7 +252,7 @@ gke/create/all: \
 
 ## Destroy Cluster
 gke/destroy/all: \
-	gke/destroy/gpus \
+	gke/destroy/node-pools \
 	gke/destroy/cluster \
 	gke/destroy/service-account 
 	@echo "GKE cluster destroyed" 
