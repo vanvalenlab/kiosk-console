@@ -1,0 +1,18 @@
+apiVersion: v1
+name: benchmarking
+version: 0.1.0
+#kubeVersion: ^1.10.0
+description: This container provides benchmarking functionality for the cluster.
+keywords:
+  - kiosk-benchmarking
+home: https://www.github.com/vanvalenlab/kiosk-benchmarking
+sources:
+    - https://hub.docker.com/vanvalenlab/kiosk-benchmarking
+maintainers:
+  - name: Dylan Bannon
+    email: bbannon@caltech.edu
+    url: vanvalen.caltech.edu
+engine: gotpl
+appVersion: 0.1.0
+deprecated: false
+tillerVersion: ^2.9.1

@@ -89,6 +89,8 @@ function tailcmd() {
          --tailbox "${tmpfile}" $((LINES-5)) $((COLUMNS-3)) 
 }
 
+# Show different functions in the main menu depending on whether the 
+# cluster has been created yet.
 function menu() {
   local value
   local header_text=("You can use the UP/DOWN arrow keys, the first\n"
@@ -98,18 +100,31 @@ function menu() {
 
   declare -A cloud_providers
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
-  value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
-            --title "[ M A I N - M E N U ]" \
-            --menu "${header_text[*]}" 17 50 7 \
-                "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
-                "GKE"     "Configure Google ${cloud_providers[gke]}" \
-		"Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
-                "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
-		"View"    "View Cluster Address" \
-		"Shell"   "Drop to the shell" \
-                "Exit"    "Exit this kiosk" \
-            --output-fd 1 \
-          )
+  if [ -z "${CLUSTER_ADDRESS}" ]; then
+    value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
+              --title "[ M A I N - M E N U ]" \
+              --menu "${header_text[*]}" 15 50 5 \
+                  "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
+                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
+          		  "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+  		          "Shell"   "Drop to the shell" \
+                  "Exit"    "Exit this kiosk" \
+              --output-fd 1 \
+            )
+  else
+    value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
+              --title "[ M A I N - M E N U ]" \
+              --menu "${header_text[*]}" 17 50 7 \
+                  "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
+                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
+                  "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
+  		          "View"    "View Cluster Address" \
+                  "Benchmark" "Benchmark Image Processing" \
+  		          "Shell"   "Drop to the shell" \
+                  "Exit"    "Exit this kiosk" \
+              --output-fd 1 \
+            )
+  fi
   retval $?
   echo $value
 }
@@ -171,6 +186,13 @@ function configure_aws() {
 	  return 0
   fi
 
+  # create some derivative GPU-related variables for use in autoscaling
+  export GPU_MAX_TIMES_TWO=$(($AWS_MAX_GPU_NODES*2))
+  export GPU_MAX_TIMES_THREE=$(($AWS_MAX_GPU_NODES*3))
+  export GPU_MAX_TIMES_FOUR=$(($AWS_MAX_GPU_NODES*4))
+  export GPU_MAX_TIMES_FIVE=$(($AWS_MAX_GPU_NODES*5))
+  export GPU_MAX_TIMES_TEN=$(($AWS_MAX_GPU_NODES*10))
+
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
   export KOPS_STATE_STORE=s3://${NAMESPACE}
@@ -178,7 +200,14 @@ function configure_aws() {
   
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE > ${CACHE_PATH}/env.aws
+  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE \
+	  -e AWS_MIN_GPU_NODES \
+	  -e AWS_MAX_GPU_NODES \
+	  -e GPU_MAX_TIMES_TWO \
+	  -e GPU_MAX_TIMES_THREE \
+	  -e GPU_MAX_TIMES_FOUR \
+	  -e GPU_MAX_TIMES_FIVE \
+	  -e GPU_MAX_TIMES_TEN > ${CACHE_PATH}/env.aws
   #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
 }
 
@@ -205,8 +234,16 @@ function configure_gke() {
   if [ "$GKE_COMPUTE_ZONE" = "" ]; then
 	  return 0
   fi
-  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-2}")
+  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-highmem-2}")
   if [ "$GKE_MACHINE_TYPE" = "" ]; then
+	  return 0
+  fi
+  export NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of Compute (non-GPU) Nodes" "${NODE_MIN_SIZE:-2}")
+  if [ "$NODE_MIN_SIZE" = "" ]; then
+	  return 0
+  fi
+  export NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of Compute (non-GPU) Nodes" "${NODE_MAX_SIZE:-11}")
+  if [ "$NODE_MAX_SIZE" = "" ]; then
 	  return 0
   fi
 
@@ -225,7 +262,7 @@ function configure_gke() {
   if [ "$GPU_PER_NODE" = "" ]; then
 	  return 0
   fi
-  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-standard-4}")
+  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
   if [ "$GPU_MACHINE_TYPE" = "" ]; then
 	  return 0
   fi
@@ -239,14 +276,25 @@ function configure_gke() {
   fi
   export CLOUD_PROVIDER=gke
 
-  
+  # create some derivative GPU-related variables for use in autoscaling
+  export GPU_MAX_TIMES_TWO=$(($GPU_NODE_MAX_SIZE*2))
+  export GPU_MAX_TIMES_THREE=$(($GPU_NODE_MAX_SIZE*3))
+  export GPU_MAX_TIMES_FOUR=$(($GPU_NODE_MAX_SIZE*4))
+  export GPU_MAX_TIMES_FIVE=$(($GPU_NODE_MAX_SIZE*5))
+  export GPU_MAX_TIMES_TEN=$(($GPU_NODE_MAX_SIZE*10))
+
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
 	  -e GKE_COMPUTE_REGION -e GKE_COMPUTE_ZONE \
 	  -e GKE_MACHINE_TYPE -e GPU_TYPE -e GPU_PER_NODE \
 	  -e GPU_MACHINE_TYPE -e GPU_NODE_MIN_SIZE \
-	  -e GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.gke
+	  -e GPU_NODE_MAX_SIZE \
+	  -e GPU_MAX_TIMES_TWO \
+	  -e GPU_MAX_TIMES_THREE \
+	  -e GPU_MAX_TIMES_FOUR \
+	  -e GPU_MAX_TIMES_FIVE \
+	  -e GPU_MAX_TIMES_TEN > ${CACHE_PATH}/env.gke
 }
 
 
@@ -258,10 +306,12 @@ function shell() {
 
 function create() {
   tailcmd "Create Cluster" "---COMPLETE---" make create
+  export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
 }
 
 function destroy() {
   tailcmd "Destroy Cluster" "---COMPLETE--" make destroy
+  export CLUSTER_ADDRESS=""
 }
 
 function view() {
@@ -274,6 +324,60 @@ function view() {
   clear
   echo "The cluster's address is: " ${cluster_address}
   read -p "Press enter to return to main menu"
+}
+
+function benchmarking() {
+  local benchmark_types="1-image,1-CPU _ ON
+	  10-images,1-CPU _ OFF
+	  100-images,1-CPU _ OFF
+	  1000-images,1-CPU _ OFF
+	  10000-images,1-CPU _ OFF
+	  100000-images,1-CPU _ OFF
+	  1000000-images,1-CPU _ OFF
+	  1-image,1-GPU _ OFF
+      10-images,1-GPU _ OFF
+	  100-images,1-GPU _ OFF
+	  1000-images,1-GPU _ OFF
+	  10000-images,1-GPU _ OFF
+	  100000-images,1-GPU _ OFF
+	  1000000-images,1-GPU _ OFF
+	  1-image,2-GPU _ OFF
+      10-images,2-GPU _ OFF
+	  100-images,2-GPU _ OFF
+	  1000-images,2-GPU _ OFF
+	  10000-images,2-GPU _ OFF
+	  100000-images,2-GPU _ OFF
+	  1000000-images,2-GPU _ OFF
+	  1-image,4-GPU _ OFF
+      10-images,4-GPU _ OFF
+	  100-images,4-GPU _ OFF
+	  1000-images,4-GPU _ OFF
+	  10000-images,4-GPU _ OFF
+	  100000-images,4-GPU _ OFF
+	  1000000-images,4-GPU _ OFF
+	  1-image,8-GPU _ OFF
+      10-images,8-GPU _ OFF
+	  100-images,8-GPU _ OFF
+	  1000-images,8-GPU _ OFF
+	  10000-images,8-GPU _ OFF
+	  100000-images,8-GPU _ OFF
+	  1000000-images,8-GPU _ OFF
+	  1-image,16-GPU _ OFF
+      10-images,16-GPU _ OFF
+	  100-images,16-GPU _ OFF
+	  1000-images,16-GPU _ OFF
+	  10000-images,16-GPU _ OFF
+	  100000-images,16-GPU _ OFF
+	  1000000-images,16-GPU _ OFF"
+  export BENCHMARK_TYPE=$(radiobox "Deepcell" \
+	  "Choose your Benchmark Type:" 15 60 7 "$benchmark_types")
+  export BENCHMARKING_PU_TYPE_AND_NUMBER=$(echo $BENCHMARK_TYPE | cut -f2 -d',' | sed 's/-/ /')
+  export BENCHMARKING_PU_TYPE=$(echo $BENCHMARKING_PU_TYPE_AND_NUMBER | cut -f2 -d' ')
+  export IMG_NUM=$(echo $BENCHMARK_TYPE | grep -o '[0-9]\+-image' | grep -o '[0-9]\+')
+  export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
+  # redeploy benchmarking pod, now that environmental variables have been set
+  helm delete benchmarking --purge
+  helmfile --selector name=benchmarking sync
 }
 
 function main() {
@@ -296,8 +400,9 @@ https://vanvalenlab.caltech.edu"
       "AWS") configure_aws ;;
       "GKE") configure_gke ;;
       "Create") create ;;
-      "Destroy") destroy;;
-      "View") view;;
+      "Destroy") destroy ;;
+      "View") view ;;
+      "Benchmark") benchmarking ;;
       "Exit") break ;;
     esac
   done

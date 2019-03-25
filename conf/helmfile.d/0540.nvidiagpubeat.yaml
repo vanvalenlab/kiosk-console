@@ -8,32 +8,32 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Tensorflow-Serving ##########################################################
+## NVIDIA GPU beat #############################################################
 ################################################################################
 
 #
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "tf-serving"
+- name: "nvidiagpubeat"
   namespace: "deepcell"
   labels:
-    chart: "tf-serving"
+    chart: "nvidiagpubeat"
     component: "deepcell"
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
-  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/nvidiagpubeat'
   version: "0.1.0"
   values:
-    - app_name: "tf-serving"
+    - app_name: "nvidiagpubeat"
       replicas: 0
-      image_name: "vanvalenlab/kiosk-tf-serving"
-      image_version: "0.1"
-      deployment_name: "tf-serving-deployment"
+      image_name: "vanvalenlab/nvidiagpubeat"
+      image_version: "dev"
+      deployment_name: "nvidiagpubeat-deployment"
       deployment_port: 8500
-      container_name: "tf-serving-container"
-      service_name: "tf-serving-service"
+      container_name: "nvidiagpubeat-container"
+      service_name: "nvidiagpubeat-service"
       service_port: 8500
       service_type: "ClusterIP"
       nodeSelector:
@@ -44,18 +44,11 @@ releases:
         cloud.google.com/gke-preemptible: "true"
 {{ end }}
       env:
-        PORT: "8500"
-        REST_API_PORT: "0"
-        REST_API_TIMEOUT: "30000"
-        MODEL_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
-        ENABLE_BATCHING: "false"
-        GRPC_CHANNEL_ARGS: ""
+        RPC_PORT: "8500"
+        REST_PORT: "8501"
+        REST_TIMEOUT: "90000"
         MODEL_PREFIX: "models"
+        TF_SERVING_CONFIG_FILE: "/kiosk/nvidiagpubeat/models.conf"
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         LOG_LEVEL: "3"
         DEBUG: "FALSE"
-      secrets:
-        AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
-        AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-        AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GCLOUD_STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'

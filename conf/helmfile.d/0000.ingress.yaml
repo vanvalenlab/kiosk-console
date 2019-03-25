@@ -32,7 +32,7 @@ releases:
         resources:
           limits:
             cpu: "200m"
-            memory: "256Mi"
+            memory: "3Gi"
           requests:
             cpu: "50m"
             memory: "128Mi"

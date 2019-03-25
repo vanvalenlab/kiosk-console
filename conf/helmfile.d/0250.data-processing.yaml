@@ -15,7 +15,7 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "dp"
+- name: "data-processing"
   namespace: "deepcell"
   labels:
     chart: "data-processing"
@@ -39,6 +39,6 @@ releases:
       resources:
         requests:
           cpu: 100m
-          memory: 1024Mi
+          memory: 2048Mi
       env:
         LISTEN_PORT: 8080

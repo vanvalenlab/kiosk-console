@@ -1,0 +1,18 @@
+apiVersion: v1
+name: bucket-monitor
+version: 0.1.0
+#kubeVersion: ^1.10.0
+description: This project monitors a cloud bucket (Google or AWS) and waits for files to be uploaded whose names match certain specifictions. These files will have entries written to the cluster's Redis database for them.
+keywords:
+  - kiosk-bucket-monitor
+home: https://www.github.com/vanvalenlab/kiosk-autoscaler
+sources:
+    - https://hub.docker.com/vanvalenlab/kiosk-autoscaler
+maintainers:
+  - name: Dylan Bannon
+    email: bbannon@caltech.edu
+    url: vanvalen.caltech.edu
+engine: gotpl
+appVersion: 0.1.0
+deprecated: false
+tillerVersion: ^2.9.1

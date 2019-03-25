@@ -1,6 +1,6 @@
 # FIXME: GPU AZs and GKE AZ might not be same
 
-export KUBERNETES_VERSION=1.10
+export KUBERNETES_VERSION=latest
 
 export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
@@ -14,9 +14,12 @@ export CLUSTER_NAME ?= deepcell
 export GKE_COMPUTE_REGION ?= us-west1
 export GKE_COMPUTE_ZONE ?= us-west1-b
 export GKE_MACHINE_TYPE ?= n1-standard-2
+export NODE_MIN_SIZE ?= 2
+export NODE_MAX_SIZE ?= 10
 export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
 # Not all GPU types are available in all regions/availability zones
+export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
 export GPU_COMPUTE_ZONE ?= $(GKE_COMPUTE_ZONE)
 export GPU_TYPE ?= nvidia-tesla-p100
 export GPU_MACHINE_TYPE ?= n1-standard-4
@@ -47,18 +50,22 @@ gke/destroy/project:
 	@gcloud projects delete $(CLOUDSDK_CORE_PROJECT)
 
 ## Create a new GKE cluster
+	#gcloud container clusters upgrade ${CLUSTER_NAME} --quiet --master \
+	#	--zone=${GKE_COMPUTE_ZONE} \
+	#	|| echo "An upgrade of the cluster would be superfluous."
 gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
 	gcloud container clusters create $(CLUSTER_NAME) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--zone=$(GKE_COMPUTE_ZONE) \
+		--region=$(GKE_COMPUTE_REGION) \
+		--node-locations=$(GKE_COMPUTE_ZONE) \
 		--max-nodes=$(NODE_MAX_SIZE) \
 		--min-nodes=$(NODE_MIN_SIZE) \
 		--machine-type=$(GKE_MACHINE_TYPE) \
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
-		--enable-autoupgrade \
+		--no-enable-autoupgrade \
 		|| echo "Apparently, the cluster already exists."
 	@echo "GKE cluster creation complete."
 	@echo " "
@@ -67,7 +74,7 @@ gke/create/cluster:
 ## Destroy GKE cluster
 gke/destroy/cluster:
 	@echo "Destroying cluster..."
-	@-gcloud container clusters --zone $(GKE_COMPUTE_ZONE) delete $(CLUSTER_NAME) --quiet
+	@-gcloud container clusters --region $(GKE_COMPUTE_REGION) delete $(CLUSTER_NAME) --quiet
 	@echo "Cluster destruction finished."
 	@echo " "
 	@echo " "
@@ -97,6 +104,7 @@ gke/list/billing-accounts:
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
+#		--enable-autoupgrade
 gke/create/gpus:
 	@gcloud components install beta --quiet
 	@echo "Creating GPU node pool..."
@@ -104,7 +112,7 @@ gke/create/gpus:
 	gcloud beta container node-pools create gpu \
 		--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--zone $(GPU_COMPUTE_ZONE) \
+		--region $(GPU_COMPUTE_REGION) \
 		--cluster $(CLUSTER_NAME) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
@@ -112,7 +120,7 @@ gke/create/gpus:
 		--machine-type=$(GPU_MACHINE_TYPE) \
 		--enable-autoscaling \
 		--enable-autorepair \
-		--enable-autoupgrade \
+		--no-enable-autoupgrade \
 		--preemptible \
 		|| echo "GPU node pool already exists."
 	@echo "GPU node pool completion finished."
@@ -126,7 +134,7 @@ gke/create/gpus:
 ## Destroy GKE GPU node pool
 gke/destroy/gpus:
 	@echo "Destroying GPU node pool..."
-	@-gcloud container node-pools delete gpu --quiet --zone $(GPU_COMPUTE_ZONE)
+	@-gcloud container node-pools delete gpu --quiet --region $(GPU_COMPUTE_REGION)
 	@echo "GPU node pool destruction finished."
 	@echo " "
 	@echo " "
@@ -196,7 +204,7 @@ gke/create/all: \
 	gke/create/gpus \
 	gke/create/bucket \
 	gke/deploy/helm \
-	gke/deploy/nvidia 
+	gke/deploy/nvidia
 	@echo "GKE cluster created" 
 	@exit 0
 

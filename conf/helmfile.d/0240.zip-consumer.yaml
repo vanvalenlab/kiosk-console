@@ -8,14 +8,14 @@ helmDefaults:
 releases:
 
 ################################################################################
-## redis-consumer ##################################################
+## zip-consumer ################################################################
 ################################################################################
 
 #
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "zc"
+- name: "zip-consumer"
   namespace: "deepcell"
   labels:
     chart: "redis-consumer"

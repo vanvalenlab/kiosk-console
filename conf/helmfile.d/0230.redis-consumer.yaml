@@ -8,14 +8,14 @@ helmDefaults:
 releases:
 
 ################################################################################
-## redis-consumer ##################################################
+## redis-consumer ##############################################################
 ################################################################################
 
 #
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "rc"
+- name: "redis-consumer"
   namespace: "deepcell"
   labels:
     chart: "redis-consumer"
@@ -40,7 +40,7 @@ releases:
       resources:
         requests:
           cpu: 100m
-          memory: 512Mi
+          memory: 2048Mi
         # limits:
         #   cpu: 100m
         #   memory: 2Gi
