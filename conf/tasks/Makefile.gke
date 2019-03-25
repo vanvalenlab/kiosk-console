@@ -148,8 +148,8 @@ gke/create/node-pools:
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region $(GKE_COMPUTE_REGION) \
 		--cluster $(CLUSTER_NAME) \
-		--num-nodes $(NODE_MIN_SIZE) \
-		--min-nodes $(NODE_MIN_SIZE) \
+		--num-nodes 2 \
+		--min-nodes 2 \
 		--max-nodes $(NODE_MAX_SIZE) \
 		--machine-type=$(GKE_MACHINE_TYPE) \
 		--enable-autoscaling \
