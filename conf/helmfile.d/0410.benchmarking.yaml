@@ -30,7 +30,7 @@ releases:
       deployment_name: "benchmarking-deployment"
       replicas: 1
       image_name: "vanvalenlab/kiosk-benchmarking"
-      image_version: "multiple_zip_files"
+      image_version: "0.1"
       container_name: "benchmarking-container"
       service_account_name: "benchmarking-service-account"
       env:
