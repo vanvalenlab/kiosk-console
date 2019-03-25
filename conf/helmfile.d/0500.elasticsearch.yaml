@@ -179,11 +179,11 @@ releases:
         antiAffinity: "soft"
         nodeAffinity: {}
         nodeSelector:
-          elasticsearch_data: yes
+          elasticsearch_data: "yes"
         tolerations:
-        - key: "elasticsearch_data"
-          value: "yes"
-          effect: "NoSchedule"
+        - key: elasticsearch_data
+          operator: Exists
+          effect: NoSchedule
         initResources: {}
           # limits:
           #   cpu: "25m"
