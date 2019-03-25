@@ -145,7 +145,6 @@ gke/create/node-pools:
 	@echo "Creating elasticsearch CPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create elasticsearch-cpu \
-		--accelerator type=$(PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region $(GKE_COMPUTE_REGION) \
 		--cluster $(CLUSTER_NAME) \
