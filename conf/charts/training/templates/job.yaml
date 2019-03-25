@@ -24,6 +24,10 @@ spec:
       - key: "nvidia.com/gpu"
         operator: "Exists"
         effect: "NoSchedule"
+      - key: "training_gpu"
+        operator: "Equal"
+        value: "yes"
+        effect: "NoSchedule"
       containers:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_tag }}
