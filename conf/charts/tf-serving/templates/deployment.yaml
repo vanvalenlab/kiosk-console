@@ -25,6 +25,9 @@ spec:
       - key: "nvidia.com/gpu"
         operator: "Exists"
         effect: "NoSchedule"
+      - key: "prediction_gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
       containers:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_version }}

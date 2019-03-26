@@ -105,12 +105,12 @@ gke/list/billing-accounts:
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
 #		--enable-autoupgrade
-gke/create/gpus:
+gke/create/node-pools:
 	@gcloud components install beta --quiet
-	@echo "Creating GPU node pool..."
+	@echo "Creating prediction GPU node pool..."
 	@echo "Using the following command: "
-	gcloud beta container node-pools create gpu \
-		--accelerator type=$(GPU_TYPE),count=$(GPU_PER_NODE) \
+	gcloud beta container node-pools create prediction-gpu \
+		--accelerator type=$(PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region $(GPU_COMPUTE_REGION) \
 		--cluster $(CLUSTER_NAME) \
@@ -122,8 +122,43 @@ gke/create/gpus:
 		--enable-autorepair \
 		--no-enable-autoupgrade \
 		--preemptible \
-		|| echo "GPU node pool already exists."
+		--node-taints prediction_gpu=yes:NoSchedule \
+		|| echo "Prediction GPU node pool creation failed."
+	@echo "Creating training GPU node pool..."
+	@echo "Using the following command: "
+	gcloud beta container node-pools create training-gpu \
+		--accelerator type=$(TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--region $(GPU_COMPUTE_REGION) \
+		--cluster $(CLUSTER_NAME) \
+		--num-nodes $(GPU_NODE_MIN_SIZE) \
+		--min-nodes $(GPU_NODE_MIN_SIZE) \
+		--max-nodes $(GPU_NODE_MAX_SIZE) \
+		--machine-type=$(GPU_MACHINE_TYPE) \
+		--enable-autoscaling \
+		--enable-autorepair \
+		--no-enable-autoupgrade \
+		--preemptible \
+		--node-taints training_gpu=yes:NoSchedule \
+		|| echo "Training GPU node pool creation failed."
 	@echo "GPU node pool completion finished."
+	@echo "Creating elasticsearch CPU node pool..."
+	@echo "Using the following command: "
+	gcloud container node-pools create elasticsearch-cpu \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--region $(GKE_COMPUTE_REGION) \
+		--cluster $(CLUSTER_NAME) \
+		--num-nodes 2 \
+		--min-nodes 2 \
+		--max-nodes $(NODE_MAX_SIZE) \
+		--machine-type=$(GKE_MACHINE_TYPE) \
+		--enable-autoscaling \
+		--enable-autorepair \
+		--no-enable-autoupgrade \
+		--preemptible \
+		--node-labels elasticsearch_data=yes \
+		--node-taints elasticsearch_data=yes:NoSchedule \
+		|| echo "Elasticsearch CPU node pool creation failed."
 	@echo " "
 	@echo " "
 
@@ -132,10 +167,16 @@ gke/create/gpus:
 #		--node-taints "nvidia.com/gpu=:NoSchedule"
 
 ## Destroy GKE GPU node pool
-gke/destroy/gpus:
-	@echo "Destroying GPU node pool..."
-	@-gcloud container node-pools delete gpu --quiet --region $(GPU_COMPUTE_REGION)
-	@echo "GPU node pool destruction finished."
+gke/destroy/node-pools:
+	@echo "Destroying prediction GPU node pool..."
+	@-gcloud container node-pools delete prediction-gpu --quiet --region $(GPU_COMPUTE_REGION)
+	@echo "Prediction GPU node pool destruction finished."
+	@echo "Destroying training GPU node pool..."
+	@-gcloud container node-pools delete training-gpu --quiet --region $(GPU_COMPUTE_REGION)
+	@echo "Training GPU node pool destruction finished."
+	@echo "Destroying elasticsearch CPU node pool..."
+	@-gcloud container node-pools delete elasticsearch-cpu --quiet --region $(GKE_COMPUTE_REGION)
+	@echo "Elasticsearch CPU node pool destruction finished."
 	@echo " "
 	@echo " "
 
@@ -201,7 +242,7 @@ gke/deploy/nvidia:
 gke/create/all: \
 	gke/create/service-account \
 	gke/create/cluster \
-	gke/create/gpus \
+	gke/create/node-pools \
 	gke/create/bucket \
 	gke/deploy/helm \
 	gke/deploy/nvidia
@@ -210,7 +251,7 @@ gke/create/all: \
 
 ## Destroy Cluster
 gke/destroy/all: \
-	gke/destroy/gpus \
+	gke/destroy/node-pools \
 	gke/destroy/cluster \
 	gke/destroy/service-account 
 	@echo "GKE cluster destroyed" 
