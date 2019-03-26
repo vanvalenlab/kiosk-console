@@ -25,13 +25,6 @@ releases:
     default: "true"
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-janitor'
   version: "0.1.0"
-  resources:
-    requests:
-      cpu: 100m
-      memory: 32Mi
-    # limits:
-    #   cpu: 100m
-    #   memory: 64Mi
   values:
     - app_name: "redis-janitor"
       deployment_name: "redis-janitor-deployment"
@@ -40,6 +33,13 @@ releases:
       image_version: "0.1"
       container_name: "redis-janitor-container"
       service_account_name: "redis-janitor-service-account"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 32Mi
+        # limits:
+        #   cpu: 100m
+        #   memory: 64Mi
       env:
         DEBUG: "true"
         INTERVAL: "5"
