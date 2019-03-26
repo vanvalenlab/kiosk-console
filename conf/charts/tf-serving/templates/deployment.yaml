@@ -26,8 +26,7 @@ spec:
         operator: "Exists"
         effect: "NoSchedule"
       - key: "prediction_gpu"
-        operator: "Equal"
-        value: "yes"
+        operator: "Exists"
         effect: "NoSchedule"
       containers:
       - name: {{ .Values.container_name }}
