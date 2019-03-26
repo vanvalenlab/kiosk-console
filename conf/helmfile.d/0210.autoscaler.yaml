@@ -30,7 +30,7 @@ releases:
       deployment_name: "autoscaler-deployment"
       replicas: 1
       image_name: "vanvalenlab/kiosk-autoscaler"
-      image_version: "code_cleanup"
+      image_version: "0.1"
       container_name: "autoscaler-container"
       service_account_name: "autoscaler-service-account"
       env:

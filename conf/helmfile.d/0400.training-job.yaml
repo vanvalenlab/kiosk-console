@@ -27,7 +27,7 @@ releases:
   version: "0.1.0"
   values:
     - app_name: "training"
-      parallelism: 1
+      parallelism: 0
       image_name: "vanvalenlab/kiosk-training"
       image_tag: "0.1"
       job_name: "training-job"
