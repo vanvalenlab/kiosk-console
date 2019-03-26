@@ -1,11 +1,7 @@
-#|| echo "Services couldn't be synced."
 helmfile/create/all:
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
-	until helmfile sync;   \
-	do	                   \
-	  helm delete --purge; \
-	done
+	@helmfile sync || echo "Services couldn't be synced."
 	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "
