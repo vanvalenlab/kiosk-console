@@ -20,12 +20,14 @@ nodeSelector:
 
 # secrets.yaml and hemlfile.d/frontend.yaml
 env:
-  RPC_PORT: "8500"
-  REST_PORT: "8501"
-  REST_TIMEOUT: "180000"
+  PORT: "8500"
+  REST_API_PORT: "0"
+  REST_API_TIMEOUT: "30000"
+  MODEL_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
+  ENABLE_BATCHING: "false"
+  GRPC_CHANNEL_ARGS: ""
   MODEL_PREFIX: "models"
   CLOUD_PROVIDER: "aws"
-  TF_SERVING_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
   LOG_LEVEL: "3"
   DEBUG: "FALSE"
 secrets:

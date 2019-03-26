@@ -39,7 +39,7 @@ releases:
       service_port: 3000
       service_type: "ClusterIP"
       ingress_name: "frontend-ingress"
-      ingress_path: "/" 
+      ingress_path: "/"
       ingress:
         annotations:
           nginx.ingress.kubernetes.io/rewrite-target: /
