@@ -36,6 +36,9 @@ releases:
       resources:
         requests:
           cpu: 100m
+          memory: 32Mi
+        limits:
+          cpu: 100m
           memory: 64Mi
       env:
         DEBUG: "true"
