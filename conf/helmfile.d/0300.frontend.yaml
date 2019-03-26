@@ -34,6 +34,9 @@ releases:
         requests:
           cpu: 100m
           memory: 256Mi
+        # limits:
+        #   cpu: 100m
+        #   memory: 512Mi
       deployment_name: "frontend-deployment"
       deployment_port: 8080
       container_name: "frontend-container"

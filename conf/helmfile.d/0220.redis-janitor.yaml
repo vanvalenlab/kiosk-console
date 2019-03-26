@@ -29,9 +29,9 @@ releases:
     requests:
       cpu: 100m
       memory: 32Mi
-    limits:
-      cpu: 100m
-      memory: 64Mi
+    # limits:
+    #   cpu: 100m
+    #   memory: 64Mi
   values:
     - app_name: "redis-janitor"
       deployment_name: "redis-janitor-deployment"
