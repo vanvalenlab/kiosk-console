@@ -33,6 +33,10 @@ releases:
       image_version: "dev"
       container_name: "bucket-monitor-container"
       service_account_name: "bucket-monitor-service-account"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 64Mi
       env:
         DEBUG: "true"
         INTERVAL: "5"
