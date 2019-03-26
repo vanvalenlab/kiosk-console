@@ -33,6 +33,13 @@ releases:
       image_version: "0.1"
       container_name: "autoscaler-container"
       service_account_name: "autoscaler-service-account"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 32Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
       env:
         DEBUG: "true"
         INTERVAL: "5"
