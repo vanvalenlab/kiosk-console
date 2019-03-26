@@ -22,9 +22,7 @@ spec:
         image: {{ .Values.image_name }}:{{ .Values.image_version }}
         imagePullPolicy: Always
         resources:
-          requests:
-            cpu: 100m
-            memory: 50Mi
+{{ toYaml .Values.resources | indent 10 }}
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}
