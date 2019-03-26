@@ -18,6 +18,10 @@ releases:
    chart: "stable/redis"
    version: "3.0.5"
    namespace: "deepcell"
+   resources:
+     requests:
+       cpu: 200m
+       memory: 256Mi
    set:
      - name: "usePassword"
        value: "false"
