@@ -291,7 +291,8 @@ function configure_gke() {
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
 	  -e GKE_COMPUTE_REGION -e GKE_COMPUTE_ZONE \
-	  -e GKE_MACHINE_TYPE -e GPU_TYPE -e GPU_PER_NODE \
+	  -e GKE_MACHINE_TYPE -e PREDICTION_GPU_TYPE \
+      -e TRAINING_GPU_TYPE -e GPU_PER_NODE \
 	  -e GPU_MACHINE_TYPE -e GPU_NODE_MIN_SIZE \
 	  -e GPU_NODE_MAX_SIZE \
 	  -e GPU_MAX_TIMES_TWO \
