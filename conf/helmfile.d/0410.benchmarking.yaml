@@ -43,7 +43,7 @@ releases:
         BENCHMARK_MODEL_VERSION: '{{ env "BENCHMARK_MODEL_VERSION" | default "NA" }}'
         BENCHMARK_POSTPROCESSING: '{{ env "BENCHMARK_POSTPROCESSING" | default "NA" }}'
         BENCHMARK_CUTS: '{{ env "BENCHMARK_CUTS" | default "NA" }}'
-        GPU_TYPE: '{{ env "GPU_TYPE" | default "NA" }}'
+        GPU_TYPE: '{{ env "PREDICTION_GPU_TYPE" | default "NA" }}'
         CLUSTER_ADDRESS: '{{ env "CLUSTER_ADDRESS" | default "NA" }}'
         UPLOAD_METHOD: '{{ env "UPLOAD_METHOD" | default "direct" }}'
         IMAGES_PER_ZIP: '{{ env "IMAGES_PER_ZIP" | default "100" }}'

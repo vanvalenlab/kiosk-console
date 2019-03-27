@@ -20,6 +20,8 @@ spec:
         imagePullPolicy: "Always"
         ports:
         - containerPort: {{ .Values.deployment_port }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}

@@ -25,6 +25,11 @@ ingress:
     #nginx.ingress.kubernetes.io/ssl-redirect: "false"
     #nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 
+resources:
+  # requests:
+  #   cpu: 100m
+  #   memory: 256Mi
+
 # secrets.yaml and hemlfile.d/frontend.yaml
 env:
   PORT: "8080"

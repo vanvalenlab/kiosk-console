@@ -28,6 +28,15 @@ releases:
   values:
     - app_name: "tf-serving"
       replicas: 0
+      resources:
+        requests:
+          nvidia.com/gpu: 1
+          cpu: 100m
+          memory: 1024Mi
+        limits:
+          nvidia.com/gpu: 1
+        #   cpu: 100m
+        #   memory: 2048Mi
       image_name: "vanvalenlab/kiosk-tf-serving"
       image_version: "0.1"
       deployment_name: "tf-serving-deployment"
@@ -40,7 +49,7 @@ releases:
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         beta.kubernetes.io/instance-type: '{{ env "AWS_GPU_MACHINE_TYPE" | default "p2.xlarge" }}'
 {{ else }}
-        cloud.google.com/gke-accelerator: '{{ env "GPU_TYPE" | default "nvidia-tesla-k80" }}'
+        cloud.google.com/gke-accelerator: '{{ env "PREDICTION_GPU_TYPE" | default "nvidia-tesla-k80" }}'
         cloud.google.com/gke-preemptible: "true"
 {{ end }}
       env:
