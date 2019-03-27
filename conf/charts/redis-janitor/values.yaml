@@ -6,6 +6,10 @@ replicas: 1
 image_name: "vanvalenlab/kiosk-redis-janitor"
 image_version: "latest"
 container_name: "redis-janitor-container"
+resources:
+  # requests:
+  #   cpu: 100m
+  #   memory: 50Mi
 env:
   DEBUG: "true"
   INTERVAL: 10
@@ -16,4 +20,3 @@ env:
 
 service_account:
   name: "redis-janitor-service-account"
-
