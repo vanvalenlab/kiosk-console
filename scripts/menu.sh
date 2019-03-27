@@ -86,10 +86,10 @@ function tailcmd() {
          --title "$title" \
          --backtitle "${BRAND}" \
          --begin 3 1 \
-         --tailbox "${tmpfile}" $((LINES-5)) $((COLUMNS-3)) 
+         --tailbox "${tmpfile}" $((LINES-5)) $((COLUMNS-3))
 }
 
-# Show different functions in the main menu depending on whether the 
+# Show different functions in the main menu depending on whether the
 # cluster has been created yet.
 function menu() {
   local value
@@ -176,7 +176,7 @@ function configure_aws() {
 	  p3.16xlarge 8GPUs OFF"
   export AWS_GPU_MACHINE_TYPE=$(radiobox "Amazon Web Services" \
 	  "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
-  
+
   export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "${AWS_MIN_GPU_NODES:-0}")
   if [ "$AWS_MIN_GPU_NODES" = "" ]; then
 	  return 0
@@ -197,7 +197,7 @@ function configure_aws() {
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
   export KOPS_STATE_STORE=s3://${NAMESPACE}
   export CLOUD_PROVIDER=aws
-  
+
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE \
@@ -257,11 +257,11 @@ function configure_gke() {
   export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for prediction (not training) from the GPU types available in your region:" \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
-  
+
   export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for training (not prediction) from the GPU types available in your region:" \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
-  
+
   export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
   if [ "$GPU_PER_NODE" = "" ]; then
 	  return 0
@@ -291,7 +291,8 @@ function configure_gke() {
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
 	  -e GKE_COMPUTE_REGION -e GKE_COMPUTE_ZONE \
-	  -e GKE_MACHINE_TYPE -e GPU_TYPE -e GPU_PER_NODE \
+	  -e GKE_MACHINE_TYPE -e PREDICTION_GPU_TYPE \
+    -e TRAINING_GPU_TYPE -e GPU_PER_NODE \
 	  -e GPU_MACHINE_TYPE -e GPU_NODE_MIN_SIZE \
 	  -e GPU_NODE_MAX_SIZE \
 	  -e GPU_MAX_TIMES_TWO \
