@@ -6,6 +6,10 @@ replicas: 1
 image_name: "vanvalenlab/kiosk-bucket-monitor"
 image_version: "latest"
 container_name: "bucket-monitor-container"
+resources:
+  # requests:
+  #   cpu: 100m
+  #   memory: 50Mi
 env:
   DEBUG: "true"
   INTERVAL: 10

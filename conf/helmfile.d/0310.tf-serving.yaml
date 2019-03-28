@@ -28,6 +28,15 @@ releases:
   values:
     - app_name: "tf-serving"
       replicas: 0
+      resources:
+        requests:
+          nvidia.com/gpu: 1
+          cpu: 100m
+          memory: 1024Mi
+        limits:
+          nvidia.com/gpu: 1
+        #   cpu: 100m
+        #   memory: 2048Mi
       image_name: "vanvalenlab/kiosk-tf-serving"
       image_version: "0.1"
       deployment_name: "tf-serving-deployment"

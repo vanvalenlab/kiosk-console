@@ -17,6 +17,11 @@ service_name: "tensorboard-service"
 service_port: 6006
 service_type: "ClusterIP"
 
+resources:
+  # requests:
+  #   cpu: 100m
+  #   memory: 256Mi
+
 # ingress.yaml
 ingress_name: "tensorboard-ingress"
 ingress_path: "/tensorboard"

@@ -18,6 +18,11 @@ nodeSelector:
   #  beta.kubernetes.io/instance-type: "p2.xlarge"
   #  cloud.google.com/gke-preemptible: "true"
 
+resources:
+  # requests:
+  #   nvidia.com/gpu: 1
+  # limits:
+  #   nvidia.com/gpu: 1
 # secrets.yaml and hemlfile.d/frontend.yaml
 env:
   PORT: "8500"

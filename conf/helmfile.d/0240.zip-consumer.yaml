@@ -37,6 +37,13 @@ releases:
       service_port: 8080
       service_type: "ClusterIP"
       secrets_name: "zip-consumer-env-variables"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        # limits:
+        #   cpu: 100m
+        #   memory: 1024Mi
       env:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"

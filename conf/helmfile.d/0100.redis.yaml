@@ -23,3 +23,8 @@ releases:
        value: "false"
      - name: "cluster.enabled"
        value: "false"
+   values:
+     - resources:
+         requests:
+           cpu: 200m
+           memory: 256Mi
