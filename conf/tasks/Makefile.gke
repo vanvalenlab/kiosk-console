@@ -239,6 +239,12 @@ gke/deploy/nvidia:
 	@echo " "
 	@echo " "
 
+## Create horizontal pod autoscalers for all relevant deployments
+gke/implement/autoscaling:
+	@kubectl autoscale deployment redis-consumer-deployment --cpu-percent=50 --min=1 --max=$(GPU_MAX_TIMES_TEN)
+	@kubectl autoscale deployment zip-consumer-deployment --cpu-percent=50 --min=1 --max=$(GPU_MAX_TIMES_TEN)
+	@kubectl autoscale deployment data-processing-deployment --cpu-percent=50 --min=1 --max=$(GPU_MAX_TIMES_TEN)
+
 ## Create Cluster
 gke/create/all: \
 	gke/create/service-account \
@@ -246,7 +252,8 @@ gke/create/all: \
 	gke/create/node-pools \
 	gke/create/bucket \
 	gke/deploy/helm \
-	gke/deploy/nvidia
+	gke/deploy/nvidia \
+	gke/implement/autoscaling
 	@echo "GKE cluster created" 
 	@exit 0
 

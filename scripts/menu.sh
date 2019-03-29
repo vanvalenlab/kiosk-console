@@ -192,6 +192,8 @@ function configure_aws() {
   export GPU_MAX_TIMES_FOUR=$(($AWS_MAX_GPU_NODES*4))
   export GPU_MAX_TIMES_FIVE=$(($AWS_MAX_GPU_NODES*5))
   export GPU_MAX_TIMES_TEN=$(($AWS_MAX_GPU_NODES*10))
+  export GPU_MAX_TIMES_TWENTY=$(($AWS_MAX_GPU_NODES*20))
+  export GPU_MAX_TIMES_THIRTY=$(($AWS_MAX_GPU_NODES*30))
 
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
