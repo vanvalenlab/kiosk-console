@@ -14,6 +14,12 @@ spec:
       labels:
         app: {{ .Values.app_name }}
     spec:
+      nodeSelector:
+        rc_dp: "yes"
+      tolerations:
+      - key: rc_dp
+        operator: Exists
+        effect: NoSchedule
       containers:
       - name: {{ .Values.container_name }}
         image: {{ .Values.image_name }}:{{ .Values.image_tag }}
@@ -22,12 +28,6 @@ spec:
         - containerPort: {{ .Values.deployment_port }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
-        nodeSelector:
-          rc_dp: "yes"
-        tolerations:
-        - key: rc_dp
-          operator: Exists
-          effect: NoSchedule
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}
