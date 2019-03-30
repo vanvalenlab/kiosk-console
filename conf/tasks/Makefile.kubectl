@@ -36,9 +36,9 @@ kubectl/display/ip:
 ## Create horizontal pod autoscalers for all relevant deployments
 kubectl/implement/autoscaling:
 	@kubens deepcell
-	@kubectl autoscale deployment redis-consumer-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TEN)
-	@kubectl autoscale deployment zip-consumer-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TEN)
-	@kubectl autoscale deployment data-processing-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TEN)
-	@kubectl scale deployment --replicas=$(GPU_NODE_MAX_SIZE) redis-consumer-deployment
+	@kubectl autoscale deployment redis-consumer-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWENTY)
+	@kubectl autoscale deployment zip-consumer-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWO)
+	@kubectl autoscale deployment data-processing-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWO)
+	@kubectl scale deployment --replicas=1 redis-consumer-deployment
 	@kubectl scale deployment --replicas=1 zip-consumer-deployment
-	@kubectl scale deployment --replicas=$(GPU_MAX_DIVIDED_BY_FOUR) data-processing-deployment
+	@kubectl scale deployment --replicas=1 data-processing-deployment
