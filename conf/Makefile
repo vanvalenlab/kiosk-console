@@ -10,7 +10,7 @@ create: \
   helmfile/create/all \
   kubectl/display/ip \
   kubectl/implement/autoscaling
-  @echo "Cluster created"
+    @echo "Cluster created"
 
 ## Destroy cluster
 destroy: \
