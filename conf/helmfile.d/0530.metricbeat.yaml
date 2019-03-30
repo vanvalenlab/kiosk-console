@@ -48,6 +48,9 @@ releases:
           - key: training_gpu
             operator: Exists
             effect: NoSchedule
+          - key: rc_dp
+            operator: Exists
+            effect: NoSchedule
         config:
           output.logstash:
             enabled: true

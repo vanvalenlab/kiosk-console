@@ -22,6 +22,12 @@ spec:
         - containerPort: {{ .Values.deployment_port }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+        nodeSelector:
+          rc_dp: "yes"
+        tolerations:
+        - key: rc_dp
+          operator: Exists
+          effect: NoSchedule
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}
