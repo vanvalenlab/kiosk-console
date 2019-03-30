@@ -240,7 +240,7 @@ function configure_gke() {
 	  return 0
   fi
 
-  local regions=$(gcloud compute region list | awk '{print $1 " _ OFF"}')
+  local regions=$(gcloud compute regions list | awk '{print $1 " _ OFF"}')
   local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
   local base_box_height=7
   local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
