@@ -229,6 +229,7 @@ function configure_gke() {
 	  return 0
   fi
   make gke/login
+  gcloud config set project ${PROJECT}
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
@@ -238,7 +239,16 @@ function configure_gke() {
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
-  export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "${GPU_COMPUTE_REGION:-us-west1}")
+
+  local regions=$(gcloud compute region list | awk '{print $1 " _ OFF"}')
+  local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
+  local base_box_height=7
+  local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
+  local total_lines=$(($base_box_height + $selector_box_lines))
+  export GKE_COMPUTE_REGION=$(radiobox "Google Cloud" \
+      "Choose a region for hosting your cluster:" \
+	  $total_lines 60 $selector_box_lines "$regions_with_default")
+  #export GKE_COMPUTE_REGION=$(inputbox "Google Cloud" "Compute Region" "${GPU_COMPUTE_REGION:-us-west1}")
   if [ "$GKE_COMPUTE_REGION" = "" ]; then
 	  return 0
   fi
@@ -259,7 +269,6 @@ function configure_gke() {
 	  return 0
   fi
 
-  gcloud config set project ${PROJECT}
   local gpus_in_region=$(gcloud compute accelerator-types list | \
 	  grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " _ OFF"}')
   local gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
