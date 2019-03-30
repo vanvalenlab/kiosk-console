@@ -194,6 +194,9 @@ function configure_aws() {
   export GPU_MAX_TIMES_TEN=$(($AWS_MAX_GPU_NODES*10))
   export GPU_MAX_TIMES_TWENTY=$(($AWS_MAX_GPU_NODES*20))
   export GPU_MAX_TIMES_THIRTY=$(($AWS_MAX_GPU_NODES*30))
+  export GPU_MAX_DIVIDED_BY_TWO=$(($GPU_NODE_MAX_SIZE/2))
+  export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))
+  export GPU_MAX_DIVIDED_BY_FOUR=$(($GPU_NODE_MAX_SIZE/4))
 
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
@@ -209,7 +212,12 @@ function configure_aws() {
 	  -e GPU_MAX_TIMES_THREE \
 	  -e GPU_MAX_TIMES_FOUR \
 	  -e GPU_MAX_TIMES_FIVE \
-	  -e GPU_MAX_TIMES_TEN > ${CACHE_PATH}/env.aws
+	  -e GPU_MAX_TIMES_TEN \
+	  -e GPU_MAX_TIMES_TWENTY \
+	  -e GPU_MAX_TIMES_THIRTY \
+	  -e GPU_MAX_DIVIDED_BY_TWO \
+	  -e GPU_MAX_DIVIDED_BY_THREE \
+	  -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
   #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
 }
 
@@ -288,6 +296,11 @@ function configure_gke() {
   export GPU_MAX_TIMES_FOUR=$(($GPU_NODE_MAX_SIZE*4))
   export GPU_MAX_TIMES_FIVE=$(($GPU_NODE_MAX_SIZE*5))
   export GPU_MAX_TIMES_TEN=$(($GPU_NODE_MAX_SIZE*10))
+  export GPU_MAX_TIMES_TWENTY=$(($GPU_NODE_MAX_SIZE*20))
+  export GPU_MAX_TIMES_THIRTY=$(($GPU_NODE_MAX_SIZE*30))
+  export GPU_MAX_DIVIDED_BY_TWO=$(($GPU_NODE_MAX_SIZE/2))
+  export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))
+  export GPU_MAX_DIVIDED_BY_FOUR=$(($GPU_NODE_MAX_SIZE/4))
 
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
@@ -301,7 +314,12 @@ function configure_gke() {
 	  -e GPU_MAX_TIMES_THREE \
 	  -e GPU_MAX_TIMES_FOUR \
 	  -e GPU_MAX_TIMES_FIVE \
-	  -e GPU_MAX_TIMES_TEN > ${CACHE_PATH}/env.gke
+	  -e GPU_MAX_TIMES_TEN \
+	  -e GPU_MAX_TIMES_TWENTY \
+	  -e GPU_MAX_TIMES_THIRTY \
+	  -e GPU_MAX_DIVIDED_BY_TWO \
+	  -e GPU_MAX_DIVIDED_BY_THREE \
+	  -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
 }
 
 
