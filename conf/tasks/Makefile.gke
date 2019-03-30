@@ -195,6 +195,9 @@ gke/destroy/node-pools:
 	@echo "Destroying elasticsearch CPU node pool..."
 	@-gcloud container node-pools delete elasticsearch-cpu --quiet --region $(GKE_COMPUTE_REGION)
 	@echo "Elasticsearch CPU node pool destruction finished."
+	@echo "Destroying redis-consumer, data-processing CPU node pool..."
+	@-gcloud container node-pools delete rc-dp-cpu --quiet --region $(GKE_COMPUTE_REGION)
+	@echo "Redis-consumer, data-processing CPU node pool destruction finished."
 	@echo " "
 	@echo " "
 
