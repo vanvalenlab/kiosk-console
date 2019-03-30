@@ -23,7 +23,6 @@ kubectl/create/all: \
   kubectl/create/nvidia-drivers
 	@echo "Kubectl provisioned"
 
-
 ## Display the cluster IP or URL
 kubectl/display/ip: IP_VAR = $(shell sh -c "kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller | grep 'LoadBalancer Ingress:' | sed 's/\([[:graph:]]\+[[:space:]]\+\)\+\([0-9.]\+\|[[:graph:]]\+amazon[[:graph:]]\+\)/\2/'")
 kubectl/display/ip:
@@ -33,3 +32,10 @@ kubectl/display/ip:
 	@echo " "
 	@echo " "
 	@echo export CLUSTER_ADDRESS=${IP_VAR} > ./cluster_address
+
+## Create horizontal pod autoscalers for all relevant deployments
+gke/implement/autoscaling:
+	@kubectl autoscale deployment redis-consumer-deployment --cpu-percent=50 --min=1 --max=$(GPU_MAX_TIMES_TEN)
+	@kubectl autoscale deployment zip-consumer-deployment --cpu-percent=50 --min=1 --max=$(GPU_MAX_TIMES_TEN)
+	@kubectl autoscale deployment data-processing-deployment --cpu-percent=50 --min=1 --max=$(GPU_MAX_TIMES_TEN)
+
