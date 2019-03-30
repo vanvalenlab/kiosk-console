@@ -254,11 +254,13 @@ function configure_gke() {
 
   local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
   local base_box_height=7
-  local selector_box_lines=$(echo "${zones}" | tr -cd '\n' | wc -c)
+  local selector_box_lines=$(( $(echo "${zones}" | tr -cd '\n' | wc -c) + 1 ))
   local total_lines=$(($base_box_height + $selector_box_lines))
   export GKE_COMPUTE_ZONE=$(radiobox "Google Cloud" \
       "Choose a primary zone within your region. This zone will host most of your nodes:" \
 	  $total_lines 60 $selector_box_lines "$zones")
+  local all_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
+  export ALL_ZONES_IN_REGION=$(echo $all_zones | sed 's/ /,/g')
   #export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
   if [ "$GKE_COMPUTE_ZONE" = "" ]; then
 	  return 0
