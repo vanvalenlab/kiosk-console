@@ -39,8 +39,8 @@ releases:
       secrets_name: "redis-consumer-env-variables"
       resources:
         requests:
-          cpu: 100m
-          memory: 2048Mi
+          cpu: 750m
+          memory: 512Mi
         # limits:
         #   cpu: 100m
         #   memory: 2Gi

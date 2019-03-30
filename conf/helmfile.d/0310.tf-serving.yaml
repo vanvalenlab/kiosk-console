@@ -31,8 +31,8 @@ releases:
       resources:
         requests:
           nvidia.com/gpu: 1
-          cpu: 100m
-          memory: 1024Mi
+          cpu: 200m
+          memory: 3Gi
         limits:
           nvidia.com/gpu: 1
         #   cpu: 100m
