@@ -114,9 +114,9 @@ gke/create/node-pools:
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region $(GKE_COMPUTE_REGION) \
 		--cluster $(CLUSTER_NAME) \
-		--num-nodes $(NODE_MIN_SIZE) \
-		--min-nodes $(NODE_MIN_SIZE) \
-		--max-nodes $(NODE_MAX_SIZE) \
+		--num-nodes 1 \
+		--min-nodes 1 \
+		--max-nodes 50 \
 		--machine-type=n1-highcpu-4 \
 		--enable-autoscaling \
 		--enable-autorepair \
@@ -167,7 +167,7 @@ gke/create/node-pools:
 		--cluster $(CLUSTER_NAME) \
 		--num-nodes 2 \
 		--min-nodes 2 \
-		--max-nodes $(NODE_MAX_SIZE) \
+		--max-nodes 2 \
 		--machine-type=n1-highmem-2 \
 		--enable-autoscaling \
 		--enable-autorepair \
