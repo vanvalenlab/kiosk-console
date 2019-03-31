@@ -60,7 +60,7 @@ gke/create/cluster:
 	gcloud container clusters create $(CLUSTER_NAME) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region=$(GKE_COMPUTE_REGION) \
-		--node-locations=$(ALL_ZONES_IN_REGION) \
+		--node-locations=$(REGION_ZONES_WITH_GPUS) \
 		--max-nodes=$(NODE_MAX_SIZE) \
 		--min-nodes=$(NODE_MIN_SIZE) \
 		--machine-type=$(GKE_MACHINE_TYPE) \
@@ -131,7 +131,7 @@ gke/create/node-pools:
 		--cluster $(CLUSTER_NAME) \
 		--accelerator type=$(PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--zone $(GPU_COMPUTE_ZONE) \
+		--region $(GPU_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
 		--max-nodes $(GPU_NODE_MAX_SIZE) \
@@ -148,7 +148,7 @@ gke/create/node-pools:
 		--cluster $(CLUSTER_NAME) \
 		--accelerator type=$(TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--zone $(GPU_COMPUTE_ZONE) \
+		--region $(GPU_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
 		--max-nodes $(GPU_NODE_MAX_SIZE) \

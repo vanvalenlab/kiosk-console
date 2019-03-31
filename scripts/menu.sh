@@ -281,8 +281,16 @@ function configure_gke() {
 
   local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
   local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-  export zones_with_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $1}')
-
+  local region_zone_array=($all_region_zones)
+  local zones_with_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
+  local region_zones_gpu=()
+  for i in "${region_zone_array[@]}"
+  do
+      if [[ $zones_with_gpus == *${i}* ]]; then
+          region_zones_gpu+=(${i})
+      fi
+  done
+  export REGION_ZONES_WITH_GPUS=$(IFS=, ; echo  | "${region_zones_gpu[*]}")
 
   #local base_box_height=7
   #local selector_box_lines=$(( $(echo "${zones}" | tr -cd '\n' | wc -c) + 1 ))
@@ -290,7 +298,6 @@ function configure_gke() {
   #export GKE_COMPUTE_ZONE=$(radiobox "Google Cloud" \
   #    "Choose a primary zone within your region. This zone will host most of your nodes:" \
   #	  $total_lines 60 $selector_box_lines "$zones")
-  #export ALL_ZONES_IN_REGION=$(echo $all_region_zones | sed 's/ /,/g')
   #export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
   #if [ "$GKE_COMPUTE_ZONE" = "" ]; then
   #	  return 0
