@@ -252,19 +252,6 @@ function configure_gke() {
 	  return 0
   fi
 
-  local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
-  local base_box_height=7
-  local selector_box_lines=$(( $(echo "${zones}" | tr -cd '\n' | wc -c) + 1 ))
-  local total_lines=$(($base_box_height + $selector_box_lines))
-  export GKE_COMPUTE_ZONE=$(radiobox "Google Cloud" \
-      "Choose a primary zone within your region. This zone will host most of your nodes:" \
-	  $total_lines 60 $selector_box_lines "$zones")
-  local all_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-  export ALL_ZONES_IN_REGION=$(echo $all_zones | sed 's/ /,/g')
-  #export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
-  if [ "$GKE_COMPUTE_ZONE" = "" ]; then
-	  return 0
-  fi
   export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-highmem-2}")
   if [ "$GKE_MACHINE_TYPE" = "" ]; then
 	  return 0
@@ -291,6 +278,23 @@ function configure_gke() {
   export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for training (not prediction) from the GPU types available in your region:" \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+
+  local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
+  local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
+  export zones_with_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $1}')
+
+
+  #local base_box_height=7
+  #local selector_box_lines=$(( $(echo "${zones}" | tr -cd '\n' | wc -c) + 1 ))
+  #local total_lines=$(($base_box_height + $selector_box_lines))
+  #export GKE_COMPUTE_ZONE=$(radiobox "Google Cloud" \
+  #    "Choose a primary zone within your region. This zone will host most of your nodes:" \
+  #	  $total_lines 60 $selector_box_lines "$zones")
+  #export ALL_ZONES_IN_REGION=$(echo $all_region_zones | sed 's/ /,/g')
+  #export GKE_COMPUTE_ZONE=$(inputbox "Google Cloud" "Compute Zone" "${GKE_COMPUTE_ZONE:-us-west1-b}")
+  #if [ "$GKE_COMPUTE_ZONE" = "" ]; then
+  #	  return 0
+  #  fi
 
   export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
   if [ "$GPU_PER_NODE" = "" ]; then
