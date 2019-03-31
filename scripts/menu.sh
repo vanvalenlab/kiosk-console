@@ -266,7 +266,7 @@ function configure_gke() {
   fi
 
   export gpus_in_region=$(gcloud compute accelerator-types list | \
-	  grep ${GKE_COMPUTE_REGION} | awk '{print $1 " "_ OFF"}')
+	  grep ${GKE_COMPUTE_REGION} | awk '{print $1 " _ OFF"}')
   export gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
   export base_box_height=7
   export selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
