@@ -301,7 +301,7 @@ function configure_gke() {
   export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
 
   msgbox "Caution!" \
-	 "Here are the zones in your chosen region that host the prediction GPU type you chose:
+      "Here are the zones in your chosen region that host the GPU type(s) you chose:
 
 $REGION_ZONES_WITH_GPUS
 
