@@ -115,7 +115,7 @@ releases:
         httpGet:
           path: /
           port: monitor
-        initialDelaySeconds: 20
+        initialDelaySeconds: 30
         # periodSeconds: 30
         # timeoutSeconds: 30
         # failureThreshold: 6
@@ -125,7 +125,7 @@ releases:
         httpGet:
           path: /
           port: monitor
-        initialDelaySeconds: 20
+        initialDelaySeconds: 30
         # periodSeconds: 30
         # timeoutSeconds: 30
         # failureThreshold: 6

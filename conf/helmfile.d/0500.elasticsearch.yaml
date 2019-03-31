@@ -129,7 +129,7 @@ releases:
           httpGet:
             path: /_cluster/health?local=true
             port: 9200
-          initialDelaySeconds: 5
+          initialDelaySeconds: 30
         antiAffinity: "soft"
         nodeAffinity: {}
         nodeSelector: {}
@@ -174,7 +174,7 @@ releases:
           httpGet:
             path: /_cluster/health?local=true
             port: 9200
-          initialDelaySeconds: 5
+          initialDelaySeconds: 30
         terminationGracePeriodSeconds: 3600
         antiAffinity: "soft"
         nodeAffinity: {}
