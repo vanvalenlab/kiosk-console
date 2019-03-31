@@ -265,12 +265,12 @@ function configure_gke() {
 	  return 0
   fi
 
-  local gpus_in_region=$(gcloud compute accelerator-types list | \
-	  grep ${GKE_COMPUTE_ZONE} | awk '{print $1 " _ OFF"}')
-  local gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
-  local base_box_height=7
-  local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
-  local total_lines=$(($base_box_height + $selector_box_lines))
+  export gpus_in_region=$(gcloud compute accelerator-types list | \
+	  grep ${GKE_COMPUTE_REGION} | awk '{print $1 " "_ OFF"}')
+  export gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
+  export base_box_height=7
+  export selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
+  export total_lines=$(($base_box_height + $selector_box_lines))
   export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for prediction (not training) from the GPU types available in your region:" \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
@@ -279,11 +279,11 @@ function configure_gke() {
       "Choose a GPU for training (not prediction) from the GPU types available in your region:" \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
-  local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
-  local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-  local region_zone_array=($all_region_zones)
-  local zones_with_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
-  local region_zones_gpu=()
+  export zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
+  export all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
+  export region_zone_array=($all_region_zones)
+  export zones_with_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
+  export region_zones_gpu=()
   for i in "${region_zone_array[@]}"
   do
       if [[ $zones_with_gpus == *${i}* ]]; then
