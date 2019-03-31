@@ -12,7 +12,6 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
 export CLUSTER_NAME ?= deepcell
 export GKE_COMPUTE_REGION ?= us-west1
-export GKE_COMPUTE_ZONE ?= us-west1-b
 export GKE_MACHINE_TYPE ?= n1-standard-2
 export NODE_MIN_SIZE ?= 2
 export NODE_MAX_SIZE ?= 10
@@ -20,7 +19,6 @@ export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSD
 
 # Not all GPU types are available in all regions/availability zones
 export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
-export GPU_COMPUTE_ZONE ?= $(GKE_COMPUTE_ZONE)
 export PREDICTION_GPU_TYPE ?= nvidia-tesla-t4
 export TRAINING_GPU_TYPE ?= nvidia-tesla-v100
 export GPU_MACHINE_TYPE ?= n1-standard-4
@@ -51,9 +49,6 @@ gke/destroy/project:
 	@gcloud projects delete $(CLOUDSDK_CORE_PROJECT)
 
 ## Create a new GKE cluster
-	#gcloud container clusters upgrade ${CLUSTER_NAME} --quiet --master \
-	#	--zone=${GKE_COMPUTE_ZONE} \
-	#	|| echo "An upgrade of the cluster would be superfluous."
 gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
@@ -83,7 +78,6 @@ gke/destroy/cluster:
 ## Set context to use GKE cluster (e.g. with kubectl)
 gke/use/cluster:
 	@gcloud config set project $(CLOUDSDK_CORE_PROJECT)
-	@gcloud config set compute/zone $(GKE_COMPUTE_ZONE)
 	@gcloud config set compute/region $(GKE_COMPUTE_REGION)
 	@gcloud container clusters get-credentials $(CLUSTER_NAME)
 
