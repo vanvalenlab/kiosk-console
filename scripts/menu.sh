@@ -305,7 +305,7 @@ function configure_gke() {
 
 $REGION_ZONES_WITH_GPUS
 
-If you see any fewer than 2 zones listed above, please reconfigure the cluster beofre deploying. Different choices of GPU and/or region will be necessary."
+If you see any fewer than 2 zones listed above, please reconfigure the cluster beofre deploying. Different choices of GPU(s) and/or region will be necessary."
 
   export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
   if [ "$GPU_PER_NODE" = "" ]; then
