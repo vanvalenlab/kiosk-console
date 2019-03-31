@@ -5,10 +5,10 @@ helmfile/create/all:
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
 	@for filename in /conf/helmfile.d/*.yaml; do \
-        deployment_name=$(grep "\- name: " $(filename)  | grep -m1 -v "\- name: \"stable\"" | awk '{print $3}' | sed 's/^\"\(.\+\)\"$/\1/'); \
-		echo $(deployment_name); \
-        until helmfile --selector name=$(deployment_name) sync; do \
-            helm delete $(deployment_name) --purge; \
+        deployment_name=$(grep "\- name: " $$filename  | grep -m1 -v "\- name: \"stable\"" | awk '{print $3}' | sed 's/^\"\(.\+\)\"$/\1/'); \
+		echo $$deployment_name; \
+        until helmfile --selector name=$$deployment_name sync; do \
+            helm delete $$deployment_name --purge; \
             sleep 30; \
         done; \
     done
