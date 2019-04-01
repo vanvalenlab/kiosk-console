@@ -13,7 +13,7 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 export CLUSTER_NAME ?= deepcell
 export GKE_COMPUTE_REGION ?= us-west1
 export GKE_MACHINE_TYPE ?= n1-standard-2
-export NODE_MIN_SIZE ?= 2
+export NODE_MIN_SIZE ?= 1
 export NODE_MAX_SIZE ?= 10
 export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
