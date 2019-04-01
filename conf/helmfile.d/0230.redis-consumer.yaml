@@ -28,7 +28,7 @@ releases:
   values:
     - app_name: "redis-consumer-interface"
       deployment_name: "redis-consumer-deployment"
-      replicas: 0
+      replicas: 1
       image_name: "vanvalenlab/kiosk-redis-consumer"
       image_tag: "0.1"
       deployment_port: 8080
