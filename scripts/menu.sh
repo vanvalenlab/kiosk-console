@@ -252,7 +252,7 @@ function configure_gke() {
 	  return 0
   fi
 
-  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-highmem-2}")
+  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-4}")
   if [ "$GKE_MACHINE_TYPE" = "" ]; then
 	  return 0
   fi
