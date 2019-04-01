@@ -268,7 +268,7 @@ function configure_gke() {
   local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
   local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
   local base_box_height=7
-  local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
+  local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
   local total_lines=$(($base_box_height + $selector_box_lines))
   export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for prediction (not training) from the GPU types available in your region:" \
