@@ -266,7 +266,7 @@ function configure_gke() {
   fi
 
   local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
-  local gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
+  local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
   local base_box_height=7
   local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
   local total_lines=$(($base_box_height + $selector_box_lines))
@@ -306,14 +306,15 @@ $REGION_ZONES_WITH_GPUS
 
 If you see any fewer than 2 zones listed above, please reconfigure the cluster beofre deploying. Different choices of GPU(s) and/or region will be necessary."
 
-  export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
-  if [ "$GPU_PER_NODE" = "" ]; then
-	  return 0
-  fi
-  export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
-  if [ "$GPU_MACHINE_TYPE" = "" ]; then
-	  return 0
-  fi
+  ## Maybe include these in an advanced menu?
+  #export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
+  #if [ "$GPU_PER_NODE" = "" ]; then
+  #	  return 0
+  #fi
+  #export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
+  #if [ "$GPU_MACHINE_TYPE" = "" ]; then
+  #	  return 0
+  #fi
   export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
   if [ "$GPU_NODE_MIN_SIZE" = "" ]; then
 	  return 0
@@ -339,6 +340,7 @@ If you see any fewer than 2 zones listed above, please reconfigure the cluster b
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
+      -e NODE_MIN_SIZE -e NODE_MAX_SIZE \
 	  -e GKE_COMPUTE_REGION \
 	  -e GKE_MACHINE_TYPE -e PREDICTION_GPU_TYPE \
       -e TRAINING_GPU_TYPE -e GPU_PER_NODE \
