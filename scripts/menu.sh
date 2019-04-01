@@ -267,7 +267,8 @@ function configure_gke() {
 
   local gpus_in_region=$(gcloud compute accelerator-types list | \
 	  grep ${GKE_COMPUTE_REGION} | awk '{print $1 " _ OFF"}')
-  local gpus_with_default=${gpus_in_region/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
+  local unique_gpus=$(echo -e "${gpus_in_region// /\\n}" | sort -u)
+  local gpus_with_default=${unique_gpus/nvidia-tesla-k80 _ OFF/nvidia-tesla-k80 _ ON}
   local base_box_height=7
   local selector_box_lines=$(echo "${gpus_in_region}" | tr -cd '\n' | wc -c)
   local total_lines=$(($base_box_height + $selector_box_lines))
