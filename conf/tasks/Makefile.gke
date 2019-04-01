@@ -110,7 +110,7 @@ gke/create/node-pools:
 		--region $(GKE_COMPUTE_REGION) \
 		--num-nodes 1 \
 		--min-nodes 1 \
-		--max-nodes 50 \
+		--max-nodes ${NODE_MAX_SIZE} \
 		--machine-type=n1-highcpu-4 \
 		--enable-autoscaling \
 		--enable-autorepair \
