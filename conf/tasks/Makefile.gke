@@ -179,18 +179,10 @@ gke/create/node-pools:
 
 ## Destroy GKE GPU node pool
 gke/destroy/node-pools:
-	@echo "Destroying prediction GPU node pool..."
-	@-gcloud container node-pools delete prediction-gpu --quiet --region $(GPU_COMPUTE_REGION)
-	@echo "Prediction GPU node pool destruction finished."
-	@echo "Destroying training GPU node pool..."
-	@-gcloud container node-pools delete training-gpu --quiet --region $(GPU_COMPUTE_REGION)
-	@echo "Training GPU node pool destruction finished."
-	@echo "Destroying elasticsearch CPU node pool..."
-	@-gcloud container node-pools delete elasticsearch-cpu --quiet --region $(GKE_COMPUTE_REGION)
-	@echo "Elasticsearch CPU node pool destruction finished."
-	@echo "Destroying redis-consumer, data-processing CPU node pool..."
-	@-gcloud container node-pools delete rc-dp-cpu --quiet --region $(GKE_COMPUTE_REGION)
-	@echo "Redis-consumer, data-processing CPU node pool destruction finished."
+	@echo "Destroying node pools."
+	@echo "Depending on cluster state, this process could take a while."
+	/conf/patches/gke-node-pool-destruction.sh
+	@echo "Node pools destroyed."
 	@echo " "
 	@echo " "
 
