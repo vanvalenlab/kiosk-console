@@ -52,6 +52,7 @@ releases:
         DP_HOST: "data-processing-service"
         DP_PORT: "8080"
         DEBUG: "True"
+        INTERVAL: "1"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
