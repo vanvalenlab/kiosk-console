@@ -102,14 +102,18 @@ releases:
         #  cpu: 100m
         #  memory: 128Mi
         requests:
-         cpu: 100m
-         memory: 2Gi
+         cpu: 300m
+         memory: 4Gi
 
-      nodeSelector: {}
+      nodeSelector:
+        logstash: "yes"
 
-      tolerations: []
+      tolerations:
+      - key: logstash
+        operator: Exists
+        effect: NoSchedule
 
-      replicaCount: 1
+      replicaCount: 3
 
       livenessProbe:
         httpGet:

@@ -51,6 +51,9 @@ releases:
           - key: rc_dp
             operator: Exists
             effect: NoSchedule
+          - key: logstash
+            operator: Exists
+            effect: NoSchedule
         config:
           output.logstash:
             enabled: true

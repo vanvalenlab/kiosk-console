@@ -169,6 +169,23 @@ gke/create/node-pools:
 		--node-labels elasticsearch_data=yes \
 		--node-taints elasticsearch_data=yes:NoSchedule \
 		|| echo "Elasticsearch CPU node pool creation failed."
+	@echo "Creating logstash CPU node pool..."
+	@echo "Using the following command: "
+	gcloud container node-pools create logstash-cpu \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--region $(GKE_COMPUTE_REGION) \
+		--cluster $(CLUSTER_NAME) \
+		--num-nodes 3 \
+		--min-nodes 1 \
+		--max-nodes 4 \
+		--machine-type=n1-highmem-1 \
+		--enable-autoscaling \
+		--enable-autorepair \
+		--no-enable-autoupgrade \
+		--preemptible \
+		--node-labels logstash=yes \
+		--node-taints logstash=yes:NoSchedule \
+		|| echo "Elasticsearch CPU node pool creation failed."
 	@echo "GPU node pool creation finished."
 	@echo " "
 	@echo " "
