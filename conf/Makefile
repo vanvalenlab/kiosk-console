@@ -14,6 +14,7 @@ create: \
 
 ## Destroy cluster
 destroy: \
+  helmfile/destroy/all
   $(CLOUD_PROVIDER)/destroy/all
 	@echo "Cluster destroyed"
 

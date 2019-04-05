@@ -8,3 +8,11 @@ helmfile/create/all:
 	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "
+
+helmfile/destroy/all:
+	@echo " "
+	@echo "Destroying all Kubernetes resources using helmfiles..."
+	/conf/patches/gke-helmfile-destruction.sh
+	@echo "Helmfile destruction finished."
+	@echo " "
+	@echo " "
