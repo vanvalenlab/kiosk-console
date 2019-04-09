@@ -226,16 +226,14 @@ releases:
       filters:
         main: |-
           filter {
-            if "filebeat" in [_index] {
-              if "redis-consumer" in [kubernetes.pod.name] {
-                grok {
-                  match => {
-                    "message" => [
-                      "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} %{NOTSPACE:redis_consumer_filename} (from|to) bucket %{NOTSPACE:redis_consumer_bucket} in %{NUMBER:redis_consumer_seconds:float} seconds.",
-                      "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: gRPC %{NOTSPACE:redis_consumer_action} (of %{NUMBER:redis_consumer_bytes} bytes )?(finished in|took) %{NUMBER:redis_consumer_seconds:float} seconds.",
-                      "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} key %{NOTSPACE:redis_consumer_key} \(model %{NOTSPACE:redis_consumer_model}, preprocessing: %{NOTSPACE:redis_consumer_preprocessing_function}, postprocessing: %{NOTSPACE:redis_consumer_postprocessing_function}\) \(%{NUMBER:redis_consumer_retries} retries\) ( )?in %{NUMBER:redis_consumer_seconds:float} seconds."
-                    ]
-                  }
+            if "redis-consumer" in [kubernetes][pod][name] {
+              grok {
+                match => {
+                  "message" => [
+                    "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} %{NOTSPACE:redis_consumer_filename} (from|to) bucket %{NOTSPACE:redis_consumer_bucket} in %{NUMBER:redis_consumer_seconds:float} seconds.",
+                    "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: gRPC %{NOTSPACE:redis_consumer_action} (of %{NUMBER:redis_consumer_bytes} bytes )?(finished in|took) %{NUMBER:redis_consumer_seconds:float} seconds.",
+                    "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} key %{NOTSPACE:redis_consumer_key} \(model %{NOTSPACE:redis_consumer_model}, preprocessing: %{NOTSPACE:redis_consumer_preprocessing_function}, postprocessing: %{NOTSPACE:redis_consumer_postprocessing_function}\) \(%{NUMBER:redis_consumer_retries} retries\) ( )?in %{NUMBER:redis_consumer_seconds:float} seconds."
+                  ]
                 }
               }
             }
