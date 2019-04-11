@@ -20,8 +20,8 @@ releases:
   labels:
     chart: "kibana"
     component: "kibana"
-    vendor: "vanvalenlab"
     namespace: "elk"
+    vendor: "elastic.co"
     default: "true"
   chart: 'stable/kibana'
   version: "1.5.0"

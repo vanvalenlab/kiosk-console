@@ -20,8 +20,8 @@ releases:
   labels:
     chart: "filebeat"
     component: "filebeat"
-    vendor: "vanvalenlab"
     namespace: "elk"
+    vendor: "elastic.co"
     default: "true"
   chart: "stable/filebeat"
   version: "1.0.0"

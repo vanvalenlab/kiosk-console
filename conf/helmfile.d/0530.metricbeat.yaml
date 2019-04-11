@@ -20,8 +20,8 @@ releases:
   labels:
     chart: "merticbeat"
     component: "metricbeat"
-    vendor: "vanvalenlab"
     namespace: "elk"
+    vendor: "elastic.co"
     default: "true"
   chart: "stable/metricbeat"
   version: "1.0.0"

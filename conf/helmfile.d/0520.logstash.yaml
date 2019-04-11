@@ -20,8 +20,8 @@ releases:
   labels:
     chart: "logstash"
     component: "logstash"
-    vendor: "vanvalenlab"
     namespace: "elk"
+    vendor: "elastic.co"
     default: "true"
   chart: 'stable/logstash'
   version: "1.5.2"
