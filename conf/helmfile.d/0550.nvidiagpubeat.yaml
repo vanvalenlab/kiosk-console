@@ -19,7 +19,7 @@ releases:
   namespace: "elk"
   labels:
     chart: "nvidiagpubeat"
-    component: "deepcell"
+    component: "nvidiagpubeat"
     namespace: "elk"
     vendor: "vanvalenlab"
     default: "true"
