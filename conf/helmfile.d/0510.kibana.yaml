@@ -16,12 +16,12 @@ releases:
 #   - [web address of Helm chart's YAML file]
 #
 - name: "kibana"
-  namespace: "deepcell"
+  namespace: "elk"
   labels:
     chart: "kibana"
     component: "kibana"
-    namespace: "deepcell"
     vendor: "vanvalenlab"
+    namespace: "elk"
     default: "true"
   chart: 'stable/kibana'
   version: "1.5.0"

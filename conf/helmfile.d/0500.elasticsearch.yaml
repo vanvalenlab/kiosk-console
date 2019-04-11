@@ -16,12 +16,12 @@ releases:
 #   - [web address of Helm chart's YAML file]
 #
 - name: "elasticsearch"
-  namespace: "deepcell"
+  namespace: "elk"
   labels:
     chart: "elasticsearch"
     component: "elasticsearch"
-    namespace: "deepcell"
     vendor: "vanvalenlab"
+    namespace: "elk"
     default: "true"
   chart: 'stable/elasticsearch'
   version: "1.19.1"

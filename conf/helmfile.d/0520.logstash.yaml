@@ -16,12 +16,12 @@ releases:
 #   - [web address of Helm chart's YAML file]
 #
 - name: "logstash"
-  namespace: "deepcell"
+  namespace: "elk"
   labels:
     chart: "logstash"
     component: "logstash"
-    namespace: "deepcell"
     vendor: "vanvalenlab"
+    namespace: "elk"
     default: "true"
   chart: 'stable/logstash'
   version: "1.5.2"

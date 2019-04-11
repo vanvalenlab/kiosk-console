@@ -16,12 +16,12 @@ releases:
 #   - [web address of Helm chart's YAML file]
 #
 - name: "metricbeat"
-  namespace: "deepcell"
+  namespace: "elk"
   labels:
     chart: "merticbeat"
     component: "metricbeat"
-    namespace: "deepcell"
     vendor: "vanvalenlab"
+    namespace: "elk"
     default: "true"
   chart: "stable/metricbeat"
   version: "1.0.0"

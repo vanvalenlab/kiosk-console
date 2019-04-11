@@ -16,12 +16,12 @@ releases:
 #   - [web address of Helm chart's YAML file]
 #
 - name: "filebeat"
-  namespace: "deepcell"
+  namespace: "elk"
   labels:
     chart: "filebeat"
     component: "filebeat"
-    namespace: "deepcell"
     vendor: "vanvalenlab"
+    namespace: "elk"
     default: "true"
   chart: "stable/filebeat"
   version: "1.0.0"
