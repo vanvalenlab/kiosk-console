@@ -16,12 +16,12 @@ releases:
 #   - [web address of Helm chart's YAML file]
 #
 - name: "filebeat"
-  namespace: "deepcell"
+  namespace: "elk"
   labels:
     chart: "filebeat"
     component: "filebeat"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
+    namespace: "elk"
+    vendor: "elastic.co"
     default: "true"
   chart: "stable/filebeat"
   version: "1.0.0"
@@ -95,5 +95,11 @@ releases:
           operator: Exists
           effect: NoSchedule
         - key: training_gpu
+          operator: Exists
+          effect: NoSchedule
+        - key: rc_dp
+          operator: Exists
+          effect: NoSchedule
+        - key: logstash
           operator: Exists
           effect: NoSchedule

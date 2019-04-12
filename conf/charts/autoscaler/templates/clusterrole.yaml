@@ -5,4 +5,4 @@ metadata:
 rules:
   - apiGroups: ["*"]
     resources: ["deployments", "jobs"]
-    verbs: ["get", "list", "update", "version"]
+    verbs: ["get", "list", "update", "patch", "version"]

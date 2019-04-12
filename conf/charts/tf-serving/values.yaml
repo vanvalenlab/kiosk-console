@@ -33,8 +33,7 @@ env:
   GRPC_CHANNEL_ARGS: ""
   MODEL_PREFIX: "models"
   CLOUD_PROVIDER: "aws"
-  LOG_LEVEL: "3"
-  DEBUG: "FALSE"
+  TF_CPP_MIN_LOG_LEVEL: "3"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"
