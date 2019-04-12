@@ -193,6 +193,7 @@ releases:
           #   memory: "128Mi"
         resources:
           limits:
+            ### Resource limits removed because elasticsearch-data-* pods are being scheduled to their own nodes now
             # cpu: "1"
             # memory: "2048Mi"
           requests:

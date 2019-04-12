@@ -30,7 +30,7 @@ releases:
       deployment_name: "redis-janitor-deployment"
       replicas: 1
       image_name: "vanvalenlab/kiosk-redis-janitor"
-      image_version: "calledprocesserror"
+      image_version: "0.1"
       container_name: "redis-janitor-container"
       service_account_name: "redis-janitor-service-account"
       resources:
