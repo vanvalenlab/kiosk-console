@@ -28,7 +28,7 @@ releases:
   values:
     - app_name: "redis-consumer-interface"
       deployment_name: "redis-consumer-deployment"
-      replicas: 0
+      replicas: 1
       image_name: "vanvalenlab/kiosk-redis-consumer"
       image_tag: "0.1"
       deployment_port: 8080
@@ -39,8 +39,8 @@ releases:
       secrets_name: "redis-consumer-env-variables"
       resources:
         requests:
-          cpu: 100m
-          memory: 2048Mi
+          cpu: 750m
+          memory: 512Mi
         # limits:
         #   cpu: 100m
         #   memory: 2Gi
@@ -52,6 +52,7 @@ releases:
         DP_HOST: "data-processing-service"
         DP_PORT: "8080"
         DEBUG: "True"
+        INTERVAL: "1"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'

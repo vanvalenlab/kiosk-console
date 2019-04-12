@@ -16,12 +16,12 @@ releases:
 #   - [web address of Helm chart's YAML file]
 #
 - name: "logstash"
-  namespace: "deepcell"
+  namespace: "elk"
   labels:
     chart: "logstash"
     component: "logstash"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
+    namespace: "elk"
+    vendor: "elastic.co"
     default: "true"
   chart: 'stable/logstash'
   version: "1.5.2"
@@ -102,20 +102,24 @@ releases:
         #  cpu: 100m
         #  memory: 128Mi
         requests:
-         cpu: 100m
-         memory: 2Gi
+         cpu: 300m
+         memory: 4Gi
 
-      nodeSelector: {}
+      nodeSelector:
+        logstash: "yes"
 
-      tolerations: []
+      tolerations:
+      - key: logstash
+        operator: Exists
+        effect: NoSchedule
 
-      replicaCount: 1
+      replicaCount: 4
 
       livenessProbe:
         httpGet:
           path: /
           port: monitor
-        initialDelaySeconds: 20
+        initialDelaySeconds: 30
         # periodSeconds: 30
         # timeoutSeconds: 30
         # failureThreshold: 6
@@ -125,7 +129,7 @@ releases:
         httpGet:
           path: /
           port: monitor
-        initialDelaySeconds: 20
+        initialDelaySeconds: 30
         # periodSeconds: 30
         # timeoutSeconds: 30
         # failureThreshold: 6
@@ -206,27 +210,31 @@ releases:
           }
 
       ## Examples for grok matches, in order:
-      ## [2019-03-23 17:14:40,182]:[DEBUG]:[ImageFileConsumer]: Consumed key predict_5f86ff3296c644b884cf21e93dc52b94_directupload_watershednuclearnofgbg41f16_0_watershed_0_qwbenchmarking100000special_image_079560.png in 8.07767105103 seconds.
-      ## [2019-03-23 17:15:43,245]:[DEBUG]:[ImageFileConsumer]: Segmented image with model watershednuclearnofgbg41f16:0 (0 retries) in 2.75492811203 seconds.
-      ## [2019-03-23 01:52:57,449]:[DEBUG]:[PredictClient]: Actual PredictRequest took: 8.60852217674 seconds.
-      ## [2019-03-23 17:17:21,588]:[DEBUG]:[PredictClient]: Converted PredictResponse to dict in 3.07414197922 seconds.
-      ## [2019-03-23 17:17:34,156]:[DEBUG]:[ImageFileConsumer]: Finished watershed post-processing (0 retries) in 0.649527072906 seconds.
-      ## [2019-03-23 17:18:06,843]:[DEBUG]:[GoogleStorage]: Uploaded /tmp/tmphg20JL/98cc8875c04d14c43f61742928cdb0b4.zip to bucket deepcell-output-benchmarking3 in 0.379716157913 seconds.
-      ## [2019-03-23 17:19:06,214]:[DEBUG]:[GoogleStorage]: Downloaded /tmp/tmp5d6cLr/directupload_watershednuclearnofgbg41f16_0_watershed_0_qwbenchmarking100000special_image_0.png in 0.165134191513 seconds.
+      ## All filters were tested against the examples using http://grokdebug.herokuapp.com/
+      ## Filter 1: Redis-consumer Storage Class Messages
+      ## [2019-03-28 22:43:15,521]:[DEBUG]:[GoogleStorage]: Downloaded /tmp/tmp0dzilK/directupload_watershednuclearnofgbg41f16_0_watershed_0_benchmarking100000special_image_0.png from bucket deepcell-output-benchmarking3 in 0.195045948029 seconds.
+      ## [2019-03-28 22:47:23,088]:[DEBUG]:[GoogleStorage]: Uploaded /tmp/tmpDZH9Sk/8e527bc296ea68aed57795ae33c76ae9.zip to bucket deepcell-output-benchmarking3 in 0.411799907684 seconds.
+      ## Filter 2: Redis-consumer gRPC Messages
+      ## [2019-03-28 22:43:16,210]:[DEBUG]:[PredictClient]: gRPC TensorFlowServingRequest finished in 0.455268859863 seconds.
+      ## [2019-03-28 22:43:18,231]:[DEBUG]:[PredictClient]: gRPC TensorFlowServingProtobufConversion took 2.01989483833 seconds.
+      ## [2019-03-28 22:47:22,407]:[INFO]:[ProcessClient]: gRPC DataProcessingStreamRequest of 5529600 bytes finished in 0.960053920746 seconds.
+      ## NOT BEING MATCHED: [2019-03-28 22:47:22,408]:[INFO]:[ProcessClient]: gRPC DataProcessingStreamConversion from 5529600 bytes to a numpy array of shape (1, 1280, 1080, 1) in 7.41481781006e-05 seconds.
+      ## Filter 3: Redis-consumer Consumer Messages
+      ## [2019-03-28 22:43:18,241]:[DEBUG]:[ImageFileConsumer]: Segmented key predict_e3700d5ae0f1478d81f21a72d685469e_directupload_watershednuclearnofgbg41f16_0_watershed_0_benchmarking100000special_image_059037.png (model watershednuclearnofgbg41f16:0, preprocessing: None, postprocessing: watershed) (0 retries) in 2.67694497108 seconds.
+      ## [2019-03-28 22:47:22,409]:[DEBUG]:[ImageFileConsumer]: Post-processed key predict_10e4553738b6428bae025ec4c1da9160_directupload_watershednuclearnofgbg41f16_0_watershed_0_benchmarking100000special_image_042604.png (model watershednuclearnofgbg41f16:0, preprocessing: None, postprocessing: watershed) (0 retries)  in 0.964694023132 seconds.
+      ## [2019-03-28 22:47:23,109]:[DEBUG]:[ImageFileConsumer]: Consumed key predict_10e4553738b6428bae025ec4c1da9160_directupload_watershednuclearnofgbg41f16_0_watershed_0_benchmarking100000special_image_042604.png (model watershednuclearnofgbg41f16:0, preprocessing: None, postprocessing: watershed) (0 retries) in 6.4265601635 seconds.
       filters:
         main: |-
           filter {
-            grok {
-              match => {
-                "message" => [
-                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} key %{NOTSPACE:redis_consumer_key} in %{NUMBER:redis_consumer_seconds:float} seconds.",
-                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} image with model %{NOTSPACE:redis_consumer_segmenting_model} \(%{NUMBER:redis_consumer_retries:int} retries\) in %{NUMBER:redis_consumer_seconds:float} seconds.",
-                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: Actual %{NOTSPACE:redis_consumer_action} took %{NUMBER:redis_consumer_seconds:float} seconds.",
-                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} PredictResponse to dict in %{NUMBER:redis_consumer_seconds:float} seconds.",
-                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: Finished %{NOTSPACE:redis_consumer_postprocessing_model} %{NOTSPACE:redis_consumer_action} \(%{NUMBER:redis_consumer_retries:int} retries\) in %{NUMBER:redis_consumer_seconds:float} seconds.",
-                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} %{NOTSPACE:redis_consumer_output_file} to bucket %{NOTSPACE:redis_consumer_output_bucket} in %{NUMBER:redis_consumer_seconds:float} seconds.",
-                        "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} %{NOTSPACE:redis_consumer_input_file} in %{NUMBER:redis_consumer_seconds:float} seconds."
-                ]
+            if "redis-consumer" in [kubernetes][pod][name] {
+              grok {
+                match => {
+                  "message" => [
+                    "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} %{NOTSPACE:redis_consumer_filename} (from|to) bucket %{NOTSPACE:redis_consumer_bucket} in %{NUMBER:redis_consumer_seconds:float} seconds.",
+                    "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: gRPC %{NOTSPACE:redis_consumer_action} (of %{NUMBER:redis_consumer_bytes:int} bytes )?(finished in|took) %{NUMBER:redis_consumer_seconds:float} seconds.",
+                    "\[%{NOTSPACE:date} %{NOTSPACE:time}\]:\[%{LOGLEVEL:loglevel}\]:\[%{NOTSPACE:module}\]: %{NOTSPACE:redis_consumer_action} key %{NOTSPACE:redis_consumer_key} \(model %{NOTSPACE:redis_consumer_model}, preprocessing: %{NOTSPACE:redis_consumer_preprocessing_function}, postprocessing: %{NOTSPACE:redis_consumer_postprocessing_function}\) \(%{NUMBER:redis_consumer_retries:int} retries\) ( )?in %{NUMBER:redis_consumer_seconds:float} seconds."
+                  ]
+                }
               }
             }
           }

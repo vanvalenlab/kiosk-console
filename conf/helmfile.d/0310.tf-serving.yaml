@@ -31,8 +31,8 @@ releases:
       resources:
         requests:
           nvidia.com/gpu: 1
-          cpu: 100m
-          memory: 1024Mi
+          cpu: 200m
+          memory: 3Gi
         limits:
           nvidia.com/gpu: 1
         #   cpu: 100m
@@ -57,12 +57,12 @@ releases:
         REST_API_PORT: "0"
         REST_API_TIMEOUT: "30000"
         MODEL_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
+        # ENABLE_BATCHING="true" causes TensorFlow Error: `Blas GEMM launch failed`
         ENABLE_BATCHING: "false"
         GRPC_CHANNEL_ARGS: ""
         MODEL_PREFIX: "models"
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
-        LOG_LEVEL: "3"
-        DEBUG: "FALSE"
+        TF_CPP_MIN_LOG_LEVEL: "0"
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'

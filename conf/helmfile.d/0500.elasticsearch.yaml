@@ -16,12 +16,12 @@ releases:
 #   - [web address of Helm chart's YAML file]
 #
 - name: "elasticsearch"
-  namespace: "deepcell"
+  namespace: "elk"
   labels:
     chart: "elasticsearch"
     component: "elasticsearch"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
+    namespace: "elk"
+    vendor: "elastic.co"
     default: "true"
   chart: 'stable/elasticsearch'
   version: "1.19.1"
@@ -129,7 +129,7 @@ releases:
           httpGet:
             path: /_cluster/health?local=true
             port: 9200
-          initialDelaySeconds: 5
+          initialDelaySeconds: 30
         antiAffinity: "soft"
         nodeAffinity: {}
         nodeSelector: {}
@@ -174,7 +174,7 @@ releases:
           httpGet:
             path: /_cluster/health?local=true
             port: 9200
-          initialDelaySeconds: 5
+          initialDelaySeconds: 30
         terminationGracePeriodSeconds: 3600
         antiAffinity: "soft"
         nodeAffinity: {}
@@ -193,7 +193,8 @@ releases:
           #   memory: "128Mi"
         resources:
           limits:
-            cpu: "1"
+            ### Resource limits removed because elasticsearch-data-* pods are being scheduled to their own nodes now
+            # cpu: "1"
             # memory: "2048Mi"
           requests:
             cpu: "25m"
