@@ -194,6 +194,8 @@ function configure_aws() {
   export GPU_MAX_TIMES_TEN=$(($AWS_MAX_GPU_NODES*10))
   export GPU_MAX_TIMES_TWENTY=$(($AWS_MAX_GPU_NODES*20))
   export GPU_MAX_TIMES_THIRTY=$(($AWS_MAX_GPU_NODES*30))
+  export GPU_MAX_TIMES_FOURTY=$(($AWS_MAX_GPU_NODES*40))
+  export GPU_MAX_TIMES_FIFTY=$(($AWS_MAX_GPU_NODES*50))
   export GPU_MAX_DIVIDED_BY_TWO=$(($AWS_MAX_GPU_NODES/2))
   export GPU_MAX_DIVIDED_BY_THREE=$(($AWS_MAX_GPU_NODES/3))
   export GPU_MAX_DIVIDED_BY_FOUR=$(($AWS_MAX_GPU_NODES/4))
@@ -216,6 +218,8 @@ function configure_aws() {
 	  -e GPU_MAX_TIMES_TEN \
 	  -e GPU_MAX_TIMES_TWENTY \
 	  -e GPU_MAX_TIMES_THIRTY \
+    -e GPU_MAX_TIMES_FOURTY \
+    -e GPU_MAX_TIMES_FIFTY \
 	  -e GPU_MAX_DIVIDED_BY_TWO \
 	  -e GPU_MAX_DIVIDED_BY_THREE \
 	  -e GPU_MAX_DIVIDED_BY_FOUR \
@@ -333,6 +337,8 @@ If you see any fewer than 2 zones listed above, please reconfigure the cluster b
   export GPU_MAX_TIMES_TEN=$(($GPU_NODE_MAX_SIZE*10))
   export GPU_MAX_TIMES_TWENTY=$(($GPU_NODE_MAX_SIZE*20))
   export GPU_MAX_TIMES_THIRTY=$(($GPU_NODE_MAX_SIZE*30))
+  export GPU_MAX_TIMES_FOURTY=$(($AWS_MAX_GPU_NODES*40))
+  export GPU_MAX_TIMES_FIFTY=$(($AWS_MAX_GPU_NODES*50))
   export GPU_MAX_DIVIDED_BY_TWO=$(($GPU_NODE_MAX_SIZE/2))
   export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))
   export GPU_MAX_DIVIDED_BY_FOUR=$(($GPU_NODE_MAX_SIZE/4))
@@ -353,6 +359,8 @@ If you see any fewer than 2 zones listed above, please reconfigure the cluster b
 	  -e GPU_MAX_TIMES_TEN \
 	  -e GPU_MAX_TIMES_TWENTY \
 	  -e GPU_MAX_TIMES_THIRTY \
+    -e GPU_MAX_TIMES_FOURTY \
+    -e GPU_MAX_TIMES_FIFTY \
 	  -e GPU_MAX_DIVIDED_BY_TWO \
 	  -e GPU_MAX_DIVIDED_BY_THREE \
 	  -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
