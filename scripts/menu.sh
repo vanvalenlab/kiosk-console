@@ -444,8 +444,7 @@ function benchmarking() {
 function main() {
   export MENU=true
   # The following two lines constitute a workaround for a bug where the first dialog call after startup fails before user input is possible.
-  dialog --msgbox "Loading..." 12 60
-  sleep 1
+  dialog --msgbox "Loading..." 12 60 --sleep 1
   msgbox "Welcome!" \
 	 "Welcome to the Deepcell Kiosk!
 
