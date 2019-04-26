@@ -47,8 +47,8 @@ releases:
 
         httpsIngressEnabled: false
         internalHttpsPort: 8443
-        httpTargetPort: 8443
-        externalHttpPort: 8443
+        httpsTargetPort: 8443
+        externalHttpsPort: 8443
 
       resources:
         requests:

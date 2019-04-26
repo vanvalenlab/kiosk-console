@@ -6,11 +6,9 @@ replicas: 1
 
 image:
   repository: "vanvalenlab/kiosk-data-processing"
-  tag: "0.1"
+  tag: "latest"
   pullPolicy: "Always"
 
-deployment_port: 8080
-container_name: "data-processing-container"
 resources:
   # requests:
   #   cpu: 100m
