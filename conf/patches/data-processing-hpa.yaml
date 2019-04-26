@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    autoscaling.alpha.kubernetes.io/conditions: '[{"type":"AbleToScale","status":"True","lastTransitionTime":"2019-04-18T18:07:51Z","reason":"ScaleDownStabilized","message":"recent
+      recommendations were higher than current one, applying the highest recent recommendation"},{"type":"ScalingActive","status":"True","lastTransitionTime":"2019-04-18T18:07:51Z","reason":"ValidMetricFound","message":"the
+      HPA was able to successfully calculate a replica count from cpu resource utilization
+      (percentage of request)"},{"type":"ScalingLimited","status":"False","lastTransitionTime":"2019-04-18T18:07:51Z","reason":"DesiredWithinRange","message":"the
+      desired count is within the acceptable range"}]'
+    autoscaling.alpha.kubernetes.io/current-metrics: '[{"type":"Resource","resource":{"name":"cpu","currentAverageUtilization":0,"currentAverageValue":"1m"}}]'
+  creationTimestamp: "2019-04-18T18:07:36Z"
+  name: data-processing-deployment
+  namespace: deepcell
+  resourceVersion: "8341"
+  selfLink: /apis/autoscaling/v1/namespaces/deepcell/horizontalpodautoscalers/data-processing-deployment
+  uid: d87a292a-6204-11e9-af2a-42010a8a0fcb
+spec:
+  maxReplicas: 4
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    name: data-processing-deployment
+  targetCPUUtilizationPercentage: 80

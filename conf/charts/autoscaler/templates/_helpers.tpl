@@ -35,7 +35,7 @@ Create chart name and version as used by the chart label.
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "metricbeat.serviceAccountName" -}}
+{{- define "serviceAccountName" -}}
 {{- if .Values.serviceAccount.create -}}
     {{ default (include "fullname" .) .Values.serviceAccount.name }}
 {{- else -}}

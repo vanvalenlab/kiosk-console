@@ -26,10 +26,13 @@ releases:
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend'
   version: "0.1.0"
   values:
-    - app_name: "frontend"
-      replicas: 1
-      image_name: "vanvalenlab/kiosk-frontend"
-      image_version: "0.1"
+    - replicas: 1
+
+      image:
+        repository: "vanvalenlab/kiosk-frontend"
+        tag: "0.1"
+        pullPolicy: "Always"
+
       resources:
         requests:
           cpu: 100m
@@ -37,12 +40,20 @@ releases:
         # limits:
         #   cpu: 100m
         #   memory: 512Mi
-      deployment_name: "frontend-deployment"
-      deployment_port: 8080
-      container_name: "frontend-container"
-      service_name: "frontend-service"
-      service_port: 3000
-      service_type: "ClusterIP"
+
+      service:
+        type: "ClusterIP"
+
+        httpIngressEnabled: true
+        internalHttpPort: 8080
+        httpTargetPort: 8080
+        externalHttpPort: 8080
+
+        httpsIngressEnabled: false
+        internalHttpsPort: 8443
+        httpsTargetPort: 8443
+        externalHttpsPort: 8443
+
       ingress_name: "frontend-ingress"
       ingress_path: "/"
       ingress:
@@ -65,6 +76,7 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         UPLOAD_PREFIX: "uploads/"
+
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'

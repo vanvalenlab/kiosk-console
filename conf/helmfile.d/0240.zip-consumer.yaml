@@ -26,17 +26,13 @@ releases:
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
   version: "0.1.0"
   values:
-    - app_name: "zip-consumer-interface"
-      deployment_name: "zip-consumer-deployment"
-      replicas: 0
-      image_name: "vanvalenlab/kiosk-redis-consumer"
-      image_tag: "0.1"
-      deployment_port: 8080
-      container_name: "zip-consumer-container"
-      service_name: "zip-consumer-service"
-      service_port: 8080
-      service_type: "ClusterIP"
-      secrets_name: "zip-consumer-env-variables"
+    - replicas: 1
+
+      image:
+        repository: "vanvalenlab/kiosk-redis-consumer"
+        tag: "0.1"
+        pullPolicy: "Always"
+
       resources:
         requests:
           cpu: 100m
@@ -44,6 +40,7 @@ releases:
         # limits:
         #   cpu: 100m
         #   memory: 1024Mi
+
       env:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
@@ -56,6 +53,7 @@ releases:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
         CONSUMER_TYPE: "zip"
+
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'

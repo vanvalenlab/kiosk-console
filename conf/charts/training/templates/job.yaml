@@ -1,17 +1,25 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ .Values.job_name }}
+  name: {{ template "fullname" . }}
   labels:
-    app: {{ .Values.app_name }}
+    app: {{ template "name" . }}
+    chart: {{ template "chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
 spec:
   parallelism: {{ .Values.parallelism }}
   completions: 2147483647
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
-      name: {{ .Values.job_name }}
+      name: {{ template "name" . }}
       labels:
-        app: {{ .Values.app_name }}
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
     spec:
       restartPolicy: Never
       nodeSelector:
@@ -29,9 +37,9 @@ spec:
         value: "yes"
         effect: "NoSchedule"
       containers:
-      - name: {{ .Values.container_name }}
-        image: {{ .Values.image_name }}:{{ .Values.image_tag }}
-        imagePullPolicy: "Always"
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         resources:
           limits:
             nvidia.com/gpu: 1

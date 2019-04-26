@@ -1,9 +1,16 @@
-app_name: "training"
+# Default values for training.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
-# job.yaml
 parallelism: 0
-image_name: "vanvalenlab/kiosk-training"
-image_tag: "latest"
+
+image:
+  repository: "vanvalenlab/kiosk-training"
+  tag: "latest"
+  pullPolicy: "Always"
+
+resources: {}
+
 job_name: "training-job"
 job_port: 7241
 container_name: "training-container"
@@ -28,7 +35,6 @@ env:
   STATUS: "new"
   GKE_COMPUTE_ZONE: "us-west1-b"
 
-secrets_name: "training-env-variables"
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"

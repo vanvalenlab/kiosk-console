@@ -37,7 +37,6 @@ releases:
       deployment_name: "data-processing-deployment"
 
       service:
-        name: "data-processing-service"
         type: "ClusterIP"
 
         httpIngressEnabled: true
