@@ -11,14 +11,15 @@ image:
 
 resources: {}
 
-job_name: "training-job"
-job_port: 7241
-container_name: "training-container"
+service:
+  type: "ClusterIP"
 
-# service.yaml
-service_name: "training-service"
-service_port: 7241
-service_type: "ClusterIP"
+  httpIngressEnabled: true
+  internalHttpPort: 7241
+  httpTargetPort: 7241
+  externalHttpPort: 7241
+
+  httpsIngressEnabled: false
 
 nodeSelector:
   #  cloud.google.com/gke-accelerator: "nvidia-tesla-k80"

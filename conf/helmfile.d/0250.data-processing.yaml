@@ -33,8 +33,6 @@ releases:
         tag: "0.1"
         pullPolicy: "Always"
 
-      deployment_name: "data-processing-deployment"
-
       service:
         type: "ClusterIP"
 

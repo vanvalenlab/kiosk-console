@@ -33,8 +33,16 @@ releases:
         tag: "0.1"
         pullPolicy: "Always"
 
-      job_port: 7241
-      service_port: 7241
+      service:
+        type: "ClusterIP"
+
+        httpIngressEnabled: true
+        internalHttpPort: 7241
+        httpTargetPort: 7241
+        externalHttpPort: 7241
+
+        httpsIngressEnabled: false
+
       nodeSelector:
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         beta.kubernetes.io/instance-type: '{{ env "AWS_GPU_MACHINE_TYPE" | default "p2.xlarge" }}'
