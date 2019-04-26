@@ -1,10 +1,14 @@
-app_name: "data-processing"
+# Default values for data-processing.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
-# deployment.yaml
-deployment_name: "data-processing-deployment"
 replicas: 1
-image_name: "vanvalenlab/kiosk-data-processing"
-image_tag: "latest"
+
+image:
+  repository: "vanvalenlab/kiosk-data-processing"
+  tag: "0.1"
+  pullPolicy: "Always"
+
 deployment_port: 8080
 container_name: "data-processing-container"
 resources:
