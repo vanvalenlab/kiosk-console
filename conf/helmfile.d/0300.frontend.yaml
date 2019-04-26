@@ -54,20 +54,15 @@ releases:
         httpsTargetPort: 8443
         externalHttpsPort: 8443
 
-      ingress_name: "frontend-ingress"
-      ingress_path: "/"
       ingress:
+        enabled: true
+        path: /
         annotations:
+          kubernetes.io/ingress.class: "nginx"
           nginx.ingress.kubernetes.io/rewrite-target: /
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
-{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
-          # aws
-          kubernetes.io/ingress.class: "nginx"
-{{ else }}
-          # google
-          kubernetes.io/ingress.class: "nginx"
-{{ end }}
+
       env:
         PORT: "8080"
         REDIS_HOST: "redis-master"

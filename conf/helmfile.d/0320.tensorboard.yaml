@@ -33,14 +33,19 @@ releases:
         tag: "0.1"
         pullPolicy: "Always"
 
-      deployment_port: 6006
-      service_name: "tensorboard-service"
-      service_port: 6006
-      service_type: "ClusterIP"
+      service:
+        type: "ClusterIP"
 
-      ingress_name: "tensorboard-ingress"
-      ingress_path: "/tensorboard"
+        httpIngressEnabled: true
+        internalHttpPort: 6006
+        httpTargetPort: 6006
+        externalHttpPort: 6006
+
+        httpsIngressEnabled: false
+
       ingress:
+        enabled: true
+        path: /
         annotations:
           nginx.ingress.kubernetes.io/rewrite-target: /
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
