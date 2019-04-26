@@ -26,8 +26,7 @@ releases:
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/data-processing'
   version: "0.1.0"
   values:
-    - app_name: "data-processing"
-      replicas: 1
+    - replicas: 1
 
       image:
         repository: "vanvalenlab/kiosk-data-processing"
@@ -56,5 +55,6 @@ releases:
         # limits:
         #   cpu: 100m
         #   memory: 2048Mi
+
       env:
         LISTEN_PORT: 8080

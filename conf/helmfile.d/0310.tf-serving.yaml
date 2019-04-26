@@ -52,9 +52,6 @@ releases:
         externalHttpPort: 8500
 
         httpsIngressEnabled: false
-        internalHttpsPort: 8443
-        httpsTargetPort: 8443
-        externalHttpsPort: 8443
 
       nodeSelector:
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}

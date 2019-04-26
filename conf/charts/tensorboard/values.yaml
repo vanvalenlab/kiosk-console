@@ -9,22 +9,17 @@ image:
   tag: "latest"
   pullPolicy: "Always"
 
-deployment_port: 6006
-container_name: "tensorboard-container"
-env:
-  LOG_PREFIX: "tensorboard_logs"
-  CLOUD_PROVIDER: "aws"
-  GKE_COMPUTE_ZONE: "us-west1-b"
+resources: {}
 
-# service.yaml
-service_name: "tensorboard-service"
-service_port: 6006
-service_type: "ClusterIP"
+service:
+  type: "ClusterIP"
 
-resources:
-  # requests:
-  #   cpu: 100m
-  #   memory: 256Mi
+  httpIngressEnabled: true
+  internalHttpPort: 6006
+  httpTargetPort: 6006
+  externalHttpPort: 6006
+
+  httpsIngressEnabled: false
 
 # ingress.yaml
 ingress_name: "tensorboard-ingress"
@@ -36,8 +31,11 @@ ingress:
     #nginx.ingress.kubernetes.io/ssl-redirect: "false"
     #nginx.ingress.kubernetes.io/proxy-body-size: "25m"
 
-# secrets.yaml
-secrets_name: "tensorboard-env-variables"
+env:
+  LOG_PREFIX: "tensorboard_logs"
+  CLOUD_PROVIDER: "aws"
+  GKE_COMPUTE_ZONE: "us-west1-b"
+
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
   AWS_SECRET_ACCESS_KEY: "change_me"

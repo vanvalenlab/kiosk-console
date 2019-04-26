@@ -11,10 +11,15 @@ image:
 
 resources: {}
 
-# service.yaml
-service_name: "redis-consumer-service"
-service_port: 8080
-service_type: "ClusterIP"
+service:
+  type: "ClusterIP"
+
+  httpIngressEnabled: true
+  internalHttpPort: 8080
+  httpTargetPort: 8080
+  externalHttpPort: 8080
+
+  httpsIngressEnabled: false
 
 service:
   name: nginx
