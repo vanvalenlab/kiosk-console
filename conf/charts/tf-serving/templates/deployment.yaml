@@ -48,12 +48,13 @@ spec:
           value: {{ $value | quote }}
 {{- end }}
 {{- end }}
+{{ $dot := . }}
 {{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:
             secretKeyRef:
-              name: tf-serving-env-variables
+              name: {{ template "secretName" $dot }}
               key: {{ $name }}
 {{- end }}
 {{- end }}
