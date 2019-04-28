@@ -15,7 +15,7 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "train"
+- name: "training"
   namespace: "deepcell"
   labels:
     chart: "training"
