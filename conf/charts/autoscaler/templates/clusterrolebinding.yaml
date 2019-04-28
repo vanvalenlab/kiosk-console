@@ -1,3 +1,4 @@
+{{- if .Values.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -13,5 +14,6 @@ roleRef:
   name: {{ template "fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ .Values.serviceAccount.name }}
+  name: {{ template "metricbeat.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
+{{- end -}}
