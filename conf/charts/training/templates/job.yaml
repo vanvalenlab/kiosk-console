@@ -10,13 +10,12 @@ metadata:
 spec:
   parallelism: {{ .Values.parallelism }}
   completions: 2147483647
-  selector:
-    matchLabels:
-      app: {{ template "name" . }}
-      release: {{ .Release.Name }}
+  # selector:
+  #   matchLabels:
+  #     app: {{ template "name" . }}
+  #     release: {{ .Release.Name }}
   template:
     metadata:
-      name: {{ template "name" . }}
       labels:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
