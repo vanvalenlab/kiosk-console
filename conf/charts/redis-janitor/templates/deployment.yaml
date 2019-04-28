@@ -19,12 +19,12 @@ spec:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
     spec:
-#      nodeSelector:
-#        kubernetes.io/role: master
-#      tolerations:
-#      - effect: NoSchedule
-#        key: node-role.kubernetes.io/master
-      serviceAccountName: {{ .Values.service_account.name }}
+     # nodeSelector:
+     #   kubernetes.io/role: master
+     # tolerations:
+     # - effect: NoSchedule
+     #   key: node-role.kubernetes.io/master
+      serviceAccountName: {{ template "serviceAccountName" . }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
