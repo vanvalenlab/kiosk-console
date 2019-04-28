@@ -10,11 +10,6 @@ metadata:
     chart: {{ template "chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- with .Values.ingress.annotations }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
-release: {{ .Release.Name }}
   annotations:
 {{- range $name, $value := .Values.ingress.annotations }}
 {{- if not ( empty $value) }}
@@ -29,5 +24,4 @@ spec:
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
-  {{- end }}
 {{- end }}
