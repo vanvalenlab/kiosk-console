@@ -44,7 +44,7 @@ spec:
           limits:
             nvidia.com/gpu: 1
         ports:
-        - containerPort: {{ .Values.job_port }}
+        - containerPort: {{ .Values.httpTargetPort }}
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}
@@ -52,13 +52,12 @@ spec:
           value: {{ $value | quote }}
 {{- end }}
 {{- end }}
-{{ $secrets_name := .Values.secrets_name }}
 {{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:
             secretKeyRef:
-              name: {{ $secrets_name }}
+              name: {{ template "secretName" . }}
               key: {{ $name }}
 {{- end }}
 {{- end }}
