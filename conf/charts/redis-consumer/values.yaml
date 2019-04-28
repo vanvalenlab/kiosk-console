@@ -21,19 +21,6 @@ service:
 
   httpsIngressEnabled: false
 
-service:
-  name: nginx
-  type: ClusterIP
-  externalHttpPort: 8080
-  externalHttpsPort: 8443
-  internalHttpPort: 8080
-  internalHttpsPort: 443
-  internalHealthzPort: 18080
-  httpTargetPort: http
-  httpsTargetPort: https
-  httpIngressEnabled: true
-  httpsIngressEnabled: false
-
 env:
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"

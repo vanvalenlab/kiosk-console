@@ -30,7 +30,7 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: {{ .Values.deployment_port }}
+        - containerPort: {{ .Values.service.httpTargetPort }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         env:
@@ -40,13 +40,13 @@ spec:
           value: {{ $value | quote }}
 {{- end }}
 {{- end }}
-{{ $secrets_name := .Values.secrets_name }}
+{{ $dot := . }}
 {{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
         - name: {{ $name }}
           valueFrom:
             secretKeyRef:
-              name: {{ $secrets_name }}
+              name: {{ template "secretName" $dot }}
               key: {{ $name }}
 {{- end }}
 {{- end }}
