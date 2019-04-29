@@ -38,7 +38,7 @@ spec:
           limits:
             nvidia.com/gpu: 1
         ports:
-        - containerPort: {{ .Values.deployment_port }}
+        - containerPort: {{ .Values.service.httpTargetPort }}
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}
