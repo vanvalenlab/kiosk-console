@@ -37,8 +37,10 @@ kubectl/display/ip:
 #@kubectl autoscale deployment zip-consumer-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWO)
 #@kubectl scale deployment --replicas=1 zip-consumer-deployment
 #@kubectl scale deployment --replicas=1 redis-consumer-deployment
+#@kubectl scale deployment --replicas=1 tracking-consumer-deployment
 #@kubectl scale deployment --replicas=1 data-processing-deployment
 kubectl/implement/autoscaling:
 	@kubens deepcell
 	@kubectl autoscale deployment redis-consumer-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWENTY)
+	@kubectl autoscale deployment tracking-consumer-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWENTY)
 	@kubectl autoscale deployment data-processing-deployment --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWO)
