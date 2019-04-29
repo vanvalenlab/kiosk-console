@@ -29,7 +29,7 @@ releases:
     - replicas: 1
 
       image:
-        repository: "vanvalenlab/kiosk-autoscaler"
+        repository: "vanvalenlab/kiosk-redis-janitor"
         tag: "0.1"
         pullPolicy: "Always"
 
