@@ -45,7 +45,7 @@ releases:
 
       ingress:
         enabled: true
-        path: /
+        path: /tensorboard
         annotations:
           nginx.ingress.kubernetes.io/rewrite-target: /
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
