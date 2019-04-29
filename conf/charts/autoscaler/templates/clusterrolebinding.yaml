@@ -14,6 +14,6 @@ roleRef:
   name: {{ template "fullname" . }}
 subjects:
 - kind: ServiceAccount
-  name: {{ template "metricbeat.serviceAccountName" . }}
+  name: {{ template "serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 {{- end -}}
