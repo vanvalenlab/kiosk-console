@@ -87,7 +87,7 @@ POD_NAME=`kubectl get pods --namespace deepcell -l type=openvpn | awk END'{ prin
 
 4. Next, using an OpenVPN client locally, connect to the cluster using `openvpn --config kubeVPN.ovpn` as your config file. You may need to use `sudo` if the above does not work.
 
-5. Once inside the cluster, you can connect to Kibana (logging) and Grafana (monitoring) by going to [service_IP]:[service_port] for the relevant service from any web browser on your local machine. (To view the service ports and IPs, execut the command `kubectl get svc --all-namespaces` from the kiosk's command line.)
+5. Once inside the cluster, you can connect to Kibana (logging) and Grafana (monitoring) by going to `[service_IP]:[service_port]` for the relevant service from any web browser on your local machine. (To view the service ports and IPs, execut the command `kubectl get svc --all-namespaces` from the kiosk's command line.)
 
 
 ## References
