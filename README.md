@@ -61,6 +61,21 @@ When you're done using the cluster, you may want to shutdown the cluster, and pe
     4. Install wrapper script: `make install`
     5. Start the kiosk. `make run`
 
+
+## Accessing Cluster Logging and Metrics Functionality using OpenVPN
+After cluster startup, choose `Shell` from the main menu. On the command line, execute the following command: 
+```
+POD_NAME=\`kubectl get pods -l type=openvpn | awk END'{ print $1 }'\` && kubectl log $POD_NAME
+```
+If the OpenVPN pod has already deployed, you should see something like "Mon Apr 29 21:15:53 2019 Initialization Sequence Completed" somewhere in the output. If you see that line, then execute
+```
+POD_NAME=`kubectl get pods --namespace deepcell -l type=openvpn | awk END'{ print $1 }'` && SERVICE_NAME=`kubectl get svc --namespace deepcell -l type=openvpn | awk END'{ print $1 }'` && SERVICE_IP=$(kubectl get svc --namespace deepcell $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].ip}') && KEY_NAME=kubeVPN && kubectl --namespace deepcell exec -it $POD_NAME /etc/openvpn/setup/newClientCert.sh $KEY_NAME $SERVICE_IP && kubectl --namespace deepcell exec -it $POD_NAME cat /etc/openvpn/certs/pki/$KEY_NAME.ovpn > $KEY_NAME.ovpn
+```
+Then, copy the newly-generated `kubeVPN.ovpn` file onto your local machine. (You can do this either by viewing the file's contents and copy-pasting them manually, or by using a file-copying tool like SCP.)
+Then, using an OpenVPN client locally, connect to the cluster using `kubeVPN.ovpn` as your config file.
+Once inside the cluster, you can connect to Kibana (logging) and Grafana (monitoring) by going to [service_IP]:[service_port] for the relevant service from any web browser on your local machine. (To view the service ports and IPs, execut the command `kubectl get svc --all-namespaces` from the kiosk's command line.)
+
+
 ## References
 - [Cluster Autoscaler for AWS](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
 - [Cluster Autoscaler for Kops](https://github.com/kubernetes/kops/blob/master/addons/cluster-autoscaler/)
