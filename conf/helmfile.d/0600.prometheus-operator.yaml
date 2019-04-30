@@ -357,7 +357,8 @@ releases:
           ##
           # hosts:
           #   - grafana.domain.com
-          hosts: []
+          hosts:
+            - grafana.deepcell.org
 
           ## Path for grafana ingress
           path: /
