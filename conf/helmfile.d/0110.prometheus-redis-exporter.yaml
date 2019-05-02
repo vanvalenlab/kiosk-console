@@ -6,11 +6,11 @@ helmDefaults:
     - "--reset-values"
 
 ################################################################################
-## Redis Data Store ############################################################
+## Redis Monitoring ############################################################
 ################################################################################
 
 repositories:
-  # Stable repo of official helm charts
+ # Stable repo of official helm charts
   - name: "stable"
     url: "https://kubernetes-charts.storage.googleapis.com"
 
@@ -38,4 +38,4 @@ releases:
           prometheus.io/port: "9121"
           prometheus.io/scrape: "true"
 
-        redisAddress: redis://myredis:6379
+        redisAddress: redis://redis-master:6379
