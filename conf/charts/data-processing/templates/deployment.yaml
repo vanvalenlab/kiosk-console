@@ -37,6 +37,9 @@ spec:
           - name: https
             containerPort: {{ .Values.service.internalHttpsPort }}
             protocol: TCP
+          - name: prometheus
+            containerPort: {{ .Values.service.prometheusHttpPort }}
+            protocol: TCP
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         env:

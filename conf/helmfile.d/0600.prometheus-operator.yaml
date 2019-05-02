@@ -1276,6 +1276,11 @@ releases:
           - job_name: redis_exporter
             static_configs:
             - targets: ['prometheus-redis-exporter:9121']
+
+          - job_name: 'data-processing'
+            static_configs:
+              - targets: ['data-processing:8501']
+
           # - job_name: kube-etcd
           #   kubernetes_sd_configs:
           #     - role: node
