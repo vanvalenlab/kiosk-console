@@ -335,6 +335,33 @@ releases:
         ##
         defaultDashboardsEnabled: true
 
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+            - name: 'default'
+              orgId: 1
+              folder: ''
+              type: file
+              disableDeletion: false
+              updateIntervalSeconds: 15
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/default
+
+        dashboards:
+          default:
+            prometheus-stats:
+              # Ref: https://grafana.com/dashboards/2
+              gnetId: 2
+              revision: 2
+              datasource: Prometheus
+            redis-stats:
+              # Ref: https://grafana.com/dashboards/2
+              gnetId: 763
+              revision: 2
+              datasource: Prometheus
+
         adminPassword: prom-operator
 
         ingress:
