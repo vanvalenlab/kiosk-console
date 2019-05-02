@@ -339,7 +339,7 @@ releases:
           dashboardproviders.yaml:
             apiVersion: 1
             providers:
-            - name: 'default'
+            - name: 'vendor'
               orgId: 1
               folder: ''
               type: file
@@ -347,17 +347,17 @@ releases:
               updateIntervalSeconds: 15
               editable: true
               options:
-                path: /var/lib/grafana/dashboards/default
+                path: /var/lib/grafana/dashboards/vendor
 
         dashboards:
-          default:
+          vendor:
             prometheus-stats:
               # Ref: https://grafana.com/dashboards/2
               gnetId: 2
               revision: 2
               datasource: Prometheus
-            redis-stats:
-              # Ref: https://grafana.com/dashboards/2
+            prometheus-redis:
+              # Ref: https://grafana.com/dashboards/763
               gnetId: 763
               revision: 2
               datasource: Prometheus
