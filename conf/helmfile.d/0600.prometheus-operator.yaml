@@ -1279,7 +1279,7 @@ releases:
 
           - job_name: 'data-processing'
             static_configs:
-              - targets: ['data-processing:8501']
+              - targets: ['data-processing:8000']
 
           # - job_name: kube-etcd
           #   kubernetes_sd_configs:
