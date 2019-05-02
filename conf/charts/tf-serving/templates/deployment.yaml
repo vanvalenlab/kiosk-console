@@ -40,7 +40,12 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         ports:
-        - containerPort: {{ .Values.service.httpTargetPort }}
+          - name: http
+            containerPort: {{ .Values.service.internalHttpPort }}
+            protocol: TCP
+          - name: grpc
+            containerPort: {{ .Values.service.internalGrpcPort }}
+            protocol: TCP
         env:
 {{- range $name, $value := .Values.env }}
 {{- if not ( empty $value) }}
