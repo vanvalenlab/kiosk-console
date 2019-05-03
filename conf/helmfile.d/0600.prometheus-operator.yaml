@@ -1277,13 +1277,13 @@ releases:
             static_configs:
             - targets: ['prometheus-redis-exporter:9121']
 
-          - job_name: 'tensorflow'
+          - job_name: tensorflow
             scrape_interval: 5s
-            metrics_path: '/monitoring/prometheus/metrics'
+            metrics_path: /monitoring/prometheus/metrics
             static_configs:
               - targets: ['tf-serving:8501']
 
-          - job_name: 'data-processing'
+          - job_name: data-processing
             static_configs:
               - targets: ['data-processing:8000']
 
