@@ -42,8 +42,8 @@ releases:
 
       resources:
         requests:
-          cpu: 100m
-          memory: 32Mi
+          cpu: 300m
+          memory: 128Mi
         # limits:
         #   cpu: 100m
         #   memory: 64Mi
