@@ -18,6 +18,8 @@ spec:
       labels:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
+      annotations:
+{{ toYaml .Values.annotations | indent 8 }}
     spec:
       # TODO: generalize the node selectors
       nodeSelector:
