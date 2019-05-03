@@ -16,12 +16,12 @@ releases:
 #   - https://github.com/helm/charts/stable/openvpn
 #
 - name: "openvpn"
-  namespace: "deepcell"
+  namespace: "kube-system"
   labels:
     chart: "openvpn"
     component: "openvpn"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
+    namespace: "kube-system"
+    vendor: "openvpn"
     default: "true"
   chart: 'stable/openvpn'
   version: "1.1.0"

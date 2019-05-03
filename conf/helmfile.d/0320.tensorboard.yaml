@@ -55,7 +55,7 @@ releases:
       resources:
         requests:
           cpu: 100m
-          memory: 256Mi
+          memory: 128Mi
 
       env:
         LOG_PREFIX: "tensorboard_logs"
