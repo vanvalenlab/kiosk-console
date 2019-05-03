@@ -102,8 +102,8 @@ releases:
         #  cpu: 100m
         #  memory: 128Mi
         requests:
-         cpu: 300m
-         memory: 4Gi
+         cpu: 150m
+         memory: 1536Mi
 
       nodeSelector:
         logstash: "yes"
