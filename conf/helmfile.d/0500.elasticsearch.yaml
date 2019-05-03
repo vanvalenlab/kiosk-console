@@ -92,7 +92,7 @@ releases:
             # memory: "1024Mi"
           requests:
             cpu: "25m"
-            memory: "512Mi"
+            memory: "768Mi"
         priorityClassName: ""
         ## (dict) If specified, apply these annotations to each client Pod
         # podAnnotations:
@@ -147,7 +147,7 @@ releases:
             # memory: "1024Mi"
           requests:
             cpu: "25m"
-            memory: "512Mi"
+            memory: "768Mi"
         priorityClassName: ""
         ## (dict) If specified, apply these annotations to each master Pod
         # podAnnotations:
@@ -197,8 +197,8 @@ releases:
             # cpu: "1"
             # memory: "2048Mi"
           requests:
-            cpu: "25m"
-            memory: "1536Mi"
+            cpu: "300m"
+            # memory: "10Gi"
         priorityClassName: ""
         ## (dict) If specified, apply these annotations to each data Pod
         # podAnnotations:
