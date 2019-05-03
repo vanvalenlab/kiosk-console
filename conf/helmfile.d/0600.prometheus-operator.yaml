@@ -1246,10 +1246,6 @@ releases:
           ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
           ##
           additionalScrapeConfigs:
-          - job_name: redis_exporter
-            static_configs:
-            - targets: ['prometheus-redis-exporter:9121']
-
           - job_name: tensorflow
             scrape_interval: 5s
             metrics_path: /monitoring/prometheus/metrics
