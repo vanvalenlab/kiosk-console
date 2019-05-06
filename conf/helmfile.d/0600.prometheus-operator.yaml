@@ -1276,6 +1276,17 @@ releases:
           - job_name: redis_exporter
             static_configs:
             - targets: ['prometheus-redis-exporter:9121']
+
+          - job_name: tensorflow
+            scrape_interval: 5s
+            metrics_path: /monitoring/prometheus/metrics
+            static_configs:
+              - targets: ['tf-serving.deepcell:8501']
+
+          - job_name: data-processing
+            static_configs:
+              - targets: ['data-processing.deepcell:8000']
+
           # - job_name: kube-etcd
           #   kubernetes_sd_configs:
           #     - role: node

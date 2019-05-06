@@ -11,6 +11,12 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
+  {{- if .Values.service.prometheusEnabled }}
+  - name: prometheus
+    targetPort: {{ .Values.service.prometheusHttpPort }}
+    port: {{ .Values.service.prometheusHttpPort }}
+    protocol: TCP
+  {{- end }}
   {{- if .Values.service.httpIngressEnabled }}
   - name: http
     targetPort: {{ .Values.service.httpTargetPort }}

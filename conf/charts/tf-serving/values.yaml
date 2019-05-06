@@ -13,9 +13,14 @@ service:
   type: "ClusterIP"
 
   httpIngressEnabled: true
-  internalHttpPort: 8500
-  httpTargetPort: 8500
-  externalHttpPort: 8500
+  internalHttpPort: 8501
+  httpTargetPort: 8501
+  externalHttpPort: 8501
+
+  grpcIngressEnabled: true
+  internalGrpcPort: 8500
+  grpcTargetPort: 8500
+  externalGrpcPort: 8500
 
   httpsIngressEnabled: false
 
@@ -32,7 +37,7 @@ resources: {}
 
 env:
   PORT: "8500"
-  REST_API_PORT: "0"
+  REST_API_PORT: "8501"
   REST_API_TIMEOUT: "30000"
   MODEL_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
   ENABLE_BATCHING: "false"

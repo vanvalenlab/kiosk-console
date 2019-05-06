@@ -1,9 +1,12 @@
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
   name: {{ template "fullname" . }}
   labels:
-    app: {{ template "fullname" . }}
+    heritage: {{ .Release.Service | quote }}
+    release: {{ .Release.Name | quote }}
+    chart: {{ template "chart" . }}
+    app: {{ template "name" . }}
 {{- if .Values.service.annotations }}
   annotations:
 {{ toYaml .Values.service.annotations | indent 4 }}
@@ -11,6 +14,12 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
+  {{- if .Values.service.grpcIngressEnabled }}
+  - name: grpc
+    targetPort: {{ .Values.service.grpcTargetPort }}
+    port: {{ .Values.service.externalGrpcPort }}
+    protocol: TCP
+  {{- end }}
   {{- if .Values.service.httpIngressEnabled }}
   - name: http
     targetPort: {{ .Values.service.httpTargetPort }}

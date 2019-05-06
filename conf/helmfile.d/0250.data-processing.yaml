@@ -46,6 +46,19 @@ releases:
         httpsTargetPort: 8443
         externalHttpsPort: 8443
 
+        prometheusEnabled: true
+        prometheusHttpPort: 8000
+
+        annotations:
+          prometheus.io/path: /metrics
+          prometheus.io/port: "8000"
+          prometheus.io/scrape: "true"
+
+      annotations:
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8000"
+        prometheus.io/scrape: "true"
+
       resources:
         requests:
           cpu: 1500m
@@ -56,3 +69,5 @@ releases:
 
       env:
         LISTEN_PORT: 8080
+        PROMETHEUS_PORT: 8000
+        PROMETHEUS_ENABLED: true
