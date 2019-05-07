@@ -72,7 +72,9 @@ releases:
       extraContainers: |
       extraVolumeMounts: []
       extraVolumes: []
-      resources: {}
+      resources:
+        requests:
+          memory: 128Mi
       priorityClassName: ""
       tolerations: []
       nodeSelector: {}
