@@ -18,6 +18,8 @@ spec:
       labels:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
+      annotations:
+{{ toYaml .Values.annotations | indent 8 }}
     spec:
       # TODO: generalize the node selectors
       nodeSelector:
@@ -36,6 +38,9 @@ spec:
             protocol: TCP
           - name: https
             containerPort: {{ .Values.service.internalHttpsPort }}
+            protocol: TCP
+          - name: prometheus
+            containerPort: {{ .Values.service.prometheusHttpPort }}
             protocol: TCP
         resources:
 {{ toYaml .Values.resources | indent 10 }}

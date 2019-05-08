@@ -335,6 +335,33 @@ releases:
         ##
         defaultDashboardsEnabled: true
 
+        dashboardProviders:
+          dashboardproviders.yaml:
+            apiVersion: 1
+            providers:
+            - name: 'vendor'
+              orgId: 1
+              folder: ''
+              type: file
+              disableDeletion: false
+              updateIntervalSeconds: 15
+              editable: true
+              options:
+                path: /var/lib/grafana/dashboards/vendor
+
+        dashboards:
+          vendor:
+            prometheus-stats:
+              # Ref: https://grafana.com/dashboards/2
+              gnetId: 2
+              revision: 2
+              datasource: Prometheus
+            prometheus-redis:
+              # Ref: https://grafana.com/dashboards/763
+              gnetId: 763
+              revision: 2
+              datasource: Prometheus
+
         adminPassword: prom-operator
 
         ingress:
@@ -1245,7 +1272,21 @@ releases:
           ## The scrape configuraiton example below will find master nodes, provided they have the name .*mst.*, relabel the
           ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
           ##
-          additionalScrapeConfigs: []
+          additionalScrapeConfigs:
+          - job_name: redis_exporter
+            static_configs:
+            - targets: ['prometheus-redis-exporter:9121']
+
+          - job_name: tensorflow
+            scrape_interval: 5s
+            metrics_path: /monitoring/prometheus/metrics
+            static_configs:
+              - targets: ['tf-serving.deepcell:8501']
+
+          - job_name: data-processing
+            static_configs:
+              - targets: ['data-processing.deepcell:8000']
+
           # - job_name: kube-etcd
           #   kubernetes_sd_configs:
           #     - role: node
