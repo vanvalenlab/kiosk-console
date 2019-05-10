@@ -66,7 +66,7 @@ When you're done using the cluster, you may want to shutdown the cluster, and pe
 1. After cluster startup, choose `Shell` from the main menu. On the command line, execute the following command:
 
 ```bash
-POD_NAME=`kubectl get pods -l type=openvpn | awk END'{ print $1 }'` \
+POD_NAME=`kubectl get pods --namespace=kube-system -l type=openvpn | awk END'{ print $1 }'` \
 && kubectl log $POD_NAME
 ```
 
@@ -75,12 +75,12 @@ If the OpenVPN pod has already deployed, you should see something like "Mon Apr 
 2. If you see that line, then execute
 
 ```bash
-POD_NAME=`kubectl get pods --namespace deepcell -l type=openvpn | awk END'{ print $1 }'` \
-&& SERVICE_NAME=`kubectl get svc --namespace deepcell -l type=openvpn | awk END'{ print $1 }'` \
-&& SERVICE_IP=$(kubectl get svc --namespace deepcell $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].ip}') \
+POD_NAME=`kubectl get pods --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
+&& SERVICE_NAME=`kubectl get svc --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
+&& SERVICE_IP=$(kubectl get svc --namespace kube-system $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].ip}') \
 && KEY_NAME=kubeVPN \
-&& kubectl --namespace deepcell exec -it $POD_NAME /etc/openvpn/setup/newClientCert.sh $KEY_NAME $SERVICE_IP \
-&& kubectl --namespace deepcell exec -it $POD_NAME cat /etc/openvpn/certs/pki/$KEY_NAME.ovpn > $KEY_NAME.ovpn
+&& kubectl --namespace kube-system exec -it $POD_NAME /etc/openvpn/setup/newClientCert.sh $KEY_NAME $SERVICE_IP \
+&& kubectl --namespace kube-system exec -it $POD_NAME cat /etc/openvpn/certs/pki/$KEY_NAME.ovpn > $KEY_NAME.ovpn
 ```
 
 3. Then, copy the newly-generated `kubeVPN.ovpn` file onto your local machine. (You can do this either by viewing the file's contents and copy-pasting them manually, or by using a file-copying tool like SCP.)

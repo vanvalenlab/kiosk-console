@@ -1281,11 +1281,11 @@ releases:
             scrape_interval: 5s
             metrics_path: /monitoring/prometheus/metrics
             static_configs:
-              - targets: ['tf-serving:8501']
+              - targets: ['tf-serving.deepcell:8501']
 
           - job_name: data-processing
             static_configs:
-              - targets: ['data-processing:8000']
+              - targets: ['data-processing.deepcell:8000']
 
           # - job_name: kube-etcd
           #   kubernetes_sd_configs:
