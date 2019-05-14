@@ -40,7 +40,7 @@ releases:
 
       # Url to access prometheus
       prometheus:
-        url: http://prometheus.default.svc
+        url: http://prometheus-operator-prometheus
         port: 9090
 
       replicas: 1
