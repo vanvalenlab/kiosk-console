@@ -8,14 +8,14 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Redis-Consumer ##############################################################
+## Image-Consumer ##############################################################
 ################################################################################
 
 #
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "redis-consumer"
+- name: "image-consumer"
   namespace: "deepcell"
   labels:
     chart: "redis-consumer"
