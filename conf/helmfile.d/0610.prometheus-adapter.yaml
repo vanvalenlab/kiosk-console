@@ -67,13 +67,13 @@ releases:
       rules:
         default: true
         custom:
-          - seriesQuery: '{__name__=":tensorflow:core:direct_session_runs"}'
-            resources:
-              template: <<.Resource>>
-            name:
-              matches: ""
-              as: "tensorflow_serving_runs"
-            metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>,container_name!="POD"}[1m])) by (<<.GroupBy>>)
+          # - seriesQuery: '{__name__=":tensorflow:core:direct_session_runs"}'
+          #   resources:
+          #     template: <<.Resource>>
+          #   name:
+          #     matches: ""
+          #     as: "tensorflow_serving_runs"
+          #   metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>,container_name!="POD"}[1m])) by (<<.GroupBy>>)
           # - seriesQuery: '{__name__=~"^container_.*",container_name!="POD",namespace!="",pod_name!=""}'
           #   seriesFilters: []
           #   resources:
