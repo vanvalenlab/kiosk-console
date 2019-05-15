@@ -67,7 +67,7 @@ When you're done using the cluster, you may want to shutdown the cluster, and pe
 
 ```bash
 POD_NAME=`kubectl get pods --namespace=kube-system -l type=openvpn | awk END'{ print $1 }'` \
-&& kubectl log $POD_NAME
+&& kubectl logs --namespace=kube-system $POD_NAME
 ```
 
 If the OpenVPN pod has already deployed, you should see something like "Mon Apr 29 21:15:53 2019 Initialization Sequence Completed" somewhere in the output.
