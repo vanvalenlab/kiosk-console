@@ -33,6 +33,8 @@ releases:
         tag: "0.1"
         pullPolicy: "Always"
 
+      nameOverride: "image-consumer"
+
       resources:
         requests:
           cpu: 750m
