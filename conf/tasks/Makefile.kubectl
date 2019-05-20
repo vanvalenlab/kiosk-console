@@ -37,3 +37,4 @@ kubectl/display/ip:
 kubectl/implement/autoscaling:
 	@envsubst < patches/hpa.yaml  > patches/hpa_subbed.yaml
 	@kubectl apply -f patches/hpa_subbed.yaml
+	@kubens deepcell
