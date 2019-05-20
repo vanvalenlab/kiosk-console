@@ -39,6 +39,7 @@ kubectl/display/ip:
 #@kubectl scale deployment --replicas=1 redis-consumer
 #@kubectl scale deployment --replicas=1 data-processing
 kubectl/implement/autoscaling:
-	@kubens deepcell
-	@kubectl autoscale deployment redis-consumer --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWENTY)
-	@kubectl autoscale deployment data-processing --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWO)
+#	@kubens deepcell
+#	@kubectl autoscale deployment redis-consumer --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWENTY)
+#	@kubectl autoscale deployment data-processing --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWO)
+@kubectl apply -f patches/hpa.yaml
