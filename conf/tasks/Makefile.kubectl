@@ -35,5 +35,5 @@ kubectl/display/ip:
 
 ## Create horizontal pod autoscalers for all relevant deployments
 kubectl/implement/autoscaling:
-@envsubst < patches/hpa.yaml  > patches/hpa_subbed.yaml
-@kubectl apply -f patches/hpa_subbed.yaml
+	@envsubst < patches/hpa.yaml  > patches/hpa_subbed.yaml
+	@kubectl apply -f patches/hpa_subbed.yaml
