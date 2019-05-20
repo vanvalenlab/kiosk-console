@@ -10,7 +10,7 @@ spec:
     kind: Deployment
     name: tf-serving
   minReplicas: 1
-  maxReplicas: $GPU_NODE_MAX_SIZE | 1
+  maxReplicas: $GPU_NODE_MAX_SIZE
   metrics:
   - type: Pods
     pods:
@@ -28,7 +28,7 @@ spec:
     kind: Deployment
     name: data-processing
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_TEN | 10
+  maxReplicas: $GPU_MAX_TIMES_TEN
   metrics:
   - type: Resource
     resource:
@@ -68,7 +68,7 @@ spec:
     kind: Deployment
     name: redis-consumer
   minReplicas: 1
-  maxReplicas: {{ env "GPU_MAX_TIMES_FIFTY" | default 50 }}
+  maxReplicas: $GPU_MAX_TIMES_FIFTY
   metrics:
   - type: Resource
     resource:
@@ -86,7 +86,7 @@ spec:
     kind: Deployment
     name: zip-consumer
   minReplicas: 1
-  maxReplicas: {{ env "GPU_MAX_TIMES_FIFTY" | default 50 }}
+  maxReplicas: $GPU_MAX_TIMES_FIFTY
   metrics:
   - type: Resource
     resource:
