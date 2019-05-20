@@ -33,15 +33,11 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 80
+      targetAverageUtilization: 80
   - type: Resource
     resource:
       name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
+      targetAverageUtilization: 80
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -59,9 +55,7 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 80
+      targetAverageUtilization: 80
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -79,9 +73,7 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 80
+      targetAverageUtilization: 80
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -99,6 +91,4 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 80
+      targetAverageUtilization: 80
