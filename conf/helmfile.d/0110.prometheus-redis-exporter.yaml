@@ -18,7 +18,7 @@ releases:
   - name: "prometheus-redis-exporter"
     labels:
       chart: "prometheus-redis-exporter"
-    chart: "stable/prometheus-redis-exporter"
+    chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/prometheus-redis-exporter'
     version: "1.0.2"
     namespace: "monitoring"
     values:
@@ -39,3 +39,6 @@ releases:
           prometheus.io/scrape: "true"
 
         redisAddress: redis://redis-master.deepcell:6379
+
+        extraArgs:
+          script: /custom-redis-script/custom-redis-metrics.lua
