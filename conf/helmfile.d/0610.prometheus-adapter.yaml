@@ -67,6 +67,12 @@ releases:
       rules:
         default: true
         custom:
+          - seriesQuery: '{__name__="redis_script_value",key="image_keys"}'
+            resources:
+              overrides:
+                      microservice: {group: "apps", resource: "deployment"}
+            name: {as: "number_of_image_keys_in_redis"}
+            metricsQuery: avg_over_time(<<.Series>>[1m])
           # - seriesQuery: '{__name__=":tensorflow:core:direct_session_runs"}'
           #   resources:
           #     template: <<.Resource>>
