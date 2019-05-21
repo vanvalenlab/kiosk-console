@@ -18,7 +18,8 @@ releases:
   - name: "prometheus-redis-exporter"
     labels:
       chart: "prometheus-redis-exporter"
-    chart: "stable/prometheus-redis-exporter"
+    chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/prometheus-redis-exporter'
+    # chart: "stable/prometheus-redis-exporter"
     version: "1.0.2"
     namespace: "monitoring"
     values:
