@@ -49,15 +49,18 @@ spec:
               port: exporter-port
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-        {{- if .Values.volumesMounts }}
-          volumesMounts:
-{{ toYaml .Values.volumesMounts | indent 12 }}
+        {{- if .Values.storage }}
+          volumeMounts:
+            - name: {{ .Values.storage.volume.name }}
+              mountPath: {{ .Values.storage.volume.mountPath }}
         {{- end }}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
     {{- end }}
-    {{- if .Values.volumes }}
+    {{- if .Values.storage }}
       volumes:
-{{ toYaml .Values.volumes | indent 8 }}
+        - name: {{ .Values.storage.volume.name }}
+          configMap:
+            name: {{ template "prometheus-redis-exporter.configmap" . }}
     {{- end }}
