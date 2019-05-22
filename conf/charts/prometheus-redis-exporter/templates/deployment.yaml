@@ -63,4 +63,5 @@ spec:
         - name: {{ .Values.storage.volume.name }}
           configMap:
             name: {{ template "prometheus-redis-exporter.configmap" . }}
+            defaultMode: 0744
     {{- end }}

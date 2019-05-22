@@ -103,3 +103,6 @@ releases:
           prometheus.io/scrape: "true"
 
         redisAddress: redis://redis-master.deepcell:6379
+
+        extraArgs:
+          script: /custom-redis-script/custom-redis-metrics.lua

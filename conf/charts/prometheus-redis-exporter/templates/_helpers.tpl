@@ -48,3 +48,4 @@ Create fully qualified configmap name.
 {{- define "prometheus-redis-exporter.configmap" -}}
 {{ default (include "prometheus-redis-exporter.fullname" .) .Values.storage.configMap.name }}
 {{- end -}}
+
