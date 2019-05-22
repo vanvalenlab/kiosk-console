@@ -41,3 +41,10 @@ Create the name of the service account to use
     {{ default "default" .Values.serviceAccount.name }}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Create fully qualified configmap name.
+*/}}
+{{- define "prometheus-redis-exporter.configmap" -}}
+{{ default (include "prometheus-redis-exporter.fullname" .) .Values.storage.configMap.name }}
+{{- end -}}
