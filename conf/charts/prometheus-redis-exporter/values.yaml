@@ -36,5 +36,13 @@ annotations: {}
 #  prometheus.io/path: /metrics
 #  prometheus.io/port: "9121"
 #  prometheus.io/scrape: "true"
-volumes: []
-volumesMounts: []
+storage: {}
+  # create: true
+  # volume:
+  #   name: script-volume
+  #   mountPath: /etc/config
+  # configMap:
+  #   name:
+  #   data:
+  #     customscript.lua: |
+  #       ''
