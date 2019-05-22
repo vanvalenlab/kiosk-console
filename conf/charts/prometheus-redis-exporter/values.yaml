@@ -15,7 +15,6 @@ image:
   repository: oliver006/redis_exporter
   tag: v0.28.0
   pullPolicy: IfNotPresent
-configMap: {}
 extraArgs: {}
 # Additional Environment variables
 env: {}
@@ -37,3 +36,5 @@ annotations: {}
 #  prometheus.io/path: /metrics
 #  prometheus.io/port: "9121"
 #  prometheus.io/scrape: "true"
+volumes: []
+volumesMounes: []

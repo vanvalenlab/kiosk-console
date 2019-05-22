@@ -49,7 +49,15 @@ spec:
               port: exporter-port
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+        {{- if .Values.volumesMounts }}
+          volumesMounts:
+{{ toYaml .Values.volumesMounts | indent 12 }}
+        {{- end }}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.volumes }}
+      volumes:
+{{ toYaml .Values.volumes | indent 8 }}
     {{- end }}
