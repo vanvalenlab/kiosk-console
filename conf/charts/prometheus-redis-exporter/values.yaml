@@ -37,4 +37,4 @@ annotations: {}
 #  prometheus.io/port: "9121"
 #  prometheus.io/scrape: "true"
 volumes: []
-volumesMounes: []
+volumesMounts: []
