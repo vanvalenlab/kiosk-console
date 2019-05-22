@@ -8,7 +8,7 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Zip-Consumer ################################################################
+## Tracking-Consumer ################################################################
 ################################################################################
 
 #
@@ -32,6 +32,8 @@ releases:
         repository: "vanvalenlab/kiosk-redis-consumer"
         tag: "tracking-0.1"
         pullPolicy: "Always"
+
+      nameOverride: "tracking-consumer"
 
       resources:
         requests:
