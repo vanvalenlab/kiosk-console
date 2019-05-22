@@ -29,13 +29,13 @@ releases:
             memory: 100Mi
 
         extraArgs:
-          script: /etc/config/customscript.lua
+          script: /custom-redis-script/custom-redis-metrics.lua
 
         storage:
           create: true
           volume:
             name: script-volume
-            mountPath: /etc/config
+            mountPath: /custom-redis-script
 
           configMap:
             name:
@@ -54,32 +54,32 @@ releases:
                 local done = false
                 local cursor = "0"
                 repeat
-                       local result = redis.call("SCAN", cursor, "MATCH", "processing-predict:*", "COUNT", 1000)
+                  local result = redis.call("SCAN", cursor, "MATCH", "processing-predict:*", "COUNT", 1000)
 
-                       cursor = result[1]
-                       keys   = result[2]
+                  cursor = result[1]
+                  keys   = result[2]
 
-                       for i, key in ipairs(keys) do
-                               queues[#queues+1] = key
-                       end
+                  for i, key in ipairs(keys) do
+                    queues[#queues+1] = key
+                  end
 
-                       if cursor == "0" then
-                               done = true
-                       end
+                  if cursor == "0" then
+                    done = true
+                  end
                 until done
 
                 -- Separately tally the zip and image keys between all queues.
                 local zip_keys = 0
                 local image_keys = 0
                 for _,queue in ipairs(queues) do
-                       local results = redis.call("LRANGE", queue, 0, -1)
-                       for _,key in ipairs(results) do
-                               if string.find(key,"^.+\.zip.+$") then
-                                       zip_keys = zip_keys + 1
-                               else
-                                       image_keys = image_keys + 1
-                               end
-                       end
+                  local results = redis.call("LRANGE", queue, 0, -1)
+                  for _,key in ipairs(results) do
+                    if string.find(key,"^.+\.zip.+$") then
+                      zip_keys = zip_keys + 1
+                    else
+                      image_keys = image_keys + 1
+                    end
+                  end
                 end
 
                 -- Format output
@@ -103,6 +103,3 @@ releases:
           prometheus.io/scrape: "true"
 
         redisAddress: redis://redis-master.deepcell:6379
-
-        extraArgs:
-          script: /custom-redis-script/custom-redis-metrics.lua
