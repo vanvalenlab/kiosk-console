@@ -70,10 +70,14 @@ spec:
   minReplicas: 1
   maxReplicas: $GPU_MAX_TIMES_FIFTY
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80
+  - type: Object
+    object:
+      metricName: redis_consumer_scale_target
+      target:
+        apiVersion: custom.metrics.k8s.io/v1beta1
+        kind: pods
+        name: redis_consumer_scale_target
+      targetValue: 1
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
