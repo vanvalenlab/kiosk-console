@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-autoscaler"
-        tag: "tracking-0.1"
+        tag: "0.1"
         pullPolicy: "Always"
 
       serviceAccount:
