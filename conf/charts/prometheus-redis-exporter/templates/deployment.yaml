@@ -49,15 +49,19 @@ spec:
               port: exporter-port
           resources:
 {{ toYaml .Values.resources | indent 12 }}
+        {{- if .Values.storage }}
           volumeMounts:
-          - name: custom-redis-script
-            mountPath: /custom-redis-script
-      volumes:
-      - name: custom-redis-script
-        configMap:
-          name: custom-redis-metrics
-          defaultMode: 0744
+            - name: {{ .Values.storage.volume.name }}
+              mountPath: {{ .Values.storage.volume.mountPath }}
+        {{- end }}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
+    {{- if .Values.storage }}
+      volumes:
+        - name: {{ .Values.storage.volume.name }}
+          configMap:
+            name: {{ template "prometheus-redis-exporter.configmap" . }}
+            defaultMode: 0744
     {{- end }}
