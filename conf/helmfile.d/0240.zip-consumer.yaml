@@ -41,6 +41,8 @@ releases:
         #   cpu: 100m
         #   memory: 1024Mi
 
+      nameOverride: zip-consumer
+
       env:
         REDIS_HOST: "redis-master"
         REDIS_PORT: "6379"
