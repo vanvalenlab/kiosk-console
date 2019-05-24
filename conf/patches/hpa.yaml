@@ -72,11 +72,11 @@ spec:
   metrics:
   - type: Object
     object:
-      metricName: redis_consumer_scale_target
+      metricName: redis_consumer_key_ratio
       target:
-        apiVersion: custom.metrics.k8s.io/v1beta1
-        kind: pods
-        name: redis_consumer_scale_target
+        apiVersion: v1
+        kind: Namespace
+        name: redis_consumer_key_ratio
       targetValue: 1
 ---
 apiVersion: autoscaling/v2beta1
