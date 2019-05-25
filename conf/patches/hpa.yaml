@@ -77,7 +77,7 @@ spec:
         apiVersion: v1
         kind: Namespace
         name: redis_consumer_key_ratio
-      targetValue: 1
+      targetValue: 20
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -92,7 +92,11 @@ spec:
   minReplicas: 1
   maxReplicas: $GPU_MAX_TIMES_FIFTY
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80
+  - type: Object
+    object:
+      metricName: zip_consumer_key_ratio
+      target:
+        apiVersion: v1
+        kind: Namespace
+        name: zip_consumer_key_ratio
+      targetValue: 1

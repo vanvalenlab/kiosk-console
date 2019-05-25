@@ -81,13 +81,18 @@ releases:
         groups:
           - name: custom-redis-metrics
             rules:
+            - record: avg_gpu_usage
+              expr: 'avg(container_accelerator_duty_cycle)'
+              labels:
+                namespace: deepcell
+                service: gpu-average-service
             - record: redis_consumer_key_ratio
-              expr: '(avg(container_accelerator_duty_cycle) <bool 0.8) * on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[5m]) / on() (avg_over_time(redis_script_value{key="image_keys"}[5m]) + 1))'
+              expr: '(avg_over_time(avg_gpu_usage[1m]) <bool 0.8) * on() (avg_over_time(redis_script_value{key="image_keys"}[2m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[2m])+1))'
               labels:
                 namespace: deepcell
                 service: redis-scaling-service
             - record: zip_consumer_key_ratio
-              expr: '(avg(container_accelerator_duty_cycle) <bool 0.8) * on() (avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[5m]) / on() (avg_over_time(redis_script_value{key="zip_keys"}[5m]) + 1))'
+              expr: '(avg_over_time(avg_gpu_usage[1m]) <bool 0.8) * on() (avg_over_time(redis_script_value{key="zip_keys"}[2m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[2m])+1))'
               labels:
                 namespace: deepcell
                 service: zip-scaling-service
