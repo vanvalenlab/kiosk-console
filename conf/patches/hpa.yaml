@@ -12,10 +12,14 @@ spec:
   minReplicas: 1
   maxReplicas: $GPU_NODE_MAX_SIZE
   metrics:
-  - type: Pods
-    pods:
-      metricName: accelerator_duty_cycle
-      targetAverageValue: 80
+  - type: Object
+    object:
+      metricName: tf_serving_scale_metric
+      target:
+        apiVersion: v1
+        kind: Namespace
+        name: tf_serving_scale_metric
+      targetValue: 80
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
