@@ -74,7 +74,7 @@ releases:
                 for _,queue in ipairs(queues) do
                   local results = redis.call("LRANGE", queue, 0, -1)
                   for _,key in ipairs(results) do
-                    if string.find(key,"^.+\.zip.+$") then
+                    if string.find(key,"^.+:.+%.zip:.+$") then
                       zip_keys = zip_keys + 1
                     else
                       image_keys = image_keys + 1
