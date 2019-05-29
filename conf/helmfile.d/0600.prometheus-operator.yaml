@@ -87,7 +87,7 @@ releases:
                 namespace: deepcell
                 service: gpu-average-service
             - record: tf_serving_scale_metric
-              expr: '((kube_deployment_spec_replicas{deployment="redis-consumer"} / on() kube_deployment_spec_replicas{deployment="tf-serving"}) >bool 25) * 100 + on() avg_over_time(avg_gpu_usage[1m])'
+              expr: '((kube_deployment_spec_replicas{deployment="redis-consumer"} / on() kube_deployment_spec_replicas{deployment="tf-serving"}) >bool 25) * on() (avg_over_time(avg_gpu_usage[1m]) <bool 10) * 100 + on() avg_over_time(avg_gpu_usage[1m])'
               labels:
                 namespace: deepcell
                 service: zip-scaling-service
