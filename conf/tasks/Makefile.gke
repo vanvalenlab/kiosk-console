@@ -17,6 +17,9 @@ export NODE_MIN_SIZE ?= 1
 export NODE_MAX_SIZE ?= 10
 export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
+# Non-GPU machine type
+export RC_DP_MACHINE_TYPE ?= n1-standard-8
+
 # Not all GPU types are available in all regions/availability zones
 export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
 export PREDICTION_GPU_TYPE ?= nvidia-tesla-t4
@@ -111,7 +114,7 @@ gke/create/node-pools:
 		--num-nodes 1 \
 		--min-nodes 1 \
 		--max-nodes ${NODE_MAX_SIZE} \
-		--machine-type=n1-highcpu-4 \
+		--machine-type=${RC_DP_MACHINE_TYPE} \
 		--enable-autoscaling \
 		--enable-autorepair \
 		--no-enable-autoupgrade \
