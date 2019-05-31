@@ -38,3 +38,4 @@ kubectl/implement/autoscaling:
 	@envsubst < patches/hpa.yaml  > patches/hpa_subbed.yaml
 	@kubectl apply -f patches/hpa_subbed.yaml
 	@kubens deepcell
+  @kubectl autoscale deployment tracking-consumer --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWENTY)
