@@ -36,15 +36,23 @@ resources: {}
   #   nvidia.com/gpu: 1
 
 env:
-  PORT: "8500"
-  REST_API_PORT: "8501"
-  REST_API_TIMEOUT: "30000"
-  MODEL_CONFIG_FILE: "/kiosk/tf-serving/models.conf"
-  ENABLE_BATCHING: "false"
+  PORT: 8500
+  REST_API_PORT: 8501
+  REST_API_TIMEOUT: 30000
+  MODEL_CONFIG_FILE: /kiosk/tf-serving/models.conf
+  BATCHING_CONFIG_FILE: /kiosk/tf-serving/batching_config.txt
+  ENABLE_BATCHING: true
+  MAX_BATCH_SIZE: 1
+  BATCH_TIMEOUT_MICROS: 0
+  MAX_ENQUEUED_BATCHES: 128
   GRPC_CHANNEL_ARGS: ""
-  MODEL_PREFIX: "models"
-  CLOUD_PROVIDER: "aws"
-  TF_CPP_MIN_LOG_LEVEL: "3"
+  MODEL_PREFIX: models
+  CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+  TF_CPP_MIN_LOG_LEVEL: 0
+  TF_SESSION_PARALLELISM: 0
+  MONITORING_CONFIG_FILE: /kiosk/tf-serving/monitoring_config.txt
+  PROMETHEUS_MONITORING_ENABLED: true
+  PROMETHEUS_MONITORING_PATH: /monitoring/prometheus/metrics
 
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
