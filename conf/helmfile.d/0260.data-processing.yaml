@@ -68,7 +68,6 @@ releases:
           memory: 3Gi
 
       env:
-        WORKERS: 10
         LISTEN_PORT: 8080
         PROMETHEUS_PORT: 8000
         PROMETHEUS_ENABLED: true
