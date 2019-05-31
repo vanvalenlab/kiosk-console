@@ -85,7 +85,7 @@ releases:
         ENABLE_BATCHING: true
         MAX_BATCH_SIZE: 1
         BATCH_TIMEOUT_MICROS: 0
-        MAX_ENQUEUED_BATCHES: 128
+        MAX_ENQUEUED_BATCHES: 512
         GRPC_CHANNEL_ARGS: ""
         MODEL_PREFIX: models
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
