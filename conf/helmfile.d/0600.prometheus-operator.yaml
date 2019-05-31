@@ -90,7 +90,7 @@ releases:
               expr: 'avg_over_time(avg_gpu_usage[1m])'
               labels:
                 namespace: deepcell
-                service: zip-scaling-service
+                service: tf-serving-scaling-service
             - record: redis_consumer_key_ratio
               expr: '(avg_over_time(redis_script_value{key="image_keys"}[2m]+1) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[2m])+1)) - on() ((avg_over_time(avg_gpu_usage[1m]) <bool 0.8) * on() ((avg_over_time(redis_script_value{key="image_keys"}[2m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[2m])+1)) - 10))'
               labels:
