@@ -19,8 +19,8 @@ releases:
    labels:
      chart: "redis"
      component: "database"
-   chart: "stable/redis"
-   version: "3.0.5"
+   chart: "stable/redis-ha"
+   version: "3.5.0"
    namespace: "deepcell"
    set:
      - name: "usePassword"
