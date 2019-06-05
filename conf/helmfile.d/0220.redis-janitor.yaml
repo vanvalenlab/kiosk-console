@@ -51,5 +51,5 @@ releases:
       env:
         DEBUG: "true"
         INTERVAL: "5"
-        REDIS_HOST: "redis-master"
+        REDIS_HOST: "redis-redis-ha"
         REDIS_PORT: "6379"

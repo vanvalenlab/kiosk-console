@@ -42,7 +42,7 @@ releases:
         #   memory: 2Gi
 
       env:
-        REDIS_HOST: "redis-master"
+        REDIS_HOST: "redis-redis-ha"
         REDIS_PORT: "6379"
         TF_HOST: "tf-serving"
         TF_PORT: "8500"

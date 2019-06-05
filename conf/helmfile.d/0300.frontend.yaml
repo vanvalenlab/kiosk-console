@@ -65,7 +65,7 @@ releases:
 
       env:
         PORT: "8080"
-        REDIS_HOST: "redis-master"
+        REDIS_HOST: "redis-redis-ha"
         REDIS_PORT: "6379"
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
