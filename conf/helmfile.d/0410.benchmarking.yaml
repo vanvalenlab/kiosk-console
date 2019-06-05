@@ -32,7 +32,7 @@ releases:
         tag: "0.1"
         pullPolicy: "Always"
       env:
-        REDIS_HOST: "redis-master"
+        REDIS_HOST: "redis-redis-ha"
         REDIS_PORT: "6379"
         BENCHMARKING_PU_TYPE_AND_NUMBER: '{{ env "BENCHMARKING_PU_TYPE_AND_NUMBER" | default "NA" }}'
         BENCHMARKING_PU_TYPE: '{{ env "BENCHMARKING_PU_TYPE" | default "NA" }}'

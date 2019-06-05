@@ -102,4 +102,4 @@ releases:
           prometheus.io/port: "9121"
           prometheus.io/scrape: "true"
 
-        redisAddress: redis://redis-master.deepcell:6379
+        redisAddress: redis://redis-redis-ha.deepcell:6379

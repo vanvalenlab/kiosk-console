@@ -44,7 +44,7 @@ releases:
       env:
         DEBUG: "true"
         INTERVAL: "5"
-        REDIS_HOST: "redis-master"
+        REDIS_HOST: "redis-redis-ha"
         REDIS_PORT: "6379"
         CLOUD_PROVIDER: {{ env "CLOUD_PROVIDER" | default "broken_default" }}
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
