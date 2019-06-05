@@ -55,7 +55,7 @@ releases:
         DEBUG: "True"
         EXPORT_PREFIX: "models"
         LOG_PREFIX: "tensorboard_logs"
-        REDIS_HOST: "redis-master"
+        REDIS_HOST: "redis-redis-ha"
         REDIS_PORT: "6379"
         STATUS: "new"
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
