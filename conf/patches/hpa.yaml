@@ -100,3 +100,21 @@ spec:
         kind: Namespace
         name: zip_consumer_key_ratio
       targetValue: 1
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: tracking-consumer
+  namespace: deepcell
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tracking-consumer
+  minReplicas: 1
+  maxReplicas: $GPU_MAX_TIMES_FIFTY
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80
