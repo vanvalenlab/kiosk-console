@@ -68,7 +68,7 @@ spec:
     kind: Deployment
     name: redis-consumer
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_FIFTY
+  maxReplicas: $GPU_MAX_TIMES_ONE_HUNDRED
   metrics:
   - type: Object
     object:
