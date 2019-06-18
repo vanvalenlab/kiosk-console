@@ -76,13 +76,31 @@ releases:
 
       ## Provide custom recording or alerting rules to be deployed into the cluster.
       ##
-      additionalPrometheusRules: []
-      #  - name: my-rule-file
-      #    groups:
-      #      - name: my_group
-      #        rules:
-      #        - record: my_record
-      #          expr: 100 * my_record
+      additionalPrometheusRules:
+      - name: custom-prometheus-rules
+        groups:
+          - name: custom-redis-metrics
+            rules:
+            - record: avg_gpu_usage
+              expr: 'avg(container_accelerator_duty_cycle)'
+              labels:
+                namespace: deepcell
+                service: gpu-average-service
+            - record: tf_serving_scale_metric
+              expr: 'avg_over_time(avg_gpu_usage[1m])'
+              labels:
+                namespace: deepcell
+                service: tf-serving-scaling-service
+            - record: redis_consumer_key_ratio
+              expr: '(avg_over_time(redis_script_value{key="image_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[1m]) + 1))'
+              labels:
+                namespace: deepcell
+                service: redis-scaling-service
+            - record: zip_consumer_key_ratio
+              expr: '(avg_over_time(redis_script_value{key="zip_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[1m]) + 1))'
+              labels:
+                namespace: deepcell
+                service: zip-scaling-service
 
       ##
       global:

@@ -42,8 +42,8 @@ releases:
 
       resources:
         requests:
-          cpu: 650m
-          memory: 64Mi
+          cpu: 100m
+          memory: 128Mi
         # limits:
         #   cpu: 100m
         #   memory: 64Mi
@@ -59,17 +59,9 @@ releases:
             {{ env "AWS_MIN_GPU_NODES" | default 0 }}|{{ env "AWS_MAX_GPU_NODES" | default 5 }}|1|deepcell|deployment|predict|tf-serving;
             {{ env "AWS_MIN_GPU_NODES" | default 0 }}|{{ env "AWS_MAX_GPU_NODES" | default 5 }}|1|deepcell|deployment|track|tf-serving;
             0|4|1|deepcell|job|train|training
-        SECONDARY_AUTOSCALING: >
-            redis-consumer|deployment|deepcell|tf-serving|deployment|deepcell|7|0|{{ env "GPU_MAX_TIMES_FIFTY" | default 0 }};
-            tracking-consumer|deployment|deepcell|tf-serving|deployment|deepcell|7|0|{{ env "GPU_MAX_TIMES_FIFTY" | default 0 }};
-            data-processing|deployment|deepcell|tf-serving|deployment|deepcell|1|0|{{ env "GPU_MAX_TIMES_TEN" | default 0 }}
 {{ else }}
         AUTOSCALING: >
             {{ env "GPU_NODE_MIN_SIZE" | default 0 }}|{{ env "GPU_NODE_MAX_SIZE" | default 5 }}|1|deepcell|deployment|predict|tf-serving;
             {{ env "GPU_NODE_MIN_SIZE" | default 0 }}|{{ env "GPU_NODE_MAX_SIZE" | default 5 }}|1|deepcell|deployment|track|tf-serving;
             0|4|1|deepcell|job|train|training
-        SECONDARY_AUTOSCALING: >
-            redis-consumer|deployment|deepcell|tf-serving|deployment|deepcell|12|0|{{ env "GPU_MAX_TIMES_FIFTY" | default 0 }};
-            tracking-consumer|deployment|deepcell|tf-serving|deployment|deepcell|12|0|{{ env "GPU_MAX_TIMES_FIFTY" | default 0 }};
-            data-processing|deployment|deepcell|tf-serving|deployment|deepcell|1|0|{{ env "GPU_MAX_TIMES_TEN" | default 0 }}
 {{ end }}

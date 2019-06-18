@@ -61,11 +61,11 @@ releases:
 
       resources:
         requests:
-          cpu: 1500m
-          memory: 1536Mi
-        # limits:
-        #   cpu: 100m
-        #   memory: 2048Mi
+          cpu: 1
+          memory: 1.5Gi
+        limits:
+          cpu: 2
+          memory: 3Gi
 
       env:
         LISTEN_PORT: 8080

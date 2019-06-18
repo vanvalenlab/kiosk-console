@@ -34,8 +34,8 @@ kubectl/display/ip:
 	@echo export CLUSTER_ADDRESS=${IP_VAR} > ./cluster_address
 
 ## Create horizontal pod autoscalers for all relevant deployments
+# @kubectl autoscale deployment tracking-consumer --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWENTY)
 kubectl/implement/autoscaling:
 	@envsubst < patches/hpa.yaml  > patches/hpa_subbed.yaml
 	@kubectl apply -f patches/hpa_subbed.yaml
 	@kubens deepcell
-	@kubectl autoscale deployment tracking-consumer --cpu-percent=80 --min=1 --max=$(GPU_MAX_TIMES_TWENTY)
