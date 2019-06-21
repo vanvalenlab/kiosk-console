@@ -12,10 +12,14 @@ spec:
   minReplicas: 1
   maxReplicas: $GPU_NODE_MAX_SIZE
   metrics:
-  - type: Pods
-    pods:
-      metricName: accelerator_duty_cycle
-      targetAverageValue: 80
+  - type: Object
+    object:
+      metricName: tf_serving_scale_metric
+      target:
+        apiVersion: v1
+        kind: Namespace
+        name: tf_serving_scale_metric
+      targetValue: 70
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -33,10 +37,6 @@ spec:
   - type: Resource
     resource:
       name: cpu
-      targetAverageUtilization: 80
-  - type: Resource
-    resource:
-      name: memory
       targetAverageUtilization: 80
 ---
 apiVersion: autoscaling/v2beta1
@@ -68,12 +68,16 @@ spec:
     kind: Deployment
     name: redis-consumer
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_FIFTY
+  maxReplicas: $GPU_MAX_TIMES_ONE_HUNDRED
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80
+  - type: Object
+    object:
+      metricName: redis_consumer_key_ratio
+      target:
+        apiVersion: v1
+        kind: Namespace
+        name: redis_consumer_key_ratio
+      targetValue: 20
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -85,6 +89,28 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: zip-consumer
+  minReplicas: 1
+  maxReplicas: $GPU_MAX_TIMES_FIFTY
+  metrics:
+  - type: Object
+    object:
+      metricName: zip_consumer_key_ratio
+      target:
+        apiVersion: v1
+        kind: Namespace
+        name: zip_consumer_key_ratio
+      targetValue: 1
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: tracking-consumer
+  namespace: deepcell
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tracking-consumer
   minReplicas: 1
   maxReplicas: $GPU_MAX_TIMES_FIFTY
   metrics:
