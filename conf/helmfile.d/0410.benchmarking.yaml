@@ -29,7 +29,7 @@ releases:
     - replicas: 1
       image:
         repository: "vanvalenlab/kiosk-benchmarking"
-        tag: "0.1"
+        tag: "dev_costs"
         pullPolicy: "Always"
       env:
         REDIS_HOST: "redis-redis-ha"
@@ -51,3 +51,10 @@ releases:
         BUCKET: '{{ env "AWS_BUCKET" | default "invalid-bucket" }}'
 {{ end }}
         BUCKET_FOLDER: '{{ env "BUCKET_UPLOAD_FOLDER" | default "uploads" }}'
+        # batch environmental varaibles
+        API_HOST: "34.83.26.255"
+        FILE: {{ env "BENCHMARKING_FILE_PATH" | default "uploads/de5b2f94781154663c78dfc7a81fa813.png" }}
+        COUNT: {{ env "BENCHMARKING_FILE_NUMBER" | default "10000" }}
+        MODEL: {{ env "BENCHMARKING_MODEL_AND_VERSION" | default "watershednuclearnofgbg41f16:0" }}
+        POSTPROCESS: {{ env "BENCHMARKING_POSTPROCESSING_FUNCTION" | default "watershed" }}
+        HTTP_RETRY_BACKOFF: 60
