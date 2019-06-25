@@ -2,6 +2,8 @@
 
 Here is some documentation on the finer points of the Deepcell Kiosk. We will go over less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics, should we ever have time to actually write them up.
 
+<br></br>
+
 ### Advanced Kiosk Deployment Workflows
 The expectation is that users will usually deploy the kiosk from their personal machine. However, if you want to deploy from a Google Cloud instance (functioning as a "bastion" or "jumpbox"), or wish to install and run the kiosk from within a containing Docker container, please read on.
 
@@ -49,12 +51,13 @@ kiosk
 ```
 From here, you can configure the kiosk as usual.
 
+<br></br>
 
-### microservice architecture
+### Microservice Architecture
 
 We put a lot of thought into how to structure the Deepcell Kiosk's microservice architecture so as to most-efficiently use available cloud resources, while ensuring that impacts to performance are as minimal and transient as possible. At the end of the day, everyone wants functional and easy-to-use software and, while some researchers have plenty of money to burn, we've constructed the Deepcell Kiosk so that you don't have to.
 
-#### database conventions
+#### Database Conventions
 
 This is purely backend documentation, so it might be irrelevant to many users. However, any future developers working with this codebase might appreciate some insight into our design decisions.
 We've decided to write a hash to Redis for every image known to the cluster. In the hash, we have a variety of fields, none of which is ever modified after creation, except for the special "status" field, which acts as an indicator to the microservices in the cluster for where the image needs to be passed next.
