@@ -11,6 +11,12 @@ image:
 
 resources: {}
 
+serviceAccount:
+  create: true
+
+rbac:
+  create: true
+
 env:
   BENCHMARKING_PU_TYPE_AND_NUMBER: "specify_me"
   BENCHMARKING_PU_TYPE: "specify_me"
