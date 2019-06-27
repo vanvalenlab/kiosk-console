@@ -32,15 +32,15 @@ If you'd prefer not to install anything permanently on your machine, but also pr
 `docker build -t dind/dind .`
 If that image builds successfully, then you can just paste the following string of commands, replacing `[dind_container]` with your chosen container name, to the terminal in order to create the docker-in-docker container and get a terminal prompt inside it.
 ```
-docker stop [dind_container] && \
-docker rm [dind_container] && \
+docker stop [dind_container]; \
+docker rm [dind_container]; \
 docker run -it --privileged --name [dind_container] dind/dind
 ```
 Once inside the docker-in-docker container, you now have the ability to crate furhter Docker containers, hwich is a necessary part of kiosk installation. So, in order to install the kiosk inside the docker-in-docker container and bring up the kiosk configuration GUI, simply paste the following incomprehensible jumble of commands to the docker-indocker command line:
 ```
 apt-get update && \
 apt-get install -y make git vim && \
-git clone https://www.github.com/vanvalenlab/kios && \
+git clone https://www.github.com/vanvalenlab/kiosk && \
 cd kiosk && \
 make init && \
 git checkout master && \
