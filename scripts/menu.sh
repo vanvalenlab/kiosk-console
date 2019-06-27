@@ -333,6 +333,8 @@ If you see any fewer than 2 zones listed above, please reconfigure the cluster b
   if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
 	  return 0
   fi
+  export COMPLETE=$(inputbox "Google Cloud")
+
   export CLOUD_PROVIDER=gke
 
   # create some derivative GPU-related variables for use in autoscaling
