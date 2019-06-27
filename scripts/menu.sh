@@ -240,9 +240,6 @@ function configure_gke() {
   fi
   make gke/login
   gcloud config set project ${PROJECT}
-  dialog --msgbox "Configuration Complete!
-
-  Cluster now available for creation" 12 60
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
@@ -336,8 +333,9 @@ If you see any fewer than 2 zones listed above, please reconfigure the cluster b
   if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
 	  return 0
   fi
-  export COMPLETE=$(inputbox "Google Cloud")
+  dialog --msgbox "Configuration Complete!
 
+  Cluster now available for creation" 12 60
   export CLOUD_PROVIDER=gke
 
   # create some derivative GPU-related variables for use in autoscaling
