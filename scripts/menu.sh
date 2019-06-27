@@ -234,7 +234,6 @@ function configure_aws() {
 }
 
 function configure_gke() {
-  export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT:-invalid_default}")
   if [ "$PROJECT" = "" ]; then
 	  return 0
   fi
