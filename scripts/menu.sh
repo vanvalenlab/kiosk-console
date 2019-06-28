@@ -419,7 +419,7 @@ function ask() {
   read response
   echo "working1 "
   sleep 1
-  if [ "$response" = "y"]; then
+  if [ "$response" = "y" ]; then
     echo "hi"
     sleep 1
     return 0
