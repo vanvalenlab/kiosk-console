@@ -418,7 +418,8 @@ function ask() {
   echo "Are you sure? y/n "
   read response
   if [ "$response" = "y"]; then
-    break
+    echo "hi"
+    return 0
   fi
 }
 
