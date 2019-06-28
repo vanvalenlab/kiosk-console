@@ -408,14 +408,10 @@ function view() {
 }
 
 function ask() {
-  echo "working"
-  read -p "Are you sure? y/n" -n 1 -r
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "working2"
-    return 0
+  export CONFIRM=$(inputbox "Deepcell" "Are you sure? y/n" "${CONFIRM=y/n}")
+  if [ "$CONFIRM" = "y" ]; then
+	  return 0
   fi
-  echo "working3"
-  return 1
 }
 
 function benchmarking() {
