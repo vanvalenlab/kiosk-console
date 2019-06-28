@@ -411,6 +411,7 @@ function ask() {
   read -p "Are you sure? y/n" -n 1 -r
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
+    echo "working"
     return 0
   fi
   return 1
