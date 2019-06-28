@@ -507,7 +507,7 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") $ true && break ;;
+      "Exit") $ false || break ;;
     esac
   done
 
