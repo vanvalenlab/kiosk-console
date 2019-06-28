@@ -508,7 +508,8 @@ https://vanvalenlab.caltech.edu"
       "View") view ;;
       "Benchmark") benchmarking ;;
       "Exit"*)
-        echo ask ;;
+        ask
+        echo $? ;;
     esac
   done
 
