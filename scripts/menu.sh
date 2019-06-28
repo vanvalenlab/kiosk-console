@@ -415,11 +415,10 @@ function ask() {
 	#  local cluster_address="No current address -- no cluster has been started yet."
   #fi
   #clear
-  echo "The cluster's address is: " ${cluster_address}
+  echo "Are you sure? y/n "
   read response
-  echo "hi $response"
-  read -p "press enter to return"
-
+  if [[ "$response" = "y"]]; then
+    break
 }
 
 function benchmarking() {
