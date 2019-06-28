@@ -509,7 +509,9 @@ https://vanvalenlab.caltech.edu"
       "Benchmark") benchmarking ;;
       "Exit"*)
         ask
-        echo $?
+        if [ $? = 0 ]; then
+          break
+        fi
         sleep 1;;
     esac
   done
