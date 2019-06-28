@@ -420,13 +420,9 @@ function ask() {
   echo "working1 "
   sleep 1
   if [ "$response" = "y" ]; then
-    echo "hi"
-    sleep 1
-    return 0
+    return $true
   fi
-  echo "working2"
-  sleep 1
-  return 1
+  return $false
 }
 
 function benchmarking() {
