@@ -419,6 +419,7 @@ function ask() {
   read response
   if [ "$response" = "y"]; then
     break
+  fi
 }
 
 function benchmarking() {
