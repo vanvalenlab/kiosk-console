@@ -408,13 +408,15 @@ function view() {
 }
 
 function ask() {
-  echo "working"
-  export CONFIRM=$(inputbox "Deepcell" "Are you sure? y/n" "${CONFIRM=y/n}")
-  echo "working2" ${CONFIRM}
-  if [ "$CONFIRM" = "y" ]; then
-    return 0
+  local title="Deepcell Cluster Address"
+  if [ -f ./cluster_address ]; then
+	  local cluster_address=$(cat ./cluster_address | sed 's/export CLUSTER_ADDRESS=\([[:graph:]]\+\)/\1/')
+  else
+	  local cluster_address="No current address -- no cluster has been started yet."
   fi
-
+  clear
+  echo "The cluster's address is: " ${cluster_address}
+  read -p "Press enter to return to main menu"
 }
 
 function benchmarking() {
