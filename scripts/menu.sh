@@ -406,6 +406,13 @@ function view() {
   echo "The cluster's address is: " ${cluster_address}
   read -p "Press enter to return to main menu"
 }
+function end() {
+  read -p "Are you sure? " -n 1 -r
+  if [[ $REPLY =~ ^[Yy]$ ]]
+  then
+    break
+  fi
+}
 
 function benchmarking() {
   local benchmark_types="1-image,1-CPU _ ON
@@ -486,12 +493,7 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit")
-      read -p "Are you sure? Y/N " -n 1 -r
-      if [[ $REPLY =~ ^[Yy]$ ]]
-      then
-        break ;;
-      fi
+      "Exit") end ;;
     esac
   done
 
