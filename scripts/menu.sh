@@ -410,8 +410,10 @@ function view() {
 function ask() {
   export CONFIRM=$(inputbox "Deepcell" "Are you sure? y/n" "${CONFIRM=y/n}")
   if [ "$CONFIRM" = "y" ]; then
+    echo "working"
 	  return 0
   fi
+  echo "wat"
 }
 
 function benchmarking() {
@@ -493,7 +495,7 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") (ask && break) ;;
+      "Exit") (ask && break) || break ;;
     esac
   done
 
