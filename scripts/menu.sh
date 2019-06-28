@@ -417,14 +417,9 @@ function ask() {
   #clear
   echo "Are you sure? y/n "
   read response
-  echo $response
   if [ $response = "y" ]; then
-    echo "working2"
-    sleep 0.25
     return 0
   fi
-  echo "working3"
-  sleep 0.25
   return 1
 }
 
@@ -511,8 +506,7 @@ https://vanvalenlab.caltech.edu"
         ask
         if [ $? = 0 ]; then
           break
-        fi
-        sleep 1;;
+        fi;;
     esac
   done
 
