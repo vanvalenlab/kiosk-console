@@ -241,11 +241,12 @@ function configure_gke() {
   make gke/login
   gcloud config set project ${PROJECT}
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
+  read -r -p "Are You Sure? [Y/n] "
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET:-invalid_default}")
+  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name (needs to be a unique name)" "${GKE_BUCKET:-invalid_default}")
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
