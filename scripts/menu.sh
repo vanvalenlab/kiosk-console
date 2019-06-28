@@ -410,7 +410,7 @@ function view() {
 function ask() {
   echo "working"
   export CONFIRM=$(inputbox "Deepcell" "Are you sure? y/n" "${CONFIRM=y/n}")
-  echo "working2"
+  echo "working2" ${CONFIRM}
   if [ "$CONFIRM" = "y" ]; then
     return 0
   fi
