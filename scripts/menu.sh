@@ -493,7 +493,8 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") end ;;
+      "Exit"*)
+      end ;;
     esac
   done
 
