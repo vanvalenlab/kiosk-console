@@ -421,11 +421,11 @@ function ask() {
   if [ $response = "y" ]; then
     echo "working2"
     sleep 0.25
-    return $false
+    return 0
   fi
   echo "working3"
   sleep 0.25
-  return $true
+  return 1
 }
 
 function benchmarking() {
