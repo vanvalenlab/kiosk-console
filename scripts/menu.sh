@@ -416,7 +416,10 @@ function ask() {
   #fi
   #clear
   echo "The cluster's address is: " ${cluster_address}
-  read -p "Press enter to return to main menu"
+  read response
+  echo "hi $response"
+  read -p "press enter to return"
+
 }
 
 function benchmarking() {
