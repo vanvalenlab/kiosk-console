@@ -508,8 +508,7 @@ https://vanvalenlab.caltech.edu"
       "View") view ;;
       "Benchmark") benchmarking ;;
       "Exit"*)
-        echo "working"
-        ask ;;
+        echo ask ;;
     esac
   done
 
