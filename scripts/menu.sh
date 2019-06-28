@@ -406,12 +406,6 @@ function view() {
   echo "The cluster's address is: " ${cluster_address}
   read -p "Press enter to return to main menu"
 }
-function leave() {
-  confirm
-  if [ $? = 0 ]; then
-    break
-  fi
-}
 
 function confirm() {
   echo "Are you sure? y/n "
@@ -501,7 +495,11 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") leave ;;
+      "Exit"*)
+        confirm
+        if [ $? = 0 ]; then
+          break
+        fi;;
     esac
   done
 
