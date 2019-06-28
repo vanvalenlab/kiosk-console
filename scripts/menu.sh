@@ -406,12 +406,14 @@ function view() {
   echo "The cluster's address is: " ${cluster_address}
   read -p "Press enter to return to main menu"
 }
-function end() {
-  read -p "Are you sure? " -n 1 -r
+
+function ask() {
+  read -p "Are you sure? y/n" -n 1 -r
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    break
+    return 0
   fi
+  return 1
 }
 
 function benchmarking() {
@@ -493,8 +495,7 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit"*)
-      end ;;
+      "Exit") (ask && break) ;;
     esac
   done
 
