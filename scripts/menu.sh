@@ -418,10 +418,13 @@ function ask() {
   echo "Are you sure? y/n "
   read response
   echo "working1 "
-  sleep 1
   if [ "$response" = "y" ]; then
+    echo "working2"
+    sleep 0.25
     return $true
   fi
+  echo "working3"
+  sleep 0.25
   return $false
 }
 
