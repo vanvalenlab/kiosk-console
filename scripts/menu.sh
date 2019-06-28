@@ -417,10 +417,13 @@ function ask() {
   #clear
   echo "Are you sure? y/n "
   read response
+  echo "working1 "
   if [ "$response" = "y"]; then
     echo "hi"
     return 0
   fi
+  echo "working2"
+  return 1
 }
 
 function benchmarking() {
