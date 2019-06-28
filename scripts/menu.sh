@@ -414,6 +414,7 @@ function ask() {
   if [ "$CONFIRM" = "y" ]; then
     return 0
   fi
+
 }
 
 function benchmarking() {
@@ -496,7 +497,6 @@ https://vanvalenlab.caltech.edu"
       "View") view ;;
       "Benchmark") benchmarking ;;
       "Exit") (ask && break) || break ;;
-      }
     esac
   done
 
