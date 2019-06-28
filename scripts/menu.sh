@@ -417,7 +417,7 @@ function ask() {
   #clear
   echo "Are you sure? y/n "
   read response
-  if [[ "$response" = "y"]]; then
+  if [ "$response" = "y"]; then
     break
 }
 
