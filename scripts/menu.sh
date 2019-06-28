@@ -418,11 +418,14 @@ function ask() {
   echo "Are you sure? y/n "
   read response
   echo "working1 "
+  sleep 1
   if [ "$response" = "y"]; then
     echo "hi"
+    sleep 1
     return 0
   fi
   echo "working2"
+  sleep 1
   return 1
 }
 
@@ -505,7 +508,7 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") (ask && break) ;;
+      "Exit") (ask && break) || break;;
     esac
   done
 
