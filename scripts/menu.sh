@@ -48,7 +48,7 @@ function largeinputbox() {
   local label=$2
   local default=$3
   local w=${4:-60}
-  local h=${5:-12}
+  local h=${5:-13}
   shift
   value=$(dialog --title "$title" \
             --inputbox "$label" "$h" "$w" "$default" \
@@ -261,7 +261,7 @@ function configure_gke() {
   fi
   export GKE_BUCKET=$(largeinputbox "Deepcell" "Bucket Name
 
-  The bucket should be an existing unique bucket on google cloud. It acts as a storage area for models and files
+  The bucket should be a unique existing bucket on google cloud. It acts as a storage area for models and files
   If you do not have one, first create a bucket under storage on google cloud"
   "${GKE_BUCKET:-untitled cloud storage}")
   if [ "$GKE_BUCKET" = "" ]; then
