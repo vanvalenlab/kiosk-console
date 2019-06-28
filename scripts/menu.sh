@@ -509,7 +509,8 @@ https://vanvalenlab.caltech.edu"
       "Benchmark") benchmarking ;;
       "Exit"*)
         ask
-        echo $? ;;
+        echo $?
+        sleep 1;;
     esac
   done
 
