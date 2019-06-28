@@ -486,7 +486,12 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") break ;;
+      "Exit")
+      read -p "Are you sure? Y/N " -n 1 -r
+      if [[ $REPLY =~ ^[Yy]$ ]]
+      then
+        break ;;
+      fi
     esac
   done
 
