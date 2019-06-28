@@ -421,11 +421,11 @@ function ask() {
   if [ "$response" = "y" ]; then
     echo "working2"
     sleep 0.25
-    return $true
+    return $false
   fi
   echo "working3"
   sleep 0.25
-  return $false
+  return $true
 }
 
 function benchmarking() {
@@ -507,7 +507,7 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") $ false || break ;;
+      "Exit") break || ask ;;
     esac
   done
 
