@@ -507,7 +507,7 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") break || ask ;;
+      "Exit") echo ask ;;
     esac
   done
 
