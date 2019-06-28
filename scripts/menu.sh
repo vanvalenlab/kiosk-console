@@ -409,11 +409,13 @@ function view() {
 
 function ask() {
   read -p "Are you sure? y/n" -n 1 -r
+  echo "working1"
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    echo "working"
+    echo "working2"
     return 0
   fi
+  echo "working3"
   return 1
 }
 
