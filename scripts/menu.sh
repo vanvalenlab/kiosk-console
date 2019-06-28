@@ -42,6 +42,20 @@ function inputbox() {
             --output-fd 1)
   echo $value
 }
+function largeinputbox() {
+  local value
+  local title=$1
+  local label=$2
+  local default=$3
+  local w=${4:-60}
+  local h=${5:-15}
+  shift
+  value=$(dialog --title "$title" \
+            --inputbox "$label" "$h" "$w" "$default" \
+            --backtitle "${BRAND}" \
+            --output-fd 1)
+  echo $value
+}
 
 function radiobox() {
   local value
@@ -245,7 +259,7 @@ function configure_gke() {
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name
+  export GKE_BUCKET=$(largeinputbox "Deepcell" "Bucket Name
   The bucket should be an existing unique bucket on google cloud. It acts as a storage area for models and files"
   "${GKE_BUCKET:-untitled cloud storage}")
   if [ "$GKE_BUCKET" = "" ]; then
