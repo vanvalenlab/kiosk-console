@@ -48,7 +48,7 @@ function largeinputbox() {
   local label=$2
   local default=$3
   local w=${4:-60}
-  local h=${5:-15}
+  local h=${5:-12}
   shift
   value=$(dialog --title "$title" \
             --inputbox "$label" "$h" "$w" "$default" \
