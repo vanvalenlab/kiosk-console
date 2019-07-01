@@ -315,10 +315,10 @@ function configure_gke() {
   local base_box_height=7
   local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
   local total_lines=$(($base_box_height + $selector_box_lines))
-  export PREDICTION_GPU_TYPE=$(largeradiobox "Google Cloud" \
+  export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for prediction (not training) from the GPU types available in your region:
       Click space to choose and enter to continue" \
-	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+	  $total_lines 60 $selector_box_lines "$gpus_with_default" \ -20) #supposed to be -12
 
   export TRAINING_GPU_TYPE=$(largeradiobox "Google Cloud" \
       "Choose a GPU for training (not prediction) from the GPU types available in your region:
