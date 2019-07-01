@@ -265,7 +265,7 @@ function configure_gke() {
   export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name
 
   The bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more.
-  If you do not have one, first create a bucket under storage on google cloud" "${GKE_BUCKET:-invalid_default}" -60 -13)
+  If you do not have one, first create a bucket under storage on google cloud" "${GKE_BUCKET:-invalid_default}"-20)# -60 -13
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
@@ -304,7 +304,7 @@ function configure_gke() {
   export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for prediction (not training) from the GPU types available in your region:
       Click space to choose and enter to continue" \
-	  $total_lines 60 $selector_box_lines "$gpus_with_default" -40) #supposed to be -12
+	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
   export TRAINING_GPU_TYPE=$(largeradiobox "Google Cloud" \
       "Choose a GPU for training (not prediction) from the GPU types available in your region:
