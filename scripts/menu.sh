@@ -323,7 +323,7 @@ function configure_gke() {
   export TRAINING_GPU_TYPE=$(largeradiobox "Google Cloud" \
       "Choose a GPU for training (not prediction) from the GPU types available in your region:
       Click space to choose and enter to continue" \
-	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+	  $total_lines 60 $selector_box_lines "$gpus_with_default" \ "-80")
 
   local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
   local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
