@@ -245,7 +245,7 @@ function configure_gke() {
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET:-invalid_default}" -60 -13)
+  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET:-invalid_default}" 60 13)
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
