@@ -60,23 +60,6 @@ function radiobox() {
             --output-fd 1)
   echo $value
 }
-function largeradiobox() {
-  local value
-  local title=$1
-  local label=$2
-  local h=${3:-30}
-  local w=${4:-60}
-  local menu_h=${5:-3}
-  local text_fields=$6
-  IFS=$'\n' read -r -a gpu_array <<< "$text_fields"
-  shift
-  value=$(dialog --title "$title" \
-            --radiolist "$label" "$h" "$w" "$menu_h" \
-	    	$text_fields \
-            --backtitle "${BRAND}" \
-            --output-fd 1)
-  echo $value
-}
 
 function infobox() {
   local message="$1"
@@ -306,7 +289,7 @@ function configure_gke() {
       Click space to choose and enter to continue" \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
-  export TRAINING_GPU_TYPE=$(largeradiobox "Google Cloud" \
+  export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for training (not prediction) from the GPU types available in your region:
       Click space to choose and enter to continue" \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
