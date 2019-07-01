@@ -24,7 +24,7 @@ releases:
     default: "false"
   chart: "stable/nginx-ingress"
   version: "0.24.0"
-  wait: true
+  #wait: true
   values:
     - controller:
         ### Optional: NGINX_INGRESS_CONTROLLER_REPLICA_COUNT; e.g. 2
