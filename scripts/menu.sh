@@ -247,7 +247,7 @@ function configure_gke() {
   fi
   export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name
   The bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more.
-  If you do not have one, first create a bucket under storage on google cloud" "${GKE_BUCKET:-invalid_default}" -20 -8)
+  If you do not have one, first create a bucket under storage on google cloud" "${GKE_BUCKET:-invalid_default}" -1 -1)
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
