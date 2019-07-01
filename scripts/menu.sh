@@ -42,20 +42,6 @@ function inputbox() {
             --output-fd 1)
   echo $value
 }
-function largeinputbox() {
-  local value
-  local title=$1
-  local label=$2
-  local default=$3
-  local w=${4:-60}
-  local h=${5:-13}
-  shift
-  value=$(dialog --title "$title" \
-            --inputbox "$label" "$h" "$w" "$default" \
-            --backtitle "${BRAND}" \
-            --output-fd 1)
-  echo $value
-}
 
 function radiobox() {
   local value
@@ -78,7 +64,7 @@ function largeradiobox() {
   local value
   local title=$1
   local label=$2
-  local h=${3:-12}
+  local h=${3:-30}
   local w=${4:-60}
   local menu_h=${5:-3}
   local text_fields=$6
@@ -265,7 +251,7 @@ function configure_aws() {
 }
 
 function configure_gke() {
-  export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT:-invalid_default}" -90 -40)
+  export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT:-invalid_default}")
   if [ "$PROJECT" = "" ]; then
 	  return 0
   fi
@@ -276,10 +262,10 @@ function configure_gke() {
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(largeinputbox "Deepcell" "Bucket Name
+  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name
 
   The bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more.
-  If you do not have one, first create a bucket under storage on google cloud" "${GKE_BUCKET:-invalid_default}")
+  If you do not have one, first create a bucket under storage on google cloud" "${GKE_BUCKET:-invalid_default}" -60 -13)
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
@@ -323,7 +309,7 @@ function configure_gke() {
   export TRAINING_GPU_TYPE=$(largeradiobox "Google Cloud" \
       "Choose a GPU for training (not prediction) from the GPU types available in your region:
       Click space to choose and enter to continue" \
-	  $total_lines 60 $selector_box_lines "$gpus_with_default" -30)
+	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
   local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
   local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
