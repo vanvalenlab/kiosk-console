@@ -44,8 +44,8 @@ releases:
         #   memory: 1024Mi
 
       env:
-        REDIS_HOST: "redis-master"
-        REDIS_PORT: "6379"
+        REDIS_HOST: "redis"
+        REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
         TF_PORT: "8500"
         DP_HOST: "data-processing"

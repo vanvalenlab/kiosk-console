@@ -32,8 +32,8 @@ releases:
         tag: "0.1"
         pullPolicy: "Always"
       env:
-        REDIS_HOST: "redis-master"
-        REDIS_PORT: "6379"
+        REDIS_HOST: "redis"
+        REDIS_PORT: "26379"
         BENCHMARKING_PU_TYPE_AND_NUMBER: '{{ env "BENCHMARKING_PU_TYPE_AND_NUMBER" | default "NA" }}'
         BENCHMARKING_PU_TYPE: '{{ env "BENCHMARKING_PU_TYPE" | default "NA" }}'
         IMG_NUM: '{{ env "IMG_NUM" | default "0" }}'
