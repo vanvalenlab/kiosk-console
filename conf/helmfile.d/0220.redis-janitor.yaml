@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-janitor"
-        tag: "0.1"
+        tag: "redis-cluster"
         pullPolicy: "Always"
 
       serviceAccount:
