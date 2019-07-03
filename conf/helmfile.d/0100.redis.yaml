@@ -10,25 +10,39 @@ helmDefaults:
 ################################################################################
 
 repositories:
- # Stable repo of official helm charts
- - name: "stable"
-   url: "https://kubernetes-charts.storage.googleapis.com"
+  # Stable repo of official helm charts
+  - name: "stable"
+    url: "https://kubernetes-charts.storage.googleapis.com"
 releases:
- # Redis
- - name: "redis"
-   labels:
-     chart: "redis"
-     component: "database"
-   chart: "stable/redis"
-   version: "3.0.5"
-   namespace: "deepcell"
-   set:
-     - name: "usePassword"
-       value: "false"
-     - name: "cluster.enabled"
-       value: "false"
-   values:
-     - resources:
-         requests:
-           cpu: 200m
-           memory: 256Mi
+  # Redis
+  - name: "redis"
+    labels:
+      chart: "redis"
+      component: "database"
+    chart: "stable/redis"
+    version: "8.0.16"
+    namespace: "deepcell"
+    values:
+      - resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+
+        usePassword: false
+
+        cluster:
+          enabled: true
+
+        sentinel:
+          enabled: true
+
+        sysctlImage:
+          enabled: true
+          mountHostSys: true
+          command:
+            - /bin/sh
+            - -c
+            - |-
+              install_packages systemd
+              sysctl -w net.core.somaxconn=10000
+              echo never > /host-sys/kernel/mm/transparent_hugepage/enabled
