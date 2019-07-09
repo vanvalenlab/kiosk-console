@@ -1,8 +1,36 @@
 ## Advanced Documentation
 
-Here is some documentation on the finer points of the Deepcell Kiosk. We will go over less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics, should we ever have time to actually write them up.
+Here is some documentation on the finer points of the Deepcell Kiosk. We will go over accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics, should we ever have time to actually write them up.
 
 <br></br>
+
+### Accessing Cluster Logging and Metrics Functionality using OpenVPN
+1. After cluster startup, choose `Shell` from the main menu. On the command line, execute the following command:
+
+```bash
+POD_NAME=`kubectl get pods --namespace=kube-system -l type=openvpn | awk END'{ print $1 }'` \
+&& kubectl logs --namespace=kube-system $POD_NAME
+```
+
+If the OpenVPN pod has already deployed, you should see something like "Mon Apr 29 21:15:53 2019 Initialization Sequence Completed" somewhere in the output.
+
+2. If you see that line, then execute
+
+```bash
+POD_NAME=`kubectl get pods --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
+&& SERVICE_NAME=`kubectl get svc --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
+&& SERVICE_IP=$(kubectl get svc --namespace kube-system $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].ip}') \
+&& KEY_NAME=kubeVPN \
+&& kubectl --namespace kube-system exec -it $POD_NAME /etc/openvpn/setup/newClientCert.sh $KEY_NAME $SERVICE_IP \
+&& kubectl --namespace kube-system exec -it $POD_NAME cat /etc/openvpn/certs/pki/$KEY_NAME.ovpn > $KEY_NAME.ovpn
+```
+
+3. Then, copy the newly-generated `kubeVPN.ovpn` file onto your local machine. (You can do this either by viewing the file's contents and copy-pasting them manually, or by using a file-copying tool like SCP.)
+
+4. Next, using an OpenVPN client locally, connect to the cluster using `openvpn --config kubeVPN.ovpn` as your config file. You may need to use `sudo` if the above does not work.
+
+5. Once inside the cluster, you can connect to Kibana (logging) and Grafana (monitoring) by going to `[service_IP]:[service_port]` for the relevant service from any web browser on your local machine. (To view the service ports and IPs, execute the command `kubectl get svc --all-namespaces` from the kiosk's command line.)
+
 
 ### Advanced Kiosk Deployment Workflows
 The expectation is that users will usually deploy the kiosk from their personal machine. However, if you want to deploy from a Google Cloud instance (functioning as a "bastion" or "jumpbox"), or wish to install and run the kiosk from within a containing Docker container, please read on.
@@ -67,6 +95,20 @@ We've decided to write a hash to Redis for every image known to the cluster. In 
 - not using a queue currently, partly to help debug failures, partly to accord with our own tendency towards indolence
 
 
+### Recovering from Failed Kiosk Creations or Destructions
+
+We developers have certainly run into situations where kiosks fail to deploy: you fill out all the configuration paramters correctly, hit `CREATE`, wait, and just watch the error messages roll in. Worse yet, maybe your cluster deployed just fine, but when it came time to destroy it, something went wrong and now you have all these cloud resources eating up your money and you can't even get to them through the kiosk anymore! Both of these situations, failed cluster deployment and failed cluster destruction after deployment, can be the result of any number of issues. We won't (and couldn't possibly) go into all of them here. Our goal is to tell you how to remove all the cloud resources your cluster is using, so that you won't end up unknowingly leaking money.
+
+#### Google Cloud (Google Kubernetes Engine)
+
+The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. In our experience, if a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand:
+
+1. Kubernetes cluster (Remember the cluster name for the following steps. This will delete most of the resources and the next steps will clean up the remainders.)
+2. any Firewall Rules associated with your cluster (They will contain at least part of the cluster name in their names.)
+3. any LoadBalancers associated with your cluster (They will contain at least part of the cluster name in their names.)
+4. any Target Pools associated with your cluster (They will contain at least part of the cluster name in their names.)
+
+While we hope this list is comprehensive, there could be some lingering resources used by Google Cloud and not deleted automatically that we're not aware of.
 
 
 ### TODO
