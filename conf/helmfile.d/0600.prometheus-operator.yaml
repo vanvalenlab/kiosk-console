@@ -92,12 +92,12 @@ releases:
                 namespace: deepcell
                 service: tf-serving-scaling-service
             - record: redis_consumer_key_ratio
-              expr: '(avg_over_time(redis_script_value{key="image_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[1m]) + 1))'
+              expr: '(avg_over_time(redis_script_value{key="predict_image_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[1m]) + 1))'
               labels:
                 namespace: deepcell
                 service: redis-scaling-service
             - record: zip_consumer_key_ratio
-              expr: '(avg_over_time(redis_script_value{key="zip_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[1m]) + 1))'
+              expr: '(avg_over_time(redis_script_value{key="predict_zip_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[1m]) + 1))'
               labels:
                 namespace: deepcell
                 service: zip-scaling-service
