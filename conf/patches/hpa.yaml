@@ -32,7 +32,7 @@ spec:
     kind: Deployment
     name: data-processing
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_TEN
+  maxReplicas: $GPU_MAX_TIMES_TWENTY
   metrics:
   - type: Resource
     resource:
