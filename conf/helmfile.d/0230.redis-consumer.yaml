@@ -48,7 +48,7 @@ releases:
         TF_PORT: 8500
         DP_HOST: data-processing
         DP_PORT: 8080
-        GRPC_TIMEOUT: 15
+        GRPC_TIMEOUT: 20
         DEBUG: True
         INTERVAL: 1
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
