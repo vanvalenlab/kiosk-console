@@ -15,13 +15,13 @@ repositories:
     url: "https://kubernetes-charts.storage.googleapis.com"
 releases:
   # Redis
-  - name: "redis"
+  - name: redis
     labels:
-      chart: "redis"
-      component: "database"
-    chart: "stable/redis"
-    version: "8.1.1"
-    namespace: "deepcell"
+      chart: redis
+      component: database
+    chart: stable/redis
+    version: 8.1.5
+    namespace: deepcell
     values:
       - resources:
           requests:
@@ -32,6 +32,7 @@ releases:
 
         cluster:
           enabled: true
+          slaveCount: 2
 
         sentinel:
           enabled: true
