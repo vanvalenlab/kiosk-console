@@ -93,11 +93,17 @@ releases:
                 service: tf-serving-scaling-service
             - record: redis_consumer_key_ratio
               expr: |-
-                ((100 - avg_over_time(avg_gpu_usage[1m]))/100)
-                < on()
-                clamp_max((avg_over_time(redis_script_value{key="predict_image_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[1m])*100)), 1)
-                or
-                clamp_max((avg_over_time(redis_script_value{key="predict_image_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[1m])*100)), 1)
+                (
+                  (100 - avg_over_time(avg_gpu_usage[1m])) / 100
+                  < on()
+                  clamp_max((avg_over_time(redis_script_value{key="predict_image_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[1m])*100)), 1)
+                  or
+                  clamp_max((avg_over_time(redis_script_value{key="predict_image_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[1m])*100)), 1)
+                )
+                * on()
+                (
+                  clamp_max(clamp_min(avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[1m]), 0), 1)
+                )
               labels:
                 namespace: deepcell
                 service: redis-scaling-service
