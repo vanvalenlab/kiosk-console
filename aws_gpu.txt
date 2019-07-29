@@ -1,0 +1,10 @@
+p2.xlarge      1GPU
+p2.8xlarge    8GPUs
+p2.16xlarge  16GPUs
+p3.2xlarge    1GPU
+p3.8xlarge    4GPUs
+p3.16xlarge  8GPUs
+g3.xlarge      1GPU
+g3.4xlarge    1GPU
+g3.8xlarge    2GPUs
+g3.16xlarge  4GPUs

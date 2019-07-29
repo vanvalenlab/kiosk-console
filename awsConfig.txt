@@ -1,0 +1,9 @@
+Access Key ID:invalid_defaults
+AWS Secret Key:invalid_defaults
+AWS S3 Bucket Name:invalid_defaults
+Cluster Name:deepcell-aws-cluster
+Master Node Machine Type:t2.medium
+Worker Node Machine Type:t2.medium
+GPU Instance Type:p2.xlarge      1GPU
+Minimum number of GPU Instances:0
+Maximum number of GPU Instances:4
