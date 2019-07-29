@@ -103,6 +103,8 @@ releases:
                 * on()
                 (
                   clamp_max(clamp_min(avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[1m]), 0), 1)
+                  or on()
+                  up{service="kubernetes"} * on() 0
                 )
               labels:
                 namespace: deepcell
