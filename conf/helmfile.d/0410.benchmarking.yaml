@@ -36,7 +36,7 @@ releases:
         GRAFANA_PASSWORD: prom-operator
         GRAFANA_HOST: prometheus-operator-grafana.monitoring.svc.cluster.local
         LOG_LEVEL: DEBUG
-        API_HOST: frontend:80
+        API_HOST: '{{ env "CLUSTER_ADDRESS" | default "frontend" }}'
         FILE: zip100.zip
         COUNT: 10000
         MODEL: watershednuclearnofgbg41f16:0
