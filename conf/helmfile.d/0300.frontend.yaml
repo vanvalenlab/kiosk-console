@@ -15,23 +15,23 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "frontend"
-  namespace: "deepcell"
+- name: frontend
+  namespace: deepcell
   labels:
-    chart: "frontend"
-    component: "deepcell"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
-    default: "true"
+    chart: frontend
+    component: deepcell
+    namespace: deepcell
+    vendor: vanvalenlab
+    default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend'
-  version: "0.1.0"
+  version: 0.1.0
   values:
     - replicas: 1
 
       image:
-        repository: "vanvalenlab/kiosk-frontend"
-        tag: "redis-cluster"
-        pullPolicy: "Always"
+        repository: vanvalenlab/kiosk-frontend
+        tag: 0.2
+        pullPolicy: Always
 
       resources:
         requests:
@@ -64,9 +64,9 @@ releases:
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
 
       env:
-        PORT: "8080"
-        REDIS_HOST: "redis"
-        REDIS_PORT: "26379"
+        PORT: 8080
+        REDIS_HOST: redis
+        REDIS_PORT: 26379
         REDIS_SENTINEL: true
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
