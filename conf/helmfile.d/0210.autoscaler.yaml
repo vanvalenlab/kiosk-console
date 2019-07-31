@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-autoscaler"
-        tag: "redis-cluster"
+        tag: "0.2"
         pullPolicy: "Always"
 
       serviceAccount:
