@@ -55,3 +55,13 @@ COPY rootfs/ /
 RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/99.menu.sh
 
 WORKDIR /conf/
+
+RUN apk update
+
+RUN apk add python3
+
+RUN echo manylinux1_compatible = True > /usr/lib/python3.6/site-packages/_manylinux.py
+
+RUN python3 -c 'import sys; sys.path.append(r"/_manylinux.py")'
+
+RUN pip3 install PyQt5
