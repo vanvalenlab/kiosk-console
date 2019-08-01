@@ -65,5 +65,3 @@ RUN echo manylinux1_compatible = True > /usr/lib/python3.6/site-packages/_manyli
 RUN python3 -c 'import sys; sys.path.append(r"/_manylinux.py")'
 
 RUN pip3 install PyQt5
-
-RUN apk add py3-qt5
