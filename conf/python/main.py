@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 import subprocess
 import sys
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
-import pyperclip
+from PyQt5 import QtWidgets
 import startScreen
 import mainMenu
 import inputs
@@ -14,7 +12,7 @@ import url
 import text
 GKE_STATE = 0
 AWS_STATE = 0
-AWS_CONFIGURED = True
+AWS_CONFIGURED = False
 GKE_CONFIGURED = False
 GKE_GPU_LIST = []
 GKE_REGIONS_LIST = []
