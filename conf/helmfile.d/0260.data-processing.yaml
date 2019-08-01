@@ -65,7 +65,7 @@ releases:
           memory: 1.5Gi
         limits:
           cpu: 2
-          # memory: 3Gi
+          memory: 3Gi
 
       env:
         LISTEN_PORT: 8080
