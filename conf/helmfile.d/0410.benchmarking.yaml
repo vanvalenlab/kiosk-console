@@ -39,6 +39,8 @@ releases:
           memory: 128Mi
 
       env:
+        NUM_CYCLES: 1
+        NUM_GPUS: '{{ env "GPU_NODE_MAX_SIZE" | default "MIA" }}'
         GRAFANA_USER: admin
         GRAFANA_PASSWORD: prom-operator
         GRAFANA_HOST: prometheus-operator-grafana.monitoring.svc.cluster.local
