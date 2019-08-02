@@ -33,6 +33,11 @@ releases:
         tag: 0.1
         pullPolicy: Always
 
+      resources:
+        requests:
+          cpu: 250m
+          memory: 128Mi
+
       env:
         GRAFANA_USER: admin
         GRAFANA_PASSWORD: prom-operator
