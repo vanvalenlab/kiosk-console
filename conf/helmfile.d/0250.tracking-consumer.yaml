@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.2"
+        tag: "redis-cluster"
         pullPolicy: "Always"
 
       nameOverride: "tracking-consumer"
