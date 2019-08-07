@@ -104,6 +104,14 @@ releases:
                 namespace: deepcell
                 service: tf-serving-running-service
             - record: redis_consumer_key_ratio
+              # COMPLICATED scaling metric that prevents too many consumers
+              # per GPU.  If too many consumers, scale down slightly.
+              # Structural outline follows:
+              # (
+              #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
+              #   +
+              #   .9 * target * is_too_many_consumers)
+              # ) * is_tf_up
               expr: |-
                 (
                   (
