@@ -107,7 +107,7 @@ releases:
               expr: |-
                 (
                   (
-                    (100 - avg_over_time(avg_gpu_usage[1m])) / 100
+                    (100 - tf_serving_scale_metric) / 100
                     < on()
                     clamp_max((avg_over_time(redis_script_value{key="predict_image_keys"}[1m]) / on() (avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m])*100)), 1)
                     or
