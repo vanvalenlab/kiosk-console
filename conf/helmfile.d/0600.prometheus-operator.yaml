@@ -109,49 +109,67 @@ releases:
                   (
                     (100 - tf_serving_scale_metric) / 100
                     < on()
-                    clamp_max((avg_over_time(redis_script_value{key="predict_image_keys"}[1m]) / on() (avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m])*100)), 1)
+                    clamp_max(
+                      (
+                        avg_over_time(redis_script_value{key="predict_image_keys"}[1m])
+                        / on()
+                        (
+                          avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m])
+                          *
+                          100
+                        )
+                      )
+                    , 1)
                     or
-                    clamp_max((avg_over_time(redis_script_value{key="predict_image_keys"}[1m]) / on() (avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m])*100)), 1)
+                    clamp_max(
+                      (
+                        avg_over_time(redis_script_value{key="predict_image_keys"}[1m])
+                        / on()
+                        (
+                          avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m])
+                          *
+                          100
+                        )
+                      )
+                    , 1)
                   )
                   * on()
                   (
-                    clamp_max(clamp_min(avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[1m]), 0), 1)
-                    or on()
-                    up{service="kubernetes"} * on() 0
+                    clamp_max(
+                      clamp_min(
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m])
+                      , 0)
+                      / on()
+                      clamp_min(
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[1m])
+                      , 1)
+                      < on()
+                      150
+                      or on()
+                      up{service="kubernetes"} * on() 0
+                    , 1)
+                  )
+                  + on()
+                  (
+                    clamp_max(
+                      clamp_min(
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m])
+                      , 0)
+                      / on()
+                      clamp_min(
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[1m])
+                      , 0)
+                      > on()
+                      150
+                      or on()
+                      up{service="kubernetes"} * on() 0
+                    , 1)
+                    * on()
+                    .9 * .15
                   )
                 )
                 * on()
-                (
-                  clamp_max(
-                    clamp_min(avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m]), 0)
-                    / on()
-                    clamp_min(avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[1m]), 0)
-                    < on()
-                    150
-                    or on()
-                    up{service="kubernetes"} * on() 0
-                  , 1)
-                )
-                + on()
-                (
-                  clamp_max(
-                    clamp_min(avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[1m]), 0)
-                    / on()
-                    clamp_min(avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[1m]), 0)
-                    >= on()
-                    150
-                    or on()
-                    up{service="kubernetes"} * on() 0
-                  , 1)
-                  * on()
-                  .9 * .15
-                  * on()
-                  (
-                    clamp_max(clamp_min(avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[1m]), 0), 1)
-                    or on()
-                    up{service="kubernetes"} * on() 0
-                  )
-                )
+                tf_serving_running_pods
               labels:
                 namespace: deepcell
                 service: redis-scaling-service
