@@ -143,7 +143,7 @@ releases:
                       clamp_min(
                         avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[15s])
                       , 1)
-                      < on()
+                      <= on()
                       150
                       or on()
                       up{service="kubernetes"} * on() 0
