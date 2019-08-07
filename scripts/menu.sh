@@ -245,9 +245,8 @@ function configure_gke() {
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name
-  The bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more.
-  If you do not have one, first create a bucket under storage on google cloud" "${GKE_BUCKET:-invalid_default}" 60 13)
+  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name:\nThe bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more. \nIf you do not have one, first create a bucket under storage on google cloud." "${GKE_BUCKET:-invalid_default}" 60 13)
+
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
@@ -258,8 +257,7 @@ function configure_gke() {
   local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
   local total_lines=$(($base_box_height + $selector_box_lines))
   export GKE_COMPUTE_REGION=$(radiobox "Google Cloud" \
-      "Choose a region for hosting your cluster:
-      Click space to choose and enter to continue" \
+      "Choose a region for hosting your cluster: \nPress the spacebar to select and Enter to continue" \
 	  $total_lines 60 $selector_box_lines "$regions_with_default")
   if [ "$GKE_COMPUTE_REGION" = "" ]; then
 	  return 0
@@ -284,14 +282,12 @@ function configure_gke() {
   local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
   local total_lines=$(($base_box_height + $selector_box_lines))
   export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
-    "Choose a GPU for training (not prediction) from the GPU types available in your region:
-    Click space to choose and enter to continue" \
-	  $total_lines 60 $selector_box_lines "$gpus_with_default" 13 60)
+      "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue" \
+	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
   export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
-    "Choose a GPU for training (not prediction) from the GPU types available in your region:
-    Click space to choose and enter to continue" \
-	  $total_lines 60 $selector_box_lines "$gpus_with_default" 13 60)
+      "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue" \
+	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
   local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
   local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
@@ -319,7 +315,7 @@ function configure_gke() {
 
 $REGION_ZONES_WITH_GPUS
 
-If you see any fewer than 2 zones listed above, please reconfigure the cluster beofre deploying. Different choices of GPU(s) and/or region will be necessary."
+If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
 
   ## Maybe include these in an advanced menu?
   #export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
@@ -338,6 +334,9 @@ If you see any fewer than 2 zones listed above, please reconfigure the cluster b
   if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
 	  return 0
   fi
+  dialog --msgbox "Configuration Complete!
+
+  Cluster now available for creation" 12 60
   export CLOUD_PROVIDER=gke
 
   # create some derivative GPU-related variables for use in autoscaling
