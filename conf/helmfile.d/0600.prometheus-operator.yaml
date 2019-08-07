@@ -91,6 +91,18 @@ releases:
               labels:
                 namespace: deepcell
                 service: tf-serving-scaling-service
+            - record: tf_serving_running_pods
+              expr: |-
+                clamp_max(
+                  clamp_min(
+                    kube_deployment_status_replicas_available{deployment="tf-serving"}
+                  , 0)
+                , 1)
+                or on()
+                up{service="kubernetes"} * on() 0
+              labels:
+                namespace: deepcell
+                service: tf-serving-running-service
             - record: redis_consumer_key_ratio
               expr: |-
                 (
