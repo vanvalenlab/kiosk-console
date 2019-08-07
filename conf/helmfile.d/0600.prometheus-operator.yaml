@@ -82,12 +82,12 @@ releases:
           - name: custom-redis-metrics
             rules:
             - record: avg_gpu_usage
-              expr: 'avg(container_accelerator_duty_cycle)'
+              expr: avg(container_accelerator_duty_cycle)
               labels:
                 namespace: deepcell
                 service: gpu-average-service
             - record: tf_serving_scale_metric
-              expr: 'avg_over_time(avg_gpu_usage[1m])'
+              expr: avg_over_time(avg_gpu_usage[1m])
               labels:
                 namespace: deepcell
                 service: tf-serving-scaling-service
