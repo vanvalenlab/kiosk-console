@@ -61,6 +61,9 @@ When you're done using the cluster, you may want to shutdown the cluster, and pe
     4. Install wrapper script: `make install`
     5. Start the kiosk. `make run`
 
+## Advanced Documentation
+
+- If you'd like more insight into the internal workings of the kiosk, please consult the [Advanced Documentation](docs/ADVANCED_DOCUMENTATION.md)
 
 ## References
 - [Cluster Autoscaler for AWS](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
