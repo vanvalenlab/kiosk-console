@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-benchmarking
-        tag: 0.1
+        tag: 0.2
         pullPolicy: Always
 
       resources:
@@ -47,7 +47,7 @@ releases:
         LOG_LEVEL: INFO
         API_HOST: '{{ env "CLUSTER_ADDRESS" | default "frontend" }}'
         FILE: zip100.zip
-        COUNT: 10000
+        COUNT: 100
         MODEL: watershednuclearnofgbg41f16:0
         UPLOAD_PREFIX: uploads
         POSTPROCESS: watershed
