@@ -119,6 +119,7 @@ class InputSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
                 ok_button.clicked.connect(lambda: self.controller.make_url(
                     "Enter this into a browser, login, and copy the code", "Existing Project ID:", "GKE", "input"))
             elif GKE_STATE == 3:
+                #set_proj_id()
                 ok_button.clicked.connect(lambda: self.controller.make_input(
                     "Bucket Name:", "Cluster Name:", "invalid_default", "GKE", "input"))
             elif GKE_STATE == 4:
@@ -472,6 +473,11 @@ def read_file(filename):
         line.append(temp.replace("\n", ""))
     return line
 
+def set_proj_id():
+    config = read_file("gkeConfig.txt")
+    inputed_proj_id = parse_dict(config, "Project ID:")
+    subprocess.check_output(["./setProjValue.sh", inputed_proj_id])
+
 def get_cloud_list():
     """Returns a list of all project ID's from login"""
     cloud_output = str(subprocess.check_output(["./getCloudList.sh"]))
@@ -492,8 +498,8 @@ def get_cloud_list():
 
 def check_proj_id():
     """compares the inputed project ID to the linked email's project ID's"""
-    config = read_file("gkeConfig.txt")
     proj_id_list = get_cloud_list()
+    config = read_file("gkeConfig.txt")
     inputed_proj_id = parse_dict(config, "Project ID:")
     legit = False
     for project in proj_id_list:
