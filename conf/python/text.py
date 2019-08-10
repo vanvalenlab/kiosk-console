@@ -39,6 +39,13 @@ class Ui_MainWindow(object):
             self.continue_button = QtWidgets.QPushButton(self.centralWidget)
             self.continue_button.setObjectName("continue_button")
             self.gridLayout.addWidget(self.continue_button, 1, 3, 1, 1)
+        elif type == "choosing":
+            self.continue_button = QtWidgets.QPushButton(self.centralWidget)
+            self.continue_button.setObjectName("continue_button")
+            self.gridLayout.addWidget(self.continue_button, 1, 3, 1, 1)
+            self.continue_button2 = QtWidgets.QPushButton(self.centralWidget)
+            self.continue_button2.setObjectName("continue_button")
+            self.gridLayout.addWidget(self.continue_button2, 1, 4, 1, 1)
         self.text_message = QtWidgets.QTextBrowser(self.centralWidget)
         self.text_message.setObjectName("text_message")
         self.gridLayout.addWidget(self.text_message, 0, 0, 1, 5)
@@ -73,6 +80,11 @@ class Ui_MainWindow(object):
         elif type == "text":
             self.back_button.setText(_translate("MainWindow", "Cancel"))
             self.continue_button.setText(_translate("MainWindow", "OK"))
+        elif type == "choosing":
+            self.back_button.setText(_translate("MainWindow", "Cancel"))
+            self.continue_button.setText(_translate("MainWindow", "AWS"))
+            self.continue_button2.setText(_translate("MainWindow", "GKE"))
+
         self.text_message.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -94,3 +106,6 @@ f"{text}"))
 
     def get_next(self):
         return self.continue_button
+        
+    def get_next2(self):
+        return self.continue_button2

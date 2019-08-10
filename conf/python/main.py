@@ -117,7 +117,7 @@ class InputSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
         elif config_type == "GKE":
             if GKE_STATE == 1:
                 ok_button.clicked.connect(lambda: self.controller.make_url(
-                    "Existing Project ID:", "GKE", "input"))
+                    "Enter this into a browser, login, and copy the code", "Existing Project ID:", "GKE", "input"))
             elif GKE_STATE == 3:
                 ok_button.clicked.connect(lambda: self.controller.make_input(
                     "Bucket Name:", "Cluster Name:", "invalid_default", "GKE", "input"))
@@ -204,12 +204,12 @@ class DropdownSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
 
 class URLSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
     """sets up the URL screen (similar format to inputbox with a copyable textbox)"""
-    def __init__(self, controller, config_type):
+    def __init__(self, controller, label, config_type):
         global GKE_STATE
         super(URLSetup, self).__init__()
         self.ui = url.Ui_MainWindow()
         url_temp = give_url()
-        self.ui.setupUi(self, url_temp)
+        self.ui.setupUi(self, label, url_temp)
         self.controller = controller
         input_box = self.ui.get_user_input()
         self.controller.setup_inputbox(input_box)
@@ -219,7 +219,6 @@ class URLSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
                 ok_button.clicked.connect(lambda: self.controller.make_input(
                     "Cluster Name:", "security code", "deepcell", "GKE", "URL"))
         setup_cancel(self)
-
 class ErrorSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
     """sets up an error screen (message is the error message)"""
     def __init__(self, controller, message):
@@ -244,6 +243,7 @@ class TextSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
         super(TextSetup, self).__init__()
         global GKE_CONFIGURED
         global AWS_CONFIGURED
+        global GKE_STATE
         self.ui = text.Ui_MainWindow()
         self.ui.setupUi(self, message, situation)
         self.controller = controller
@@ -267,7 +267,12 @@ class TextSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
                     lambda: self.controller.make_text(
                         "GKE", "\nGoogle Cloud Configuration Complete!\nCluster "+
                         "is ready to be created", "configured", "Warning:", "text"))
-
+        elif config_type == "cluster":
+            if situation == "choosing":
+                aws_cluster_button = self.ui.get_next()
+                gke_cluster_button = self.ui.get_next2()
+                aws_cluster_button.clicked.connect(lambda: cluster_aws())
+                gke_cluster_button.clicked.connect(lambda: cluster_gke())
 class Controller():
     """controls the setting up the different screens"""
     def __init__(self):
@@ -314,9 +319,13 @@ class Controller():
             if not AWS_CONFIGURED and not GKE_CONFIGURED:
                 self.make_error("Configure AWS or GKE before setting up a cluster")
             elif AWS_CONFIGURED and GKE_CONFIGURED:
-                self.make_text("cluster", "woah", "choosing", "none", "none")
+                self.make_text("cluster", "Choose One", "choosing", "none", "none")
             elif AWS_CONFIGURED:
-                clusterAWS()
+                self.make_text("cluster", "Setting up AWS", "text", "none", "none")
+                #cluster_AWS()
+            elif GKE_CONFIGURED:
+                self.make_text("cluster", "Setting up GKE", "text", "none", "none")
+                #cluster_GKE()
 
     def setup_inputbox(self, inputbox):
         """makes a inputbox accessible from outside that screen"""
@@ -356,9 +365,15 @@ class Controller():
 
         if previous == "URL":
             temp_url = self.user_input.text()
+            returning = 1
             if check_url_code(temp_url):
-                return 1
-            return "incorrect code"
+                returning = 1
+            else:
+                return "incorrect code"
+            if returning:
+                if check_proj_id():
+                    return returning
+                return "\nInvalid Project ID given linked google account. \nCheck your Project ID on console.cloud.google.com"
 
         if previous == "dropdown":
             for button in self.button_list:
@@ -392,17 +407,21 @@ class Controller():
 
     def make_text(self, config_type, message, situation, last_label, previous):
         """create the window for an URL screen"""
-        self.window.close()
-        self.window = TextSetup(self, config_type, message, situation, last_label, previous)
-        make_window(self)
+        temp = self.check_input(last_label, config_type, previous)
+        if temp == 1:
+            self.window.close()
+            self.window = TextSetup(self, config_type, message, situation, last_label, previous)
+            make_window(self)
+        else:
+            self.make_error(temp)
 
-    def make_url(self, last_label, config_type, previous):
+    def make_url(self, label, last_label, config_type, previous):
         """create the window for an URL screen"""
         temp = self.check_input(last_label, config_type, previous)
         if temp == 1:
             increment()
             self.window.close()
-            self.window = URLSetup(self, config_type)
+            self.window = URLSetup(self, label, config_type)
             make_window(self)
         else:
             self.make_error(temp)
@@ -452,6 +471,36 @@ def read_file(filename):
     for temp in file_lines:
         line.append(temp.replace("\n", ""))
     return line
+
+def get_cloud_list():
+    """Returns a list of all project ID's from login"""
+    cloud_output = str(subprocess.check_output(["./getCloudList.sh"]))
+    new_line = cloud_output.find("\\n")
+    cloud_list = []
+
+    #This part gets project ID, name, and project number
+    while not new_line == -1:
+        cloud_output = cloud_output[new_line+2:]
+        new_line = cloud_output.find("\\n")
+        if not new_line == -1:
+            cloud_list.append(cloud_output[:new_line])
+    #This goes through and leaves only project ID
+    for temp in range(len(cloud_list)):
+        first_space = cloud_list[temp].find(" ")
+        cloud_list[temp] = cloud_list[temp][:first_space]
+    return cloud_list
+
+def check_proj_id():
+    """compares the inputed project ID to the linked email's project ID's"""
+    config = read_file("gkeConfig.txt")
+    proj_id_list = get_cloud_list()
+    inputed_proj_id = parse_dict(config, "Project ID:")
+    legit = False
+    for project in proj_id_list:
+        if project == inputed_proj_id:
+            legit = True
+    return legit
+
 
 # Creates/checks the url
 def give_url():
@@ -558,8 +607,9 @@ def parse_dict(file, identifier):
             value = line[colon+1:]
             return value
 
-def clusterGKE():
+def cluster_gke():
     """main gke cluster starter"""
+    print("gke")
     config = read_file("gkeConfig.txt")
     proj_id = parse_dict(config, "Project ID:")
     cluster_name = parse_dict(config, "Cluster Name:")
@@ -582,8 +632,9 @@ def clusterGKE():
         print("nope")
 
 
-def clusterAWS():
+def cluster_aws():
     """main aws cluster starter"""
+    print("aws")
     config = read_file("awsConfig.txt")
     key_id = parse_dict(config, "Access Key ID:")
     secret_key = parse_dict(config, "AWS Secret Key:")
