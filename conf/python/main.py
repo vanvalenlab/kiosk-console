@@ -12,8 +12,10 @@ import url
 import text
 GKE_STATE = 0
 AWS_STATE = 0
+CHOSEN = "none"
 AWS_CONFIGURED = False
 GKE_CONFIGURED = False
+CLUSTER_CREATED = True
 GKE_GPU_LIST = []
 GKE_REGIONS_LIST = []
 #
@@ -42,8 +44,9 @@ class MainMenuSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
         super(MainMenuSetup, self).__init__()
         global AWS_CONFIGURED
         global GKE_CONFIGURED
+        global CLUSTER_CREATED
         self.ui = mainMenu.Ui_MainWindow()
-        self.ui.setupUi(self, AWS_CONFIGURED, GKE_CONFIGURED)
+        self.ui.setupUi(self, AWS_CONFIGURED, GKE_CONFIGURED, CLUSTER_CREATED)
         self.controller = controller
 
         aws_button = self.ui.get_aws(self)
@@ -54,6 +57,16 @@ class MainMenuSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
 
         cluster_button = self.ui.get_cluster(self)
         cluster_button.clicked.connect(lambda: self.controller.start("cluster"))
+
+        if CLUSTER_CREATED:
+            view_button = self.ui.get_view(self)
+            view_button.clicked.connect(lambda: self.controller.make_text("cluster", "View Cluster Address", "text", "none", "none"))
+
+            benchmarking_button = self.ui.get_benchmarking(self)
+            benchmarking_button.clicked.connect(lambda: self.controller.make_text("cluster", "Benchmark Image Processing", "text", "none", "none"))
+
+        shell_button = self.ui.get_shell(self)
+        shell_button.clicked.connect(lambda: self.controller.make_text("cluster", "Drop to Shell", "text", "none", "none"))
 
         exit_button = self.ui.get_exit(self)
         exit_button.clicked.connect(sys.exit)
@@ -119,7 +132,7 @@ class InputSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
                 ok_button.clicked.connect(lambda: self.controller.make_url(
                     "Enter this into a browser, login, and copy the code", "Existing Project ID:", "GKE", "input"))
             elif GKE_STATE == 3:
-                #set_proj_id()
+                set_proj_id()
                 ok_button.clicked.connect(lambda: self.controller.make_input(
                     "Bucket Name:", "Cluster Name:", "invalid_default", "GKE", "input"))
             elif GKE_STATE == 4:
@@ -272,8 +285,8 @@ class TextSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
             if situation == "choosing":
                 aws_cluster_button = self.ui.get_next()
                 gke_cluster_button = self.ui.get_next2()
-                aws_cluster_button.clicked.connect(lambda: cluster_aws())
-                gke_cluster_button.clicked.connect(lambda: cluster_gke())
+                aws_cluster_button.clicked.connect(lambda: self.controller.chosen_cluster("AWS"))
+                gke_cluster_button.clicked.connect(lambda: self.controller.chosen_cluster("GKE"))
 class Controller():
     """controls the setting up the different screens"""
     def __init__(self):
@@ -289,8 +302,10 @@ class Controller():
         """makes the main menu"""
         global AWS_STATE
         global GKE_STATE
+        global CHOSEN
         AWS_STATE = 0
         GKE_STATE = 0
+        CHOSEN = "none"
         self.window.close()
         self.window = MainMenuSetup(self)
         make_window(self)
@@ -299,6 +314,8 @@ class Controller():
         """works with the menu in order to process the effects for the user's button choice"""
         global AWS_CONFIGURED
         global GKE_CONFIGURED
+        global CHOSEN
+        global CLUSTER_CREATED
 
         if config_type == "AWS":
             if AWS_CONFIGURED:
@@ -317,16 +334,17 @@ class Controller():
                 self.make_input("Existing Project ID:", "none", "invalid_default", "GKE", "N/A")
 
         elif config_type == "cluster":
-            if not AWS_CONFIGURED and not GKE_CONFIGURED:
-                self.make_error("Configure AWS or GKE before setting up a cluster")
-            elif AWS_CONFIGURED and GKE_CONFIGURED:
-                self.make_text("cluster", "Choose One", "choosing", "none", "none")
-            elif AWS_CONFIGURED:
-                self.make_text("cluster", "Setting up AWS", "text", "none", "none")
-                #cluster_AWS()
-            elif GKE_CONFIGURED:
-                self.make_text("cluster", "Setting up GKE", "text", "none", "none")
-                #cluster_GKE()
+            if CLUSTER_CREATED:
+                if not AWS_CONFIGURED and not GKE_CONFIGURED:
+                    self.make_error("Configure AWS or GKE before setting up a cluster")
+                elif AWS_CONFIGURED and GKE_CONFIGURED and CHOSEN == "none":
+                    self.make_text("cluster", "Choose One", "choosing", "none", "none")
+                elif AWS_CONFIGURED or CHOSEN == "AWS":
+                    self.make_text("cluster", "Setting up AWS", "text", "none", "none")
+                    #cluster_AWS()
+                elif GKE_CONFIGURED or CHOSEN == "GKE":
+                    self.make_text("cluster", "Setting up GKE", "text", "none", "none")
+                    #cluster_GKE()
 
     def setup_inputbox(self, inputbox):
         """makes a inputbox accessible from outside that screen"""
@@ -351,7 +369,7 @@ class Controller():
         if previous == "input":
             temp_text = self.user_input.text()
             if temp_text in ("invalid_default", ""):
-                return "invalid input"
+                 return "invalid input"
             if config_type == "GKE":
                 if GKE_STATE == 1:
                     write_into_file('gkeConfig.txt', 'w+', last_label, temp_text)
@@ -437,6 +455,16 @@ class Controller():
         elif config_type == "GKE":
             GKE_CONFIGURED = False
             self.start("GKE")
+
+    def chosen_cluster(self, temp_choice):
+        """This is called when both aws and gke are set up. Calls main aws or gke programs"""
+        global CHOSEN
+        if temp_choice == "AWS":
+            CHOSEN = "AWS"
+            self.start("cluster")
+        elif temp_choice == "GKE":
+            CHOSEN = "GKE"
+            self.start("cluster")
 
 # General functions used in almost every screen created
 def setup_cancel(self):
@@ -602,7 +630,7 @@ def gpu_warning():
             warning += GKE_REGIONS_LIST[region_num]+", "
     warning += GKE_REGIONS_LIST[len(GKE_REGIONS_LIST)-1]
     warning += "\nIf you see 0 or 1 zones listed above, please reconfigure the cluster before "
-    warning += "deploying.\nDifferent choices of GPU(s) and/or region will be necessary."
+    warning += "deploying. Different choices of GPU(s) and/or region will be necessary."
     return [warning, length]
 
 def parse_dict(file, identifier):
