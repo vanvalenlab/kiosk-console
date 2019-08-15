@@ -197,7 +197,7 @@ class Ui_MainWindow(object):
         word_list = self.parse(text)
         text = ""
         for temp in word_list:
-            text += "<p style=\" margin-top:10px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{}</p></body></html>".format(temp)
+            text += f"<p style=\" margin-top:10px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{temp}</p></body></html>"
             text += "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.ok_button.setText(_translate("MainWindow", "OK"))
@@ -205,7 +205,7 @@ class Ui_MainWindow(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-"{}".format(text)))
+f"{text}"))
 
     def parse(self, text):
         word_list = []
