@@ -13,9 +13,9 @@ import text
 GKE_STATE = 0
 AWS_STATE = 0
 CHOSEN = "none"
-AWS_CONFIGURED = False
-GKE_CONFIGURED = False
-CLUSTER_CREATED = True
+AWS_CONFIGURED = True
+GKE_CONFIGURED = True
+CLUSTER_CREATED = False
 GKE_GPU_LIST = []
 GKE_REGIONS_LIST = []
 #
@@ -281,12 +281,21 @@ class TextSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
                     lambda: self.controller.make_text(
                         "GKE", "\nGoogle Cloud Configuration Complete!\nCluster "+
                         "is ready to be created", "configured", "Warning:", "text"))
+            elif config_type == "cluster":
+                if previous == "AWS setup":
+                    aws_cluster_button = self.ui.get_next()
+                    aws_cluster_button.clicked.connect(cluster_aws)
+                elif previous == "GKE setup":
+                    gke_cluster_button = self.ui.get_next()
+                    gke_cluster_button.clicked.connect(cluster_gke)
         elif config_type == "cluster":
             if situation == "choosing":
                 aws_cluster_button = self.ui.get_next()
                 gke_cluster_button = self.ui.get_next2()
                 aws_cluster_button.clicked.connect(lambda: self.controller.chosen_cluster("AWS"))
                 gke_cluster_button.clicked.connect(lambda: self.controller.chosen_cluster("GKE"))
+
+
 class Controller():
     """controls the setting up the different screens"""
     def __init__(self):
@@ -334,16 +343,16 @@ class Controller():
                 self.make_input("Existing Project ID:", "none", "invalid_default", "GKE", "N/A")
 
         elif config_type == "cluster":
-            if CLUSTER_CREATED:
+            if CLUSTER_CREATED == False:
                 if not AWS_CONFIGURED and not GKE_CONFIGURED:
                     self.make_error("Configure AWS or GKE before setting up a cluster")
                 elif AWS_CONFIGURED and GKE_CONFIGURED and CHOSEN == "none":
                     self.make_text("cluster", "Choose One", "choosing", "none", "none")
-                elif AWS_CONFIGURED or CHOSEN == "AWS":
-                    self.make_text("cluster", "Setting up AWS", "text", "none", "none")
+                elif AWS_CONFIGURED and not GKE_CONFIGURED or CHOSEN == "AWS":
+                    self.make_text("cluster", "Setting up AWS", "text", "none", "AWS setup")
                     #cluster_AWS()
-                elif GKE_CONFIGURED or CHOSEN == "GKE":
-                    self.make_text("cluster", "Setting up GKE", "text", "none", "none")
+                elif GKE_CONFIGURED and not AWS_CONFIGURED or CHOSEN == "GKE":
+                    self.make_text("cluster", "Setting up GKE", "text", "none", "GKE setup")
                     #cluster_GKE()
 
     def setup_inputbox(self, inputbox):
@@ -658,12 +667,12 @@ def cluster_gke():
     min_gpu_nodes = parse_dict(config, "Minimum Number of GPU Nodes:")
     max_gpu_nodes = parse_dict(config, "Maximum Number of GPU Nodes:")
     # test for if any are none (as opposed to a string type)
-    try:
-        temp = proj_id+" "+cluster_name+" "+bucket_name+" "+region+" "+node_type+" "
-        temp += min_compute_nodes+" "+max_compute_nodes+" "+predict_gpu+" "+train_gpu
-        temp += " "+possible_zones+" "+min_gpu_nodes+" "+max_gpu_nodes
-    except TypeError:
-        print("nope")
+    # try:
+    #     temp = proj_id+" "+cluster_name+" "+bucket_name+" "+region+" "+node_type+" "
+    #     temp += min_compute_nodes+" "+max_compute_nodes+" "+predict_gpu+" "+train_gpu
+    #     temp += " "+possible_zones+" "+min_gpu_nodes+" "+max_gpu_nodes
+    # except TypeError:
+    #     print("nope")
 
 
 def cluster_aws():
@@ -680,11 +689,11 @@ def cluster_aws():
     min_gpu = parse_dict(config, "Minimum number of GPU Instances:")
     max_gpu = parse_dict(config, "Maximum number of GPU Instances:")
     # test for if any are none (as opposed to a string type)
-    try:
-        temp = subprocess.check_output(["./awsEnv.sh", key_id, secret_key, bucket_name, cluster_name, min_gpu, max_gpu])
-    except subprocess.CalledProcessError as e:
-        print(e)
-    print(temp)
+    # try:
+    #     temp = subprocess.check_output(["./awsEnv.sh", key_id, secret_key, bucket_name, cluster_name, min_gpu, max_gpu])
+    # except subprocess.CalledProcessError as e:
+    #     print(e)
+    # print(temp)
 
 def main():
     """Executes the program"""

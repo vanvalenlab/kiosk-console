@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM debian:9
 
 RUN apt-get update && \
       apt-get -y install sudo
@@ -11,7 +11,7 @@ USER docker
 
 RUN sudo apt install python3-pip -y
 
-RUN pip3 install PyQt5
+RUN pip3 install pyqt5
 
 RUN sudo apt install curl -y
 
@@ -27,6 +27,6 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 COPY . .
 
-RUN sudo apt install libgl1-mesa-glx
+RUN sudo apt install libgl1-mesa-glx -y
 
 #CMD ["/bin/sh", "-c", "main.py"]

@@ -225,7 +225,7 @@ class Ui_MainWindow(object):
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{URL}</p></body></html>"))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{}</p></body></html>".format(URL)))
         self.label_2.setText(_translate("Input", label))
         self.back_button.setText(_translate("MainWindow", "Cancel"))
         self.continue_button.setText(_translate("MainWindow", "OK"))
