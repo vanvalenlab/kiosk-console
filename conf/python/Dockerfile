@@ -27,6 +27,12 @@ ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
 
 COPY . .
 
+RUN sudo chmod 777 ./*.sh
+
+RUN sudo chmod 777 ./*.txt
+
+RUN sudo chmod 777 ./*.py
+
 RUN sudo apt install libgl1-mesa-glx -y
 
 #CMD ["/bin/sh", "-c", "main.py"]
