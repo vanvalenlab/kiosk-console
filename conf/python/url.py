@@ -221,11 +221,11 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow, label, URL):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.text_message.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
-f"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{URL}</p></body></html>"))
+        self.text_message.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n" + \
+        "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n" + \
+        "p, li { white-space: pre-wrap; }\n" + \
+        "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:10pt; font-weight:400; font-style:normal;\">\n" + \
+        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{0}</p></body></html>".format(URL)))
         self.label_2.setText(_translate("Input", label))
         self.back_button.setText(_translate("MainWindow", "Cancel"))
         self.continue_button.setText(_translate("MainWindow", "OK"))

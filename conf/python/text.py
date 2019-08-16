@@ -216,7 +216,7 @@ class Ui_MainWindow(object):
         word_list = self.parse(text)
         text = ""
         for temp in word_list:
-            text += f"<p style=\" margin-top:10px; margin-bottom:0px; margin-left:10px; margin-right:10px; -qt-block-indent:0; text-indent:0px;\">{temp}</p></body></html>"
+            text += "<p style=\" margin-top:10px; margin-bottom:0px; margin-left:10px; margin-right:10px; -qt-block-indent:0; text-indent:0px;\">{0}</p></body></html>".format(temp)
             text += "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         if type == "resetting":
@@ -232,11 +232,11 @@ class Ui_MainWindow(object):
             self.continue_button.setText(_translate("MainWindow", "AWS"))
             self.continue_button2.setText(_translate("MainWindow", "GKE"))
 
-        self.text_message.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n"
-f"{text}"))
+        self.text_message.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n" + \
+        "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n" + \
+        "p, li { white-space: pre-wrap; }\n" + \
+        "</style></head><body style=\" font-family:\'.SF NS Text\'; font-size:13pt; font-weight:400; font-style:normal;\">\n" + \
+        "{0}".format(text)))
 
     def parse(self, text):
         word_list = []
