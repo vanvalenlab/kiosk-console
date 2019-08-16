@@ -197,7 +197,7 @@ class Ui_MainWindow(object):
         word_list = self.parse(text)
         text = ""
         for temp in word_list:
-            #text += f"<p style=\" margin-top:10px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{temp}</p></body></html>"
+            text += "<p style=\" margin-top:10px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">{0}</p></body></html>".format(temp)
             text += "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n"
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.ok_button.setText(_translate("MainWindow", "OK"))
