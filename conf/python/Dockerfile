@@ -11,7 +11,9 @@ USER docker
 
 RUN sudo apt install python3-pip -y
 
-RUN pip3 install pyqt5
+RUN pip3 install PyQt5 
+
+RUN sudo apt install python-pyqt5 -y
 
 RUN sudo apt install curl -y
 
