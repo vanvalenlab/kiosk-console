@@ -43,51 +43,60 @@ releases:
               custom-redis-metrics.lua: |
                 -- Based on https://github.com/soveran/rediscan.lua by GitHub user Soveran.
 
-                -- Base queue name:
-                local base_queue_name = "predict"
-                local queues = {}
-                queues[#queues+1] = base_queue_name
-                local queue_regex = "processing-" .. base_queue_name .. ":*"
+                local function get_queue_count(queue)
+                  -- Find number of keys in the queue
+                  local queue_size = redis.call("LLEN", queue)
 
-                -- Gather the names of all queues.
-                local keys = nil
-                local done = false
-                local cursor = "0"
-                repeat
-                  local result = redis.call("SCAN", cursor, "MATCH", "processing-predict:*", "COUNT", 1000)
+                  -- Get all processing queues
+                  local queue_regex = "processing-" .. queue .. ":*"
 
-                  cursor = result[1]
-                  keys   = result[2]
+                  local count = 0
 
-                  for i, key in ipairs(keys) do
-                    queues[#queues+1] = key
-                  end
+                  local cursor = "0"
+                  local done = false
 
-                  if cursor == "0" then
-                    done = true
-                  end
-                until done
+                  repeat
 
-                -- Separately tally the zip and image keys between all queues.
-                local zip_keys = 0
-                local image_keys = 0
-                for _,queue in ipairs(queues) do
-                  local results = redis.call("LRANGE", queue, 0, -1)
-                  for _,key in ipairs(results) do
-                    if string.find(key,"^.+:.+%.zip:.+$") then
-                      zip_keys = zip_keys + 1
-                    else
-                      image_keys = image_keys + 1
+                    local result = redis.call("SCAN", cursor, "MATCH", queue_regex, "COUNT", 1000)
+                    cursor = result[1]
+
+                    for i, key in ipairs(result[2]) do
+                      -- How many keys are in each queue (should be 1)
+                      local keys_in_queue = redis.call("LLEN", key)
+                      count = count + keys_in_queue
                     end
-                  end
+
+                    if cursor == "0" then
+                      done = true
+                    end
+
+                  until done
+
+                  return count + queue_size
                 end
 
-                -- Format output
+                -- Final table to output
                 local results = {}
-                table.insert(results, "image_keys")
-                table.insert(results, tostring(image_keys))
-                table.insert(results, "zip_keys")
-                table.insert(results, tostring(zip_keys))
+
+                -- All Queues to Monitor:
+                local queues = {}
+
+                queues[#queues+1] = "predict"
+                queues[#queues+1] = "track"
+
+                for _,queue in ipairs(queues) do
+                  local zip_queue = queue .. "-zip"
+
+                  local queue_count = get_queue_count(queue)
+                  local zip_queue_count = get_queue_count(zip_queue)
+
+                  table.insert(results, queue .. "_image_keys")
+                  table.insert(results, tostring(queue_count))
+
+                  table.insert(results, queue .. "_zip_keys")
+                  table.insert(results, tostring(zip_queue_count))
+
+                end
 
                 return results
 
@@ -102,4 +111,4 @@ releases:
           prometheus.io/port: "9121"
           prometheus.io/scrape: "true"
 
-        redisAddress: redis://redis-master.deepcell:6379
+        redisAddress: redis://redis.deepcell:6379

@@ -26,7 +26,7 @@ releases:
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/data-processing'
   version: "0.1.0"
   values:
-    - replicas: 1
+    - replicas: 0
 
       image:
         repository: "vanvalenlab/kiosk-data-processing"

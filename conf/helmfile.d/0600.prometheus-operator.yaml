@@ -82,22 +82,114 @@ releases:
           - name: custom-redis-metrics
             rules:
             - record: avg_gpu_usage
-              expr: 'avg(container_accelerator_duty_cycle)'
+              expr: avg(container_accelerator_duty_cycle)
               labels:
                 namespace: deepcell
                 service: gpu-average-service
             - record: tf_serving_scale_metric
-              expr: 'avg_over_time(avg_gpu_usage[1m])'
+              expr: avg_over_time(avg_gpu_usage[15s])
               labels:
                 namespace: deepcell
                 service: tf-serving-scaling-service
+            - record: tf_serving_running_pods
+              expr: |-
+                clamp_max(
+                  clamp_min(
+                    kube_deployment_status_replicas_available{deployment="tf-serving"}
+                  , 0)
+                , 1)
+                or on()
+                up{service="kubernetes"} * on() 0
+              labels:
+                namespace: deepcell
+                service: tf-serving-running-service
             - record: redis_consumer_key_ratio
-              expr: '(avg_over_time(redis_script_value{key="image_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="redis-consumer"}[1m]) + 1))'
+              # COMPLICATED scaling metric that prevents too many consumers
+              # per GPU.  If too many consumers, scale down slightly.
+              # Structural outline follows:
+              # (
+              #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
+              #   +
+              #   .9 * target * is_too_many_consumers)
+              # ) * is_tf_up
+              expr: |-
+                (
+                  (
+                    (100 - tf_serving_scale_metric) / 100
+                    < on()
+                    clamp_max(
+                      (
+                        avg_over_time(redis_script_value{key="predict_image_keys"}[15s])
+                        / on()
+                        (
+                          avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[15s])
+                          *
+                          100
+                        )
+                      )
+                    , 1)
+                    or
+                    clamp_max(
+                      (
+                        avg_over_time(redis_script_value{key="predict_image_keys"}[15s])
+                        / on()
+                        (
+                          avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[15s])
+                          *
+                          100
+                        )
+                      )
+                    , 1)
+                  )
+                  * on()
+                  (
+                    clamp_max(
+                      clamp_min(
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[15s])
+                      , 0)
+                      / on()
+                      clamp_min(
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[15s])
+                      , 1)
+                      <= on()
+                      150
+                      or on()
+                      up{service="kubernetes"} * on() 0
+                    , 1)
+                  )
+                  + on()
+                  (
+                    clamp_max(
+                      clamp_min(
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[15s])
+                      , 0)
+                      / on()
+                      clamp_min(
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[15s])
+                      , 0)
+                      > on()
+                      150
+                      or on()
+                      up{service="kubernetes"} * on() 0
+                    , 1)
+                    * on()
+                    .9 * .15
+                  )
+                )
+                * on()
+                tf_serving_running_pods
               labels:
                 namespace: deepcell
                 service: redis-scaling-service
             - record: zip_consumer_key_ratio
-              expr: '(avg_over_time(redis_script_value{key="zip_keys"}[1m]) / on() (avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[1m]) + 1))'
+              expr: |-
+                avg_over_time(redis_script_value{key="predict_zip_keys"}[15s])
+                / on()
+                (
+                  avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[15s])
+                  +
+                  1
+                )
               labels:
                 namespace: deepcell
                 service: zip-scaling-service
