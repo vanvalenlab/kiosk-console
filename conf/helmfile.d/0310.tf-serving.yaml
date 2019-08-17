@@ -36,12 +36,12 @@ releases:
       resources:
         requests:
           nvidia.com/gpu: 1
-          cpu: 500m
+          cpu: 1
           memory: 3.5Gi
         limits:
           nvidia.com/gpu: 1
-          # cpu: 100m
-          # memory: 2048Mi
+          # cpu: 2
+          # memory: 8Gi
 
       service:
         type: "ClusterIP"

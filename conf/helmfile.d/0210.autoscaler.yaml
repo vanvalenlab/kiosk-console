@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-autoscaler"
-        tag: "0.1"
+        tag: "0.2"
         pullPolicy: "Always"
 
       serviceAccount:
@@ -43,7 +43,7 @@ releases:
       resources:
         requests:
           cpu: 100m
-          memory: 128Mi
+          memory: 64Mi
         # limits:
         #   cpu: 100m
         #   memory: 64Mi
@@ -52,8 +52,8 @@ releases:
       env:
         DEBUG: "true"
         INTERVAL: "5"
-        REDIS_HOST: "redis-master"
-        REDIS_PORT: "6379"
+        REDIS_HOST: "redis"
+        REDIS_PORT: "26379"
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         AUTOSCALING: >
             {{ env "AWS_MIN_GPU_NODES" | default 0 }}|{{ env "AWS_MAX_GPU_NODES" | default 5 }}|1|deepcell|deployment|predict|tf-serving;

@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-janitor"
-        tag: "0.1"
+        tag: "0.2"
         pullPolicy: "Always"
 
       serviceAccount:
@@ -42,7 +42,7 @@ releases:
 
       resources:
         requests:
-          cpu: 300m
+          cpu: 400m
           memory: 128Mi
         # limits:
         #   cpu: 100m
@@ -51,5 +51,5 @@ releases:
       env:
         DEBUG: "true"
         INTERVAL: "5"
-        REDIS_HOST: "redis-master"
-        REDIS_PORT: "6379"
+        REDIS_HOST: "redis"
+        REDIS_PORT: "26379"

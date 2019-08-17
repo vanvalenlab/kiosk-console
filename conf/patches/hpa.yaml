@@ -21,24 +21,24 @@ spec:
         name: tf_serving_scale_metric
       targetValue: 70
 ---
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: data-processing
-  namespace: deepcell
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: data-processing
-  minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_TEN
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80
----
+# apiVersion: autoscaling/v2beta1
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: data-processing
+#   namespace: deepcell
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: data-processing
+#   minReplicas: 1
+#   maxReplicas: $GPU_MAX_TIMES_TWENTY
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       targetAverageUtilization: 80
+# ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
@@ -68,7 +68,7 @@ spec:
     kind: Deployment
     name: redis-consumer
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_ONE_HUNDRED
+  maxReplicas: $GPU_MAX_TIMES_ONE_HUNDRED_FIFTY
   metrics:
   - type: Object
     object:
@@ -77,7 +77,7 @@ spec:
         apiVersion: v1
         kind: Namespace
         name: redis_consumer_key_ratio
-      targetValue: 20
+      targetValue: .15
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -90,7 +90,7 @@ spec:
     kind: Deployment
     name: zip-consumer
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_FIFTY
+  maxReplicas: $GPU_MAX_TIMES_ONE_HUNDRED
   metrics:
   - type: Object
     object:

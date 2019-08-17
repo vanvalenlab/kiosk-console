@@ -314,7 +314,7 @@ function configure_gke() {
 
 $REGION_ZONES_WITH_GPUS
 
-If you see any fewer than 2 zones listed above, please reconfigure the cluster beofre deploying. Different choices of GPU(s) and/or region will be necessary."
+If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
 
   ## Maybe include these in an advanced menu?
   #export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
@@ -333,6 +333,9 @@ If you see any fewer than 2 zones listed above, please reconfigure the cluster b
   if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
 	  return 0
   fi
+  dialog --msgbox "Configuration Complete!
+
+  Cluster now available for creation" 12 60
   export CLOUD_PROVIDER=gke
 
   # create some derivative GPU-related variables for use in autoscaling
@@ -347,6 +350,7 @@ If you see any fewer than 2 zones listed above, please reconfigure the cluster b
   export GPU_MAX_TIMES_FIFTY=$(($GPU_NODE_MAX_SIZE*50))
   export GPU_MAX_TIMES_SEVENTY_FIVE=$(($GPU_NODE_MAX_SIZE*75))
   export GPU_MAX_TIMES_ONE_HUNDRED=$(($GPU_NODE_MAX_SIZE*100))
+  export GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=$(($GPU_NODE_MAX_SIZE*150))
   export GPU_MAX_TIMES_TWO_HUNDRED=$(($GPU_NODE_MAX_SIZE*200))
   export GPU_MAX_DIVIDED_BY_TWO=$(($GPU_NODE_MAX_SIZE/2))
   export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))

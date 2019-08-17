@@ -30,12 +30,12 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.1"
+        tag: "0.2.1"
         pullPolicy: "Always"
 
       resources:
         requests:
-          cpu: 300m
+          cpu: 200m
           memory: 128Mi
         # limits:
         #   cpu: 100m
@@ -44,8 +44,8 @@ releases:
       nameOverride: zip-consumer
 
       env:
-        REDIS_HOST: "redis-master"
-        REDIS_PORT: "6379"
+        REDIS_HOST: "redis"
+        REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
         TF_PORT: "8500"
         DP_HOST: "data-processing"
