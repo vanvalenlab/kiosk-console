@@ -13,8 +13,8 @@ import text
 GKE_STATE = 0
 AWS_STATE = 0
 CHOSEN = "none"
-AWS_CONFIGURED = True
-GKE_CONFIGURED = True
+AWS_CONFIGURED = False
+GKE_CONFIGURED = False
 CLUSTER_CREATED = False
 GKE_GPU_LIST = []
 GKE_REGIONS_LIST = []
@@ -27,6 +27,17 @@ GKE_REGIONS_LIST = []
 #
 # config_type = AWS or GKE
 #
+# previous = type of last screen (input, dropdown, etc.)
+#
+# GKE and AWS STATES represent what slide of the config they are on
+#
+# CHOSEN is for specifically when the cluster is being made and both AWS
+# and GKE are available for creation. Chosen is which one the user choses
+#
+# AWS and GKE CONFIGURED are for if setting up for each is done
+#
+# In general Classes with setup, make screens individually depending on config type
+# and which State they are at.
 
 class StartScreenSetup(QtWidgets.QMainWindow, startScreen.Ui_MainWindow):
     """sets up the start screen (intro about van valen lab)"""
@@ -60,13 +71,16 @@ class MainMenuSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
 
         if CLUSTER_CREATED:
             view_button = self.ui.get_view(self)
-            view_button.clicked.connect(lambda: self.controller.make_text("cluster", "View Cluster Address", "text", "none", "none"))
+            view_button.clicked.connect(lambda: self.controller.make_text(
+                "cluster", "View Cluster Address", "text", "none", "none"))
 
             benchmarking_button = self.ui.get_benchmarking(self)
-            benchmarking_button.clicked.connect(lambda: self.controller.make_text("cluster", "Benchmark Image Processing", "text", "none", "none"))
+            benchmarking_button.clicked.connect(lambda: self.controller.make_text(
+                "cluster", "Benchmark Image Processing", "text", "none", "none"))
 
         shell_button = self.ui.get_shell(self)
-        shell_button.clicked.connect(lambda: self.controller.make_text("cluster", "Drop to Shell", "text", "none", "none"))
+        shell_button.clicked.connect(lambda: self.controller.make_text(
+            "cluster", "Drop to Shell", "text", "none", "none"))
 
         exit_button = self.ui.get_exit(self)
         exit_button.clicked.connect(sys.exit)
@@ -130,7 +144,8 @@ class InputSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
         elif config_type == "GKE":
             if GKE_STATE == 1:
                 ok_button.clicked.connect(lambda: self.controller.make_url(
-                    "Enter this into a browser, login, and copy the code", "Existing Project ID:", "GKE", "input"))
+                    "Enter this into a browser, login, and copy the code",
+                    "Existing Project ID:", "GKE", "input"))
             elif GKE_STATE == 3:
                 set_proj_id()
                 ok_button.clicked.connect(lambda: self.controller.make_input(
@@ -181,6 +196,7 @@ class InputSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
 class DropdownSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
     """sets up the dropdown screens (general with a radiobox, textbox, and 2 buttons)"""
     def __init__(self, controller, label, dropdown_list, config_type):
+        # dropdown_list is a list of all the things wanted in the dropdown menu itself
         global AWS_STATE
         global GKE_STATE
         global GKE_GPU_LIST
@@ -233,6 +249,7 @@ class URLSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
                 ok_button.clicked.connect(lambda: self.controller.make_input(
                     "Cluster Name:", "security code", "deepcell", "GKE", "URL"))
         setup_cancel(self)
+
 class ErrorSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
     """sets up an error screen (message is the error message)"""
     def __init__(self, controller, message):
@@ -297,7 +314,8 @@ class TextSetup(QtWidgets.QMainWindow, mainMenu.Ui_MainWindow):
 
 
 class Controller():
-    """controls the setting up the different screens"""
+    """controls the setting up the different screens.
+    A middle man between users and specific screens"""
     def __init__(self):
         self.window = StartScreenSetup(self)
         self.user_input = None
@@ -320,12 +338,11 @@ class Controller():
         make_window(self)
 
     def start(self, config_type):
-        """works with the menu in order to process the effects for the user's button choice"""
+        """works with the main menu in order to process the user's main menu choices"""
         global AWS_CONFIGURED
         global GKE_CONFIGURED
         global CHOSEN
         global CLUSTER_CREATED
-
         if config_type == "AWS":
             if AWS_CONFIGURED:
                 self.make_text("AWS", "\nConfiguring amazon again will clear you last "+
@@ -343,17 +360,15 @@ class Controller():
                 self.make_input("Existing Project ID:", "none", "invalid_default", "GKE", "N/A")
 
         elif config_type == "cluster":
-            if CLUSTER_CREATED == False:
+            if not CLUSTER_CREATED:
                 if not AWS_CONFIGURED and not GKE_CONFIGURED:
                     self.make_error("Configure AWS or GKE before setting up a cluster")
                 elif AWS_CONFIGURED and GKE_CONFIGURED and CHOSEN == "none":
                     self.make_text("cluster", "Choose One", "choosing", "none", "none")
                 elif AWS_CONFIGURED and not GKE_CONFIGURED or CHOSEN == "AWS":
                     self.make_text("cluster", "Setting up AWS", "text", "none", "AWS setup")
-                    #cluster_AWS()
                 elif GKE_CONFIGURED and not AWS_CONFIGURED or CHOSEN == "GKE":
                     self.make_text("cluster", "Setting up GKE", "text", "none", "GKE setup")
-                    #cluster_GKE()
 
     def setup_inputbox(self, inputbox):
         """makes a inputbox accessible from outside that screen"""
@@ -378,7 +393,7 @@ class Controller():
         if previous == "input":
             temp_text = self.user_input.text()
             if temp_text in ("invalid_default", ""):
-                 return "invalid input"
+                return "invalid input"
             if config_type == "GKE":
                 if GKE_STATE == 1:
                     write_into_file('gkeConfig.txt', 'w+', last_label, temp_text)
@@ -401,7 +416,8 @@ class Controller():
             if returning:
                 if check_proj_id():
                     return returning
-                return "\nInvalid Project ID given linked google account. \nCheck your Project ID on console.cloud.google.com"
+                return "\nInvalid Project ID given linked google account." + \
+                        "\nCheck your Project ID on console.cloud.google.com"
 
         if previous == "dropdown":
             for button in self.button_list:
@@ -476,15 +492,15 @@ class Controller():
             self.start("cluster")
 
 # General functions used in almost every screen created
-def setup_cancel(self):
-    """General go back to menu command"""
-    cancel_button = self.ui.get_cancel()
-    cancel_button.clicked.connect(self.controller.make_menu)
-
 def make_window(self):
     """Makes a window"""
     self.window.setWindowTitle("Kiosk - Van Valen Lab Caltech 2018")
     self.window.show()
+
+def setup_cancel(self):
+    """General go back to menu command"""
+    cancel_button = self.ui.get_cancel()
+    cancel_button.clicked.connect(self.controller.make_menu)
 
 def increment():
     """increments both states (this is alright since menu resets both)"""
@@ -493,7 +509,7 @@ def increment():
     AWS_STATE += 1
     GKE_STATE += 1
 
-# General functions that read and write files
+# General functions that read and write to files (used mainly for GKE and AWS config.txt)
 def write_into_file(filename, file_action, tag, user_input):
     """writes into a given file given text"""
     temp_dict = open(filename, file_action)
@@ -510,7 +526,9 @@ def read_file(filename):
         line.append(temp.replace("\n", ""))
     return line
 
+# These deal with setting and checking the user inputed Project ID in GKE setup (1st step)
 def set_proj_id():
+    """calls shellscript to set the project ID value"""
     config = read_file("gkeConfig.txt")
     inputed_proj_id = parse_dict(config, "Project ID:")
     subprocess.check_output(["./setProjValue.sh", inputed_proj_id])
@@ -520,7 +538,6 @@ def get_cloud_list():
     cloud_output = str(subprocess.check_output(["./getCloudList.sh"]))
     new_line = cloud_output.find("\\n")
     cloud_list = []
-
     #This part gets project ID, name, and project number
     while not new_line == -1:
         cloud_output = cloud_output[new_line+2:]
@@ -534,7 +551,7 @@ def get_cloud_list():
     return cloud_list
 
 def check_proj_id():
-    """compares the inputed project ID to the linked email's project ID's"""
+    """checks the inputed project ID with the linked email's project ID's for legitamacy"""
     proj_id_list = get_cloud_list()
     config = read_file("gkeConfig.txt")
     inputed_proj_id = parse_dict(config, "Project ID:")
@@ -545,7 +562,7 @@ def check_proj_id():
     return legit
 
 
-# Creates/checks the url
+# Creates/checks the url in GKE step 2
 def give_url():
     """calls shell script and creates a url for users to login with"""
     raw_url = str(subprocess.check_output(["./authenticateGiveURL.sh"]))
@@ -560,7 +577,7 @@ def check_url_code(code):
         return 0
     return 1
 
-# Region/GPU stuff in GKE
+# Region/GPU calls and checks in GKE
 def region_to_gpu():
     """calls the shell script that gives the possible GPUs given a certain region"""
     global GKE_GPU_LIST
@@ -623,7 +640,7 @@ def parse_shell_output(unparsed):
 def gpu_warning():
     """returns the text used for gke where it explains at least 2 regions are necessary"""
     #
-    #This will return it in a list where the second element reports if at least
+    # This will return it in a list where the second element reports if at least
     #
     # 2 regions were there
     #
@@ -651,7 +668,7 @@ def parse_dict(file, identifier):
             return value
 
 def cluster_gke():
-    """main gke cluster starter"""
+    """actual gke cluster starter (called by create GKE cluster screen)"""
     print("gke")
     config = read_file("gkeConfig.txt")
     proj_id = parse_dict(config, "Project ID:")
@@ -666,17 +683,12 @@ def cluster_gke():
     possible_zones = parse_dict(config, "Possible Zones given the GPU:")
     min_gpu_nodes = parse_dict(config, "Minimum Number of GPU Nodes:")
     max_gpu_nodes = parse_dict(config, "Maximum Number of GPU Nodes:")
-    # test for if any are none (as opposed to a string type)
-    # try:
-    #     temp = proj_id+" "+cluster_name+" "+bucket_name+" "+region+" "+node_type+" "
-    #     temp += min_compute_nodes+" "+max_compute_nodes+" "+predict_gpu+" "+train_gpu
-    #     temp += " "+possible_zones+" "+min_gpu_nodes+" "+max_gpu_nodes
-    # except TypeError:
-    #     print("nope")
+    # HERE IS WHERE IT WOULD SEND OUT ENVIRONMENTAL VARIABLES TO ALPINE LINUX
+
 
 
 def cluster_aws():
-    """main aws cluster starter"""
+    """actual aws cluster starter (called by create AWS cluster screen)"""
     print("aws")
     config = read_file("awsConfig.txt")
     key_id = parse_dict(config, "Access Key ID:")
@@ -688,12 +700,8 @@ def cluster_aws():
     gpu_type = parse_dict(config, "GPU Instance Type:")
     min_gpu = parse_dict(config, "Minimum number of GPU Instances:")
     max_gpu = parse_dict(config, "Maximum number of GPU Instances:")
-    # test for if any are none (as opposed to a string type)
-    # try:
-    #     temp = subprocess.check_output(["./awsEnv.sh", key_id, secret_key, bucket_name, cluster_name, min_gpu, max_gpu])
-    # except subprocess.CalledProcessError as e:
-    #     print(e)
-    # print(temp)
+    # HERE IS WHERE IT WOULD SEND OUT ENVIRONMENTAL VARIABLES TO ALPINE LINUX
+
 
 def main():
     """Executes the program"""
