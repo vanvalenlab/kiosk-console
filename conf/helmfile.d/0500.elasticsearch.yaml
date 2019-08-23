@@ -66,7 +66,7 @@ releases:
           MINIMUM_MASTER_NODES: "2"
       client:
         name: client
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF") "OFF" }}
+{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
         replicas: 0
 {{ else }}
         replicas: 2
@@ -120,7 +120,7 @@ releases:
       master:
         name: master
         exposeHttp: false
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF") "OFF" }}
+{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
         replicas: 0
 {{ else }}
         replicas: 3
@@ -169,7 +169,7 @@ releases:
       data:
         name: data
         exposeHttp: false
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF") "OFF" }}
+{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
         replicas: 0
 {{ else }}
         replicas: 2

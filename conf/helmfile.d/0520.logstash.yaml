@@ -113,7 +113,7 @@ releases:
         operator: Exists
         effect: NoSchedule
 
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF") "OFF" }}
+{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
       replicaCount: 0
 {{ else }}
       replicaCount: 4

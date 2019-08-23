@@ -1,4 +1,4 @@
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF") "OFF" }}
+{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
 
 {{ else }}
 helmDefaults:
