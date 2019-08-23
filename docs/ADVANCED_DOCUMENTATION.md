@@ -6,7 +6,7 @@ Here is some documentation on the finer points of the Deepcell Kiosk. We will go
 
 ### Accessing Cluster Logging and Metrics Functionality using OpenVPN
 
-(__Optional:__ For reliability reasons, logging facilities are disabled by default. To enable logging functionality, move all helmfiles in [conf/optional_helmfiles](conf/optional_helmfiles) to [conf/helmfile.d](conf/helmfile.d) before cluster creation. Note that cluster creation might get stuck during the helmfiles deployment step and, if the cluster appears to be in an error loop, simply exit the cluster creation dialog, change the cluster name in the config menu, and try creating the cluster again. There's probably a 50% failure rate when logging is enabled, but it should succeed eventually. Pull requests and advice on this issue are greatly appreciated.)
+(__Optional:__ For reliability reasons, logging facilities are disabled by default. To enable logging functionality, either set `ELK_DEPLOYMENT_TOGGLE=ON` before cluster creation, or set it after cluster creation and then execute `helmfile sync`. Note that the cluster might get stuck during helmfile deployment and, if the cluster appears to be in an error loop, simply exit the cluster, change the cluster name in the configuration menu, and try creating the cluster again. There's a ~50% failure rate when deploying the logging infrastructure, but it should succeed eventually. Pull requests and advice on this issue are greatly appreciated.)
 
 1. After cluster startup, choose `Shell` from the main menu. On the command line, execute the following command:
 

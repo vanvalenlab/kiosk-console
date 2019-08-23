@@ -33,6 +33,9 @@ ENV NODE_MACHINE_TYPE="t2.medium"
 ENV NODE_MAX_SIZE="60"
 ENV NODE_MIN_SIZE="1"
 
+# Deployment config
+ENV ELK_DEPLOYMENT_TOGGLE="OFF"
+
 # Filesystem entry for tfstate
 RUN s3 fstab '${KOPS_STATE_STORE}' '/' '/s3'
 

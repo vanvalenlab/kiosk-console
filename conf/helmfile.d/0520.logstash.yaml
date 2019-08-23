@@ -113,7 +113,11 @@ releases:
         operator: Exists
         effect: NoSchedule
 
+{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF") "OFF" }}
+      replicaCount: 0
+{{ else }}
       replicaCount: 4
+{{ end }}
 
       livenessProbe:
         httpGet:
