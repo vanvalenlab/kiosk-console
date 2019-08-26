@@ -14,13 +14,23 @@ do
 done
 echo "Training GPU node pool destruction finished."
 
-echo "Destroying elasticsearch CPU node pool..."
-until gcloud container node-pools delete elasticsearch-cpu --quiet --region ${GKE_COMPUTE_REGION}
-do
-    echo "Elasticsearch-data CPU node pool destruction failed. Trying again in 30 seconds."
-    sleep 30
-done
-echo "Elasticsearch CPU node pool destruction finished."
+if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then
+    echo "Destroying elasticsearch CPU node pool..."
+    until gcloud container node-pools delete elasticsearch-cpu --quiet --region ${GKE_COMPUTE_REGION}
+    do
+        echo "Elasticsearch-data CPU node pool destruction failed. Trying again in 30 seconds."
+        sleep 30
+    done
+    echo "Elasticsearch CPU node pool destruction finished."
+
+    echo "Destroying logstash CPU node pool..."
+    until gcloud container node-pools delete logstash-cpu --quiet --region ${GKE_COMPUTE_REGION}
+    do
+        echo "Logstash-data CPU node pool destruction failed. Trying again in 30 seconds."
+        sleep 30
+    done
+    echo "Logstash CPU node pool destruction finished."
+fi
 
 echo "Destroying redis-consumer, data-processing CPU node pool..."
 until gcloud container node-pools delete rc-dp-cpu --quiet --region ${GKE_COMPUTE_REGION}

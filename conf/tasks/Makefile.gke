@@ -156,6 +156,14 @@ gke/create/node-pools:
 		--node-taints training_gpu=yes:NoSchedule \
 		|| echo "Training GPU node pool creation failed."
 	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
+		make gke/deploy/elk
+	fi
+	@echo "GPU node pool creation finished."
+	@echo " "
+	@echo " "
+
+gke/deploy/elk:
+	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
 		@echo "Creating elasticsearch CPU node pool...";\
 		@echo "Using the following command: ";\
 		gcloud container node-pools create elasticsearch-cpu \
@@ -191,9 +199,6 @@ gke/create/node-pools:
 			--node-taints logstash=yes:NoSchedule \
 			|| echo "Elasticsearch CPU node pool creation failed.";\
 	fi
-	@echo "GPU node pool creation finished."
-	@echo " "
-	@echo " "
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
 # When you add a GPU node pool to an existing cluster that already runs a non-GPU node pool, GKE automatically taints the GPU nodes with the following node taint
