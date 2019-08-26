@@ -245,7 +245,8 @@ function configure_gke() {
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name" "${GKE_BUCKET:-invalid_default}")
+  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name\n\nThe bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more. If you do not have one, first create a bucket under storage on google cloud." "${GKE_BUCKET:-invalid_default}" 60 13)
+
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
@@ -256,7 +257,7 @@ function configure_gke() {
   local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
   local total_lines=$(($base_box_height + $selector_box_lines))
   export GKE_COMPUTE_REGION=$(radiobox "Google Cloud" \
-      "Choose a region for hosting your cluster:" \
+      "Choose a region for hosting your cluster: \nPress the spacebar to select and Enter to continue." \
 	  $total_lines 60 $selector_box_lines "$regions_with_default")
   if [ "$GKE_COMPUTE_REGION" = "" ]; then
 	  return 0
@@ -281,11 +282,11 @@ function configure_gke() {
   local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
   local total_lines=$(($base_box_height + $selector_box_lines))
   export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
-      "Choose a GPU for prediction (not training) from the GPU types available in your region:" \
+      "Choose a GPU for prediction (not training) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
   export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
-      "Choose a GPU for training (not prediction) from the GPU types available in your region:" \
+      "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
   local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
@@ -411,6 +412,15 @@ function view() {
   read -p "Press enter to return to main menu"
 }
 
+function confirm() {
+  echo "Are you sure? y/n "
+  read response
+  if [ $response = "y" ]; then
+    return 0
+  fi
+  return 1
+}
+
 function benchmarking() {
   local benchmark_types="1-image,1-CPU _ ON
 	  10-images,1-CPU _ OFF
@@ -490,7 +500,11 @@ https://vanvalenlab.caltech.edu"
       "Destroy") destroy ;;
       "View") view ;;
       "Benchmark") benchmarking ;;
-      "Exit") break ;;
+      "Exit"*)
+        confirm
+        if [ $? = 0 ]; then
+          break
+        fi;;
     esac
   done
 
