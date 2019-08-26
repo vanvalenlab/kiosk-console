@@ -15,39 +15,50 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "benchmarking"
-  namespace: "deepcell"
+- name: benchmarking
+  namespace: deepcell
   labels:
-    chart: "benchmarking"
-    component: "benchmarking"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
-    default: "true"
+    chart: benchmarking
+    component: benchmarking
+    namespace: deepcell
+    vendor: vanvalenlab
+    default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/benchmarking'
-  version: "0.1.0"
+  version: 0.1.0
   values:
-    - replicas: 1
+    - replicas: 0
+
       image:
-        repository: "vanvalenlab/kiosk-benchmarking"
-        tag: "0.1"
-        pullPolicy: "Always"
+        repository: vanvalenlab/kiosk-benchmarking
+        tag: 0.2.1
+        pullPolicy: Always
+
+      resources:
+        requests:
+          cpu: 250m
+          memory: 128Mi
+
       env:
-        REDIS_HOST: "redis-master"
-        REDIS_PORT: "6379"
-        BENCHMARKING_PU_TYPE_AND_NUMBER: '{{ env "BENCHMARKING_PU_TYPE_AND_NUMBER" | default "NA" }}'
-        BENCHMARKING_PU_TYPE: '{{ env "BENCHMARKING_PU_TYPE" | default "NA" }}'
-        IMG_NUM: '{{ env "IMG_NUM" | default "0" }}'
-        BENCHMARK_MODEL: '{{ env "BENCHMARK_MODEL" | default "NA" }}'
-        BENCHMARK_MODEL_VERSION: '{{ env "BENCHMARK_MODEL_VERSION" | default "NA" }}'
-        BENCHMARK_POSTPROCESSING: '{{ env "BENCHMARK_POSTPROCESSING" | default "NA" }}'
-        BENCHMARK_CUTS: '{{ env "BENCHMARK_CUTS" | default "NA" }}'
-        GPU_TYPE: '{{ env "PREDICTION_GPU_TYPE" | default "NA" }}'
-        CLUSTER_ADDRESS: '{{ env "CLUSTER_ADDRESS" | default "NA" }}'
-        UPLOAD_METHOD: '{{ env "UPLOAD_METHOD" | default "direct" }}'
-        IMAGES_PER_ZIP: '{{ env "IMAGES_PER_ZIP" | default "100" }}'
+        NUM_CYCLES: 1
+        NUM_GPUS: '{{ env "GPU_NODE_MAX_SIZE" | default "MIA" }}'
+        GRAFANA_USER: admin
+        GRAFANA_PASSWORD: prom-operator
+        GRAFANA_HOST: prometheus-operator-grafana.monitoring.svc.cluster.local
+        LOG_LEVEL: INFO
+        API_HOST: '{{ env "CLUSTER_ADDRESS" | default "frontend" }}'
+        FILE: zip100.zip
+        COUNT: 100
+        MODEL: watershednuclearnofgbg41f16:0
+        UPLOAD_PREFIX: uploads
+        POSTPROCESS: watershed
+        PREPROCESS: ""
+        START_DELAY: 0.5
+        UPDATE_INTERVAL: 15
+        MANAGER_REFRESH_RATE: 15
+        EXPIRE_TIME: 3600
+        CONCURRENT_REQUESTS_PER_HOST: 1
 {{ if eq (env "CLOUD_PROVIDER" | default "gke") "gke" }}
-        BUCKET: '{{ env "GKE_BUCKET" | default "invalid-bucket" }}'
+        STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "invalid-bucket" }}'
 {{ else }}
-        BUCKET: '{{ env "AWS_BUCKET" | default "invalid-bucket" }}'
+        STORAGE_BUCKET: '{{ env "AWS_BUCKET" | default "invalid-bucket" }}'
 {{ end }}
-        BUCKET_FOLDER: '{{ env "BUCKET_UPLOAD_FOLDER" | default "uploads" }}'

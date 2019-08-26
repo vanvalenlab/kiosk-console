@@ -12,15 +12,22 @@ image:
 resources: {}
 
 env:
-  BENCHMARKING_PU_TYPE_AND_NUMBER: "specify_me"
-  BENCHMARKING_PU_TYPE: "specify_me"
-  IMG_NUM: 0
-  BENCHMARK_MODEL: "specify_me"
-  BENCHMARK_MODEL_VERSION: "specify_me"
-  BENCHMARK_POSTPROCESSING: "specify_me"
-  BENCHMARK_CUTS: 0
-  GPU_TYPE: "specify_me"
-  UPLOAD_METHOD: "specify_me"
-  IMAGES_PER_ZIP: 0
-  BUCKET: "specify_me"
-  BUCKET_FOLDER: "specify_me"
+  NUM_CYCLES: 1
+  NUM_GPUS: 1
+  GRAFANA_USER: admin
+  GRAFANA_PASSWORD: admin
+  GRAFANA_HOST: grafana
+  LOG_LEVEL: DEBUG
+  API_HOST: '{{ env "CLUSTER_ADDRESS" | default "frontend" }}'
+  FILE: specify_me
+  COUNT: 1
+  MODEL: dummy_model:dummy_version
+  UPLOAD_PREFIX: uploads
+  POSTPROCESS: ""
+  PREPROCESS: ""
+  START_DELAY: 1
+  UPDATE_INTERVAL: 15
+  MANAGER_REFRESH_RATE: 15
+  EXPIRE_TIME: 3600
+  CONCURRENT_REQUESTS_PER_HOST: 1
+  STORAGE_BUCKET: specify_me
