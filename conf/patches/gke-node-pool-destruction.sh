@@ -14,7 +14,7 @@ do
 done
 echo "Training GPU node pool destruction finished."
 
-if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then
+if [ "${ELK_DEPLOYMENT_TOGGLE}" == "ON" ] || [ "${ELK_DEPLOYMENT_TOGGLE}" == "on" ]; then
     echo "Destroying elasticsearch CPU node pool..."
     until gcloud container node-pools delete elasticsearch-cpu --quiet --region ${GKE_COMPUTE_REGION}
     do
