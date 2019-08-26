@@ -1,6 +1,3 @@
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
-
-{{ else }}
 helmDefaults:
   args:
     - "--wait"
@@ -106,4 +103,3 @@ releases:
         - key: logstash
           operator: Exists
           effect: NoSchedule
-{{ end }}

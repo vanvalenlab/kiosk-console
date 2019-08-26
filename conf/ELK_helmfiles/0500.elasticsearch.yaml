@@ -66,11 +66,7 @@ releases:
           MINIMUM_MASTER_NODES: "2"
       client:
         name: client
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
-        replicas: 0
-{{ else }}
         replicas: 2
-{{ end }}
         serviceType: ClusterIP
         loadBalancerIP: {}
         loadBalancerSourceRanges: {}
@@ -120,11 +116,7 @@ releases:
       master:
         name: master
         exposeHttp: false
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
-        replicas: 0
-{{ else }}
         replicas: 3
-{{ end }}
         heapSize: "512m"
         # additionalJavaOpts: "-XX:MaxRAM=512m"
         persistence:
@@ -169,11 +161,7 @@ releases:
       data:
         name: data
         exposeHttp: false
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
-        replicas: 0
-{{ else }}
         replicas: 2
-{{ end }}
         heapSize: "1536m"
         # additionalJavaOpts: "-XX:MaxRAM=1536m"
         persistence:

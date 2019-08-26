@@ -4,6 +4,9 @@
 helmfile/create/all:
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
+	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
+		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
+	fi
 	/conf/patches/gke-helmfile-deployment.sh
 	@echo "Helmfile deployment finished."
 	@echo " "

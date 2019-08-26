@@ -79,11 +79,7 @@ releases:
       tolerations: []
       nodeSelector: {}
       podAnnotations: {}
-{{ if eq (env "ELK_DEPLOYMENT_TOGGLE" | default "OFF" | lower) "off" }}
-      replicaCount: 0
-{{ else }}
       replicaCount: 1
-{{ end }}
       revisionHistoryLimit: 3
       dashboardImport:
         timeout: 60
