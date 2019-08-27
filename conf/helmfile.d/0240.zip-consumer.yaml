@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.2.1"
+        tag: "0.2.2"
         pullPolicy: "Always"
 
       resources:
