@@ -193,6 +193,18 @@ releases:
               labels:
                 namespace: deepcell
                 service: zip-scaling-service
+            - record: tracking_consumer_key_ratio
+              expr: |-
+                avg_over_time(redis_script_value{key="track_image_keys"}[15s])
+                / on()
+                (
+                  avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
+                  +
+                  1
+                )
+              labels:
+                namespace: deepcell
+                service: tracking-scaling-service
 
       ##
       global:
