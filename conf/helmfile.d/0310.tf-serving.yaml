@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-tf-serving"
-        tag: "0.1"
+        tag: "0.2.0"
         pullPolicy: "Always"
 
       resources:
