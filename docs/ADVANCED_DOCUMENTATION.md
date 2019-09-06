@@ -5,6 +5,9 @@ Here is some documentation on the finer points of the Deepcell Kiosk. We will go
 <br></br>
 
 ### Accessing Cluster Logging and Metrics Functionality using OpenVPN
+
+(__Optional:__ For reliability reasons, logging facilities are disabled by default. To enable logging functionality, either 1) execute `export ELK_DEPLOYMENT_TOGGLE=ON` at the command line before cluster creation, or 2) execute `export ELK_DEPLOYMENT_TOGGLE=ON; make gke/deploy/elk; make helmfile/create/elk` at the command line after cluster creation. Please note that, whenever logging is enabled, the cluster might get stuck in the process of deploying the logging infrastructure. If the cluster appears to be in an error loop, simply exit the cluster, change the cluster name in the configuration menu, and try creating it again. There's a ~50% failure rate when deploying the logging infrastructure, but cluster deployment should succeed eventually. Pull requests and advice on this issue would be greatly appreciated.)
+
 1. After cluster startup, choose `Shell` from the main menu. On the command line, execute the following command:
 
 ```bash
