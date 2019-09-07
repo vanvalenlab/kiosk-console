@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-janitor"
-        tag: "0.2"
+        tag: "0.3.0"
         pullPolicy: "Always"
 
       serviceAccount:
@@ -49,6 +49,7 @@ releases:
         #   memory: 64Mi
 
       env:
+        QUEUES: "predict,track"
         DEBUG: "true"
         INTERVAL: "5"
         REDIS_HOST: "redis"

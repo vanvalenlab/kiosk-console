@@ -114,7 +114,11 @@ spec:
   minReplicas: 1
   maxReplicas: $GPU_MAX_TIMES_FIFTY
   metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80
+  - type: Object
+    object:
+      metricName: tracking_consumer_key_ratio
+      target:
+        apiVersion: v1
+        kind: Namespace
+        name: tracking_consumer_key_ratio
+      targetValue: 1
