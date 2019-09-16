@@ -53,8 +53,8 @@ releases:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
         CONSUMER_TYPE: "zip"
-        LABEL_DETECT_ENABLED: true
-        SCALE_DETECT_ENABLED: true
+        LABEL_DETECT_ENABLED: True
+        SCALE_DETECT_ENABLED: True
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
