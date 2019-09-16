@@ -46,8 +46,6 @@ releases:
         REDIS_PORT: 26379
         TF_HOST: tf-serving
         TF_PORT: 8500
-        DP_HOST: data-processing
-        DP_PORT: 8080
         GRPC_TIMEOUT: 20
         DEBUG: True
         INTERVAL: 1
@@ -55,6 +53,8 @@ releases:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
         CONSUMER_TYPE: image
+        LABEL_DETECT_ENABLED: true
+        SCALE_DETECT_ENABLED: true
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
