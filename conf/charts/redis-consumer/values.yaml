@@ -6,7 +6,7 @@ replicas: 1
 
 image:
   repository: "vanvalenlab/kiosk-redis-consumer"
-  tag: "latest"
+  tag: "drift"
   pullPolicy: "Always"
 
 resources: {}
@@ -32,6 +32,12 @@ env:
   GKE_COMPUTE_ZONE: "us-west1-b"
   LABEL_DETECT_ENABLED: true
   SCALE_DETECT_ENABLED: true
+  TRACKING_MODEL: tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1
+  NUCLEAR_POSTPROCESS: retinanet-semantic
+  PHASE_MODEL: resnet50_retinanet_20190813_all_phase_512:0
+  PHASE_POSTPROCESS: retinanet
+  CYTOPLASM_MODEL: resnet50_retinanet_20190903_all_fluorescent_cyto_512:0
+  CYTOPLASM_POSTPROCESS: retinanet-semantic
 
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"
