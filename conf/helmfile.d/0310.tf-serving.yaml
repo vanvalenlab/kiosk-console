@@ -24,7 +24,7 @@ releases:
     vendor: "vanvalenlab"
     default: "true"
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
-  version: "0.1.0"
+  version: "tf-1.14.0"
   values:
     - replicas: 0
 
