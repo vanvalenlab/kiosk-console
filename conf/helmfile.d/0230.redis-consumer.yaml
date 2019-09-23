@@ -42,24 +42,45 @@ releases:
         #   memory: 2Gi
 
       env:
-        REDIS_HOST: redis
-        REDIS_PORT: 26379
-        TF_HOST: tf-serving
-        TF_PORT: 8500
-        GRPC_TIMEOUT: 20
         DEBUG: True
         INTERVAL: 1
+        QUEUE: predict
+        CONSUMER_TYPE: image
+        EMPTY_QUEUE_TIMEOUT: 5
+        GRPC_TIMEOUT: 20
+        GRPC_BACKOFF: 3
+
+        REDIS_HOST: redis
+        REDIS_PORT: 26379
+        REDIS_TIMEOUT: 3
+
+        TF_HOST: tf-serving
+        TF_PORT: 8500
+        TF_TENSOR_NAME: "image"
+        TF_TENSOR_DTYPE: "DT_FLOAT"
+
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
-        CONSUMER_TYPE: image
+
+        NUCLEAR_MODEL: panoptic:3
+        NUCLEAR_POSTPROCESS: retinanet-semantic
+
         PHASE_MODEL: resnet50_retinanet_20190813_all_phase_512:0
         PHASE_POSTPROCESS: retinanet
+
         CYTOPLASM_MODEL: resnet50_retinanet_20190903_all_fluorescent_cyto_512:0
         CYTOPLASM_POSTPROCESS: retinanet
-        NUCLEAR_POSTPROCESS: retinanet-semantic
-        LABEL_DETECT_ENABLED: True
-        SCALE_DETECT_ENABLED: True
+
+        LABEL_DETECT_ENABLED: true
+        LABEL_DETECT_MODEL: "LabelDetection:1"
+        LABEL_RESHAPE_SIZE: 216
+        LABEL_DETECT_SAMPLE: 10
+
+        SCALE_DETECT_ENABLED: true
+        SCALE_DETECT_MODEL: "ScaleDetection:3"
+        SCALE_RESHAPE_SIZE: 216
+        SCALE_DETECT_SAMPLE: 10
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
