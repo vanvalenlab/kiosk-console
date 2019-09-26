@@ -52,7 +52,7 @@ releases:
 
       env:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
-        DEBUG: "True"
+        DEBUG: "true"
         EXPORT_PREFIX: "models"
         LOG_PREFIX: "tensorboard_logs"
         REDIS_HOST: "redis"

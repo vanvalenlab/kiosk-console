@@ -53,18 +53,18 @@ env:
   CYTOPLASM_MODEL: "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
   CYTOPLASM_POSTPROCESS: "retinanet"
 
-  LABEL_DETECT_ENABLED: false
+  LABEL_DETECT_ENABLED: "false"
   LABEL_DETECT_MODEL: "LabelDetection:1"
   LABEL_RESHAPE_SIZE: 216
   LABEL_DETECT_SAMPLE: 3
 
-  SCALE_DETECT_ENABLED: false
+  SCALE_DETECT_ENABLED: "false"
   SCALE_DETECT_MODEL: "ScaleDetection:3"
   SCALE_RESHAPE_SIZE: 216
   SCALE_DETECT_SAMPLE: 3
 
-  DRIFT_CORRECT_ENABLED: false
-  NORMALIZE_TRACKING: false
+  DRIFT_CORRECT_ENABLED: "false"
+  NORMALIZE_TRACKING: "false"
 
   TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
   TRACKING_SEGMENT_MODEL: "panoptic:3"
