@@ -24,13 +24,13 @@ releases:
     vendor: "vanvalenlab"
     default: "true"
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
-  version: "tf-1.14.0"
+  version: "0.1.0"
   values:
     - replicas: 0
 
       image:
         repository: "vanvalenlab/kiosk-tf-serving"
-        tag: "0.1"
+        tag: "tf-1.14.0"
         pullPolicy: "Always"
 
       resources:
