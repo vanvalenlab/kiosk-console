@@ -55,7 +55,6 @@ releases:
         QUEUES: "predict,train,track"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
-        QUEUES: "predict,train,track"
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         AUTOSCALING: >
             {{ env "AWS_MIN_GPU_NODES" | default 0 }}|{{ env "AWS_MAX_GPU_NODES" | default 5 }}|1|deepcell|deployment|predict|tf-serving;
