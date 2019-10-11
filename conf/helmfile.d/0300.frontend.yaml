@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: dev
+        tag: 0.3.0
         pullPolicy: Always
 
       resources:
