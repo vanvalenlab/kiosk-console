@@ -78,7 +78,7 @@ releases:
         LABEL_DETECT_SAMPLE: 10
 
         SCALE_DETECT_ENABLED: "true"
-        SCALE_DETECT_MODEL: "ScaleDetection:3"
+        SCALE_DETECT_MODEL: "ScaleDetection:0"
         SCALE_RESHAPE_SIZE: 216
         SCALE_DETECT_SAMPLE: 10
 
