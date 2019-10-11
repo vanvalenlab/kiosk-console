@@ -75,7 +75,7 @@ releases:
         CYTOPLASM_POSTPROCESS: "retinanet"
 
         LABEL_DETECT_ENABLED: "true"
-        LABEL_DETECT_MODEL: "LabelDetection:2"
+        LABEL_DETECT_MODEL: "LabelDetection:0"
         LABEL_RESHAPE_SIZE: 216
         LABEL_DETECT_SAMPLE: 10
 
