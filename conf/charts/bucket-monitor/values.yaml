@@ -13,7 +13,9 @@ resources: {}
 
 env:
   DEBUG: "true"
-  INTERVAL: 10
+  INTERVAL: "21600"
+  AGE_THRESHOLD: "604800"
+  PREFIX: "uploads/,output/"
   CLOUD_PROVIDER: "overwrite_this"
   BUCKET: "overwrite_this"
   REDIS_HOST: "redis-master"
