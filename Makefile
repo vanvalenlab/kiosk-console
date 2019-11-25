@@ -32,3 +32,7 @@ install:
 ## Start the geodesic shell by calling wrapper script
 run:
 	$(CLUSTER)
+
+## Target for testing cluster deployment
+test:
+	echo "TEST"
