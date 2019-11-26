@@ -53,13 +53,5 @@ jobs:
       uses: actions/gcloud/auth@master
       env:
         GCLOUD_AUTH: ${{ secrets.GKE_KEY_BASE64 }}
-      #env:
-      #  GCLOUD_AUTH: $HOME/secrets/gke_service_account_key_base64.json
-      #- name: setup gcloud CLI 
-      #uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-      #with:
-      #  version: '270.0.0'
-      #  service_account_email: ${{ secrets.GKE_EMAIL }}
-      #  service_account_key: $HOME/secrets/gke_service_account_key.json
     - name: run cluster setup
       run: make test
