@@ -49,4 +49,4 @@ jobs:
       env:
         GCLOUD_AUTH: ${{ secrets.GKE_KEY_BASE64 }}
     - name: run cluster setup
-      run: cd ./conf && make test
+      run: make test
