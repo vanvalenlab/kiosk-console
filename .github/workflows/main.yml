@@ -44,7 +44,6 @@ jobs:
     - name: checkout branch
       uses: actions/checkout@v1
     - name: Decrypt large secret
-      uses: actions/checkout@v1
       run: ./.github/workflows/decrypt_gke_service_account_key.sh
       env:
         GKE_KEY_PASSPHRASE: ${{ secrets.GKE_KEY_PASSPHRASE }}
