@@ -52,6 +52,6 @@ jobs:
       with:
         version: '270.0.0'
         service_account_email: ${{ secrets.GKE_EMAIL }}
-        service_account_key: $HOME/secrets/gke_secrive_account_key.json
+        service_account_key: $HOME/secrets/gke_service_account_key.json
     - name: run cluster setup
       run: make test
