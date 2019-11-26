@@ -39,5 +39,5 @@ test:
 	ls
 	ls ..
 	make deps
-	cd ./conf && make create
+	cd ./conf/tasks && make -f Makefile.gke gke/create/all && make -f Makefile.helmfile helmfile/create/all && make -f Makefile.kubectl kubectl/display/ip && make -f Makefile.kubectl kubectl/implement/autoscaling
 	echo "TESTED"
