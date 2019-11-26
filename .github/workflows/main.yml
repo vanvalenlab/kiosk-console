@@ -43,11 +43,16 @@ jobs:
     steps:
     - name: checkout branch
       uses: actions/checkout@v1
+    - name: Decrypt large secret
+      uses: actions/checkout@v1
+      run: ./.github/workflows/decrypt_gke_service_account_key.sh
+      env:
+        GKE_KEY_PASSPHRASE: ${{ secrets.GKE_KEY_PASSPHRASE }}
     - name: setup gcloud CLI 
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         version: '270.0.0'
         service_account_email: ${{ secrets.GKE_EMAIL }}
-        service_account_key: ${{ secrets.GKE_KEY }}
+        service_account_key: ./.github/workflows/gke_secrive_account_key.json
     - name: run cluster setup
       run: make test
