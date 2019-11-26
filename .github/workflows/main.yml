@@ -48,7 +48,7 @@ jobs:
       env:
         GKE_KEY_PASSPHRASE: ${{ secrets.GKE_KEY_PASSPHRASE }}
     - name: Test printing your secret (Remove this step in production)
-      run: cat $HOME/secrets/my_secret.json
+      run: cat $HOME/secrets/gke_service_account_key.json
     - name: setup gcloud CLI 
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
