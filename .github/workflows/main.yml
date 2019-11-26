@@ -7,6 +7,7 @@ on:
 
 # Environment variables available to all jobs and steps in this workflow
 env:
+  CLOUD_PROVIDER: gke
   GPU_MAX_TIMES_THIRTY: 120 
   TRAINING_GPU_TYPE: nvidia-tesla-v100
   GPU_MAX_TIMES_ONE_HUNDRED_FIFTY: 600 
