@@ -44,12 +44,6 @@ jobs:
     steps:
     - name: checkout branch
       uses: actions/checkout@v1
-    - name: Decrypt large secret
-      run: ./.github/workflows/decrypt_gke_service_account_key.sh
-      env:
-        GKE_KEY_PASSPHRASE: ${{ secrets.GKE_KEY_PASSPHRASE }}
-    - name: Test printing your secret (Remove this step in production)
-      run: cat $HOME/secrets/gke_service_account_key_base64.json
     - name: setup gcloud CLI
       uses: actions/gcloud/auth@master
       env:
