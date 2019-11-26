@@ -1,0 +1,52 @@
+name: Test Kiosk Deployment on GKE
+
+on:
+  push:
+    branches:
+    - feature/cicd
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  GPU_MAX_TIMES_THIRTY: 120
+  TRAINING_GPU_TYPE: nvidia-tesla-v100
+  GPU_MAX_TIMES_ONE_HUNDRED_FIFTY: 600
+  PREDICTION_GPU_TYPE: nvidia-tesla-v100
+  GPU_MAX_DIVIDED_BY_TWO: 2
+  GPU_MAX_TIMES_TWO_HUNDRED: 800
+  GPU_MAX_TIMES_TEN: 40
+  GPU_MAX_TIMES_FIFTY: 200
+  NODE_MAX_SIZE: 60
+  GPU_MAX_DIVIDED_BY_THREE: 1
+  GPU_NODE_MIN_SIZE: 0
+  GPU_MAX_TIMES_THREE: 12
+  GKE_BUCKET: ${{ secrets.GKE_BUCKET }}
+  PROJECT: ${{ secrets.GKE_PROJECT }}
+  GPU_MAX_TIMES_FOUR: 16
+  GPU_MAX_TIMES_TWO: 8
+  GPU_MAX_TIMES_FIVE: 20
+  GKE_COMPUTE_REGION: us-west1
+  GPU_MAX_TIMES_ONE_HUNDRED: 400
+  GPU_NODE_MAX_SIZE: 4
+  GPU_MAX_DIVIDED_BY_FOUR: 1
+  NODE_MIN_SIZE: 1
+  GPU_MAX_TIMES_SEVENTY_FIVE: 300
+  GKE_MACHINE_TYPE: n1-standard-4
+  GPU_MAX_TIMES_FOURTY: 160
+  GPU_MAX_TIMES_TWENTY: 80
+  CLUSTER_NAME: deepcell-ci-testing
+  #GITHUB_SHA: ${{ github.sha }}
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: checkout branch
+      uses: actions/checkout@feature/cicd
+    - name: setup gcloud CLI
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@feature/cicd
+      with:
+        version: '270.0.0'
+        service_account_email: ${{ secrets.GKE_EMAIL }}
+        service_account_key: ${{ secrets.GKE_KEY }}
+    - name: run cluster setup
+      run: make test
