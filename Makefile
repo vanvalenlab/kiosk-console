@@ -39,7 +39,9 @@ test:
 	ls
 	ls ..
 	make deps
+	pwd
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
+	pwd
 	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
 	cd ./conf/tasks && make -f Makefile.gke gke/create/bucket
 	cd ./conf/tasks && make -f Makefile.gke gke/deploy/helm
