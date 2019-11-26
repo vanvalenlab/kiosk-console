@@ -52,7 +52,9 @@ jobs:
     - name: setup gcloud CLI
       uses: actions/gcloud/auth@master
       env:
-        GCLOUD_AUTH: $HOME/secrets/gke_service_account_key_base64.json
+        GCLOUD_AUTH: ${{ GKE_KEY_BASE64 }}
+      #env:
+      #  GCLOUD_AUTH: $HOME/secrets/gke_service_account_key_base64.json
       #- name: setup gcloud CLI 
       #uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       #with:
