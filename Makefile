@@ -39,5 +39,11 @@ test:
 	ls
 	ls ..
 	make deps
-	cd ./conf/tasks && make -f Makefile.gke gke/create/all && make -f Makefile.helmfile helmfile/create/all && make -f Makefile.kubectl kubectl/display/ip && make -f Makefile.kubectl kubectl/implement/autoscaling
+	cd ./conf/tasks
+	make -f Makefile.gke gke/create/cluster
+	make -f Makefile.gke gke/create/node-pools
+	make -f Makefile.gke gke/create/bucket
+	make -f Makefile.gke gke/deploy/helm
+	make -f Makefile.gke gke/deploy/nvidia
+	make -f Makefile.helmfile helmfile/create/all && make -f Makefile.kubectl kubectl/display/ip && make -f Makefile.kubectl kubectl/implement/autoscaling
 	echo "TESTED"
