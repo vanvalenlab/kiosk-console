@@ -36,5 +36,5 @@ run:
 ## Target for testing cluster deployment
 test:
 	echo "TEST"
-	make create
+	cd ./conf && make create
 	echo "TESTED"
