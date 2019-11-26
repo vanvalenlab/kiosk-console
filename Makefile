@@ -38,7 +38,7 @@ test:
 	echo "TEST"
 	ls
 	ls ..
-	make deps
+	make init
 	pwd
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	pwd
