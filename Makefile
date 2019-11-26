@@ -38,5 +38,6 @@ test:
 	echo "TEST"
 	ls
 	ls ..
+	make deps
 	cd ./conf && make create
 	echo "TESTED"
