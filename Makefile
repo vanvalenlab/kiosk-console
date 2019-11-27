@@ -40,13 +40,9 @@ test:
 	echo $(PROJECT) && echo $(HOME)
 	pwd
 	make init
-	#gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) && \
-	#gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
-	#gcloud config set project $(PROJECT) &&
-	#cd ./conf/tasks && make -f Makefile.gke gke/create/service-account
 	gcloud config set project $(PROJECT) && \
-	gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" && \
-	gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin && \
+	gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) && \
+	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	echo $(CLOUDSDK_CONFIG)
 	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
@@ -55,3 +51,7 @@ test:
 	cd ./conf/tasks && make -f Makefile.gke gke/deploy/nvidia
 	cd ./conf/tasks && make -f Makefile.helmfile helmfile/create/all && make -f Makefile.kubectl kubectl/display/ip && make -f Makefile.kubectl kubectl/implement/autoscaling
 	echo "TESTED"
+	#gcloud config set project $(PROJECT) && \
+	#gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" && \
+	#gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin &&
+	#cd ./conf/tasks && make -f Makefile.gke gke/create/service-account
