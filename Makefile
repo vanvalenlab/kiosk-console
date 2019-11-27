@@ -37,13 +37,12 @@ run:
 test:
 	echo "TEST"
 	ls
-	ls ..
 	make init
 	pwd
+	echo $(PROJECT)
 	echo $(HOME)
 	gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL)
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json
-	echo $(PROJECT)
 	gcloud config set project $(PROJECT)
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	echo $(CLOUDSDK_CONFIG)
