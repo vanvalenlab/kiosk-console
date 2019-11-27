@@ -40,6 +40,7 @@ test:
 	ls ..
 	make init
 	pwd
+	echo $(HOME)
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	pwd
 	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
