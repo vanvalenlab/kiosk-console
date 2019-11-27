@@ -20,7 +20,8 @@ env:
   GPU_MAX_DIVIDED_BY_THREE: 1
   GPU_NODE_MIN_SIZE: 0
   GPU_MAX_TIMES_THREE: 12
-  GKE_BUCKET: ${{ secrets.GKE_BUCKET }}
+  GKE_BUCKET: deepcell-output-benchmarking
+  #GKE_BUCKET: ${{ secrets.GKE_BUCKET }}
   PROJECT: deepcell-209717
   #PROJECT: ${{ secrets.GKE_PROJECT }}
   GPU_MAX_TIMES_FOUR: 16
