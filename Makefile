@@ -36,8 +36,8 @@ run:
 ## Target for testing cluster deployment
 test:
 	echo "TEST"
-	ls
 	echo $(PROJECT) && echo $(HOME)
+	ls
 	pwd
 	make init
 	gcloud config set project $(PROJECT) && \
