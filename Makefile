@@ -43,7 +43,9 @@ test:
 	#gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) && \
 	#gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
 	#gcloud config set project $(PROJECT) &&
-	cd ./conf/tasks && make -f Makefile.gke gke/create/service-account
+	#cd ./conf/tasks && make -f Makefile.gke gke/create/service-account
+	gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" && \
+	gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin && \
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	echo $(CLOUDSDK_CONFIG)
 	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
