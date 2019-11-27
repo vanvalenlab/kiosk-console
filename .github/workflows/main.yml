@@ -37,6 +37,7 @@ env:
   CLUSTER_NAME: deepcell-ci-testing
   GKE_NODE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GKE_EMAIL }}
   CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
+  REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
   CLOUDSDK_PYTHON_SITEPACKAGES: 1
   #GITHUB_SHA: ${{ github.sha }}
 
