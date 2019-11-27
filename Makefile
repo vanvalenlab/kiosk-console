@@ -41,6 +41,7 @@ test:
 	make init
 	pwd
 	echo $(HOME)
+	gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL)
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	pwd
 	echo $(CLOUDSDK_CONFIG)
