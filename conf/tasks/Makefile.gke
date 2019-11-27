@@ -56,7 +56,7 @@ gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
 	gcloud container clusters create $(CLUSTER_NAME) \
-		--project=$(PROJECT)
+		--project=$(PROJECT) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region=$(GKE_COMPUTE_REGION) \
 		--node-locations=$(REGION_ZONES_WITH_GPUS) \
