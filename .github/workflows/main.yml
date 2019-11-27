@@ -21,7 +21,8 @@ env:
   GPU_NODE_MIN_SIZE: 0
   GPU_MAX_TIMES_THREE: 12
   GKE_BUCKET: ${{ secrets.GKE_BUCKET }}
-  PROJECT: ${{ secrets.GKE_PROJECT }}
+  PROJECT: deepcell-209717
+  #PROJECT: ${{ secrets.GKE_PROJECT }}
   GPU_MAX_TIMES_FOUR: 16
   GPU_MAX_TIMES_TWO: 8
   GPU_MAX_TIMES_FIVE: 20
@@ -35,10 +36,11 @@ env:
   GPU_MAX_TIMES_FOURTY: 160 
   GPU_MAX_TIMES_TWENTY: 80
   CLUSTER_NAME: deepcell-ci-testing
-  GKE_NODE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GKE_EMAIL }}
+  GKE_NODE_SERVICE_ACCOUNT_EMAIL: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
+  #GKE_NODE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GKE_EMAIL }}
   CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
   REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
-  GKE_KEY_BASE64: ${{ secrets.GKE_KEY_BASE64 }}
+  #GKE_KEY_BASE64: ${{ secrets.GKE_KEY_BASE64 }}
   CLOUDSDK_PYTHON_SITEPACKAGES: 1
   #GITHUB_SHA: ${{ github.sha }}
 
