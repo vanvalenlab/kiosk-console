@@ -22,16 +22,53 @@ service:
   httpsIngressEnabled: false
 
 env:
+  DEBUG: "True"
+  INTERVAL: 10
+  CONSUMER_TYPE: "image"
+  QUEUE: "predict"
+  EMPTY_QUEUE_TIMEOUT: 5
+  EXPIRE_TIME: 3600
+  GRPC_TIMEOUT: 30
+  GRPC_BACKOFF: 3
+
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
+  REDIS_TIMEOUT: 3
+
   TF_HOST: "overwrite_this"
   TF_PORT: "sepcify_me"
-  DP_HOST: "overwrite_this"
-  DP_PORT: "sepcify_me"
-  AWS_REGION: "us-east-1"
-  DEBUG: "True"
+  TF_TENSOR_NAME: "image"
+  TF_TENSOR_DTYPE: "DT_FLOAT"
+
   CLOUD_PROVIDER: "aws"
+  AWS_REGION: "us-east-1"
   GKE_COMPUTE_ZONE: "us-west1-b"
+
+  NUCLEAR_MODEL: "panoptic:3"
+  NUCLEAR_POSTPROCESS: "retinanet-semantic"
+
+  PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
+  PHASE_POSTPROCESS: "retinanet"
+
+  CYTOPLASM_MODEL: "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
+  CYTOPLASM_POSTPROCESS: "retinanet"
+
+  LABEL_DETECT_ENABLED: "false"
+  LABEL_DETECT_MODEL: "LabelDetection:0"
+  LABEL_RESHAPE_SIZE: 216
+  LABEL_DETECT_SAMPLE: 3
+
+  SCALE_DETECT_ENABLED: "false"
+  SCALE_DETECT_MODEL: "ScaleDetection:0"
+  SCALE_RESHAPE_SIZE: 216
+  SCALE_DETECT_SAMPLE: 3
+
+  DRIFT_CORRECT_ENABLED: "false"
+  NORMALIZE_TRACKING: "false"
+
+  TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
+  TRACKING_SEGMENT_MODEL: "panoptic:3"
+  TRACKING_POSTPROCESS_FUNCTION: "retinanet"
 
 secrets:
   AWS_ACCESS_KEY_ID: "change_me"

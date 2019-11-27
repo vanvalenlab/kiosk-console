@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.2.2"
+        tag: "0.4.1"
         pullPolicy: "Always"
 
       nameOverride: "tracking-consumer"
@@ -44,18 +44,52 @@ releases:
         #   memory: 1024Mi
 
       env:
+        DEBUG: "true"
+        INTERVAL: 1
+        QUEUE: "track"
+        CONSUMER_TYPE: "tracking"
+        EMPTY_QUEUE_TIMEOUT: 5
+        GRPC_TIMEOUT: 20
+        GRPC_BACKOFF: 3
+
         REDIS_HOST: "redis"
-        REDIS_PORT: "26379"
+        REDIS_PORT: 26379
+        REDIS_TIMEOUT: 3
+
         TF_HOST: "tf-serving"
-        TF_PORT: "8500"
-        DP_HOST: "data-processing"
-        DP_PORT: "8080"
-        DEBUG: "True"
+        TF_PORT: 8500
+        TF_TENSOR_NAME: "image"
+        TF_TENSOR_DTYPE: "DT_FLOAT"
+
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
-        CONSUMER_TYPE: "tracking"
-        QUEUE: "track"
+
+        NUCLEAR_MODEL: "panoptic:3"
+        NUCLEAR_POSTPROCESS: "retinanet-semantic"
+
+        PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
+        PHASE_POSTPROCESS: "retinanet"
+
+        CYTOPLASM_MODEL: "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
+        CYTOPLASM_POSTPROCESS: "retinanet"
+
+        LABEL_DETECT_ENABLED: "true"
+        LABEL_DETECT_MODEL: "LabelDetection:0"
+        LABEL_RESHAPE_SIZE: 216
+        LABEL_DETECT_SAMPLE: 10
+
+        SCALE_DETECT_ENABLED: "true"
+        SCALE_DETECT_MODEL: "ScaleDetection:0"
+        SCALE_RESHAPE_SIZE: 216
+        SCALE_DETECT_SAMPLE: 10
+
+        DRIFT_CORRECT_ENABLED: "false"
+        NORMALIZE_TRACKING: "true"
+
+        TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
+        TRACKING_SEGMENT_MODEL: "panoptic:3"
+        TRACKING_POSTPROCESS_FUNCTION: "retinanet"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'

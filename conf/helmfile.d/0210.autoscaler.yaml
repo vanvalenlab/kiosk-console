@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-autoscaler"
-        tag: "0.2"
+        tag: "0.3.0"
         pullPolicy: "Always"
 
       serviceAccount:
@@ -52,6 +52,7 @@ releases:
       env:
         DEBUG: "true"
         INTERVAL: "5"
+        QUEUES: "predict,train,track"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}

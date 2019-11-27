@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.2
+        tag: 0.3.0
         pullPolicy: Always
 
       resources:
@@ -67,7 +67,7 @@ releases:
         PORT: 8080
         REDIS_HOST: redis
         REDIS_PORT: 26379
-        REDIS_SENTINEL: true
+        REDIS_SENTINEL: "true"
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
