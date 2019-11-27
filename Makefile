@@ -42,6 +42,7 @@ test:
 	pwd
 	echo $(HOME)
 	gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL)
+	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(GKE_KEY_BASE64)
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	pwd
 	echo $(CLOUDSDK_CONFIG)
