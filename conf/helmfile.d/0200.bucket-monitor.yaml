@@ -26,11 +26,11 @@ releases:
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/bucket-monitor'
   version: "0.1.0"
   values:
-    - replicas: 0
+    - replicas: 1
 
       image:
         repository: "vanvalenlab/kiosk-bucket-monitor"
-        tag: "0.2"
+        tag: "0.3.0"
         pullPolicy: "Always"
 
       resources:
@@ -43,7 +43,9 @@ releases:
 
       env:
         DEBUG: "true"
-        INTERVAL: "5"
+        AGE_THRESHOLD: "259200"
+        PREFIX: "uploads/,output/"
+        INTERVAL: "21600"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
         CLOUD_PROVIDER: {{ env "CLOUD_PROVIDER" | default "broken_default" }}

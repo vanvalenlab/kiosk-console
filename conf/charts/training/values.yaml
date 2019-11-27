@@ -28,7 +28,7 @@ nodeSelector:
 # secrets.yaml and hemlfile.d/training.yaml
 env:
   CLOUD_PROVIDER: "aws"
-  DEBUG: "True"
+  DEBUG: "true"
   EXPORT_PREFIX: "models"
   LOG_PREFIX: "tensorboard_logs"
   REDIS_HOST: "redis-master"

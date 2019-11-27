@@ -155,43 +155,50 @@ gke/create/node-pools:
 		--no-enable-autoupgrade \
 		--node-taints training_gpu=yes:NoSchedule \
 		|| echo "Training GPU node pool creation failed."
-	@echo "Creating elasticsearch CPU node pool..."
-	@echo "Using the following command: "
-	gcloud container node-pools create elasticsearch-cpu \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region $(GKE_COMPUTE_REGION) \
-		--cluster $(CLUSTER_NAME) \
-		--num-nodes 2 \
-		--min-nodes 1 \
-		--max-nodes 2 \
-		--machine-type=n1-highmem-2 \
-		--enable-autoscaling \
-		--enable-autorepair \
-		--no-enable-autoupgrade \
-		--preemptible \
-		--node-labels elasticsearch_data=yes \
-		--node-taints elasticsearch_data=yes:NoSchedule \
-		|| echo "Elasticsearch CPU node pool creation failed."
-	@echo "Creating logstash CPU node pool..."
-	@echo "Using the following command: "
-	gcloud container node-pools create logstash-cpu \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region $(GKE_COMPUTE_REGION) \
-		--cluster $(CLUSTER_NAME) \
-		--num-nodes 3 \
-		--min-nodes 1 \
-		--max-nodes 20 \
-		--machine-type=n1-highmem-2 \
-		--enable-autoscaling \
-		--enable-autorepair \
-		--no-enable-autoupgrade \
-		--preemptible \
-		--node-labels logstash=yes \
-		--node-taints logstash=yes:NoSchedule \
-		|| echo "Elasticsearch CPU node pool creation failed."
+	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
+		make gke/deploy/elk;\
+	fi
 	@echo "GPU node pool creation finished."
 	@echo " "
 	@echo " "
+
+gke/deploy/elk:
+	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
+		@echo "Creating elasticsearch CPU node pool...";\
+		@echo "Using the following command: ";\
+		gcloud container node-pools create elasticsearch-cpu \
+			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+			--region $(GKE_COMPUTE_REGION) \
+			--cluster $(CLUSTER_NAME) \
+			--num-nodes 2 \
+			--min-nodes 1 \
+			--max-nodes 2 \
+			--machine-type=n1-highmem-2 \
+			--enable-autoscaling \
+			--enable-autorepair \
+			--no-enable-autoupgrade \
+			--preemptible \
+			--node-labels elasticsearch_data=yes \
+			--node-taints elasticsearch_data=yes:NoSchedule \
+			|| echo "Elasticsearch CPU node pool creation failed.";\
+		@echo "Creating logstash CPU node pool...";\
+		@echo "Using the following command: ";\
+		gcloud container node-pools create logstash-cpu \
+			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+			--region $(GKE_COMPUTE_REGION) \
+			--cluster $(CLUSTER_NAME) \
+			--num-nodes 3 \
+			--min-nodes 1 \
+			--max-nodes 20 \
+			--machine-type=n1-highmem-2 \
+			--enable-autoscaling \
+			--enable-autorepair \
+			--no-enable-autoupgrade \
+			--preemptible \
+			--node-labels logstash=yes \
+			--node-taints logstash=yes:NoSchedule \
+			|| echo "Elasticsearch CPU node pool creation failed.";\
+	fi
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
 # When you add a GPU node pool to an existing cluster that already runs a non-GPU node pool, GKE automatically taints the GPU nodes with the following node taint
