@@ -53,6 +53,6 @@ jobs:
       env:
         GCLOUD_AUTH: ${{ secrets.GKE_KEY_BASE64 }}
     - name: write gke service account key to file
-      run: ./write_gke_service_acconut_key_to_file.sh
+      run: ./.github/workflows/write_gke_service_acconut_key_to_file.sh
     - name: run cluster setup
       run: make test
