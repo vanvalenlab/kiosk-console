@@ -37,10 +37,10 @@ run:
 test:
 	echo "TEST"
 	ls
-	make init
 	pwd
 	echo $(PROJECT)
 	echo $(HOME)
+	make init
 	gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL)
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json
 	gcloud config set project $(PROJECT)
