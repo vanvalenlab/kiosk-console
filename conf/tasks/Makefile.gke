@@ -10,7 +10,16 @@ export CLOUDSDK_CONFIG ?= /localhost/.config/gcloud/
 #
 # Increase quotas: https://console.cloud.google.com/iam-admin/quotas
 
+# Project name must be globally unique
+export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
+
+# Cluster name ust be unique within the project
 export CLUSTER_NAME ?= deepcell
+export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
+
+# Bucket name need not be unique
+export CLOUDSDK_BUCKET ?= $(GKE_BUCKET)
+
 export GKE_COMPUTE_REGION ?= us-west1
 export GKE_MACHINE_TYPE ?= n1-standard-2
 export NODE_MIN_SIZE ?= 1
@@ -28,15 +37,6 @@ export GPU_MACHINE_TYPE ?= n1-highmem-2
 export GPU_NODE_MIN_SIZE ?= 0
 export GPU_NODE_MAX_SIZE ?= 4
 export GPU_PER_NODE ?= 1
-
-# Project name must be globally unique
-export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
-
-# Cluster name ust be unique within the project
-export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
-
-# Bucket name need not be unique
-export CLOUDSDK_BUCKET ?= $(GKE_BUCKET)
 
 ## Login to Google Cloud
 gke/login:
