@@ -2,7 +2,7 @@
 
 export KUBERNETES_VERSION=latest
 
-export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
+export CLOUDSDK_CONFIG ?= /localhost/.config/gcloud/
 
 # https://cloud.google.com/kubernetes-engine/docs/quickstart
 # https://cloud.google.com/compute/docs/machine-types
