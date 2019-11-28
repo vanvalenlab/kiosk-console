@@ -37,8 +37,8 @@ run:
 test:
 	echo "TEST"
 	echo $(PROJECT) && echo $(HOME)
-	ls
 	pwd
+	ls
 	make init
 	gcloud config set project $(PROJECT) && \
 	gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) && \
