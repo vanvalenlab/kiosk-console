@@ -39,7 +39,7 @@ env:
   CLUSTER_NAME: deepcell-ci-testing
   GKE_NODE_SERVICE_ACCOUNT_EMAIL: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   #GKE_NODE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GKE_EMAIL }}
-  CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
+  #CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
   REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
   #GKE_KEY_BASE64: ${{ secrets.GKE_KEY_BASE64 }}
   CLOUDSDK_PYTHON_SITEPACKAGES: 1
