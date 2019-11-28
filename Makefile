@@ -44,6 +44,7 @@ test:
 	gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) && \
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
 	gcloud auth list && \
+	gcloud projects get-iam-policy deepcell-209717 && \
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	echo $(CLOUDSDK_CONFIG)
 	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
