@@ -68,7 +68,7 @@ When you've processed all your images and are finished using the DeepCell platfo
 - [Running GPU Intances on Kops](https://github.com/brunsgaard/kops-nvidia-docker-installer)
 
 
-## References
+## Footnotes
 
 <a name="footnote1">1</a>: To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
 
