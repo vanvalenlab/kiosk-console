@@ -1,41 +1,44 @@
 # DeepCell Kiosk: A Scalable and User-Friendly Environment for Biological Image Analysis
 
-The DeepCell Kiosk allows users to easily spin up an end-to-end DeepCell environment on [Kubernetes](https://kubernetes.io/). This repository is a collection of shell scripts and configuration files that follow the infrastructure-as-code model, allowing researchers to easily deploy and scale a deep learning platform for biological image analysis.
+The DeepCell Kiosk is the entry point for users to easily spin up an end-to-end DeepCell environment in the cloud using [Kubernetes](https://kubernetes.io/). Following the infrastructure-as-code model as a guide, this repository allows researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop vast amounts of images to be processed in parallel using publicly available, or custom-built, TensorFlow models.[^1]
+
+[^1]: To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
 
 The scalability of the Deepcell Kiosk software is enabled by [cloud computing](https://en.wikipedia.org/wiki/Cloud_computing). (At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/), although [AWS](https://aws.amazon.com/) support is in development.)
 
-A running example of the Deepcell Kiosk is live at [deepcell.org](https://deepcell.org).
+A running example of the Deepcell Kiosk is live at [deepcell.org](https://deepcell.org). A [FAQ](http://www.deepcell.org/faq) page is also available.
 
 
-## Start your own Deepcell Kiosk in 10 easy steps!
+## Getting started
 
 ### Preliminary setup
 
-1. Create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role.
+1. Create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Make sure and record the project ID (you will need this in step 7).
+2. Create a cloud storage bucket within the same platform. This will be used to store data and models. Record the bucket name (you will need this in step 7).
 
 ### Deepcell Kiosk startup
 
 #### Windows Users only
 
-2. [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux)
+3. [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux)
 
 #### All Users (Windows and otherwise)
 
-3. Install [Docker for your OS](https://www.docker.com/community-edition) (*FREE Community Edition*).
-4. Start a terminal shell and install the Deepcell kiosk wrapper script: `docker run vanvalenlab/kiosk:0.3.0 | sudo -E bash -s 0.3.0`
-5. Start the kiosk. At the terminal shell, just run: `kiosk`
+4. Install [Docker for your OS](https://www.docker.com/community-edition) (*FREE Community Edition*).
+5. Start a terminal shell and install the Deepcell kiosk wrapper script: `docker run vanvalenlab/kiosk:1.0.0 | sudo -E bash -s 1.0.0`
+6. Start the kiosk. At the terminal shell, just run: `kiosk`
 
 ### Deepcell Kiosk usage
 
-7. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported) and fill out the configuration values as needed. Once the Kiosk has been configured for a cloud provider, the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
+7. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported) and fill out the configuration values as needed. Each reponse has been prepopulated with a default value that will be appropriate for most users (for more detailed information on each of these values refer to our [Advanced Documentation](docs/ADVANCED_DOCUMENTATION.md). Once the Kiosk has been configured for a cloud provider, you will be returned to the main menu and the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
 8. With the Kiosk configured for the appropriate cloud provider, select the `Create` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see `Cluster Created` followed by `---COMPLETE---` printed to the terminal. If you see `---COMPLETE---` with error text immediately preceding it, cluster creation failed.
 9. Find the cluster's web address by choosing the `View` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".)
-10. Go to the cluster address in your web browser to find the Deepcell Kiosk frontpage.
+10. Go to the cluster address in your web browser to find the Deepcell Kiosk frontpage. To run a job (load raw data and download the results) use the `PREDICT` tab.
+11. The `Predict` page on DeepCell.org allows for different job types (ie: nuclear segmentation and or nuclear tracking). Each job type requires a specific model. For example models and data, refer to [deepcell.org](https://deepcell.org/data).
 
+### Deepcell Kiosk shutdown
 
-## Deepcell Kiosk shutdown
-
-When you've processed all your images done using the Deepcell platform, you may want to destroy all the cloud services currently in use.
+When you've processed all your images and are finished using the DeepCell platform, you may want to destroy all the cloud services currently in use.
 1. To destroy the cloud resources, select `Destroy` from the Deepcell Kiosk's main menu. Cloud resource destruction is complete when you see `Cluster destroyed` followed by `---COMPLETE---` printed to the screen. However, if the screen shows error output immediately before the `---COMPLETE---` indicator, cluster destruction failed and some cloud resources may still exist. In this case, it may be best to delete resources manually though the cloud provider's web interface.
 2. After destroying cloud resources, if you wish to shut down the Deepcell Kiosk entirely, simply select `Exit` from the Deepcell Kiosk's main menu. The Deepcell Kiosk is now completely shut down.
 
@@ -57,7 +60,7 @@ When you've processed all your images done using the Deepcell platform, you may 
 
 ## Advanced Documentation
 
-- If you'd like more insight into the internal workings of the kiosk, please consult the [Advanced Documentation](docs/ADVANCED_DOCUMENTATION.md)
+- If you'd like more insight into the detailed workings of the DeepCell Kiosk, please consult the [Advanced Documentation](docs/ADVANCED_DOCUMENTATION.md)
 
 
 ## References
@@ -69,7 +72,7 @@ When you've processed all your images done using the Deepcell platform, you may 
 
 ## Copyright
 
-Copyright © 2018-2019 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.  
+Copyright © 2018-2019 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
 All rights reserved.
 
 

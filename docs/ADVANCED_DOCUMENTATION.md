@@ -1,12 +1,10 @@
 ## Advanced Documentation
 
-Here is some documentation on the finer points of the Deepcell Kiosk. We will go over accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics, should we ever have time to actually write them up.
-
-<br></br>
+Here is some documentation on the finer points of the DeepCell Kiosk. We will go over accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
 
 ### Accessing Cluster Logging and Metrics Functionality using OpenVPN
 
-(__Optional:__ For reliability reasons, logging facilities are disabled by default. To enable logging functionality, either 1) execute `export ELK_DEPLOYMENT_TOGGLE=ON` at the command line before cluster creation, or 2) execute `export ELK_DEPLOYMENT_TOGGLE=ON; make gke/deploy/elk; make helmfile/create/elk` at the command line after cluster creation. Please note that, whenever logging is enabled, the cluster might get stuck in the process of deploying the logging infrastructure. If the cluster appears to be in an error loop, simply exit the cluster, change the cluster name in the configuration menu, and try creating it again. There's a ~50% failure rate when deploying the logging infrastructure, but cluster deployment should succeed eventually. Pull requests and advice on this issue would be greatly appreciated.)
+__Optional:__ For reliability reasons, logging facilities are disabled by default. To enable logging functionality, either 1) execute `export ELK_DEPLOYMENT_TOGGLE=ON` at the command line before cluster creation, or 2) execute `export ELK_DEPLOYMENT_TOGGLE=ON; make gke/deploy/elk; make helmfile/create/elk` at the command line after cluster creation. Please note that, whenever logging is enabled, the cluster might get stuck in the process of deploying the logging infrastructure. If the cluster appears to be in an error loop, simply exit the cluster, change the cluster name in the configuration menu, and try creating it again. There's a ~50% failure rate when deploying the logging infrastructure, but cluster deployment should succeed eventually. Pull requests and advice on this issue would be greatly appreciated.
 
 1. After cluster startup, choose `Shell` from the main menu. On the command line, execute the following command:
 
@@ -82,8 +80,6 @@ kiosk
 ```
 From here, you can configure the kiosk as usual.
 
-<br></br>
-
 ### Microservice Architecture
 
 We put a lot of thought into how to structure the Deepcell Kiosk's microservice architecture so as to most-efficiently use available cloud resources, while ensuring that impacts to performance are as minimal and transient as possible. At the end of the day, everyone wants functional and easy-to-use software and, while some researchers have plenty of money to burn, we've constructed the Deepcell Kiosk so that you don't have to.
@@ -112,8 +108,3 @@ The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Goo
 4. any Target Pools associated with your cluster (They will contain at least part of the cluster name in their names.)
 
 While we hope this list is comprehensive, there could be some lingering resources used by Google Cloud and not deleted automatically that we're not aware of.
-
-
-### TODO
-#### filenaming conventions
-#### input files (direct and via web interface)
