@@ -1,6 +1,6 @@
 # DeepCell Kiosk: A Scalable and User-Friendly Environment for Biological Image Analysis
 
-The DeepCell Kiosk is the entry point for users to easily spin up an end-to-end DeepCell environment in the cloud using [Kubernetes](https://kubernetes.io/). Following the infrastructure-as-code model as a guide, this repository allows researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop vast amounts of images to be processed in parallel using publicly available, or custom-built, TensorFlow models. <sup>[1](#footnote1)</sup>
+The DeepCell Kiosk is the entry point for users to easily spin up an end-to-end DeepCell environment in the cloud using [Kubernetes](https://kubernetes.io/). Following the infrastructure-as-code model as a guide, this repository allows researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop vast amounts of images to be processed in parallel using publicly available, or custom-built, TensorFlow models.<sup>[1](#footnote1)</sup>
 
 The scalability of the DeepCell Kiosk software is enabled by [cloud computing](https://en.wikipedia.org/wiki/Cloud_computing). (At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/), although [AWS](https://aws.amazon.com/) support is in development.)
 
