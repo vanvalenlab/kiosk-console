@@ -55,6 +55,8 @@ gke/destroy/project:
 gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
+	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
+	gcloud auth list && \
 	gcloud container clusters create $(CLUSTER_NAME) \
 		--project=$(PROJECT) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
