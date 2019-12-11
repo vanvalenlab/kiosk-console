@@ -100,4 +100,4 @@ jobs:
       - store_artifacts:
           path: test-reports
           destination: test-reports
-  context: Kiosk Build Variables
+    context: Kiosk Build Variables
