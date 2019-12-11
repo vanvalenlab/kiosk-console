@@ -46,7 +46,7 @@ jobs:
           REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
           #GKE_KEY_BASE64: ${{ secrets.GKE_KEY_BASE64 }}
           #GITHUB_SHA: ${{ github.sha }}
-          CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
+          CLOUDSDK_CONFIG: /home/circleci/repo/.config/gcloud/
           CLOUDSDK_PYTHON_SITEPACKAGES: 1
           CLOUDSDK_CORE_PROJECT: deepcell-209717
           #CLOUDSDK_CORE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
