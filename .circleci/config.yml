@@ -75,6 +75,7 @@ jobs:
       - run:
           name: decrypt gcloud service account secret
           command: |
+            printenv
             # Decrypt the file
             mkdir $HOME/secrets
             # --batch to prevent interactive command --yes to assume "yes" for questions
