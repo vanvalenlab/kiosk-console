@@ -10,6 +10,47 @@ jobs:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.6.1
+        environment:
+          CLOUD_PROVIDER: gke
+          GPU_MAX_TIMES_THIRTY: 120
+          TRAINING_GPU_TYPE: nvidia-tesla-v100
+          GPU_MAX_TIMES_ONE_HUNDRED_FIFTY: 600
+          PREDICTION_GPU_TYPE: nvidia-tesla-v100
+          GPU_MAX_DIVIDED_BY_TWO: 2
+          GPU_MAX_TIMES_TWO_HUNDRED: 800
+          GPU_MAX_TIMES_TEN: 40
+          GPU_MAX_TIMES_FIFTY: 200
+          NODE_MAX_SIZE: 60
+          GPU_MAX_DIVIDED_BY_THREE: 1
+          GPU_NODE_MIN_SIZE: 0
+          GPU_MAX_TIMES_THREE: 12
+          GKE_BUCKET: deepcell-output-benchmarking
+          #GKE_BUCKET: ${{ secrets.GKE_BUCKET }}
+          PROJECT: deepcell-209717
+          #PROJECT: ${{ secrets.GKE_PROJECT }}
+          GPU_MAX_TIMES_FOUR: 16
+          GPU_MAX_TIMES_TWO: 8
+          GPU_MAX_TIMES_FIVE: 20
+          GKE_COMPUTE_REGION: us-west1
+          GPU_MAX_TIMES_ONE_HUNDRED: 400
+          GPU_NODE_MAX_SIZE: 4
+          GPU_MAX_DIVIDED_BY_FOUR: 1
+          NODE_MIN_SIZE: 1
+          GPU_MAX_TIMES_SEVENTY_FIVE: 300
+          GKE_MACHINE_TYPE: n1-standard-4
+          GPU_MAX_TIMES_FOURTY: 160
+          GPU_MAX_TIMES_TWENTY: 80
+          CLUSTER_NAME: deepcell-ci-testing
+          GKE_NODE_SERVICE_ACCOUNT_EMAIL: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
+          #GKE_NODE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GKE_EMAIL }}
+          REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
+          #GKE_KEY_BASE64: ${{ secrets.GKE_KEY_BASE64 }}
+          #GITHUB_SHA: ${{ github.sha }}
+          CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
+          CLOUDSDK_PYTHON_SITEPACKAGES: 1
+          CLOUDSDK_CORE_PROJECT: deepcell-209717
+          #CLOUDSDK_CORE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
+          CLOUDSDK_CORE_VERBOSITY: debug
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -21,35 +62,41 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+      - run:
+          name: install gcloud
+          command: |
+            # Add the Cloud SDK distribution URI as a package source
+            echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+            # Import the Google Cloud Platform public key
+            curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+            # Update the package list and install the Cloud SDK
+            sudo apt-get update && sudo apt-get install google-cloud-sdk
 
       - run:
-          name: install dependencies
+          name: decrypt gcloud service account secret
           command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
+            # Decrypt the file
+            mkdir $HOME/secrets
+            # --batch to prevent interactive command --yes to assume "yes" for questions
+            gpg --quiet --batch --yes --decrypt --passphrase="$GKE_KEY_PASSPHRASE" \
+            --output $HOME/secrets/gke_service_account_key.json ./.github/workflows/gke_service_account_key.json.gpg
+          context: Kiosk Build Variables
 
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-
+      - run:
+          name: spin up cluster
+          command: |
+            make test
+      
       # run tests!
       # this example uses Django's built-in test-runner
       # other common Python testing frameworks include pytest and nose
       # https://pytest.org
       # https://nose.readthedocs.io
-      - run:
-          name: run tests
-          command: |
-            . venv/bin/activate
-            python manage.py test
+      #- run:
+      #    name: run tests
+      #    command: |
+      #      . venv/bin/activate
+      #      python manage.py test
 
       - store_artifacts:
           path: test-reports
