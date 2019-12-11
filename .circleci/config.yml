@@ -81,7 +81,6 @@ jobs:
             # --batch to prevent interactive command --yes to assume "yes" for questions
             gpg --quiet --batch --yes --decrypt --passphrase="$GKE_KEY_PASSPHRASE" \
             --output $HOME/secrets/gke_service_account_key.json ./.github/workflows/gke_service_account_key.json.gpg
-          context: kiosk-build-variables
 
       - run:
           name: spin up cluster
@@ -102,3 +101,10 @@ jobs:
       - store_artifacts:
           path: test-reports
           destination: test-reports
+
+workflows:
+  version: 2
+    Test_Workflow:
+      jobs:
+        - build
+            context: kiosk-build-variables
