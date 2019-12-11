@@ -106,7 +106,5 @@ workflows:
   version: 2
   Test_Workflow:
     jobs:
-      - build_job:
-          requires:
-            - build
+      - build:
           context: kiosk-build-variables
