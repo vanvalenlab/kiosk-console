@@ -23,7 +23,7 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 #### All Users (Windows and otherwise)
 
 4. Install [Docker for your OS](https://www.docker.com/community-edition) (*FREE Community Edition*).
-5. Start a terminal shell and install the DeepCell kiosk wrapper script: `docker run vanvalenlab/kiosk:1.0.0 | sudo -E bash -s 1.0.0`
+5. Start a terminal shell and install the DeepCell kiosk wrapper script: `docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash`
 6. Start the kiosk. At the terminal shell, just run: `kiosk`
 
 ### DeepCell Kiosk usage
