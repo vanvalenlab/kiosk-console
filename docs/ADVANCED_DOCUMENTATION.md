@@ -96,9 +96,10 @@ There may be occasions where the Kiosk fails to deploy or the cluster destructio
 The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. In our experience, if a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand:
 
 1. Kubernetes cluster (Remember the cluster name for the following steps. This will delete most of the resources and the next steps will clean up the remainders.)
-2. any Firewall Rules associated with your cluster (They will contain at least part of the cluster name in their names.)
-3. any LoadBalancers associated with your cluster (They will contain at least part of the cluster name in their names.)
-4. any Target Pools associated with your cluster (They will contain at least part of the cluster name in their names.)
+2. any Firewall Rules associated with your cluster (They will contain at least part of the cluster name in their names)
+3. any LoadBalancers associated with your cluster (They will contain at least part of the cluster name in their names)
+4. any Target Pools associated with your cluster (They will contain at least part of the cluster name in their names)
+5. any Persistent Disks associated with your cluster (They will contain at least part of the cluster name in their names)
 
 While we hope this list is comprehensive, there could be some lingering resources used by Google Cloud and not deleted automatically that we're not aware of.
 
@@ -109,7 +110,3 @@ To assist future developers with any alterations/extensions they wish to make to
 #### Database conventions
 
 We've elected to write a hash to Redis for every image known to the cluster. In the hash, we have a variety of fields, none of which is ever modified after creation, except for the special "status" field, which acts as an indicator to the microservices in the cluster for where the image needs to be passed next.
-- write originating pod and timestamp for every status change
-- move all fields to "old_" prefixed fields upon status reset
-- increment "status_reset" counter upon status reset
-- not using a queue currently, partly to help debug failures, partly to accord with our own tendency towards indolence
