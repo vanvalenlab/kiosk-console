@@ -1,8 +1,8 @@
 # DeepCell Kiosk: A Scalable and User-Friendly Environment for Biological Image Analysis
 
-The DeepCell Kiosk is the entry point for users to easily spin up an end-to-end DeepCell environment in the cloud using [Kubernetes](https://kubernetes.io/). Following the infrastructure-as-code model as a guide, this repository allows researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop vast amounts of images to be processed in parallel using publicly available, or custom-built, TensorFlow models.<sup>[1](#footnote1)</sup>
+The DeepCell Kiosk is the entry point for users to spin up an end-to-end DeepCell environment in the cloud using [Kubernetes](https://kubernetes.io/). It is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models.<sup>[1](#footnote1)</sup>
 
-The scalability of the DeepCell Kiosk software is enabled by [cloud computing](https://en.wikipedia.org/wiki/Cloud_computing). (At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/), although [AWS](https://aws.amazon.com/) support is in development.)
+The scalability of the DeepCell Kiosk software is enabled by [cloud computing](https://en.wikipedia.org/wiki/Cloud_computing). At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/), although [AWS](https://aws.amazon.com/) support is in development.
 
 A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org). A [FAQ](http://www.deepcell.org/faq) page is also available.
 
@@ -23,12 +23,15 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 #### All Users (Windows and otherwise)
 
 4. Install [Docker for your OS](https://www.docker.com/community-edition) (*FREE Community Edition*).
-5. Start a terminal shell and install the DeepCell kiosk wrapper script: `docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash`
+5. Start a terminal shell and install the DeepCell kiosk wrapper script:
+```bash
+docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
+```
 6. Start the kiosk. At the terminal shell, just run: `kiosk`
 
 ### DeepCell Kiosk usage
 
-7. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported) and fill out the configuration values as needed. Each reponse has been prepopulated with a default value that will be appropriate for most users (for more detailed information on each of these values refer to our [Advanced Documentation](docs/ADVANCED_DOCUMENTATION.md). Once the Kiosk has been configured for a cloud provider, you will be returned to the main menu and the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
+7. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported) and fill out the configuration values as needed. Each reponse has been prepopulated with a default value that will be appropriate for most users (for more detailed information on each of these values refer to our [Advanced Documentation](docs/ADVANCED_DOCUMENTATION.md)). Once the Kiosk has been configured for a cloud provider, you will be returned to the main menu and the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
 8. With the Kiosk configured for the appropriate cloud provider, select the `Create` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see `Cluster Created` followed by `---COMPLETE---` printed to the terminal. If you see `---COMPLETE---` with error text immediately preceding it, cluster creation failed.
 9. Find the cluster's web address by choosing the `View` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".)
 10. Go to the cluster address in your web browser to find the DeepCell Kiosk frontpage. To run a job (load raw data and download the results) use the `PREDICT` tab.
@@ -43,18 +46,23 @@ When you've processed all your images and are finished using the DeepCell platfo
 
 ## Important notes
 
-- The DeepCell Kiosk is optimized for cost-effectiveness. However, there are several potential pitfalls for users that we can't code against:
-    1. Please ensure that your bucket and Kubernetes cluster are in the same region. See [here](https://cloud.google.com/storage/pricing) for details but, simply put, you pay significantly more if your Kubernetes cluster and bucket are not in the same region.
-    2. Please be mindful of your storage usage before and after using the DeepCell Kiosk. If you feel that you no longer need to have certain files in cloud storage after you're done using the DeepCell Kiosk, we highly recommend deleting them as soon as possible. Forgetting about large number of files in storage opens your lab to a large potential financial liability.
-- When using the DeepCell Kiosk's `Predict` functionality, the first image will take a while to process (up to 10 minutes) because the cluster will need to requisition more computing resources. (This is because the cluster is designed to use as few resources as possible in its resting state.)
+- The DeepCell Kiosk is optimized for cost-effectiveness. However, please ensure that your bucket and Kubernetes cluster are in the same region. See [here](https://cloud.google.com/storage/pricing) for details but, simply put, you pay significantly more if your Kubernetes cluster and bucket are not in the same region.
+- When using the DeepCell Kiosk's `Predict` functionality, the first image will take a while to process (up to 10 minutes) because the cluster will need to requisition more computing resources. (This is because the cluster is designed to use as few resources as possible in its resting state).
 - This repository is being actively developed. If you are experiencing issues with the DeepCell Kiosk, please consult the [Troubleshooting document](docs/TROUBLESHOOTING.md) in the `docs` folder. If you need further help, please file an issue against this repository.
 - Those interested in Kiosk developement should follow a different path to start the Kiosk:
-    1. Clone this repo: `git clone git@github.com:vanvalenlab/kiosk.git`
-    2. Initialize the "build-harness": `make init`
-    3. Build the container: `make docker/build`
-    4. Install wrapper script: `make install`
-    5. Start the kiosk. `make run`
 
+```bash
+   # Clone this repo:
+   git clone git@github.com:vanvalenlab/kiosk.git
+   # Initialize the "build-harness":
+   make init
+   # Build the container:
+   make docker/build
+   # Install wrapper script:
+   make install
+   # Start the kiosk
+   make run
+```
 
 ## Advanced documentation
 
