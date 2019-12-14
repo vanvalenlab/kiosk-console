@@ -93,9 +93,9 @@ function tailcmd() {
 # cluster has been created yet.
 function menu() {
   local value
-  local header_text=("You can use the UP/DOWN arrow keys, the first\n"
-                     "letter of the choice as a hot key, or the\n"
-                     "number keys 1-9 to choose an option.\n"
+  local header_text=("Use the UP/DOWN arrow keys or the first\n"
+                     "letter of the choice as a hot key to\n"
+                     "select an option.\n"
                      "Choose a task.")
 
   declare -A cloud_providers
