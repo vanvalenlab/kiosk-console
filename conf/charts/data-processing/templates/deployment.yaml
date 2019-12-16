@@ -21,13 +21,6 @@ spec:
       annotations:
 {{ toYaml .Values.annotations | indent 8 }}
     spec:
-      # TODO: generalize the node selectors
-      nodeSelector:
-        rc_dp: "yes"
-      tolerations:
-      - key: rc_dp
-        operator: Exists
-        effect: NoSchedule
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

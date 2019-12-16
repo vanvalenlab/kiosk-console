@@ -97,9 +97,6 @@ releases:
         - key: training_gpu
           operator: Exists
           effect: NoSchedule
-        - key: rc_dp
-          operator: Exists
-          effect: NoSchedule
         - key: logstash
           operator: Exists
           effect: NoSchedule

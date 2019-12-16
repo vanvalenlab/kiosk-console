@@ -19,12 +19,6 @@ spec:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
     spec:
-      nodeSelector:
-        rc_dp: "yes"
-      tolerations:
-      - key: rc_dp
-        operator: Exists
-        effect: NoSchedule
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

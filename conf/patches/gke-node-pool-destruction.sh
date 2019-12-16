@@ -31,11 +31,3 @@ if [ "${ELK_DEPLOYMENT_TOGGLE}" == "ON" ] || [ "${ELK_DEPLOYMENT_TOGGLE}" == "on
     done
     echo "Logstash CPU node pool destruction finished."
 fi
-
-echo "Destroying redis-consumer, data-processing CPU node pool..."
-until gcloud container node-pools delete rc-dp-cpu --quiet --region ${GKE_COMPUTE_REGION}
-do
-    echo "Redis-consumer, data-processing CPU node pool destruction failed. Trying again in 30 seconds."
-    sleep 30
-done
-echo "Redis-consumer, data-processing CPU node pool destruction finished."
