@@ -1,6 +1,29 @@
 ## Advanced documentation
 
-Here is some documentation on the finer points of the DeepCell Kiosk. We will go over accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
+Here is some documentation on the finer points of the DeepCell Kiosk. We will go over cluster customization, accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
+
+### Building custom consumer pipelines
+
+#### Deploying custom consumers
+
+The DeepCell Kiosk uses [`helm`](https://helm.sh/) and [`helmfile`](https://github.com/roboll/helmfile) to coordinate Docker containers.
+This allows the `redis-consumer` to be easily extended by simply creating a new Docker image with your custom consumer (via `docker build` and `docker push`), adding a new `helmfile` for your new consumer to `/conf/helmfile.d/`, and deploying it to the cluster with:
+
+```bash
+helmfile -l name=my-new-consumer sync
+```
+
+Please refer to the [`redis-consumer`](github.com/vanvalenlab/kiosk-redis-consumer) repository for more information on building your own consumer.
+
+#### Autoscaling custom consumers
+
+To effectively scale your new consumer, some small edits will be needed in the following files:
+
+* `/conf/helmfile.d/0110.prometheus-redis-exporter.yaml`
+* `/conf/helmfile.d/0600.prometheus-operator.yaml`
+* `/conf/patches/hpa.yaml`
+
+Generally, the consumers for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the `prometheus-redis-exporter`, the custom rule is defined in `prometheus-operator`, and the Horizontal Pod Autoscaler uses the new rule in the `hpa.yaml` file. Please use custom metric `redis_consumer_key_ratio` as an example.
 
 ### Accessing cluster metrics and logging using OpenVPN
 
