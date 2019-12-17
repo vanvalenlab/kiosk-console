@@ -23,7 +23,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
 * `/conf/helmfile.d/0600.prometheus-operator.yaml`
 * `/conf/patches/hpa.yaml`
 
-Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the `prometheus-redis-exporter`, the custom rule is defined in `prometheus-operator`, and the Horizontal Pod Autoscaler uses the new rule in the `hpa.yaml` file. Please use custom metric `redis_consumer_key_ratio` as an example.
+Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the `prometheus-redis-exporter`, the custom rule is defined in `prometheus-operator`, and the Horizontal Pod Autoscaler is created and configured to use the new rule in the `hpa.yaml` file. Please use custom metric `redis_consumer_key_ratio` as an example.
 
 ### Accessing cluster metrics and logging using OpenVPN
 
