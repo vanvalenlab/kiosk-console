@@ -43,6 +43,16 @@ releases:
           # cpu: 2
           # memory: 8Gi
 
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Equal"
+        value: "present"
+        effect: "NoSchedule"
+      - key: "prediction_gpu"
+        operator: "Equal"
+        value: "yes"
+        effect: "NoSchedule"
+
       service:
         type: "ClusterIP"
 
@@ -75,16 +85,6 @@ releases:
         cloud.google.com/gke-accelerator: '{{ env "PREDICTION_GPU_TYPE" | default "nvidia-tesla-k80" }}'
         cloud.google.com/gke-preemptible: "true"
 {{ end }}
-
-      tolerations:
-      - key: "nvidia.com/gpu"
-        operator: "Equal"
-        value: "present"
-        effect: "NoSchedule"
-      - key: "prediction_gpu"
-        operator: "Equal"
-        value: "yes"
-        effect: "NoSchedule"
 
       env:
         PORT: 8500
