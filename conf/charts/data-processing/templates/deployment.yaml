@@ -44,6 +44,10 @@ spec:
           value: {{ $value | quote }}
 {{- end }}
 {{- end }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
 {{ $secrets_name := .Values.secrets_name }}
 {{- range $name, $value := .Values.secrets }}
 {{- if not ( empty $value) }}
