@@ -44,9 +44,17 @@ spec:
           value: {{ $value | quote }}
 {{- end }}
 {{- end }}
-    {{- if .Values.nodeSelector }}
+    {{- with .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
     {{- end }}
 {{ $secrets_name := .Values.secrets_name }}
 {{- range $name, $value := .Values.secrets }}
