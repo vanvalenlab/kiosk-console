@@ -1,6 +1,6 @@
 ## Advanced documentation
 
-Here is some documentation on the finer points of the DeepCell Kiosk. We will go over cluster customization, accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
+Welcome to the advanced documentation for DeepCell Kiosk developers. We will go over cluster customization, accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
 
 ### Building custom consumer pipelines
 
