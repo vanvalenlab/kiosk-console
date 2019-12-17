@@ -76,6 +76,14 @@ releases:
         cloud.google.com/gke-preemptible: "true"
 {{ end }}
 
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+      - key: "prediction_gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+
       env:
         PORT: 8500
         REST_API_PORT: 8501

@@ -22,19 +22,14 @@ spec:
         release: {{ .Release.Name }}
     spec:
       restartPolicy: "Always"
+    {{- with .Values.nodeSelector }}
       nodeSelector:
-{{- range $name, $value := .Values.nodeSelector }}
-{{- if not ( empty $value) }}
-        {{ $name }}: {{ $value | quote }}
-{{- end }}
-{{- end }}
+    {{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
       tolerations:
-      - key: "nvidia.com/gpu"
-        operator: "Exists"
-        effect: "NoSchedule"
-      - key: "prediction_gpu"
-        operator: "Exists"
-        effect: "NoSchedule"
+{{ toYaml . | indent 8 }}
+    {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
