@@ -78,10 +78,12 @@ releases:
 
       tolerations:
       - key: "nvidia.com/gpu"
-        operator: "Exists"
+        operator: "Equal"
+        value: "present"
         effect: "NoSchedule"
       - key: "prediction_gpu"
-        operator: "Exists"
+        operator: "Equal"
+        value: "yes"
         effect: "NoSchedule"
 
       env:
