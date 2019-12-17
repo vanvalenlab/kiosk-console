@@ -25,6 +25,10 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
 Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the `prometheus-redis-exporter`, the custom rule is defined in `prometheus-operator`, and the Horizontal Pod Autoscaler is created and configured to use the new rule in the `hpa.yaml` file. Please use custom metric `redis_consumer_key_ratio` as an example.
 
+#### Connecting custom consumers with the frontend
+
+Finally, in order to use the frontend interface to interact with your new consumer, you will need to add the new queue to the [`kiosk-frontend`](https://github.com/vanvalenlab/kiosk-frontend). Please consult its documentation for configuration details.
+
 ### Accessing cluster metrics and logging using OpenVPN
 
 #### Setting up OpenVPN
