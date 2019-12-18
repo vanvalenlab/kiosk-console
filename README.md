@@ -25,7 +25,7 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 ### Preliminary setup
 
 1. Create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Write down the project ID (you will need this in step 7).
-2. Upgrade your account [Google requires](https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available)
+2. In order to add accelerated hardware to the clusters you will launch, you will need to [upgrade](https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade) your Google Cloud account and [apply](https://cloud.google.com/compute/quotas) for a GPU quota.<sup>[2](#footnote2)</sup>
 3. Create a cloud storage bucket within the same platform. This will be used to store data and models. Record the bucket name (you will need this in step 7).
 
 <a name="toc1b"></a>
@@ -97,6 +97,7 @@ When you've processed all your images and are finished using the DeepCell platfo
 ## Footnotes
 
 <a name="footnote1">1</a>: To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
+<a name="footnote2">2</a>: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google has prohibited access to these GPU nodes by default as part of its free tier, thus neccesitating the upgrade. For more information, please refer to [Google's blog post on the subject](https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available).
 
 <a name="toc5"></a>
 ## Copyright
