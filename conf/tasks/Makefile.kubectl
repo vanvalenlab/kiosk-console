@@ -14,7 +14,8 @@ kubectl/create/autoscaler:
 
 ## Provision cluster autoscaler
 kubectl/create/nvidia-drivers:
-	gomplate -f addons/nvidia-device-plugin.yaml | kubectl apply -f -
+	## gomplate -f addons/nviedia-device-plugin.yaml | kubectl apply -f -
+	https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/cos/daemonset-preloaded.yaml
 
 ## Provision all extra resources with kubectl
 kubectl/create/all: \
