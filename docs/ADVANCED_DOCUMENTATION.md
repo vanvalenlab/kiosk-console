@@ -123,7 +123,7 @@ There may be occasions where the Kiosk fails to deploy or the cluster destructio
 
 The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. If a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand (n.b. the name of each resource will contain at least part of the cluster name in it):
 
-1. Kubernetes cluster (Remember the cluster name for the following steps. This will delete most of the resources and the next steps will clean up the remainders.)
+1. Kubernetes cluster (Remember the cluster name for the following steps. This will delete most of the resources and the proceeding steps will clean up the rest.)
 2. any Firewall Rules associated with your cluster
 3. any LoadBalancers associated with your cluster
 4. any Target Pools associated with your cluster
