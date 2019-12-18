@@ -261,7 +261,7 @@ gke/destroy/helm:
 	-helm reset --force --tiller-connection-timeout=2
 	-kubectl delete clusterrolebinding tiller-cluster-rule
 	-kubectl delete serviceaccount --namespace kube-system tiller
-	
+
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
 	@echo "Deploying NVIDIA drivers for GPU instances..."
@@ -279,13 +279,13 @@ gke/create/all: \
 	gke/create/bucket \
 	gke/deploy/helm \
 	gke/deploy/nvidia
-	@echo "GKE cluster created" 
+	@echo "GKE cluster created"
 	@exit 0
 
 ## Destroy Cluster
 gke/destroy/all: \
 	gke/destroy/node-pools \
 	gke/destroy/cluster \
-	gke/destroy/service-account 
-	@echo "GKE cluster destroyed" 
+	gke/destroy/service-account
+	@echo "GKE cluster destroyed"
 	@exit 0
