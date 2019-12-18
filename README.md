@@ -6,8 +6,12 @@ The scalability of the DeepCell Kiosk software is enabled by [cloud computing](h
 
 A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org). A [FAQ](http://www.deepcell.org/faq) page is also available.
 
+# Table of Contents
 
-## Getting started
+* [**Getting Started**](#toc1)
+   * Preliminary setup
+
+<a name="toc1">## Getting started</a>:
 
 ### Preliminary setup
 
