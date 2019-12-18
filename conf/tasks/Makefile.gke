@@ -18,7 +18,7 @@ export NODE_MAX_SIZE ?= 10
 export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
 # Non-GPU machine type
-export CONSUMER_MACHINE_TYPE ?= n1-highmem-2
+export CONSUMER_MACHINE_TYPE ?= n1-standard-8
 
 # Not all GPU types are available in all regions/availability zones
 export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
