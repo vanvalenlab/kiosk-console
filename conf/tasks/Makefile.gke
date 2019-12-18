@@ -265,7 +265,7 @@ gke/destroy/helm:
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
 	@echo "Deploying NVIDIA drivers for GPU instances..."
-	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
+	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
 		echo "These drivers are not being installed. They may already be installed."
 	@echo "NVIDIA GPU driver deployment finished."
 	@echo " "
