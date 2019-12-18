@@ -14,10 +14,10 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
    * [Usage](#toc1c)
    * [Shutdown](#toc1d)
 * [Important notes](#toc2)
-* [Advanced documentation](#toc3)
+* [Advanced documentation](docs/ADVANCED_DOCUMENTATION.md)
 * [Troubleshooting](docs/TROUBLESHOOTING.md)
-* [References](#toc4)
-* [Copyright, License, Trademarks, and Credits](#toc5)
+* [References](#toc3)
+* [Copyright, License, Trademarks, and Credits](#toc4)
 
 <a name="toc1"></a>
 ## Getting started
@@ -81,12 +81,11 @@ When you've processed all your images and are finished using the DeepCell platfo
    make run
 ```
 
-<a name="toc3"></a>
 ## Advanced documentation
 
 - If you would like more insight into the detailed workings of the DeepCell Kiosk, please consult the [advanced documentation](docs/ADVANCED_DOCUMENTATION.md)
 
-<a name="toc4"></a>
+<a name="toc3"></a>
 ## References
 
 - [Cluster Autoscaler for AWS](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
@@ -100,7 +99,7 @@ When you've processed all your images and are finished using the DeepCell platfo
 
 <a name="footnote2">2</a>: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google does not include these GPU nodes by default as part of its free tier thus necessitating the upgrade. For more information, please refer to [Google's blog post on the subject](https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available).
 
-<a name="toc5"></a>
+<a name="toc4"></a>
 ## Copyright
 
 Copyright © 2018-2019 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
