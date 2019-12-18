@@ -98,7 +98,7 @@ When you've processed all your images and are finished using the DeepCell platfo
 
 <a name="footnote1">1</a>: To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
 
-<a name="footnote2">2</a>: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google does not include these GPU nodes by default as part of its free tier, thus necessitating the upgrade. For more information, please refer to [Google's blog post on the subject](https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available).
+<a name="footnote2">2</a>: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google does not include these GPU nodes by default as part of its free tier thus necessitating the upgrade. For more information, please refer to [Google's blog post on the subject](https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available).
 
 <a name="toc5"></a>
 ## Copyright
