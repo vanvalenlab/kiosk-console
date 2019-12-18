@@ -114,19 +114,20 @@ kiosk
 ```
 From here, you can configure the kiosk as usual.
 
+<a name="failcd"></a>
 ### Recovering from failed Kiosk creations or destructions
 
 There may be occasions where the Kiosk fails to deploy or the cluster destruction doesn't execute properly and leaves orphaned cloud resources active. Both failed cluster deployment and failed cluster destruction after deployment can be the result of any number of issues. We can't go into all of them here. Rather, our goal is to tell you how to remove all the cloud resources your cluster is using, so that you won't end up unknowingly leaking money.
 
 #### Google Cloud (Google Kubernetes Engine)
 
-The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. If a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand:
+The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. If a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand (n.b. the name of each resource will contain at least part of the cluster name in it):
 
 1. Kubernetes cluster (Remember the cluster name for the following steps. This will delete most of the resources and the next steps will clean up the remainders.)
-2. any Firewall Rules associated with your cluster (They will contain at least part of the cluster name in their names)
-3. any LoadBalancers associated with your cluster (They will contain at least part of the cluster name in their names)
-4. any Target Pools associated with your cluster (They will contain at least part of the cluster name in their names)
-5. any Persistent Disks associated with your cluster (They will contain at least part of the cluster name in their names)
+2. any Firewall Rules associated with your cluster
+3. any LoadBalancers associated with your cluster
+4. any Target Pools associated with your cluster
+5. any Persistent Disks associated with your cluster
 
 While we hope this list is comprehensive, there could be some lingering resources used by Google Cloud and not deleted automatically that we're not aware of.
 
