@@ -82,21 +82,5 @@ releases:
         http.enabled: false
         http.port: 5066
       tolerations:
-        - key: node-role.kubernetes.io/master
-          operator: Exists
-          effect: NoSchedule
-        - key: nvidia.com/gpu
-          operator: Exists
-          effect: NoSchedule
-        - key: elasticsearch_data
-          operator: Exists
-          effect: NoSchedule
-        - key: prediction_gpu
-          operator: Exists
-          effect: NoSchedule
-        - key: training_gpu
-          operator: Exists
-          effect: NoSchedule
-        - key: logstash
-          operator: Exists
+        - operator: Exists
           effect: NoSchedule
