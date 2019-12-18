@@ -35,6 +35,7 @@ releases:
 
       resources:
         requests:
+          nvidia.com/gpu: 1
           cpu: 1
           memory: 3.5Gi
         limits:
@@ -44,12 +45,10 @@ releases:
 
       tolerations:
       - key: "nvidia.com/gpu"
-        operator: "Equal"
-        value: "present"
+        operator: "Exists"
         effect: "NoSchedule"
       - key: "prediction_gpu"
-        operator: "Equal"
-        value: "yes"
+        operator: "Exists"
         effect: "NoSchedule"
 
       service:
