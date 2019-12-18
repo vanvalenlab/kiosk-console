@@ -22,4 +22,4 @@ A prediction job may also never finish if the `tf-serving` pod never comes up. I
 
 #### I hit an error during cluster destruction.
 
-If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](docs/ADVANCED_DOCUMENTATION.md#failcd).
+If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](docs/ADVANCED_DOCUMENTATION#failcd.md).
