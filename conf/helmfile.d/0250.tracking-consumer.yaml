@@ -43,6 +43,14 @@ releases:
         #   cpu: 100m
         #   memory: 1024Mi
 
+      tolerations:
+        - key: consumer
+          operator: Exists
+          effect: NoSchedule
+
+      nodeSelector:
+        - consumer: "yes"
+
       env:
         DEBUG: "true"
         INTERVAL: 1

@@ -33,6 +33,8 @@ releases:
         tag: "0.4.1"
         pullPolicy: "Always"
 
+      nameOverride: zip-consumer
+
       resources:
         requests:
           cpu: 200m
@@ -41,7 +43,13 @@ releases:
         #   cpu: 100m
         #   memory: 1024Mi
 
-      nameOverride: zip-consumer
+      tolerations:
+        - key: consumer
+          operator: Exists
+          effect: NoSchedule
+
+      nodeSelector:
+        - consumer: "yes"
 
       env:
         REDIS_HOST: "redis"

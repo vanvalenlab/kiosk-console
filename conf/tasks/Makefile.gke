@@ -17,6 +17,9 @@ export NODE_MIN_SIZE ?= 1
 export NODE_MAX_SIZE ?= 10
 export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
+# Non-GPU machine type
+export CONSUMER_MACHINE_TYPE ?= n1-highmem-2
+
 # Not all GPU types are available in all regions/availability zones
 export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
 export PREDICTION_GPU_TYPE ?= nvidia-tesla-t4
@@ -101,6 +104,23 @@ gke/list/billing-accounts:
 ## Create GKE GPU node pool
 #		--enable-autoupgrade
 gke/create/node-pools:
+	@echo "Creating consumer CPU node pool..."
+	@echo "Using the following command: "
+	gcloud container node-pools create consumer-cpu \
+		--cluster $(CLUSTER_NAME) \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--region $(GKE_COMPUTE_REGION) \
+		--num-nodes 1 \
+		--min-nodes 1 \
+		--max-nodes ${NODE_MAX_SIZE} \
+		--machine-type=${CONSUMER_MACHINE_TYPE} \
+		--enable-autoscaling \
+		--enable-autorepair \
+		--no-enable-autoupgrade \
+		--preemptible \
+		--node-labels consumer=yes \
+		--node-taints consumer=yes:NoSchedule \
+		|| echo "Elasticsearch CPU node pool creation failed."
 	@echo "Creating prediction GPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create prediction-gpu \
