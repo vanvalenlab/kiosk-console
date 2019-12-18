@@ -6,19 +6,28 @@ The scalability of the DeepCell Kiosk software is enabled by [cloud computing](h
 
 A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org). A [FAQ](http://www.deepcell.org/faq) page is also available.
 
-# Table of Contents
+## Table of Contents
 
-* [**Getting Started**](#toc1)
+* [**Getting started**](#toc1)
    * Preliminary setup
+   * Launching the Kiosk
+   * Usage
+   * Shutdown
+* [**Important notes**](#toc2)
+* [**Advanced documentation**](#toc3)
+* [**Troubleshooting**](docs/TROUBLESHOOTING.md)
+* [**References**](#toc4)
+* [**Copyright, License, Trademarks, and Credits**](#toc5)
 
-<a name="toc1">## Getting started</a>:
+<a name="toc1"></a>:
+## Getting started
 
 ### Preliminary setup
 
 1. Create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Write down the project ID (you will need this in step 7).
 2. Create a cloud storage bucket within the same platform. This will be used to store data and models. Record the bucket name (you will need this in step 7).
 
-### DeepCell Kiosk startup
+### Launching the DeepCell Kiosk
 
 #### Windows Users only
 
@@ -47,7 +56,7 @@ When you've processed all your images and are finished using the DeepCell platfo
 1. To destroy the cloud resources, select `Destroy` from the DeepCell Kiosk's main menu. Cloud resource destruction is complete when you see `Cluster destroyed` followed by `---COMPLETE---` printed to the screen. However, if the screen shows error output immediately before the `---COMPLETE---` indicator, cluster destruction failed and some cloud resources may still exist. In this case, it may be best to delete resources manually though the cloud provider's web interface.
 2. After destroying cloud resources, if you wish to shut down the DeepCell Kiosk entirely, simply select `Exit` from the DeepCell Kiosk's main menu. The DeepCell Kiosk is now completely shut down.
 
-
+<a name="toc2"></a>:
 ## Important notes
 
 - The DeepCell Kiosk is optimized for cost-effectiveness. However, please ensure that your bucket and Kubernetes cluster are in the same region. See [here](https://cloud.google.com/storage/pricing) for details but, simply put, you pay significantly more if your Kubernetes cluster and bucket are not in the same region.
@@ -68,11 +77,12 @@ When you've processed all your images and are finished using the DeepCell platfo
    make run
 ```
 
+<a name="toc3"></a>:
 ## Advanced documentation
 
 - If you would like more insight into the detailed workings of the DeepCell Kiosk, please consult the [advanced documentation](docs/ADVANCED_DOCUMENTATION.md)
 
-
+<a name="toc4"></a>:
 ## References
 
 - [Cluster Autoscaler for AWS](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
@@ -84,7 +94,7 @@ When you've processed all your images and are finished using the DeepCell platfo
 
 <a name="footnote1">1</a>: To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
 
-
+<a name="toc5"></a>:
 ## Copyright
 
 Copyright © 2018-2019 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
