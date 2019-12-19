@@ -93,9 +93,9 @@ function tailcmd() {
 # cluster has been created yet.
 function menu() {
   local value
-  local header_text=("You can use the UP/DOWN arrow keys, the first\n"
-                     "letter of the choice as a hot key, or the\n"
-                     "number keys 1-9 to choose an option.\n"
+  local header_text=("Use the UP/DOWN arrow keys or the first\n"
+                     "letter of the choice as a hot key to\n"
+                     "select an option.\n"
                      "Choose a task.")
 
   declare -A cloud_providers
@@ -263,7 +263,7 @@ function configure_gke() {
 	  return 0
   fi
 
-  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-4}")
+  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-1}")
   if [ "$GKE_MACHINE_TYPE" = "" ]; then
 	  return 0
   fi
@@ -277,7 +277,7 @@ function configure_gke() {
   fi
 
   local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
-  local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
+  local gpus_with_default=${gpus_in_region/nvidia-tesla-t4 _ OFF/nvidia-tesla-t4 _ ON}
   local base_box_height=7
   local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
   local total_lines=$(($base_box_height + $selector_box_lines))
@@ -285,6 +285,7 @@ function configure_gke() {
       "Choose a GPU for prediction (not training) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
+  local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
   export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
       "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
 	  $total_lines 60 $selector_box_lines "$gpus_with_default")

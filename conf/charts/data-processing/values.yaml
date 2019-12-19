@@ -11,6 +11,12 @@ image:
 
 resources: {}
 
+tolerations: {}
+
+affinity: {}
+
+nodeSelector: {}
+
 service:
   type: "ClusterIP"
 

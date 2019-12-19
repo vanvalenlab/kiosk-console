@@ -12,13 +12,13 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
 export CLUSTER_NAME ?= deepcell
 export GKE_COMPUTE_REGION ?= us-west1
-export GKE_MACHINE_TYPE ?= n1-standard-2
+export GKE_MACHINE_TYPE ?= n1-standard-1
 export NODE_MIN_SIZE ?= 1
 export NODE_MAX_SIZE ?= 10
 export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
 # Non-GPU machine type
-export RC_DP_MACHINE_TYPE ?= n1-standard-8
+export CONSUMER_MACHINE_TYPE ?= n1-highmem-2
 
 # Not all GPU types are available in all regions/availability zones
 export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
@@ -104,27 +104,26 @@ gke/list/billing-accounts:
 ## Create GKE GPU node pool
 #		--enable-autoupgrade
 gke/create/node-pools:
-	@gcloud components install beta --quiet
-	@echo "Creating redis-consumer and data-processing CPU node pool..."
+	@echo "Creating consumer CPU node pool..."
 	@echo "Using the following command: "
-	gcloud container node-pools create rc-dp-cpu \
+	gcloud container node-pools create consumer-cpu \
 		--cluster $(CLUSTER_NAME) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region $(GKE_COMPUTE_REGION) \
 		--num-nodes 1 \
 		--min-nodes 1 \
 		--max-nodes ${NODE_MAX_SIZE} \
-		--machine-type=${RC_DP_MACHINE_TYPE} \
+		--machine-type=${CONSUMER_MACHINE_TYPE} \
 		--enable-autoscaling \
 		--enable-autorepair \
 		--no-enable-autoupgrade \
 		--preemptible \
-		--node-labels rc_dp=yes \
-		--node-taints rc_dp=yes:NoSchedule \
+		--node-labels consumer=yes \
+		--node-taints consumer=yes:NoSchedule \
 		|| echo "Elasticsearch CPU node pool creation failed."
 	@echo "Creating prediction GPU node pool..."
 	@echo "Using the following command: "
-	gcloud beta container node-pools create prediction-gpu \
+	gcloud container node-pools create prediction-gpu \
 		--cluster $(CLUSTER_NAME) \
 		--accelerator type=$(PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
@@ -141,7 +140,7 @@ gke/create/node-pools:
 		|| echo "Prediction GPU node pool creation failed."
 	@echo "Creating training GPU node pool..."
 	@echo "Using the following command: "
-	gcloud beta container node-pools create training-gpu \
+	gcloud container node-pools create training-gpu \
 		--cluster $(CLUSTER_NAME) \
 		--accelerator type=$(TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
@@ -201,7 +200,8 @@ gke/deploy/elk:
 	fi
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
-# When you add a GPU node pool to an existing cluster that already runs a non-GPU node pool, GKE automatically taints the GPU nodes with the following node taint
+# When you add a GPU node pool to an existing cluster that already runs a non-GPU
+# node pool, GKE automatically taints the GPU nodes with the following node taint
 #		--node-taints "nvidia.com/gpu=:NoSchedule"
 
 ## Destroy GKE GPU node pool
@@ -261,11 +261,11 @@ gke/destroy/helm:
 	-helm reset --force --tiller-connection-timeout=2
 	-kubectl delete clusterrolebinding tiller-cluster-rule
 	-kubectl delete serviceaccount --namespace kube-system tiller
-	
+
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
 	@echo "Deploying NVIDIA drivers for GPU instances..."
-	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
+	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
 		echo "These drivers are not being installed. They may already be installed."
 	@echo "NVIDIA GPU driver deployment finished."
 	@echo " "
@@ -279,13 +279,13 @@ gke/create/all: \
 	gke/create/bucket \
 	gke/deploy/helm \
 	gke/deploy/nvidia
-	@echo "GKE cluster created" 
+	@echo "GKE cluster created"
 	@exit 0
 
 ## Destroy Cluster
 gke/destroy/all: \
 	gke/destroy/node-pools \
 	gke/destroy/cluster \
-	gke/destroy/service-account 
-	@echo "GKE cluster destroyed" 
+	gke/destroy/service-account
+	@echo "GKE cluster destroyed"
 	@exit 0

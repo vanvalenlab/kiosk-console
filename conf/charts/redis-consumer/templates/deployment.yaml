@@ -19,12 +19,18 @@ spec:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
     spec:
+    {{- with .Values.nodeSelector }}
       nodeSelector:
-        rc_dp: "yes"
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
       tolerations:
-      - key: rc_dp
-        operator: Exists
-        effect: NoSchedule
+{{ toYaml . | indent 8 }}
+    {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
