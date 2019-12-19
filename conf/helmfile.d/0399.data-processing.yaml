@@ -73,7 +73,7 @@ releases:
           effect: NoSchedule
 
       nodeSelector:
-        - consumer: "yes"
+        consumer: "yes"
 
       env:
         LISTEN_PORT: 8080
