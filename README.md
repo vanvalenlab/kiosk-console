@@ -35,7 +35,7 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 
 #### Windows Users only
 
-4. [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux)
+4. [Install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux) and your preferred Linux distribution (we like Ubuntu).
 
 #### All Users (Windows and otherwise)
 
