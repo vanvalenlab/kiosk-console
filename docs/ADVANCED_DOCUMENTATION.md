@@ -72,24 +72,10 @@ The expectation is that users will usually deploy the kiosk from their personal 
 
 <a name="jumpbox"></a>
 #### Jumpbox deployment workflow
-If you wish to use a jumpbox (bastion) on Google Cloud to launch your kiosk, first requisition an instance with the "Debian/Ubuntu 9" operating system, then get to a terminal prompt inside the instance. If you have chosen to SSH into the machine from a terminal on your local machine, simply paste the following command:
-```
-sudo apt-get update && \
-sudo apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common && \
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add - && \
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" && \
-sudo apt-get update && \
-sudo apt-get install -y containerd.io docker-ce docker-ce-cli git make vim && \
-git clone https://www.github.com/vanvalenlab/kiosk && \
-cd kiosk && \
-make init && \
-git checkout master && \
-sed -i 's/sudo -E //' ./Makefile && \
-sudo make docker/build && \
-sudo make install && \
-sudo kiosk
-```
-Alternatively, if you SSH'd in using Google Cloud's browser-based terminal, you will need to break that large clump of commands into individual commands (each semicolon denotes the end of a command) and paste them one at a time onto the command line. After this, you should see the kiosk GUI screen and can follow the kiosk configuration and launch process as usual.
+
+A "jumpbox" is a cloud VM that allows users to securely create and securely connect to a cluster.
+
+First, requisition a Ubuntu [GCP VM Instance](https://console.cloud.google.com/compute/instances). When the instance is ready, connect to it via SSH and [install Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/). Once installed, the VM should be ready for the standard `sudo docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash`.
 
 #### Docker-in-Docker deployment workflow
 If you'd prefer not to install anything permanently on your machine, but also prefer not to use a jumpbox, you can run the kiosk from within a Docker container. To do this, we will use the "Docker in Docker" container created by Github user jpetazzo. First, clone the Github repository for docker-in-docker: `https://github.com/jpetazzo/dind`. Then enter the `dind` directory that was just created and execute
