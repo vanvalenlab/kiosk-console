@@ -70,6 +70,7 @@ POD_NAME=`kubectl get pods --namespace kube-system -l type=openvpn | awk END'{ p
 ### Advanced Kiosk deployment workflows
 The expectation is that users will usually deploy the kiosk from their personal machine. However, if you want to deploy from a Google Cloud instance (sometimes called a "bastion" or "jumpbox") or wish to install and run the kiosk from within a Docker container, please read on.
 
+<a name="jumpbox"></a>
 #### Jumpbox deployment workflow
 If you wish to use a jumpbox (bastion) on Google Cloud to launch your kiosk, first requisition an instance with the "Debian/Ubuntu 9" operating system, then get to a terminal prompt inside the instance. If you have chosen to SSH into the machine from a terminal on your local machine, simply paste the following command:
 ```
