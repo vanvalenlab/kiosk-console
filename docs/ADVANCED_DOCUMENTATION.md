@@ -81,6 +81,8 @@ First, requisition a Ubuntu [GCP VM Instance](https://console.cloud.google.com/c
 sudo docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
 ```
 
+Please note that the jumpbox counts against the GCP project CPU quota, and you may need to [increase your CPU quota](https://cloud.google.com/compute/quotas) in order to deploy a DeepCell kiosk with a jumpbox.
+
 #### Docker-in-Docker deployment workflow
 If you'd prefer not to install anything permanently on your machine, but also prefer not to use a jumpbox, you can run the kiosk from within a Docker container. To do this, we will use the "Docker in Docker" container created by Github user jpetazzo. First, clone the Github repository for docker-in-docker: `https://github.com/jpetazzo/dind`. Then enter the `dind` directory that was just created and execute `docker build -t dind/dind .`
 
