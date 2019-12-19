@@ -75,7 +75,11 @@ The expectation is that users will usually deploy the kiosk from their personal 
 
 A "jumpbox" is a cloud VM that allows users to securely create and securely connect to a cluster.
 
-First, requisition a Ubuntu [GCP VM Instance](https://console.cloud.google.com/compute/instances). When the instance is ready, connect to it via SSH and [install Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/). Once installed, the VM should be ready for the standard `sudo docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash`.
+First, requisition a Ubuntu [GCP VM Instance](https://console.cloud.google.com/compute/instances). When the instance is ready, connect to it via SSH and [install Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/). Once installed, the VM should be ready for the standard:
+
+```bash
+sudo docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
+```
 
 #### Docker-in-Docker deployment workflow
 If you'd prefer not to install anything permanently on your machine, but also prefer not to use a jumpbox, you can run the kiosk from within a Docker container. To do this, we will use the "Docker in Docker" container created by Github user jpetazzo. First, clone the Github repository for docker-in-docker: `https://github.com/jpetazzo/dind`. Then enter the `dind` directory that was just created and execute
