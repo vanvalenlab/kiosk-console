@@ -27,7 +27,7 @@ releases:
     vendor: "coreos"
     default: "true"
   chart: "stable/prometheus-operator"
-  version: "5.4.1"
+  version: "7.4.0"
   wait: true
   values:
     # Default values for prometheus-operator.
