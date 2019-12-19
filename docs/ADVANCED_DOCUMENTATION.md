@@ -82,16 +82,18 @@ sudo docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
 ```
 
 #### Docker-in-Docker deployment workflow
-If you'd prefer not to install anything permanently on your machine, but also prefer not to use a jumpbox, you can run the kiosk from within a Docker container. To do this, we will use the "Docker in Docker" container created by Github user jpetazzo. First, clone the Github repository for docker-in-docker: `https://github.com/jpetazzo/dind`. Then enter the `dind` directory that was just created and execute
-`docker build -t dind/dind .`
+If you'd prefer not to install anything permanently on your machine, but also prefer not to use a jumpbox, you can run the kiosk from within a Docker container. To do this, we will use the "Docker in Docker" container created by Github user jpetazzo. First, clone the Github repository for docker-in-docker: `https://github.com/jpetazzo/dind`. Then enter the `dind` directory that was just created and execute `docker build -t dind/dind .`
+
 Once that image builds successfully, then you can paste the following string of commands, replacing `[dind_container]` with your chosen container name, to the terminal in order to create the docker-in-docker container and get a terminal prompt inside it.
-```
+
+```bash
 docker stop [dind_container]; \
 docker rm [dind_container]; \
 docker run -it --privileged --name [dind_container] dind/dind
 ```
 Once inside the docker-in-docker container, you now have the ability to create further Docker containers, which is a necessary part of kiosk installation. So, in order to install the kiosk inside the docker-in-docker container and bring up the kiosk configuration GUI, simply paste the following commands to the docker-in-docker command line:
-```
+
+```bash
 apt-get update && \
 apt-get install -y make git vim && \
 git clone https://www.github.com/vanvalenlab/kiosk && \
@@ -103,6 +105,7 @@ make docker/build && \
 make install && \
 kiosk
 ```
+
 From here, you can configure the kiosk as usual.
 
 <a name="failcd"></a>
