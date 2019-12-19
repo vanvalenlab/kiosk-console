@@ -43,6 +43,14 @@ releases:
           # cpu: 2
           # memory: 8Gi
 
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+      - key: "prediction_gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+
       service:
         type: "ClusterIP"
 
