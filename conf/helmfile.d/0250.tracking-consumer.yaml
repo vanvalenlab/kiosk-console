@@ -49,7 +49,7 @@ releases:
           effect: NoSchedule
 
       nodeSelector:
-        - consumer: "yes"
+        consumer: "yes"
 
       env:
         DEBUG: "true"
