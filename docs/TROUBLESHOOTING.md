@@ -23,3 +23,10 @@ A prediction job may also never finish if the `tf-serving` pod never comes up. I
 #### I hit an error during cluster destruction.
 
 If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](ADVANCED_DOCUMENTATION.md#failcd).
+
+
+#### I killed my docker container!
+
+Unfortunately, your cluster is unreachable. Your cluster will remain up until it is manually destroyed, as [described here](ADVANCED_DOCUMENTATION.md#failcd). Services *should* remain stable if you want to continue to use the cluster, though debugging any issues will be impossible.
+
+If you plan to have a long-running cluster up, it is recommended to use the [jumpbox](ADVANCED_DOCUMENTATION.md#jumpbox) deployment method in order to prevent this issue.
