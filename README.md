@@ -26,7 +26,7 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 
 1. Create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Write down the project ID (you will need this in step 7).
 
-2. In order to add accelerated hardware to the clusters you will launch, you will need to [upgrade](https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade) your Google Cloud account<sup>[2](#footnote2)</sup> and [apply](https://cloud.google.com/compute/quotas) for a quota of at least 1 GPU.<sup>[3](#footnote3)</sup> This may take some time, as Google will need to approve each request.
+2. In order to add accelerated hardware to the clusters you will launch, you will need to [upgrade](https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade) your Google Cloud account<sup>[2](#footnote2)</sup> and [apply](https://cloud.google.com/compute/quotas) for a quota of at least 1 GPU.<sup>[3](#footnote3)</sup> Please also request at least 16 *In-use IP addresses* for the *Compute Engine API* of your region (by default `us-west-1`). This may take some time, as Google will need to approve each request.
 
 3. Create a [cloud storage bucket](https://cloud.google.com/storage/docs/creating-buckets). This will be used to store data and models. Record the bucket name (you will need this in step 7).
 
