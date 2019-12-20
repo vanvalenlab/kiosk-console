@@ -2,6 +2,23 @@
 
 Welcome to the advanced documentation for DeepCell Kiosk developers. We will go over cluster customization, accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
 
+* [Building custom consumer pipelines](#adtoc1)
+   * [Deploying custom consumers](#adtoc1)
+   * [Autoscaling custom consumers](#adtoc1b)
+   * [Connecting custom consumers with the frontend](#adtoc1c)
+* [Accessing cluster metrics and logging using OpenVPN](#adtoc2)
+   * [Setting up OpenVPN](#adtoc2)
+   * [Cluster metrics](#adtoc2b)
+   * [Logging](#adtoc2c)
+* [Advanced Kiosk deployment workflows](#jumpbox)
+   * [Jumpbox deployment workflow](#jumpbox)
+   * [Docker-in-Docker deployment workflow](#adtoc3b)
+* [Recovering from failed Kiosk creations or destructions](#failcd)
+   * [Google Cloud (Google Kubernetes Engine)](#failcd)
+* [Design decisions](#adtoc5)
+   * [Database conventions](#adtoc5)
+
+<a name="adtoc1"></a>
 ### Building custom consumer pipelines
 
 #### Deploying custom consumers
@@ -15,6 +32,7 @@ helmfile -l name=my-new-consumer sync
 
 Please refer to the [`redis-consumer`](https://github.com/vanvalenlab/kiosk-redis-consumer) repository for more information on building your own consumer.
 
+<a name="adtoc1b"></a>
 #### Autoscaling custom consumers
 
 To effectively scale your new consumer, some small edits will be needed in the following files:
@@ -25,10 +43,12 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
 Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the `prometheus-redis-exporter`, the custom rule is defined in `prometheus-operator`, and the Horizontal Pod Autoscaler is created and configured to use the new rule in the `hpa.yaml` file. Please use custom metric `redis_consumer_key_ratio` as an example.
 
+<a name="adtoc1c"></a>
 #### Connecting custom consumers with the frontend
 
 Finally, in order to use the frontend interface to interact with your new consumer, you will need to add the new queue to the [`kiosk-frontend`](https://github.com/vanvalenlab/kiosk-frontend). Please consult its documentation for configuration details.
 
+<a name="adtoc2"></a>
 ### Accessing cluster metrics and logging using OpenVPN
 
 #### Setting up OpenVPN
@@ -57,10 +77,12 @@ POD_NAME=`kubectl get pods --namespace kube-system -l type=openvpn | awk END'{ p
 
 4. Next, using an OpenVPN client locally, connect to the cluster using `openvpn --config kubeVPN.ovpn` as your config file. You may need to use `sudo` if the above does not work.
 
+<a name="adtoc2b"></a>
 ##### Cluster metrics
 
 5. Once inside the cluster, you can connect to Grafana by going to `[service_IP]:[service_port]` for the relevant service from any web browser on your local machine. (To view the service ports and IPs, execute the command `kubectl get svc --all-namespaces` from the kiosk's command line.)
 
+<a name="adtoc2c"></a>
 ##### Logging
 
 6. For reliability reasons, logging facilities are disabled by default. To enable logging functionality, execute `export ELK_DEPLOYMENT_TOGGLE=ON; make gke/deploy/elk; make helmfile/create/elk` at the command line after cluster creation.
@@ -73,7 +95,7 @@ The expectation is that users will usually deploy the kiosk from their personal 
 <a name="jumpbox"></a>
 #### Jumpbox deployment workflow
 
-A "jumpbox" is a cloud VM that allows users to securely create and securely connect to a cluster.
+A "jumpbox" is a cloud VM that allows users to securely create and connect to a cluster.
 
 First, requisition a Ubuntu [GCP VM Instance](https://console.cloud.google.com/compute/instances). When the instance is ready, connect to it via SSH and [install Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/). Once installed, the VM should be ready for the standard:
 
@@ -83,8 +105,9 @@ sudo docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
 kiosk
 ```
 
-Please note that the jumpbox counts against the GCP project CPU quota, and you may need to [increase your CPU quota](https://cloud.google.com/compute/quotas) in order to deploy a DeepCell kiosk with a jumpbox.
+Please note that the jumpbox counts against the GCP project CPU quota, so you may need to [increase your CPU quota](https://cloud.google.com/compute/quotas) in order to deploy a DeepCell kiosk with a jumpbox.
 
+<a name="adtoc3b"></a>
 #### Docker-in-Docker deployment workflow
 If you'd prefer not to install anything permanently on your machine, but also prefer not to use a jumpbox, you can run the kiosk from within a Docker container. To do this, we will use the "Docker in Docker" container created by Github user jpetazzo. First, clone the Github repository for docker-in-docker: `https://github.com/jpetazzo/dind`. Then enter the `dind` directory that was just created and execute `docker build -t dind/dind .`
 
@@ -110,16 +133,16 @@ make install && \
 kiosk
 ```
 
-From here, you can configure the kiosk as usual.
+From here, you can configure the Kiosk as usual.
 
 <a name="failcd"></a>
 ### Recovering from failed Kiosk creations or destructions
 
-There may be occasions where the Kiosk fails to deploy or the cluster destruction doesn't execute properly and leaves orphaned cloud resources active. Both failed cluster deployment and failed cluster destruction after deployment can be the result of any number of issues. We can't go into all of them here. Rather, our goal is to tell you how to remove all the cloud resources your cluster is using, so that you won't end up unknowingly leaking money.
+There may be occasions where the Kiosk fails to deploy or the cluster destruction doesn't execute properly and leaves orphaned cloud resources active. Both failed cluster deployment and failed cluster destruction after deployment can be the result of any number of issues. Before you re-lauch any future clusters, and to prevent you from unkowingly leaking money, you should remove all the vestigial cloud resources left from the failed launch/destruction.
 
 #### Google Cloud (Google Kubernetes Engine)
 
-The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. If a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand (n.b. the name of each resource will contain at least part of the cluster name in it):
+The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. If a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand (*n.b.* the name of each resource will contain at least part of the cluster name in it):
 
 1. Kubernetes cluster (Remember the cluster name for the following steps. This will delete most of the resources and the proceeding steps will clean up the rest.)
 2. any Firewall Rules associated with your cluster
@@ -129,6 +152,7 @@ The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Goo
 
 While we hope this list is comprehensive, there could be some lingering resources used by Google Cloud and not deleted automatically that we're not aware of.
 
+<a name="adtoc5"></a>
 ### Design decisions
 
 To assist future developers with any alterations/extensions they wish to make to the Kiosk codebase, here we provide some insight into our decision making process for some key components within the platform.
