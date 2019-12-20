@@ -79,6 +79,8 @@ First, requisition a Ubuntu [GCP VM Instance](https://console.cloud.google.com/c
 
 ```bash
 sudo docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
+
+kiosk
 ```
 
 Please note that the jumpbox counts against the GCP project CPU quota, and you may need to [increase your CPU quota](https://cloud.google.com/compute/quotas) in order to deploy a DeepCell kiosk with a jumpbox.
