@@ -28,9 +28,9 @@ A prediction job may also never finish if the `tf-serving` pod never comes up. I
 <a name="ttoc3"></a>
 #### I hit an error during cluster creation/destruction
 
-The Google Cloup API can fails to respond to certain commands in unexpected ways. If this occurs during cluster creation, you may need to manually re-create the cluster after waiting through a time-out period.
+The Google Cloud API may encounter occasional failures which can interrupt cluster creation or destruction. If this occurs during cluster creation, you may need to  recreate the cluster after waiting brief a time-out period.
 
-If the cluster creation or destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](ADVANCED_DOCUMENTATION.md#failcd).
+If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](ADVANCED_DOCUMENTATION.md#failcd).
 
 <a name="ttoc4"></a>
 #### I killed my docker container!
