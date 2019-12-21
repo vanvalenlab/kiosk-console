@@ -36,6 +36,7 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 ### Launching the DeepCell Kiosk
 
 5. One of the enabling technologies the DeepCell Kiosk utilizes is Docker (*FREE Community Edition*). Installation is easy for [Linux and MacOS](https://docs.docker.com/install/), but the setup can be complicated for Windows. For this reason, we recommend Windows users employ an [Ubuntu VM](https://brb.nci.nih.gov/seqtools/installUbuntu.html) or follow the [cloud jumpbox worfklow](docs/ADVANCED_DOCUMENTATION.md#jumpbox) outlined in the advanced documentation.
+
 ⋅⋅⋅* If Windows user prefer to run the Kiosk natively in Windows, they should [install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux) and the Ubuntu Linux distribution. This should be completed prior to installing Docker. Once installed, follow the Docker installation instructions for [Linux](https://docs.docker.com/install/) in WSL.
 
 6. Start a terminal shell and install the DeepCell kiosk wrapper script:<sup>[5](#footnote5)</sup>
