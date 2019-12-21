@@ -24,36 +24,42 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 
 ### Preliminary setup
 
-1. Create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Write down the project ID (you will need this in step 8).
+1. Create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Write down the project ID (you will need this in step 9).
 
-2. In order to add accelerated hardware to the clusters you will launch, you will need to [upgrade](https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade) your Google Cloud account.<sup>[2](#footnote2)</sup> Please note, this may take some time, as Google will need to approve the upgrade.<sup>[3](#footnote3)</sup>
+2. Make sure nable the [Kubernetes Engine API](https://console.cloud.google.com/apis/api/container.googleapis.com/overview) is enabled.
 
-3. You will also need to [apply](https://cloud.google.com/compute/quotas) for a quota of at least 1 GPU.<sup>[4](#footnote4)</sup> Please also request at least 16 *In-use IP addresses* for the *Compute Engine API* of your region (by default `us-west1`). This may take some time, as Google will need to approve each these requests.
+3. In order to add accelerated hardware to the clusters you will launch, you will need to [upgrade](https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade) your Google Cloud account.<sup>[2](#footnote2)</sup> Please note, this may take some time, as Google will need to approve the upgrade.<sup>[3](#footnote3)</sup>
 
-4. Create a [cloud storage bucket](https://cloud.google.com/storage/docs/creating-buckets). This will be used to store data and models. Record the bucket name (you will need this in step 8).
+4. You will also need to [apply](https://cloud.google.com/compute/quotas) for a quota of at least 1 GPU.<sup>[4](#footnote4)</sup> Please also request at least 16 *In-use IP addresses* for the *Compute Engine API* of your region (by default `us-west1`). This may take some time, as Google will need to approve each these requests.
+
+5. Create a [cloud storage bucket](https://cloud.google.com/storage/docs/creating-buckets). This will be used to store data and models. Record the bucket name (you will need this in step 8).
 
 <a name="toc1b"></a>
 ### Launching the DeepCell Kiosk
 
-5. One of the enabling technologies the DeepCell Kiosk utilizes is Docker (*FREE Community Edition*). Installation is easy for [Linux and MacOS](https://docs.docker.com/install/), but the setup can be complicated for Windows. For this reason, we recommend Windows users employ an [Ubuntu VM](https://brb.nci.nih.gov/seqtools/installUbuntu.html) or follow the [cloud jumpbox worfklow](docs/ADVANCED_DOCUMENTATION.md#jumpbox) outlined in the advanced documentation.
+6. One of the enabling technologies the DeepCell Kiosk utilizes is Docker (*FREE Community Edition*). Installation is easy for [Linux and MacOS](https://docs.docker.com/install/), but the setup can be complicated for Windows. For this reason, we recommend Windows users employ an [Ubuntu VM](https://brb.nci.nih.gov/seqtools/installUbuntu.html) or follow the [cloud jumpbox worfklow](docs/ADVANCED_DOCUMENTATION.md#jumpbox) outlined in the advanced documentation.
 
    * If Windows user prefer to run the Kiosk natively in Windows, they should [install WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (Windows Subsystem for Linux) and the Ubuntu Linux distribution. This should be completed prior to installing Docker. Once installed, follow the Docker installation instructions for [Linux](https://docs.docker.com/install/) in WSL.
 
-6. Start a terminal shell and install the DeepCell kiosk wrapper script:<sup>[5](#footnote5)</sup>
+7. Start a terminal shell and install the DeepCell kiosk wrapper script:<sup>[5](#footnote5)</sup>
 ```bash
 docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
 ```
 
-7. Start the kiosk. At the terminal shell, just run: `kiosk`
+8. Start the kiosk. At the terminal shell, just run: `kiosk`
 
 <a name="toc1c"></a>
 ### DeepCell Kiosk usage
 
-8. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported) and fill out the configuration values as needed. Each reponse has been prepopulated with a default value that will be appropriate for most users (for more detailed information on each of these values refer to our [Advanced Documentation](docs/ADVANCED_DOCUMENTATION.md)). Once the Kiosk has been configured for a cloud provider, you will be returned to the main menu and the word `(active)` will appear next to that cloud provider's configuration option in the Kiosk menu.
-9. With the Kiosk configured for the appropriate cloud provider, select the `Create` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see `Cluster Created` followed by `---COMPLETE---` printed to the terminal. If you see `---COMPLETE---` with error text immediately preceding it, cluster creation failed.
-10. Find the cluster's web address by choosing the `View` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".)
-11. Go to the cluster address in your web browser to find the DeepCell Kiosk frontpage. To run a job (load raw data and download the results) use the `PREDICT` tab.
-12. The `Predict` page on DeepCell.org allows for different job types (ie: nuclear segmentation and or nuclear tracking). Each job type requires a specific model. For example models and data, refer to [DeepCell.org](https://deepcell.org/data).<sup>[6](#footnote6)</sup>
+9. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported) and fill out the configuration values as needed. Each response is pre-populated with a default value appropriate for most users (for more detailed information on each of these values refer to our [advanced documentation](docs/ADVANCED_DOCUMENTATION.md)). Once the Kiosk has been configured, you will be returned to the main menu and the word `(active)` will appear next to that cloud provider's configuration option.
+
+10. With the Kiosk configured for the appropriate cloud provider, select the `Create` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see `Cluster Created` followed by `---COMPLETE---` printed to the terminal. If you see `---COMPLETE---` with error text immediately preceding it, cluster creation failed.
+
+11. Find the cluster's web address by choosing the `View` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".)
+
+12. Go to the cluster address in your web browser to find the DeepCell Kiosk frontpage. To run a job (load raw data and download the results) use the `PREDICT` tab.
+
+13. The `Predict` page on DeepCell.org allows for different job types (ie: nuclear segmentation and or nuclear tracking). Each job type requires a specific model. For example models and data, refer to [DeepCell.org](https://deepcell.org/data).<sup>[6](#footnote6)</sup>
 
 <a name="toc1d"></a>
 ### DeepCell Kiosk shutdown
