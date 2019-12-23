@@ -1,13 +1,16 @@
 sudo: true
 dist: xenial
 
-language: bash
+git:
+  depth: false
 
-script:
-  - echo "No tests to run!"
+language: bash
 
 jobs:
   include:
+    - stage: test
+      script:
+      - echo "No tests to run!"
     - stage: deploy
       if: tag IS present
       script:
