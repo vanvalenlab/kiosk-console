@@ -26,7 +26,7 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 
 (*n.b. Google Cloud Platform must approve several requests which may take up to 1 day to complete.*)
 
-1. Create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Write down the project ID (you will need this in step 9).
+1. If necessary, create an account at [Google Cloud](https://cloud.google.com) and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Write down the project ID (you will need this in step 9).
 
 2. Make sure the [Kubernetes Engine API](https://console.cloud.google.com/apis/api/container.googleapis.com/overview) is enabled.
 
