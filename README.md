@@ -34,7 +34,7 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 
 4. You will also need to [apply](https://cloud.google.com/compute/quotas) for a quota of at least 1 GPU using the `GPUs (all regions)` option.<sup>[4](#footnote4)</sup> Please also request at least 16 *In-use IP addresses* for the *Compute Engine API* of your region (by default `us-west1`). This may take some time, as Google will need to approve each these requests.
 
-5. Create a [cloud storage bucket](https://cloud.google.com/storage/docs/creating-buckets). This will be used to store data and models. Record the bucket name (you will need this in step 8).
+5. Create a [cloud storage bucket](https://cloud.google.com/storage/docs/creating-buckets). This will be used to store data and models. Record the bucket name (you will need this in step 8). Please do not use underscores (`_`) in your bucket name.
 
 <a name="toc1b"></a>
 ### Launching the DeepCell Kiosk
