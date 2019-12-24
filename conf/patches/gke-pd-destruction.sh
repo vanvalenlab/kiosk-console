@@ -1,5 +1,8 @@
 echo "Destroying orphaned persistent disks..."
 while IFS= read -r result
 do
-    gcloud compute disks delete $result --quiet --zone=${GPU_COMPUTE_REGION}
-done < <(gcloud compute disks list | grep ${cluster_name} | awk '{print $1}')
+    VAR_NAME=$(echo $result | awk '{print $1}')
+    VAR_REGION=$(echo $result | awk '{print $2}')
+    gcloud compute disks delete $VAR_NAME --quiet --zone=$VAR_REGION
+done < <(gcloud compute disks list | grep $CLUSTER_NAME)
+
