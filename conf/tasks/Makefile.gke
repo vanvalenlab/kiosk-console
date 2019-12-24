@@ -213,6 +213,14 @@ gke/destroy/node-pools:
 	@echo " "
 	@echo " "
 
+## Destroy Orphaned GKE persistent disks
+gke/destroy/pds:
+	@echo "Destroying orphaned persistent disks."
+	/conf/patches/gke-pd-destruction.sh
+	@echo "Orphaned persistent disks destroyed."
+	@echo " "
+	@echo " "
+
 # https://cloud.google.com/storage/docs/access-control/iam-roles
 ## Create Service Account used by deepcell
 gke/create/service-account:
@@ -286,6 +294,7 @@ gke/create/all: \
 gke/destroy/all: \
 	gke/destroy/node-pools \
 	gke/destroy/cluster \
-	gke/destroy/service-account
+	gke/destroy/service-account \
+	gke/destroy/pds
 	@echo "GKE cluster destroyed"
 	@exit 0
