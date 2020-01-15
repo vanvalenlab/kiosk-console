@@ -196,7 +196,7 @@ gke/create/elk-node-pools:
 			--node-taints logstash=yes:NoSchedule \
 			|| echo "Elasticsearch CPU node pool creation failed.";\
 	else\
-		echo "ELK stack is disabled."
+		echo "ELK stack is disabled.";\
 	fi
 	@echo "ELK node pools created."
 	@shopt -u nocasematch
