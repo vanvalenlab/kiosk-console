@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "Deleting all custom node pools..."
 while IFS= read -r result
 do
   retries=3

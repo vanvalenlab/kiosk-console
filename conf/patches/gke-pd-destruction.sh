@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "Destroying orphaned persistent disks..."
 while IFS= read -r result
 do
   retries=3
