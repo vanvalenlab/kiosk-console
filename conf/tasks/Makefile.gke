@@ -154,14 +154,11 @@ gke/create/node-pools:
 		--no-enable-autoupgrade \
 		--node-taints training_gpu=yes:NoSchedule \
 		|| echo "Training GPU node pool creation failed."
-	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
-		make gke/deploy/elk;\
-	fi
 	@echo "GPU node pool creation finished."
 	@echo " "
 	@echo " "
 
-gke/deploy/elk:
+gke/create/elk-node-pools:
 	@shopt -s nocasematch
 	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
 		echo "Creating elasticsearch CPU node pool...";\
@@ -198,7 +195,10 @@ gke/deploy/elk:
 			--node-labels logstash=yes \
 			--node-taints logstash=yes:NoSchedule \
 			|| echo "Elasticsearch CPU node pool creation failed.";\
+	else\
+		echo "ELK stack is disabled."
 	fi
+	@echo "ELK node pools created."
 	@shopt -u nocasematch
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
@@ -286,6 +286,7 @@ gke/create/all: \
 	gke/create/service-account \
 	gke/create/cluster \
 	gke/create/node-pools \
+	gke/create/elk-node-pools \
 	gke/create/bucket \
 	gke/deploy/helm \
 	gke/deploy/nvidia
