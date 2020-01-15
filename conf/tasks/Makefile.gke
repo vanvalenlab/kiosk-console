@@ -164,8 +164,8 @@ gke/create/node-pools:
 gke/deploy/elk:
 	@shopt -s nocasematch
 	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
-		@echo "Creating elasticsearch CPU node pool...";\
-		@echo "Using the following command: ";\
+		echo "Creating elasticsearch CPU node pool...";\
+		echo "Using the following command: ";\
 		gcloud container node-pools create elasticsearch-cpu \
 			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 			--region $(GKE_COMPUTE_REGION) \
@@ -181,8 +181,8 @@ gke/deploy/elk:
 			--node-labels elasticsearch_data=yes \
 			--node-taints elasticsearch_data=yes:NoSchedule \
 			|| echo "Elasticsearch CPU node pool creation failed.";\
-		@echo "Creating logstash CPU node pool...";\
-		@echo "Using the following command: ";\
+		echo "Creating logstash CPU node pool...";\
+		echo "Using the following command: ";\
 		gcloud container node-pools create logstash-cpu \
 			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 			--region $(GKE_COMPUTE_REGION) \
