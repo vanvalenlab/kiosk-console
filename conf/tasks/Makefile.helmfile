@@ -28,7 +28,7 @@ helmfile/create/elk:
 helmfile/destroy/all:
 	@echo " "
 	@echo "Destroying all Kubernetes resources using helmfiles..."
-	/conf/patches/gke-helmfile-destruction.sh
+	@helm ls --all --short | xargs helm delete --purge
 	@echo "Helmfile destruction finished."
 	@echo " "
 	@echo " "
