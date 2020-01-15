@@ -1,4 +1,5 @@
-## helmfile sync has been failing a lot on GKE, due to automatic master upgrades immediately after cluster creation
+## helmfile sync has been failing a lot on GKE,
+## due to automatic master upgrades immediately after cluster creation
 ## @helmfile sync || echo "Services couldn't be synced."
 ## what follow is a workaround
 helmfile/create/all:
