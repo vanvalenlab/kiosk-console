@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.3.0
+        tag: 0.4.0-rc
         pullPolicy: Always
 
       resources:
@@ -72,6 +72,7 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         UPLOAD_PREFIX: "uploads/"
+        JOB_TYPES: "segmentation,tracking"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
