@@ -1,41 +1,14 @@
-echo "Destroying prediction GPU node pool..."
-until gcloud container node-pools delete prediction-gpu --quiet --region ${GPU_COMPUTE_REGION}
+#!/bin/bash
+
+while IFS= read -r result
 do
-    echo "Prediction GPU node pool destruction failed. Trying again in 30 seconds."
+  retries=3
+  for ((i=0; i<retries; i++)); do
+    VAR_NAME=$(echo $result | awk '{print $1}')
+    gcloud container node-pools delete $VAR_NAME --quiet --region=${GKE_COMPUTE_REGION} --cluster ${CLUSTER_NAME}
+    [[ $? -eq 0 ]] && break
+    echo "Something went wrong while deleting node-pool ${VAR_NAME}. Retrying in 30 seconds."
     sleep 30
-done
-echo "Prediction GPU node pool destruction finished."
-
-echo "Destroying training GPU node pool..."
-until gcloud container node-pools delete training-gpu --quiet --region ${GPU_COMPUTE_REGION}
-do
-    echo "Training GPU node pool destruction failed. Trying again in 30 seconds."
-    sleep 30
-done
-echo "Training GPU node pool destruction finished."
-
-if [ "${ELK_DEPLOYMENT_TOGGLE}" == "ON" ] || [ "${ELK_DEPLOYMENT_TOGGLE}" == "on" ]; then
-    echo "Destroying elasticsearch CPU node pool..."
-    until gcloud container node-pools delete elasticsearch-cpu --quiet --region ${GKE_COMPUTE_REGION}
-    do
-        echo "Elasticsearch-data CPU node pool destruction failed. Trying again in 30 seconds."
-        sleep 30
-    done
-    echo "Elasticsearch CPU node pool destruction finished."
-
-    echo "Destroying logstash CPU node pool..."
-    until gcloud container node-pools delete logstash-cpu --quiet --region ${GKE_COMPUTE_REGION}
-    do
-        echo "Logstash-data CPU node pool destruction failed. Trying again in 30 seconds."
-        sleep 30
-    done
-    echo "Logstash CPU node pool destruction finished."
-fi
-
-echo "Destroying consumer CPU node pool..."
-until gcloud container node-pools delete consumer-cpu --quiet --region ${GKE_COMPUTE_REGION}
-do
-    echo "Consumer CPU node pool destruction failed. Trying again in 30 seconds."
-    sleep 30
-done
-echo "Consumer CPU node pool destruction finished."
+  done
+  echo "Successfully deleted node-pool ${VAR_NAME}"
+done < <(gcloud container node-pools list --cluster ${CLUSTER_NAME} --region ${GKE_COMPUTE_REGION} --filter "NOT default-pool" | grep -v NAME)
