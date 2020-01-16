@@ -120,7 +120,7 @@ gke/create/node-pools:
 		--preemptible \
 		--node-labels consumer=yes \
 		--node-taints consumer=yes:NoSchedule \
-		|| echo "Elasticsearch CPU node pool creation failed."
+		|| echo "Consumer CPU node pool creation failed."
 	@echo "Creating prediction GPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create prediction-gpu \
