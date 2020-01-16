@@ -37,9 +37,9 @@ function inputbox() {
   local h=${5:-8}
   shift
   value=$(dialog --title "$title" \
-            --inputbox "$label" "$h" "$w" "$default" \
             --backtitle "${BRAND}" \
-            --output-fd 1)
+            --output-fd 1 \
+            --inputbox "$label" "$h" "$w" "$default")
   echo $value
 }
 
