@@ -37,9 +37,9 @@ function inputbox() {
   local h=${5:-8}
   shift
   value=$(dialog --title "$title" \
-            --inputbox "$label" "$h" "$w" "$default" \
             --backtitle "${BRAND}" \
-            --output-fd 1)
+            --output-fd 1 \
+            --inputbox "$label" "$h" "$w" "$default")
   echo $value
 }
 
@@ -114,7 +114,7 @@ function menu() {
   else
     value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
-              --menu "${header_text[*]}" 17 50 7 \
+              --menu "${header_text[*]}" 17 50 6 \
                   "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                   "GKE"     "Configure Google ${cloud_providers[gke]}" \
                   "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
@@ -237,8 +237,8 @@ function configure_gke() {
   if [ "$PROJECT" = "" ]; then
 	  return 0
   fi
-  make gke/login
-  gcloud config set project ${PROJECT}
+#  make gke/login
+#  gcloud config set project ${PROJECT}
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
@@ -249,6 +249,27 @@ function configure_gke() {
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
+
+  # Custom vs Advanced build options
+
+
+  local setup_options="Default test ON
+    Custom test OFF"
+  local CLUSTER_SETUP_METHOD=$(radiobox "Kiosk Setup" \
+    "Choose a method of configuring your cluser: \nPress the spacebar to select and Enter to continue." \
+    15 60 7 "$setup_options")
+  if [ "$CLUSTER_SETUP_METHOD" = "" ]; then
+    return 0
+  fi
+
+
+
+
+
+
+
+
+  # End custom build options
 
   local regions=$(gcloud compute regions list | grep "-" | awk '{print $1 " _ OFF"}')
   local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
@@ -391,6 +412,7 @@ function shell() {
 }
 
 function create() {
+  #todo: check if status is active and if not echo that fact and request config
   tailcmd "Create Cluster" "---COMPLETE---" make create
   export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
 }
