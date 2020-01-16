@@ -54,10 +54,9 @@ function radiobox() {
   IFS=$'\n' read -r -a gpu_array <<< "$text_fields"
   shift
   value=$(dialog --title "$title" \
-            --radiolist "$label" "$h" "$w" "$menu_h" \
-	    	$text_fields \
             --backtitle "${BRAND}" \
-            --output-fd 1)
+            --output-fd 1 \
+            --radiolist "$label" "$h" "$w" "$menu_h" $text_fields)
   echo $value
 }
 
