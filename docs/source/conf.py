@@ -17,6 +17,9 @@ import sys
 import shlex
 sys.path.insert(0, os.path.abspath('../..'))
 
+from os.path import abspath, join, dirname
+sys.path.insert(0, abspath(join(dirname(__file__))))
+
 
 # -- Project information -----------------------------------------------------
 
