@@ -33,6 +33,8 @@ releases:
         tag: "0.4.3"
         pullPolicy: "Always"
 
+      nameOverride: "segmentation-consumer"
+
       resources:
         requests:
           cpu: 300m
