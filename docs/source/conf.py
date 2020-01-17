@@ -15,16 +15,18 @@
 import os
 import sys
 import shlex
-sys.path.insert(0, os.path.abspath('../..'))
+from datetime import datetime
 
-from os.path import abspath, join, dirname
-sys.path.insert(0, abspath(join(dirname(__file__))))
+sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'DeepCell Kiosk'
-copyright = '2016-2018, Van Valen Lab at the California Institute of Technology (Caltech)'
+copyright = '2016-{currentyear}, Van Valen Lab at the California Institute of Technology (Caltech)'.format(
+    currentyear=datetime.now().year
+)
 author = 'Van Valen Lab at Caltech'
 
 # The short X.Y version
