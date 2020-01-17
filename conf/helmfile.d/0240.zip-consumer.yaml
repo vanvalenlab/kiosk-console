@@ -52,6 +52,7 @@ releases:
         consumer: "yes"
 
       env:
+        QUEUE: "segmentation"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
