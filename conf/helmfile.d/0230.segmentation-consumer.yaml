@@ -15,7 +15,7 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "redis-consumer"
+- name: "segmentation-consumer"
   namespace: "deepcell"
   labels:
     chart: "redis-consumer"
