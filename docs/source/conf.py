@@ -29,6 +29,15 @@ version = ''
 # The full version, including alpha/beta/rc tags
 release = '1.0.0'
 
+# -- RTD configuration ------------------------------------------------
+
+# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
+on_rtd = os.environ.get("READTHEDOCS", None) == "True"
+
+# This is used for linking and such so we link to the thing we're building
+rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
+if rtd_version not in ["stable", "latest"]:
+    rtd_version = "stable"
 
 # -- General configuration ---------------------------------------------------
 
@@ -182,7 +191,8 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
-autodoc_mock_imports=["tensorflow", "sklearn", "skimage", "nbformat", "cv2", "keras_retinanet", "keras_maskrcnn"]
+autodoc_mock_imports = ["tensorflow", "sklearn", "skimage",
+                        "nbformat", "cv2", "keras_retinanet", "keras_maskrcnn"]
 
 # -- Options for intersphinx extension ---------------------------------------
 
@@ -192,3 +202,8 @@ intersphinx_mapping = {
 
 intersphinx_cache_limit = 0
 
+# -- Custom Document processing ----------------------------------------------
+
+import gensidebar
+
+gensidebar.generate_sidebar(globals(), "kiosk")

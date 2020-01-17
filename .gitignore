@@ -15,3 +15,5 @@ build-harness/
 
 # Documentation
 docs/build/
+
+.vscode/*
