@@ -1,6 +1,6 @@
 export CLOUD_PROVIDER ?= aws
 
-include /build-harness/templates/Makefile.build-harness
+# include /build-harness/templates/Makefile.build-harness
 
 include tasks/Makefile.*
 
