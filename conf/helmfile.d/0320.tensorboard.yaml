@@ -26,7 +26,7 @@ releases:
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tensorboard'
   version: "0.1.0"
   values:
-    - replicas: 0
+    - replicas: 1
 
       image:
         repository: "vanvalenlab/kiosk-tensorboard"
