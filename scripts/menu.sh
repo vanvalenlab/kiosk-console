@@ -220,11 +220,11 @@ function configure_aws() {
 	  -e GPU_MAX_TIMES_TEN \
 	  -e GPU_MAX_TIMES_TWENTY \
 	  -e GPU_MAX_TIMES_THIRTY \
-      -e GPU_MAX_TIMES_FOURTY \
-      -e GPU_MAX_TIMES_FIFTY \
-      -e GPU_MAX_TIMES_SEVENTY_FIVE \
-      -e GPU_MAX_TIMES_ONE_HUNDRED \
-      -e GPU_MAX_TIMES_TWO_HUNDRED \
+    -e GPU_MAX_TIMES_FOURTY \
+    -e GPU_MAX_TIMES_FIFTY \
+    -e GPU_MAX_TIMES_SEVENTY_FIVE \
+    -e GPU_MAX_TIMES_ONE_HUNDRED \
+    -e GPU_MAX_TIMES_TWO_HUNDRED \
 	  -e GPU_MAX_DIVIDED_BY_TWO \
 	  -e GPU_MAX_DIVIDED_BY_THREE \
 	  -e GPU_MAX_DIVIDED_BY_FOUR \
@@ -237,8 +237,8 @@ function configure_gke() {
   if [ "$PROJECT" = "" ]; then
 	  return 0
   fi
-#  make gke/login
-#  gcloud config set project ${PROJECT}
+  make gke/login
+  gcloud config set project ${PROJECT}
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
