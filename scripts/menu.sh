@@ -2,6 +2,8 @@
 
 export BRAND="Caltech Van Valen Lab"
 
+export RANDOM_DEFAULT="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
+
 #dialog --print-maxsize
 
 #trap ctrl_c SIGINT
@@ -37,9 +39,9 @@ function inputbox() {
   local h=${5:-8}
   shift
   value=$(dialog --title "$title" \
-            --inputbox "$label" "$h" "$w" "$default" \
             --backtitle "${BRAND}" \
-            --output-fd 1)
+            --output-fd 1 \
+            --inputbox "$label" "$h" "$w" "$default")
   echo $value
 }
 
@@ -54,10 +56,9 @@ function radiobox() {
   IFS=$'\n' read -r -a gpu_array <<< "$text_fields"
   shift
   value=$(dialog --title "$title" \
-            --radiolist "$label" "$h" "$w" "$menu_h" \
-	    	$text_fields \
             --backtitle "${BRAND}" \
-            --output-fd 1)
+            --output-fd 1 \
+            --radiolist "$label" "$h" "$w" "$menu_h" $text_fields)
   echo $value
 }
 
@@ -144,7 +145,7 @@ function configure_aws() {
   if [ "$AWS_SECRET_ACCESS_KEY" = "" ]; then
 	  return 0
   fi
-  export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET:-invalid_default}")
+  export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET:-$RANDOM_DEFAULT}")
   if [ "$AWS_S3_BUCKET" = "" ]; then
 	  return 0
   fi
@@ -240,12 +241,12 @@ function configure_gke() {
   fi
   make gke/login
   gcloud config set project ${PROJECT}
-  export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell}")
+  export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-$RANDOM_DEFAULT}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name\n\nThe bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more. Please do not use underscores (_) in your bucket name." "${GKE_BUCKET:-invalid_default}" 60 13)
+  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name\n\nThe bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more. Please do not use underscores (_) in your bucket name." "${GKE_BUCKET:-$RANDOM_DEFAULT}" 60 13)
 
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
