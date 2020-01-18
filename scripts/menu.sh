@@ -51,13 +51,12 @@ function radiobox() {
   local w=${4:-60}
   local menu_h=${5:-3}
   local text_fields=$6
-  IFS=$'\n' read -r -a gpu_array <<< "$text_fields"
+  IFS=$'\n' read -r -a radio_array <<< "$text_fields"
   shift
   value=$(dialog --title "$title" \
-            --radiolist "$label" "$h" "$w" "$menu_h" \
-	    	$text_fields \
             --backtitle "${BRAND}" \
-            --output-fd 1)
+            --output-fd 1 \
+            --radiolist "$label" "$h" "$w" "$menu_h" $text_fields)
   echo $value
 }
 
@@ -253,108 +252,154 @@ function configure_gke() {
   # Custom vs Advanced build options
 
 
-  local setup_options="Default test ON
-    Custom test OFF"
-  local CLUSTER_SETUP_METHOD=$(radiobox "Kiosk Setup" \
-    "Choose a method of configuring your cluser: \nPress the spacebar to select and Enter to continue." \
-    15 60 7 "$setup_options")
-  if [ "$CLUSTER_SETUP_METHOD" = "" ]; then
-    return 0
+  # local setup_options="Default test ON
+  #   Custom test OFF"
+  # local CLUSTER_SETUP_METHOD=$(radiobox "Kiosk Setup" \
+  #   "Choose a method of configuring your cluser: " \
+  #   15 60 7 "$setup_options")
+  # if [ "$CLUSTER_SETUP_METHOD" = "" ]; then
+  #   return 0
+  # fi
+
+
+  local setup_opt_value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
+              --title "  Configuration Options  " \
+              --menu "${header_text[*]}" 10 70 3 \
+                  "Default"     "Use default options to setup cluster" \
+                  "Advanced"    "Specify custom cluster creation options" \
+              --output-fd 1 \
+            )
+
+  if [ "$setup_opt_value" = "Default" ]; then
+    # Default
+
+    export GKE_COMPUTE_REGION=us-west1
+    export GKE_MACHINE_TYPE=n1-standard-1
+    export NODE_MIN_SIZE=1
+    export NODE_MAX_SIZE=10
+    export PREDICTION_GPU_TYPE=nvidia-tesla-t4
+    export TRAINING_GPU_TYPE=nvidia-tesla-v100
+
+    local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
+    local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
+    local region_zone_array=($all_region_zones)
+    local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
+    local region_zones_gpu=()
+    for i in "${region_zone_array[@]}"
+    do
+        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+            region_zones_gpu+=(${i})
+        fi
+    done
+    local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
+    local region_zones_all_gpus=()
+    for i in "${region_zones_gpu[@]}"
+    do
+        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+            region_zones_all_gpus+=(${i})
+        fi
+    done
+    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
+
+    msgbox "Caution!" \
+        "Here are the zones in your chosen region that host the GPU type(s) you chose:
+
+  $REGION_ZONES_WITH_GPUS
+
+  If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
+
+    export GPU_NODE_MIN_SIZE=0
+    export GPU_NODE_MAX_SIZE=1
+
+  else
+    # Advanced
+    local regions=$(gcloud compute regions list | grep "-" | awk '{print $1 " _ OFF"}')
+    local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
+    local base_box_height=7
+    local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
+    local total_lines=$(($base_box_height + $selector_box_lines))
+    export GKE_COMPUTE_REGION=$(radiobox "Google Cloud" \
+        "Choose a region for hosting your cluster: \nPress the spacebar to select and Enter to continue." \
+  	  $total_lines 60 $selector_box_lines "$regions_with_default")
+    if [ "$GKE_COMPUTE_REGION" = "" ]; then
+  	  return 0
+    fi
+
+    export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-1}")
+    if [ "$GKE_MACHINE_TYPE" = "" ]; then
+  	  return 0
+    fi
+    export NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of Compute (non-GPU) Nodes" "${NODE_MIN_SIZE:-1}")
+    if [ "$NODE_MIN_SIZE" = "" ]; then
+  	  return 0
+    fi
+    export NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of Compute (non-GPU) Nodes" "${NODE_MAX_SIZE:-11}")
+    if [ "$NODE_MAX_SIZE" = "" ]; then
+  	  return 0
+    fi
+
+    local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
+    local gpus_with_default=${gpus_in_region/nvidia-tesla-t4 _ OFF/nvidia-tesla-t4 _ ON}
+    local base_box_height=7
+    local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
+    local total_lines=$(($base_box_height + $selector_box_lines))
+    export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
+        "Choose a GPU for prediction (not training) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
+  	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+
+    local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
+    export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
+        "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
+  	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+
+    local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
+    local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
+    local region_zone_array=($all_region_zones)
+    local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
+    local region_zones_gpu=()
+    for i in "${region_zone_array[@]}"
+    do
+        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+            region_zones_gpu+=(${i})
+        fi
+    done
+    local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
+    local region_zones_all_gpus=()
+    for i in "${region_zones_gpu[@]}"
+    do
+        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+            region_zones_all_gpus+=(${i})
+        fi
+    done
+    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
+
+    msgbox "Caution!" \
+        "Here are the zones in your chosen region that host the GPU type(s) you chose:
+
+  $REGION_ZONES_WITH_GPUS
+
+  If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
+
+    ## Maybe include these in an advanced menu?
+    #export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
+    #if [ "$GPU_PER_NODE" = "" ]; then
+    #	  return 0
+    #fi
+    #export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
+    #if [ "$GPU_MACHINE_TYPE" = "" ]; then
+    #	  return 0
+    #fi
+    export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
+    if [ "$GPU_NODE_MIN_SIZE" = "" ]; then
+  	  return 0
+    fi
+    export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "${GPU_NODE_MAX_SIZE:-4}")
+    if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
+  	  return 0
+    fi
+
   fi
 
-
-
-
-
-
-
-
-  # End custom build options
-
-  local regions=$(gcloud compute regions list | grep "-" | awk '{print $1 " _ OFF"}')
-  local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
-  local base_box_height=7
-  local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
-  local total_lines=$(($base_box_height + $selector_box_lines))
-  export GKE_COMPUTE_REGION=$(radiobox "Google Cloud" \
-      "Choose a region for hosting your cluster: \nPress the spacebar to select and Enter to continue." \
-	  $total_lines 60 $selector_box_lines "$regions_with_default")
-  if [ "$GKE_COMPUTE_REGION" = "" ]; then
-	  return 0
-  fi
-
-  export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-1}")
-  if [ "$GKE_MACHINE_TYPE" = "" ]; then
-	  return 0
-  fi
-  export NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of Compute (non-GPU) Nodes" "${NODE_MIN_SIZE:-1}")
-  if [ "$NODE_MIN_SIZE" = "" ]; then
-	  return 0
-  fi
-  export NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of Compute (non-GPU) Nodes" "${NODE_MAX_SIZE:-11}")
-  if [ "$NODE_MAX_SIZE" = "" ]; then
-	  return 0
-  fi
-
-  local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
-  local gpus_with_default=${gpus_in_region/nvidia-tesla-t4 _ OFF/nvidia-tesla-t4 _ ON}
-  local base_box_height=7
-  local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
-  local total_lines=$(($base_box_height + $selector_box_lines))
-  export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
-      "Choose a GPU for prediction (not training) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-	  $total_lines 60 $selector_box_lines "$gpus_with_default")
-
-  local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
-  export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
-      "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-	  $total_lines 60 $selector_box_lines "$gpus_with_default")
-
-  local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
-  local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-  local region_zone_array=($all_region_zones)
-  local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
-  local region_zones_gpu=()
-  for i in "${region_zone_array[@]}"
-  do
-      if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-          region_zones_gpu+=(${i})
-      fi
-  done
-  local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
-  local region_zones_all_gpus=()
-  for i in "${region_zones_gpu[@]}"
-  do
-      if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-          region_zones_all_gpus+=(${i})
-      fi
-  done
-  export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
-
-  msgbox "Caution!" \
-      "Here are the zones in your chosen region that host the GPU type(s) you chose:
-
-$REGION_ZONES_WITH_GPUS
-
-If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
-
-  ## Maybe include these in an advanced menu?
-  #export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
-  #if [ "$GPU_PER_NODE" = "" ]; then
-  #	  return 0
-  #fi
-  #export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
-  #if [ "$GPU_MACHINE_TYPE" = "" ]; then
-  #	  return 0
-  #fi
-  export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
-  if [ "$GPU_NODE_MIN_SIZE" = "" ]; then
-	  return 0
-  fi
-  export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "${GPU_NODE_MAX_SIZE:-4}")
-  if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
-	  return 0
-  fi
   dialog --msgbox "Configuration Complete!
 
   Cluster now available for creation" 12 60
