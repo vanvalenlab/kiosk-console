@@ -75,6 +75,8 @@ def generate_sidebar(conf, conf_api):
     write('Getting Started', 'GETTING_STARTED')
     write('Developer Documentation', 'DEVELOPER')
     write('Software Infrastructure', 'SOFTWARE_INFRASTRUCTURE')
+    write('Advanced Documentation', 'ADVANCED_DOCUMENTATION')
+    write('Troubleshooting', 'TROUBLESHOOTING')
     endl()
 
     toctree('Container Reference')
