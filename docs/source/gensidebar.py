@@ -32,7 +32,7 @@ def generate_sidebar(conf, conf_api):
 
     def toctree(name):
         lines.extend(
-            [".. toctree::", "    :caption: %s" % name, "    :maxdepth: 2", ""]
+            [".. toctree::", "    :caption: %s" % name, "    :maxdepth: 3", ""]
         )
 
     def endl():
@@ -66,7 +66,7 @@ def generate_sidebar(conf, conf_api):
         if project != conf_api:
             if do_gen:
                 lines.append(
-                    '    {desc} <https://deepcell-kiosk.readthedocs.io/projects{project}/en/{version}/index.html>'.format(
+                    '    {desc} <https://deepcell-kiosk.readthedocs.io/projects/{project}/en/{version}/>'.format(
                         desc=desc,
                         project=project,
                         version=version
@@ -80,12 +80,13 @@ def generate_sidebar(conf, conf_api):
     #
 
     toctree('Deepcell Kiosk')
-    write("Read Me", 'readme_link')
-    write('Troubleshooting', "TROUBLESHOOTING")
+    write('Getting Started', 'GETTING_STARTED')
+    write('Developer Documentation', 'DEVELOPER')
+    write('Software Infrastructure', 'SOFTWARE_INFRASTRUCTURE')
     endl()
 
     toctree('Container Reference')
-    write_subproject('Redis Consumer', 'redis-consumer')
+    write_subproject('Redis Consumer', 'kiosk-redis-consumer')
     endl()
 
     # toctree("Robot Programming")
