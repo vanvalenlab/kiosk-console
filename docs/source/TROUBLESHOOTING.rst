@@ -3,7 +3,10 @@
 Troubleshooting
 ===============
 
-We've done our best to make the DeepCell Kiosk robust to common use cases, however, there may be unforseen issues. In the following (as well as on our [FAQ](http://www.deepcell.org/faq)), we hope to cover some possible sources of fustration. If you run accross a new problem not listed in either location, please feel free to open an issue on the [DeepCell Kiosk repository](`https://www.github.com/vanvalenlab/kiosk`).
+We've done our best to make the DeepCell Kiosk robust to common use cases, however, there may be unforseen issues. In the following (as well as on our `FAQ <http://www.deepcell.org/faq>`_, we hope to cover some possible sources of fustration. If you run accross a new problem not listed in either location, please feel free to open an issue on the `DeepCell Kiosk repository <https://www.github.com/vanvalenlab/kiosk>`_.
+
+.. toctree::
+    :maxdepth: 2
 
 Docker Related Errors
 ---------------------
