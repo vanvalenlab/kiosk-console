@@ -6,17 +6,9 @@
 import os
 
 
-def write_if_changed(fname, contents):
-
-    try:
-        with open(fname, "r") as fp:
-            old_contents = fp.read()
-    except:
-        old_contents = ""
-
-    if old_contents != contents:
-        with open(fname, "w") as fp:
-            fp.write(contents)
+def write_sidebar(fname, contents):
+    with open(fname, "w") as fp:
+        fp.write(contents)
 
 
 def generate_sidebar(conf, conf_api):
@@ -89,34 +81,6 @@ def generate_sidebar(conf, conf_api):
     write_subproject('Redis Consumer', 'kiosk-redis-consumer')
     endl()
 
-    # toctree("Robot Programming")
-    # write("Getting Started", "getting_started")
-    # write("Installation", "install/index")
-    # write("Programmer's Guide", "guide/index")
-    # write("Frameworks", "frameworks/index")
-    # write("Hardware & Sensors", "hw")
-    # write("Camera & Vision", "vision/index")
-    # endl()
+    print(lines)
 
-    # toctree("API Reference")
-    # write_api("wpilib", "WPILib")
-    # write_api("pynetworktables", "NetworkTables")
-    # write_api("cscore", "CSCore")
-    # write_api("utilities", "Utilities")
-    # write_api("pyfrc", "PyFRC")
-    # write_api("ctre", "CTRE Libraries")
-    # write_api("navx", "NavX Library")
-    # write_api("rev", "SPARK MAX Library")
-    # endl()
-
-    # toctree("Additional Info")
-    # write("Troubleshooting", "troubleshooting")
-    # write("Support", "support")
-    # write("FAQ", "faq")
-    # endl()
-
-    # toctree("RobotPy Developers")
-    # write("Developer Documentation", "dev/index")
-    # endl()
-
-    write_if_changed("_sidebar.rst.inc", "\n".join(lines))
+    write_sidebar("_sidebar.rst.inc", "\n".join(lines))

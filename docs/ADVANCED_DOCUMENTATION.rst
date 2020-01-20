@@ -1,19 +1,37 @@
-## Advanced documentation
+.. _ADVANCED_DOCUMENTATION:
+
+Advanced Documentation
+======================
 
 Welcome to the advanced documentation for DeepCell Kiosk developers. We will go over cluster customization, accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
 
-### Building custom consumer pipelines
+Building custom consumer pipelines
+----------------------------------
 
-#### Deploying custom consumers
+Deploying custom consumers
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The DeepCell Kiosk uses [`helm`](https://helm.sh/) and [`helmfile`](https://github.com/roboll/helmfile) to coordinate Docker containers.
-This allows the `redis-consumer` to be easily extended by simply creating a new Docker image with your custom consumer (via `docker build` and `docker push`), adding a new `helmfile` for your new consumer to `/conf/helmfile.d/`, and deploying it to the cluster with:
+The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers.
+This allows the ``redis-consumer`` to be easily extended by simply creating a new Docker image with your custom consumer (via ``docker build`` and ``docker push``), adding a new ``helmfile`` for your new consumer to ``/conf/helmfile.d/``, and deploying it to the cluster with:
 
-```bash
-helmfile -l name=my-new-consumer sync
-```
+.. |helm| raw:: html
 
-Please refer to the [`redis-consumer`](https://github.com/vanvalenlab/kiosk-redis-consumer) repository for more information on building your own consumer.
+    <tt><a href="https://helm.sh/">helm</a></tt>
+
+.. |helmfile| raw:: html
+
+    <tt><a href="https://github.com/roboll/helmfile">helmfile</a></tt>
+
+.. code-break:: bash
+
+    helmfile -l name=my-new-consumer sync
+
+
+Please refer to the |redis-consumer| repository for more information on building your own consumer.
+
+.. |redis-consumer| raw::
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk-redis-consumer">redis-consumer</a></tt>
 
 #### Autoscaling custom consumers
 
@@ -68,7 +86,8 @@ POD_NAME=`kubectl get pods --namespace kube-system -l type=openvpn | awk END'{ p
 7. Similar to step 5, you can connect to Kibana by going to `[service_IP]:[service_port]` for the relevant service from any web browser on your local machine.
 
 
-<a name="failcd"></a>
+.. _failedcd:
+
 ### Recovering from failed Kiosk creations or destructions
 
 There may be occasions where the Kiosk fails to deploy or the cluster destruction doesn't execute properly and leaves orphaned cloud resources active. Both failed cluster deployment and failed cluster destruction after deployment can be the result of any number of issues. We can't go into all of them here. Rather, our goal is to tell you how to remove all the cloud resources your cluster is using, so that you won't end up unknowingly leaking money.
