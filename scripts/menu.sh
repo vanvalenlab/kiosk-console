@@ -477,6 +477,10 @@ function benchmarking() {
 
 function main() {
   export MENU=true
+  if [ ! -z "$(GEODESIC_CONFIG_HOME)" ] && [ ! -d "$(GEODESIC_CONFIG_HOME)" ]; \
+	then \
+	  mkdir $(GEODESIC_CONFIG_HOME); \
+	fi
   # The following two lines constitute a workaround for a bug where the first dialog call after startup fails before user input is possible.
   dialog --msgbox "Loading..." 12 60 --sleep 1
   msgbox "Welcome!" \
