@@ -23,7 +23,7 @@ Check out our `docs <https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 Related Projects
 ----------------
 
-The kiosk is part of a software infastructure system built by the Van Valen Lab at Caltech. Refer to our :ref:`Software Infastructure Docs <SOFTWARE_INFRASTRUCTURE>` for more information about how each repo contributes to the kiosk.
+The kiosk is part of a software infastructure system built by the Van Valen Lab at Caltech. Refer to our `Software Infastructure Docs <https://deepcell-kiosk.readthedocs.io/en/master/SOFTWARE_INFRASTRUCTURE.html>`_ for more information about how each repo contributes to the kiosk.
 
 * https://github.com/vanvalenlab/kiosk-frontend
 * https://github.com/vanvalenlab/kiosk-redis-consumer
@@ -48,25 +48,19 @@ Footnotes
 
 .. [1] To train custom models, please refer to `DeepCell-TF <https://github.com/vanvalenlab/deepcell-tf>`_, which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
 
-Copyright
----------
-
-Copyright © 2018-2020 `The Van Valen Lab <http://www.vanvalen.caltech.edu/>`_ at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
-All rights reserved.
-
 License
 -------
 
 This software is licensed under a modified `APACHE2`_.
 
-.. _APACHE2: LICENSE
+.. _APACHE2: https://github.com/vanvalenlab/kiosk/blob/master/LICENSE
 
 .. image:: https://img.shields.io/badge/License-Apache%202.0-blue.svg
     :target: https://opensource.org/licenses/Apache-2.0
 
 See `LICENSE`_ for full details.
 
-.. _LICENSE: LICENSE
+.. _LICENSE: https://github.com/vanvalenlab/kiosk/blob/master/LICENSE
 
 Trademarks
 ----------
@@ -81,3 +75,11 @@ Credits
 
 
 This kiosk was developed with `Cloud Posse, LLC <https://cloudposse.com>`_. They can be reached at <hello@cloudposse.com>
+
+.. include-end-marker
+
+Copyright
+---------
+
+Copyright © 2018-2020 `The Van Valen Lab <http://www.vanvalen.caltech.edu/>`_ at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
+All rights reserved.
