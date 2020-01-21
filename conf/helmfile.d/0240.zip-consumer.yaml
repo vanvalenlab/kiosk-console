@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.4.3"
+        tag: "0.4.4"
         pullPolicy: "Always"
 
       nameOverride: zip-consumer
@@ -52,6 +52,7 @@ releases:
         consumer: "yes"
 
       env:
+        QUEUE: "segmentation"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
         TF_HOST: "tf-serving"

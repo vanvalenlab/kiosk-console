@@ -60,23 +60,23 @@ spec:
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: redis-consumer
+  name: segmentation-consumer
   namespace: deepcell
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: redis-consumer
+    name: segmentation-consumer
   minReplicas: 1
   maxReplicas: $GPU_MAX_TIMES_ONE_HUNDRED_FIFTY
   metrics:
   - type: Object
     object:
-      metricName: redis_consumer_key_ratio
+      metricName: segmentation_consumer_key_ratio
       target:
         apiVersion: v1
         kind: Namespace
-        name: redis_consumer_key_ratio
+        name: segmentation_consumer_key_ratio
       targetValue: .15
 ---
 apiVersion: autoscaling/v2beta1

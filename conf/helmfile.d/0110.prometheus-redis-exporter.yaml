@@ -81,8 +81,8 @@ releases:
                 -- All Queues to Monitor:
                 local queues = {}
 
-                queues[#queues+1] = "predict"
-                queues[#queues+1] = "track"
+                queues[#queues+1] = "segmentation"
+                queues[#queues+1] = "tracking"
 
                 for _,queue in ipairs(queues) do
                   local zip_queue = queue .. "-zip"
