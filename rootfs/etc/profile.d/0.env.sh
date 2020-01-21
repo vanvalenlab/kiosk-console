@@ -1,16 +1,16 @@
 set -a
-if [ -f "${CACHE_PATH}/env" ]; then
-  echo "* Loading general settings from ${CACHE_PATH}/env"
-  source "${CACHE_PATH}/env"
+if [ -f "${GEODESIC_CONFIG_HOME}/env" ]; then
+  echo "* Loading general settings from ${GEODESIC_CONFIG_HOME}/env"
+  source "${GEODESIC_CONFIG_HOME}/env"
 fi
 
-if [ -f "${CACHE_PATH}/env.aws" ]; then
-  echo "* Loading Amazon Web Services settings from ${CACHE_PATH}/env.aws"
-  source "${CACHE_PATH}/env.aws"
+if [ -f "${GEODESIC_CONFIG_HOME}/env.aws" ]; then
+  echo "* Loading Amazon Web Services settings from ${GEODESIC_CONFIG_HOME}/env.aws"
+  source "${GEODESIC_CONFIG_HOME}/env.aws"
 fi
 
-if [ -f "${CACHE_PATH}/env.gke" ]; then
-  echo "* Loading Google Cloud settings from ${CACHE_PATH}/env.gke"
-  source "${CACHE_PATH}/env.gke"
+if [ -f "${GEODESIC_CONFIG_HOME}/env.gke" ]; then
+  echo "* Loading Google Cloud settings from ${GEODESIC_CONFIG_HOME}/env.gke"
+  source "${GEODESIC_CONFIG_HOME}/env.gke"
 fi
 set +a
