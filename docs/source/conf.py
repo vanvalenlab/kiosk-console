@@ -40,9 +40,10 @@ release = '1.0.0'
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"
 
 # This is used for linking and such so we link to the thing we're building
-rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
-if rtd_version not in ["stable", "latest"]:
-    rtd_version = "stable"
+# rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
+# if rtd_version not in ["stable", "latest"]:
+#     rtd_version = "stable"
+rtd_version = 'mrgn-docs'
 
 # -- General configuration ---------------------------------------------------
 
@@ -203,7 +204,9 @@ autodoc_mock_imports = ["tensorflow", "sklearn", "skimage",
 # -- Options for intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {
-    'deepcell': ('https://deepcell.readthedocs.io/en/documentation/', None),
+    'deepcell': ('https://deepcell.readthedocs.io/en/{}/'.format('master'), None),
+    # 'deepcell': ('https://deepcell.readthedocs.io/en/{}/'.format(rtd_version), None),
+    'kiosk-redis-consumer': ('https://deepcell-kiosk.readthedocs.io/projects/kiosk-redis-consumer/en/{}/'.format('mrgn-docs'), None)
 }
 
 intersphinx_cache_limit = 0

@@ -3,6 +3,9 @@
 Getting Started
 ===============
 
+**Contents**
+.. contents:: :local:
+
 Google Cloud Setup
 ------------------
 

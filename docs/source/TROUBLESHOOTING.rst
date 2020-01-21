@@ -5,8 +5,7 @@ Troubleshooting
 
 We've done our best to make the DeepCell Kiosk robust to common use cases, however, there may be unforseen issues. In the following (as well as on our `FAQ <http://www.deepcell.org/faq>`_, we hope to cover some possible sources of fustration. If you run accross a new problem not listed in either location, please feel free to open an issue on the `DeepCell Kiosk repository <https://www.github.com/vanvalenlab/kiosk>`_.
 
-.. toctree::
-    :maxdepth: 2
+.. contents:: :local:
 
 Docker Related Errors
 ---------------------
@@ -67,7 +66,7 @@ A consumer should always either successfully consume a job or fail and provide a
 
 A prediction job may also never finish if the ``tf-serving`` pod never comes up. If you see that the ``tf-serving`` pod is not in status ``Running`` or has been restarting, there is likely a memory/resource issue with the model server itself. If this is the case, please read below.
 
-My predictions keep failing and I have a lot of models (or model versions) in my `models` folder.
+My predictions keep failing and I have a lot of models (or model versions) in my ``models`` folder.
 ---------------------------------------------------------------------------------------------------
 
 You could be experiencing a memory issue involving TensorFlow-Serving. The solution is to reduce the number of models or model versions you have in your ``models`` folder. Other possible solutions, listed in descending order of likelihood of fixing your issue, include choosing GPU instances which have more memory, using smaller models, or, if possible, submitting smaller images for prediction. In our experience, using ``n1-highmem-2`` and ``n1-highmem-4`` instances, we ran into issues when we had more than roughly 10 model versions total across all models in the ``models`` folder.
@@ -75,4 +74,17 @@ You could be experiencing a memory issue involving TensorFlow-Serving. The solut
 I hit an error during cluster destruction
 -----------------------------------------
 
-If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your `Google Cloud Console <https://console.cloud.google.com>`_.  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult :ref:`failedcd`.
+There may be occasions where the Kiosk fails to deploy or the cluster destruction doesn't execute properly and leaves orphaned cloud resources active. Both failed cluster deployment and failed cluster destruction after deployment can be the result of any number of issues. We can't go into all of them here. Rather, our goal is to tell you how to remove all the cloud resources your cluster is using, so that you won't end up unknowingly leaking money.
+
+Google Cloud (Google Kubernetes Engine)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. If a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand (n.b. the name of each resource will contain at least part of the cluster name in it):
+
+1. Kubernetes cluster (Remember the cluster name for the following steps. This will delete most of the resources and the proceeding steps will clean up the rest.)
+2. any Firewall Rules associated with your cluster
+3. any LoadBalancers associated with your cluster
+4. any Target Pools associated with your cluster
+5. any Persistent Disks associated with your cluster
+
+While we hope this list is comprehensive, there could be some lingering resources used by Google Cloud and not deleted automatically that we're not aware of.
