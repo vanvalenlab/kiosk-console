@@ -476,7 +476,6 @@ function benchmarking() {
 }
 
 function main() {
-  make create_cache_path
   export MENU=true
   # The following two lines constitute a workaround for a bug where the first dialog call after startup fails before user input is possible.
   dialog --msgbox "Loading..." 12 60 --sleep 1
