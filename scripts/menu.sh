@@ -210,6 +210,7 @@ function configure_aws() {
   export KOPS_STATE_STORE=s3://${NAMESPACE}
   export CLOUD_PROVIDER=aws
 
+  make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${GEODESIC_CONFIG_HOME}/env
   printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE \
 	  -e AWS_MIN_GPU_NODES \
@@ -358,6 +359,7 @@ If you see either 0 or 1 zones listed above, please reconfigure the cluster befo
   export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))
   export GPU_MAX_DIVIDED_BY_FOUR=$(($GPU_NODE_MAX_SIZE/4))
 
+  make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${GEODESIC_CONFIG_HOME}/env
   printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
       -e NODE_MIN_SIZE -e NODE_MAX_SIZE \
