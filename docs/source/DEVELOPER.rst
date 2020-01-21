@@ -3,7 +3,6 @@
 Developer Documentation
 =======================
 
-**Contents**
 .. contents:: :local:
 
 Starting the kiosk for development
