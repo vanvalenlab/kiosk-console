@@ -210,7 +210,7 @@ function configure_aws() {
   export KOPS_STATE_STORE=s3://${NAMESPACE}
   export CLOUD_PROVIDER=aws
 
-  printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
+  printenv | grep -e CLOUD_PROVIDER > ${GEODESIC_CONFIG_HOME}/env
   printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE \
 	  -e AWS_MIN_GPU_NODES \
 	  -e AWS_MAX_GPU_NODES \
@@ -229,8 +229,8 @@ function configure_aws() {
 	  -e GPU_MAX_DIVIDED_BY_TWO \
 	  -e GPU_MAX_DIVIDED_BY_THREE \
 	  -e GPU_MAX_DIVIDED_BY_FOUR \
-      -E GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.gke
-  #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
+      -E GPU_NODE_MAX_SIZE > ${GEODESIC_CONFIG_HOME}/env.gke
+  #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${GEODESIC_CONFIG_HOME}/env.aws
 }
 
 function configure_gke() {
@@ -358,7 +358,7 @@ If you see either 0 or 1 zones listed above, please reconfigure the cluster befo
   export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))
   export GPU_MAX_DIVIDED_BY_FOUR=$(($GPU_NODE_MAX_SIZE/4))
 
-  printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
+  printenv | grep -e CLOUD_PROVIDER > ${GEODESIC_CONFIG_HOME}/env
   printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
       -e NODE_MIN_SIZE -e NODE_MAX_SIZE \
 	  -e GKE_COMPUTE_REGION \
@@ -380,7 +380,7 @@ If you see either 0 or 1 zones listed above, please reconfigure the cluster befo
       -e GPU_MAX_TIMES_TWO_HUNDRED \
 	  -e GPU_MAX_DIVIDED_BY_TWO \
 	  -e GPU_MAX_DIVIDED_BY_THREE \
-	  -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
+	  -e GPU_MAX_DIVIDED_BY_FOUR > ${GEODESIC_CONFIG_HOME}/env.gke
 }
 
 
