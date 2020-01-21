@@ -34,6 +34,7 @@ service:
 resources: {}
 
 env:
+  JOB_TYPES: "segmentation,tracking"
   PORT: "8080"
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"

@@ -31,7 +31,8 @@ env:
   DEBUG: "True"
   INTERVAL: 10
   CONSUMER_TYPE: "image"
-  QUEUE: "predict"
+  QUEUE: "segmentation"
+  SEGMENTATION_QUEUE: "segmentation"
   EMPTY_QUEUE_TIMEOUT: 5
   EXPIRE_TIME: 3600
   GRPC_TIMEOUT: 30
