@@ -18,9 +18,9 @@ destroy: \
   $(CLOUD_PROVIDER)/destroy/all
 	@echo "Cluster destroyed"
 
-## Create $CACHE_PATH directory, if it doesn't already exist
+## Create $GEODESIC_CONFIG_HOME directory, if it doesn't already exist
 create_cache_path:
-	@if [ ! -z "$(CACHE_PATH)" ] && [ ! -d "$(CACHE_PATH)" ]; \
+	@if [ ! -z "$(GEODESIC_CONFIG_HOME)" ] && [ ! -d "$(GEODESIC_CONFIG_HOME)" ]; \
 	then \
-	  mkdir $(CACHE_PATH); \
+	  mkdir $(GEODESIC_CONFIG_HOME); \
 	fi

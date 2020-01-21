@@ -1,4 +1,4 @@
-SSH_KEY ?= $(CACHE_PATH)/id_rsa
+SSH_KEY ?= $(GEODESIC_CONFIG_HOME)/id_rsa
 SSH_PUBLIC_KEY ?= $(SSH_KEY).pub
 
 ## Prep the kiosk for cluster creation
@@ -10,10 +10,10 @@ kops/prep:
 
 ## Create SSH key for Kops cluster
 kops/create/ssh-key:
-	@if [ ! -d "$(CACHE_PATH)" ]; \
+	@if [ ! -d "$(GEODESIC_CONFIG_HOME)" ]; \
 	then \
 	    echo "It looks like you haven't run a cloud provider configuration yet."; \
-	    echo "At the very least the CACHE_PATH directory, " $(CACHE_PATH) ", does not exist."; \
+	    echo "At the very least the GEODESIC_CONFIG_HOME directory, " $(GEODESIC_CONFIG_HOME) ", does not exist."; \
 	    exit 1; \
 	fi
 	@echo "Generating public/private RSA key pair..."
@@ -86,7 +86,7 @@ kops/create/all: \
   kops/create/ssh-key \
   kops/create/cluster \
   kops/create/$(CLOUD_PROVIDER) \
-  kops/create/gpu-nodes 
+  kops/create/gpu-nodes
 	@echo "Kops created"
 	@echo " "
 
@@ -110,4 +110,3 @@ kops/destroy/all: \
 kops/wait:
 	@echo "Waiting for kops cluster to come online..."
 	@time wait-for-kops
-
