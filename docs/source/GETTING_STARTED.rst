@@ -48,7 +48,9 @@ Local Docker Installation - Windows
 * `Install WSL <https://docs.microsoft.com/en-us/windows/wsl/install-win10>`_ and the Ubuntu Linux distribution
 * Once installed, follow the Docker installation instructions for `Linux <https://docs.docker.com/install/linux/docker-ce/ubuntu/>`_
 
-.. todo:: Can we provide guidance on which architecture users need to install?
+.. todo::
+
+    Can we provide guidance on which architecture users need to install?
 
 Local Docker Installation - MacOS and Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -88,14 +90,18 @@ You are now ready to start the kiosk! Those interested in Kiosk development shou
 
 8. To start the kiosk, just run ``kiosk`` from the terminal shell
 
-.. todo:: Add screenshot of welcome screen
+.. todo::
+
+    Add screenshot of welcome screen
 
 DeepCell Kiosk Usage
 --------------------
 
 9. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported) and fill out the configuration values as needed. Each response is pre-populated with a default value appropriate for most users (for more detailed information on each of these values refer to our [advanced documentation](docs/ADVANCED_DOCUMENTATION.md)). Once the Kiosk has been configured, you will be returned to the main menu and the word ``(active)`` will appear next to that cloud provider's configuration option.
 
-.. todo:: Write a complete description of each configuration option after the menu refactor is complete.
+.. todo::
+
+    Write a complete description of each configuration option after the menu refactor is complete.
 
 10. With the Kiosk configured for the appropriate cloud provider, select the ``Create`` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see ``Cluster Created`` followed by ``---COMPLETE---`` printed to the terminal. If you see ``---COMPLETE---`` with error text immediately preceding it, cluster creation failed.
 

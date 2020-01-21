@@ -10,10 +10,16 @@ Welcome to the advanced documentation for DeepCell Kiosk developers. We will go 
 Kiosk Setup Parameters
 ----------------------
 
-.. todo:: Write a description of the parameters and their defaults
+.. todo::
+
+    Write a description of the parameters and their defaults
 
 Building custom consumer pipelines
 ----------------------------------
+
+.. todo::
+
+    Write material that explains why a user might want to build their own consumer. Make a decision about which portions of this documentation should be in the readme of the kiosk-redis-consumer as opposed to here.
 
 Deploying custom consumers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
