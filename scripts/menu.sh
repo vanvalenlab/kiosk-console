@@ -107,8 +107,8 @@ function menu() {
               --menu "${header_text[*]}" 15 50 5 \
                   "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                   "GKE"     "Configure Google ${cloud_providers[gke]}" \
-          		  "Create"    "Create ${CLOUD_PROVIDER^^} Cluster" \
-  		          "Shell"     "Drop to the shell" \
+          		    "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+  		            "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
             )
@@ -119,8 +119,8 @@ function menu() {
                   "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                   "GKE"     "Configure Google ${cloud_providers[gke]}" \
                   "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
-  		          "View"      "View Cluster Address" \
-  		          "Shell"     "Drop to the shell" \
+  		            "View"    "View Cluster Address" \
+  		            "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
             )
