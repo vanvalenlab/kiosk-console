@@ -234,10 +234,13 @@ function configure_aws() {
 }
 
 function configure_gke() {
-  export PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT:-invalid_default}")
-  if [ "$PROJECT" = "" ]; then
-	  return 0
+
+  local NEW_PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT:-invalid_default}")
+  if [ -z $NEW_PROJECT ]; then
+    return 0
   fi
+  export PROJECT="${NEW_PROJECT}"
+
   make gke/login
   gcloud config set project ${PROJECT}
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-$RANDOM_DEFAULT}")
@@ -274,6 +277,8 @@ function configure_gke() {
 
   if [ "$setup_opt_value" = "Default" ]; then
     # Default
+
+    dialog --msgbox "Loading default values..." 12 60 --sleep 1
 
     export GKE_COMPUTE_REGION=us-west1
     export GKE_MACHINE_TYPE=n1-standard-1
@@ -547,7 +552,7 @@ function confirm() {
 function main() {
   export MENU=true
   # The following two lines constitute a workaround for a bug where the first dialog call after startup fails before user input is possible.
-  dialog --msgbox "Loading..." 12 60 --sleep 1
+  #dialog --msgbox "Loading..." 12 60 --sleep 1
   msgbox "Welcome!" \
 	 "Welcome to the Deepcell Kiosk!
 
