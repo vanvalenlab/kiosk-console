@@ -64,8 +64,8 @@ function radiobox() {
 
 function infobox() {
   local message="$1"
-  local w=${2:-20}
-  local h=${3:-3}
+  local h=${2:-3}
+  local w=${3:-20}
   dialog --infobox "$message" $h $w
 }
 
@@ -278,7 +278,7 @@ function configure_gke() {
   if [ "$setup_opt_value" = "Default" ]; then
     # Default
 
-    dialog --msgbox "Loading default values..." 12 60 --sleep 1
+    infobox "Loading default values..." 7 60
 
     export GKE_COMPUTE_REGION=us-west1
     export GKE_MACHINE_TYPE=n1-standard-1
@@ -319,6 +319,7 @@ function configure_gke() {
     export GPU_NODE_MAX_SIZE=1
 
   else
+    infobox "Loading..."
     # Advanced
     local regions=$(gcloud compute regions list | grep "-" | awk '{print $1 " _ OFF"}')
     local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
@@ -487,12 +488,14 @@ function view() {
 }
 
 function confirm() {
-  echo "Are you sure? y/n "
-  read response
-  if [ $response = "y" ]; then
-    return 0
-  fi
-  return 1
+
+  dialog --yesno "Are you sure?" 7 60
+  response=$?
+  case $response in
+    0) return 0;;
+    1) return 1;;
+    255) return 1;;
+  esac
 }
 
 # function benchmarking() {
@@ -552,7 +555,8 @@ function confirm() {
 function main() {
   export MENU=true
   # The following two lines constitute a workaround for a bug where the first dialog call after startup fails before user input is possible.
-  #dialog --msgbox "Loading..." 12 60 --sleep 1
+  dialog --sleep 1 --msgbox "Loading..." 12 60
+  #infobox "Loading..."
   msgbox "Welcome!" \
 	 "Welcome to the Deepcell Kiosk!
 

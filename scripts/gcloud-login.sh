@@ -6,8 +6,11 @@ short_url=$(curl -sS "http://tinyurl.com/api-create.php?url=$long_url")
 clear
 # qrencode -t utf8 "$long_url"
 echo "Deploying a cluster on Google Cloud requires authorization.
+
 Please go to this website to authorize access to your Google Cloud account:
- $long_url"
+
+$long_url
+"
 
 echo -n "Enter authorization code: "
 read code
