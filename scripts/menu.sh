@@ -507,60 +507,6 @@ function confirm() {
   esac
 }
 
-# function benchmarking() {
-#   local benchmark_types="1-image,1-CPU _ ON
-# 	  10-images,1-CPU _ OFF
-# 	  100-images,1-CPU _ OFF
-# 	  1000-images,1-CPU _ OFF
-# 	  10000-images,1-CPU _ OFF
-# 	  100000-images,1-CPU _ OFF
-# 	  1000000-images,1-CPU _ OFF
-# 	  1-image,1-GPU _ OFF
-#       10-images,1-GPU _ OFF
-# 	  100-images,1-GPU _ OFF
-# 	  1000-images,1-GPU _ OFF
-# 	  10000-images,1-GPU _ OFF
-# 	  100000-images,1-GPU _ OFF
-# 	  1000000-images,1-GPU _ OFF
-# 	  1-image,2-GPU _ OFF
-#       10-images,2-GPU _ OFF
-# 	  100-images,2-GPU _ OFF
-# 	  1000-images,2-GPU _ OFF
-# 	  10000-images,2-GPU _ OFF
-# 	  100000-images,2-GPU _ OFF
-# 	  1000000-images,2-GPU _ OFF
-# 	  1-image,4-GPU _ OFF
-#       10-images,4-GPU _ OFF
-# 	  100-images,4-GPU _ OFF
-# 	  1000-images,4-GPU _ OFF
-# 	  10000-images,4-GPU _ OFF
-# 	  100000-images,4-GPU _ OFF
-# 	  1000000-images,4-GPU _ OFF
-# 	  1-image,8-GPU _ OFF
-#       10-images,8-GPU _ OFF
-# 	  100-images,8-GPU _ OFF
-# 	  1000-images,8-GPU _ OFF
-# 	  10000-images,8-GPU _ OFF
-# 	  100000-images,8-GPU _ OFF
-# 	  1000000-images,8-GPU _ OFF
-# 	  1-image,16-GPU _ OFF
-#       10-images,16-GPU _ OFF
-# 	  100-images,16-GPU _ OFF
-# 	  1000-images,16-GPU _ OFF
-# 	  10000-images,16-GPU _ OFF
-# 	  100000-images,16-GPU _ OFF
-# 	  1000000-images,16-GPU _ OFF"
-#   export BENCHMARK_TYPE=$(radiobox "Deepcell" \
-# 	  "Choose your Benchmark Type:" 15 60 7 "$benchmark_types")
-#   export BENCHMARKING_PU_TYPE_AND_NUMBER=$(echo $BENCHMARK_TYPE | cut -f2 -d',' | sed 's/-/ /')
-#   export BENCHMARKING_PU_TYPE=$(echo $BENCHMARKING_PU_TYPE_AND_NUMBER | cut -f2 -d' ')
-#   export IMG_NUM=$(echo $BENCHMARK_TYPE | grep -o '[0-9]\+-image' | grep -o '[0-9]\+')
-#   export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
-#   # redeploy benchmarking pod, now that environmental variables have been set
-#   helm delete benchmarking --purge
-#   helmfile --selector name=benchmarking sync
-# }
-
 function main() {
   export MENU=true
   # The following line is a workaround for a bug where the first dialog call
