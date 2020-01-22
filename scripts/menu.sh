@@ -563,7 +563,8 @@ function confirm() {
 
 function main() {
   export MENU=true
-  # The following two lines constitute a workaround for a bug where the first dialog call after startup fails before user input is possible.
+  # The following line is a workaround for a bug where the first dialog call
+  # after startup fails before user input is possible.
   dialog --sleep 1 --msgbox "Loading..." 12 60
   #infobox "Loading..."
   msgbox "Welcome!" \
