@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.4.1"
+        tag: "0.4.4"
         pullPolicy: "Always"
 
       nameOverride: "tracking-consumer"
@@ -54,7 +54,8 @@ releases:
       env:
         DEBUG: "true"
         INTERVAL: 1
-        QUEUE: "track"
+        QUEUE: "tracking"
+        SEGMENTATION_QUEUE: "segmentation"
         CONSUMER_TYPE: "tracking"
         EMPTY_QUEUE_TIMEOUT: 5
         GRPC_TIMEOUT: 20

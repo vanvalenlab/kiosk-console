@@ -48,7 +48,7 @@ releases:
         #   cpu: 100m
         #   memory: 64Mi
 
-# 1|{{ env "GPU_NODE_MAX_SIZE" | default 10 }}|1|deepcell|deployment|predict|zip-consumer;
+# 1|{{ env "GPU_NODE_MAX_SIZE" | default 10 }}|1|deepcell|deployment|segmentation|zip-consumer;
       env:
         DEBUG: "true"
         INTERVAL: "5"
@@ -57,12 +57,12 @@ releases:
         REDIS_PORT: "26379"
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         AUTOSCALING: >
-            {{ env "AWS_MIN_GPU_NODES" | default 0 }}|{{ env "AWS_MAX_GPU_NODES" | default 5 }}|1|deepcell|deployment|predict|tf-serving;
-            {{ env "AWS_MIN_GPU_NODES" | default 0 }}|{{ env "AWS_MAX_GPU_NODES" | default 5 }}|1|deepcell|deployment|track|tf-serving;
+            {{ env "AWS_MIN_GPU_NODES" | default 0 }}|{{ env "AWS_MAX_GPU_NODES" | default 5 }}|1|deepcell|deployment|segmentation|tf-serving;
+            {{ env "AWS_MIN_GPU_NODES" | default 0 }}|{{ env "AWS_MAX_GPU_NODES" | default 5 }}|1|deepcell|deployment|tracking|tf-serving;
             0|4|1|deepcell|job|train|training
 {{ else }}
         AUTOSCALING: >
-            {{ env "GPU_NODE_MIN_SIZE" | default 0 }}|{{ env "GPU_NODE_MAX_SIZE" | default 5 }}|1|deepcell|deployment|predict|tf-serving;
-            {{ env "GPU_NODE_MIN_SIZE" | default 0 }}|{{ env "GPU_NODE_MAX_SIZE" | default 5 }}|1|deepcell|deployment|track|tf-serving;
+            {{ env "GPU_NODE_MIN_SIZE" | default 0 }}|{{ env "GPU_NODE_MAX_SIZE" | default 5 }}|1|deepcell|deployment|segmentation|tf-serving;
+            {{ env "GPU_NODE_MIN_SIZE" | default 0 }}|{{ env "GPU_NODE_MAX_SIZE" | default 5 }}|1|deepcell|deployment|tracking|tf-serving;
             0|4|1|deepcell|job|train|training
 {{ end }}

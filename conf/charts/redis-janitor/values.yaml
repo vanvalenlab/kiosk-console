@@ -24,7 +24,7 @@ rbac:
   pspEnabled: false
 
 env:
-  QUEUES: "predict,track"
+  QUEUES: "segmentation,tracking"
   DEBUG: "true"
   INTERVAL: 10
   CLOUD_PROVIDER: "overwrite_this"

@@ -103,7 +103,7 @@ releases:
               labels:
                 namespace: deepcell
                 service: tf-serving-running-service
-            - record: redis_consumer_key_ratio
+            - record: segmentation_consumer_key_ratio
               # COMPLICATED scaling metric that prevents too many consumers
               # per GPU.  If too many consumers, scale down slightly.
               # Structural outline follows:
@@ -119,10 +119,10 @@ releases:
                     < on()
                     clamp_max(
                       (
-                        avg_over_time(redis_script_value{key="predict_image_keys"}[15s])
+                        avg_over_time(redis_script_value{key="segmentation_image_keys"}[15s])
                         / on()
                         (
-                          avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[15s])
+                          avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
                           *
                           100
                         )
@@ -131,10 +131,10 @@ releases:
                     or
                     clamp_max(
                       (
-                        avg_over_time(redis_script_value{key="predict_image_keys"}[15s])
+                        avg_over_time(redis_script_value{key="segmentation_image_keys"}[15s])
                         / on()
                         (
-                          avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[15s])
+                          avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
                           *
                           100
                         )
@@ -145,7 +145,7 @@ releases:
                   (
                     clamp_max(
                       clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[15s])
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
                       , 0)
                       / on()
                       clamp_min(
@@ -161,7 +161,7 @@ releases:
                   (
                     clamp_max(
                       clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="redis-consumer"}[15s])
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
                       , 0)
                       / on()
                       clamp_min(
@@ -180,10 +180,10 @@ releases:
                 tf_serving_running_pods
               labels:
                 namespace: deepcell
-                service: redis-scaling-service
+                service: segmentation-scaling-service
             - record: zip_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_value{key="predict_zip_keys"}[15s])
+                avg_over_time(redis_script_value{key="segmentation_zip_keys"}[15s])
                 / on()
                 (
                   avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[15s])
@@ -195,7 +195,7 @@ releases:
                 service: zip-scaling-service
             - record: tracking_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_value{key="track_image_keys"}[15s])
+                avg_over_time(redis_script_value{key="tracking_image_keys"}[15s])
                 / on()
                 (
                   avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])

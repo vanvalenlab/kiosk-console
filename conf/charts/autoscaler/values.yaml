@@ -28,5 +28,5 @@ env:
   INTERVAL: 10
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
-  QUEUES: "predict,train,track"
+  QUEUES: "segmentation,tracking"
   AUTOSCALING: "3|10|5|deployment|example; 3|5|3|development|example2"
