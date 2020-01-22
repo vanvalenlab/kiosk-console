@@ -242,7 +242,8 @@ function configure_gke() {
   export PROJECT="${NEW_PROJECT}"
 
   make gke/login
-  gcloud config set project ${PROJECT}
+  gcloud config set project ${PROJECT} --quiet
+
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-$RANDOM_DEFAULT}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
