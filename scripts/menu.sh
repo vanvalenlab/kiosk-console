@@ -311,13 +311,6 @@ function configure_gke() {
     done
     export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
 
-    msgbox "Caution!" \
-        "Here are the zones in your chosen region that host the GPU type(s) you chose:
-
-  $REGION_ZONES_WITH_GPUS
-
-If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
-
     export GPU_NODE_MIN_SIZE=0
     export GPU_NODE_MAX_SIZE=1
 
@@ -384,22 +377,15 @@ If you see either 0 or 1 zones listed above, please reconfigure the cluster befo
     done
     export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
 
-    msgbox "Caution!" \
-        "Here are the zones in your chosen region that host the GPU type(s) you chose:
-
-  $REGION_ZONES_WITH_GPUS
-
-If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
-
     ## Maybe include these in an advanced menu?
-    #export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
-    #if [ "$GPU_PER_NODE" = "" ]; then
-    #	  return 0
-    #fi
-    #export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
-    #if [ "$GPU_MACHINE_TYPE" = "" ]; then
-    #	  return 0
-    #fi
+    # export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
+    # if [ "$GPU_PER_NODE" = "" ]; then
+    # 	  return 0
+    # fi
+    # export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
+    # if [ "$GPU_MACHINE_TYPE" = "" ]; then
+    # 	  return 0
+    # fi
     export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
     if [ "$GPU_NODE_MIN_SIZE" = "" ]; then
   	  return 0
@@ -411,9 +397,18 @@ If you see either 0 or 1 zones listed above, please reconfigure the cluster befo
 
   fi
 
-  dialog --msgbox "Configuration Complete!
+  local message=("The following are zones in your region with the specified GPU type(s):"
+                 "\n\n    $REGION_ZONES_WITH_GPUS"
+                 "\n\nIf you see either 0 or 1 zones listed above,"
+                 "please reconfigure the cluster before deploying."
+                 "Different choices of GPU(s) and/or region will be necessary.")
+  msgbox "Caution!" "${message[*]}"
 
-Cluster now available for creation" 12 60
+
+  local success_text=("Configuration Complete!"
+                      "\n\nThe cluster is now available for creation.")
+  dialog --msgbox "${success_text[*]}" 12 60
+
   export CLOUD_PROVIDER=gke
 
   # create some derivative GPU-related variables for use in autoscaling
