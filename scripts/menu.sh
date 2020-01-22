@@ -94,7 +94,7 @@ function tailcmd() {
 # cluster has been created yet.
 function menu() {
   local value
-  local header_text=("Use the UP/DOWN arrow keys or the first\n"
+  local header_text=(" Use the UP/DOWN arrow keys or the first\n"
                      "letter of the choice as a hot key to\n"
                      "select an option.\n"
                      "Choose a task.")
