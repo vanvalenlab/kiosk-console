@@ -35,8 +35,8 @@ function inputbox() {
   local title=$1
   local label=$2
   local default=$3
-  local w=${4:-60}
-  local h=${5:-8}
+  local h=${4:-8}
+  local w=${5:-60}
   shift
   value=$(dialog --title "$title" \
             --backtitle "${BRAND}" \
@@ -248,7 +248,7 @@ function configure_gke() {
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name\n\nThe bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more. Please do not use underscores (_) in your bucket name." "${GKE_BUCKET:-$RANDOM_DEFAULT}" 60 13)
+  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name\n\nThe bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more. Please do not use underscores (_) in your bucket name." "${GKE_BUCKET:-$RANDOM_DEFAULT}" 13 60)
 
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
@@ -313,7 +313,7 @@ function configure_gke() {
 
   $REGION_ZONES_WITH_GPUS
 
-  If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
+If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
 
     export GPU_NODE_MIN_SIZE=0
     export GPU_NODE_MAX_SIZE=1
@@ -386,7 +386,7 @@ function configure_gke() {
 
   $REGION_ZONES_WITH_GPUS
 
-  If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
+If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
 
     ## Maybe include these in an advanced menu?
     #export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
@@ -410,7 +410,7 @@ function configure_gke() {
 
   dialog --msgbox "Configuration Complete!
 
-  Cluster now available for creation" 12 60
+Cluster now available for creation" 12 60
   export CLOUD_PROVIDER=gke
 
   # create some derivative GPU-related variables for use in autoscaling
