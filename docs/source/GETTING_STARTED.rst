@@ -60,6 +60,9 @@ Cloud-Based Jumpbox Workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Navigate to the `VM instances <https://console.cloud.google.com/compute/instances>`_ page via ``Compute Engine > VM instances``
 * Check that your boot disk is configured for ``Debian/Ubuntu 9`` operating system
+
+.. warning:: Container optimized images do not support kiosk installation.
+
 * All other settings can be left as defaults
 * After creating the instance, SSH into your instance either using the option provided by Google Cloud or through your local terminal.
 * If you have chosen to SSH into the machine from a terminal on your local machine, simply paste the following commands copied from the Docker installation guide for `Debian <https://docs.docker.com/install/linux/docker-ce/debian/>`_

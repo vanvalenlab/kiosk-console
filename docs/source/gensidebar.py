@@ -71,14 +71,15 @@ def generate_sidebar(conf, conf_api):
 
     toctree('Deepcell Kiosk')
     write('Getting Started', 'GETTING_STARTED')
-    write('Developer Documentation', 'DEVELOPER')
-    write('Software Infrastructure', 'SOFTWARE_INFRASTRUCTURE')
-    write('Advanced Documentation', 'ADVANCED_DOCUMENTATION')
     write('Troubleshooting', 'TROUBLESHOOTING')
+    write('Advanced Documentation', 'ADVANCED_DOCUMENTATION')
+    write('Software Infrastructure', 'SOFTWARE_INFRASTRUCTURE')
+    write('Developer Documentation', 'DEVELOPER')
     endl()
 
     toctree('Container Reference')
     write_subproject('kiosk-redis-consumer', 'kiosk-redis-consumer')
+    write_subproject('kiosk-frontend', 'kiosk-frontend')
     endl()
 
     print(lines)

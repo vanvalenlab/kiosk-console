@@ -40,10 +40,9 @@ release = '1.0.0'
 on_rtd = os.environ.get("READTHEDOCS", None) == "True"
 
 # This is used for linking and such so we link to the thing we're building
-# rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
-# if rtd_version not in ["stable", "latest"]:
-#     rtd_version = "stable"
-rtd_version = 'mrgn-docs'
+rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
+if rtd_version not in ["stable", "latest", "mrgn-docs"]:
+    rtd_version = "stable"
 
 # -- General configuration ---------------------------------------------------
 
@@ -204,15 +203,20 @@ autodoc_mock_imports = ["tensorflow", "sklearn", "skimage",
 # -- Options for intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {
-    'deepcell': ('https://deepcell.readthedocs.io/en/{}/'.format('master'), None),
-    # 'deepcell': ('https://deepcell.readthedocs.io/en/{}/'.format(rtd_version), None),
-    'kiosk-redis-consumer': ('https://deepcell-kiosk.readthedocs.io/projects/kiosk-redis-consumer/en/{}/'.format('mrgn-docs'), None)
+    'deepcell': ('https://deepcell.readthedocs.io/en/{}/'.format(rtd_version), None),
+    'kiosk-redis-consumer': ('https://deepcell-kiosk.readthedocs.io/projects/kiosk-redis-consumer/en/{}/'.format(rtd_version), None),
+    'kiosk-frontend': ('https://deepcell-kiosk.readthedocs.io/projects/kiosk-frontend/en/{}/'.format(rtd_version), None)
 }
 
 intersphinx_cache_limit = 0
+
+# -- Options for todo extension ----------------------------------------------
+
+# If true, `todo` and `todoList` produce output, else they produce nothing.
+todo_include_todos = True
 
 # -- Custom Document processing ----------------------------------------------
 
 import gensidebar
 
-gensidebar.generate_sidebar(globals(), "kiosk")
+gensidebar.generate_sidebar(globals(), "deepcell-kiosk")
