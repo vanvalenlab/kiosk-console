@@ -129,7 +129,6 @@ function menu() {
   echo $value
 }
 
-
 function configure_aws() {
   if [ -z "${NAMESPACE}" ]; then
     # Generate a friendly human readable name
@@ -256,19 +255,6 @@ function configure_gke() {
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
   fi
-
-  # Custom vs Advanced build options
-
-
-  # local setup_options="Default test ON
-  #   Custom test OFF"
-  # local CLUSTER_SETUP_METHOD=$(radiobox "Kiosk Setup" \
-  #   "Choose a method of configuring your cluser: " \
-  #   15 60 7 "$setup_options")
-  # if [ "$CLUSTER_SETUP_METHOD" = "" ]; then
-  #   return 0
-  # fi
-
 
   local setup_opt_value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
               --title "  Configuration Options  " \
@@ -404,7 +390,6 @@ function configure_gke() {
                  "Different choices of GPU(s) and/or region will be necessary.")
   msgbox "Caution!" "${message[*]}"
 
-
   local success_text=("Configuration Complete!"
                       "\n\nThe cluster is now available for creation.")
   dialog --msgbox "${success_text[*]}" 12 60
@@ -460,7 +445,6 @@ function configure_gke() {
 	  -e GPU_MAX_DIVIDED_BY_THREE \
 	  -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
 }
-
 
 function shell() {
   clear
