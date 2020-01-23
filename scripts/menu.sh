@@ -250,7 +250,11 @@ function configure_gke() {
   if [ "$CLUSTER_NAME" = "" ]; then
 	  return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name\n\nThe bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more. Please do not use underscores (_) in your bucket name." "${GKE_BUCKET:-$RANDOM_DEFAULT}" 13 60)
+  local bucket_text=("Bucket Name"
+                     "\n\nThe bucket should be a unique existing bucket on google cloud."
+                     "It acts as a storage area for models, data, and more."
+                     "Please do not use underscores (_) in your bucket name.")
+  export GKE_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${GKE_BUCKET:-$RANDOM_DEFAULT}" 13 60)
 
   if [ "$GKE_BUCKET" = "" ]; then
 	  return 0
