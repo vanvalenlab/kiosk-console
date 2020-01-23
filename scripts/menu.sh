@@ -107,8 +107,8 @@ function menu() {
               --menu "${header_text[*]}" 15 50 5 \
                   "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                   "GKE"     "Configure Google ${cloud_providers[gke]}" \
-          		    "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
-  		            "Shell"   "Drop to the shell" \
+                  "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+                  "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
             )
@@ -119,8 +119,8 @@ function menu() {
                   "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                   "GKE"     "Configure Google ${cloud_providers[gke]}" \
                   "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
-  		            "View"    "View Cluster Address" \
-  		            "Shell"   "Drop to the shell" \
+                  "View"    "View Cluster Address" \
+                  "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
             )
@@ -137,52 +137,52 @@ function configure_aws() {
 
   export AWS_ACCESS_KEY_ID=$(inputbox "Amazon Web Services" "Access Key ID" "${AWS_ACCESS_KEY_ID:-invalid_default}")
   if [ "$AWS_ACCESS_KEY_ID" = "" ]; then
-	  return 0
+    return 0
   fi
   export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY:-invalid_default}")
   if [ "$AWS_SECRET_ACCESS_KEY" = "" ]; then
-	  return 0
+    return 0
   fi
   export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET:-$RANDOM_DEFAULT}")
   if [ "$AWS_S3_BUCKET" = "" ]; then
-	  return 0
+    return 0
   fi
   export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE:-deepcell-aws-cluster}")
   export NAMESPACE=$(echo ${NAMESPACE} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$NAMESPACE" = "" ]; then
-	  return 0
+    return 0
   fi
   export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "${MASTER_MACHINE_TYPE:-m4.large}")
   if [ "$MASTER_MACHINE_TYPE" = "" ]; then
-	  return 0
+    return 0
   fi
   export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "${NODE_MACHINE_TYPE:-m4.large}")
   if [ "$NODE_MACHINE_TYPE" = "" ]; then
-	  return 0
+    return 0
   fi
 
   # let's just hardcode the menu, since all instance types are apparently available in all regions
   # and there's no built-in way to list type in the aws-cli
   local gpu_types="g3.xlarge 1GPU OFF
-	  g3.4xlarge 1GPU OFF
-	  g3.8xlarge 2GPUs OFF
-	  g3.16xlarge 4GPUs OFF
-	  p2.xlarge 1GPU ON
-	  p2.8xlarge 8GPUs OFF
-	  p2.16xlarge 16GPUs OFF
-	  p3.2xlarge 1GPU OFF
-	  p3.8xlarge 4GPUs OFF
-	  p3.16xlarge 8GPUs OFF"
+    g3.4xlarge 1GPU OFF
+    g3.8xlarge 2GPUs OFF
+    g3.16xlarge 4GPUs OFF
+    p2.xlarge 1GPU ON
+    p2.8xlarge 8GPUs OFF
+    p2.16xlarge 16GPUs OFF
+    p3.2xlarge 1GPU OFF
+    p3.8xlarge 4GPUs OFF
+    p3.16xlarge 8GPUs OFF"
   export AWS_GPU_MACHINE_TYPE=$(radiobox "Amazon Web Services" \
-	  "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
+    "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
 
   export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "${AWS_MIN_GPU_NODES:-0}")
   if [ "$AWS_MIN_GPU_NODES" = "" ]; then
-	  return 0
+    return 0
   fi
   export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "${AWS_MAX_GPU_NODES:-4}")
   if [ "$AWS_MAX_GPU_NODES" = "" ]; then
-	  return 0
+    return 0
   fi
 
   # create some derivative GPU-related variables for use in autoscaling
@@ -210,27 +210,27 @@ function configure_aws() {
 
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e AWS_ACCESS_KEY_ID \
+  printenv | grep -E GPU_NODE_MAX_SIZE \
     -e AWS_SECRET_ACCESS_KEY \
     -e AWS_S3_BUCKET \
     -e NAMESPACE \
-	  -e AWS_MIN_GPU_NODES \
-	  -e AWS_MAX_GPU_NODES \
-	  -e GPU_MAX_TIMES_TWO \
-	  -e GPU_MAX_TIMES_THREE \
-	  -e GPU_MAX_TIMES_FOUR \
-	  -e GPU_MAX_TIMES_FIVE \
-	  -e GPU_MAX_TIMES_TEN \
-	  -e GPU_MAX_TIMES_TWENTY \
-	  -e GPU_MAX_TIMES_THIRTY \
+    -e AWS_MIN_GPU_NODES \
+    -e AWS_MAX_GPU_NODES \
+    -e GPU_MAX_TIMES_TWO \
+    -e GPU_MAX_TIMES_THREE \
+    -e GPU_MAX_TIMES_FOUR \
+    -e GPU_MAX_TIMES_FIVE \
+    -e GPU_MAX_TIMES_TEN \
+    -e GPU_MAX_TIMES_TWENTY \
+    -e GPU_MAX_TIMES_THIRTY \
     -e GPU_MAX_TIMES_FOURTY \
     -e GPU_MAX_TIMES_FIFTY \
     -e GPU_MAX_TIMES_SEVENTY_FIVE \
     -e GPU_MAX_TIMES_ONE_HUNDRED \
     -e GPU_MAX_TIMES_TWO_HUNDRED \
-	  -e GPU_MAX_DIVIDED_BY_TWO \
-	  -e GPU_MAX_DIVIDED_BY_THREE \
-	  -e GPU_MAX_DIVIDED_BY_FOUR \
+    -e GPU_MAX_DIVIDED_BY_TWO \
+    -e GPU_MAX_DIVIDED_BY_THREE \
+    -e GPU_MAX_DIVIDED_BY_FOUR \
     -E GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.aws
 }
 
@@ -248,7 +248,7 @@ function configure_gke() {
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-$RANDOM_DEFAULT}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
-	  return 0
+    return 0
   fi
   local bucket_text=("Bucket Name"
                      "\n\nThe bucket should be a unique existing bucket on google cloud."
@@ -257,7 +257,7 @@ function configure_gke() {
   export GKE_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${GKE_BUCKET:-$RANDOM_DEFAULT}" 13 60)
 
   if [ "$GKE_BUCKET" = "" ]; then
-	  return 0
+    return 0
   fi
 
   local setup_opt_value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
@@ -293,22 +293,22 @@ function configure_gke() {
     local total_lines=$(($base_box_height + $selector_box_lines))
     export GKE_COMPUTE_REGION=$(radiobox "Google Cloud" \
         "Choose a region for hosting your cluster: \nPress the spacebar to select and Enter to continue." \
-  	  $total_lines 60 $selector_box_lines "$regions_with_default")
+      $total_lines 60 $selector_box_lines "$regions_with_default")
     if [ "$GKE_COMPUTE_REGION" = "" ]; then
-  	  return 0
+      return 0
     fi
 
     export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-1}")
     if [ "$GKE_MACHINE_TYPE" = "" ]; then
-  	  return 0
+      return 0
     fi
     export NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of Compute (non-GPU) Nodes" "${NODE_MIN_SIZE:-1}")
     if [ "$NODE_MIN_SIZE" = "" ]; then
-  	  return 0
+      return 0
     fi
     export NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of Compute (non-GPU) Nodes" "${NODE_MAX_SIZE:-11}")
     if [ "$NODE_MAX_SIZE" = "" ]; then
-  	  return 0
+      return 0
     fi
 
     infobox "Loading..."
@@ -319,29 +319,29 @@ function configure_gke() {
     local total_lines=$(($base_box_height + $selector_box_lines))
     export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
         "Choose a GPU for prediction (not training) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-  	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+      $total_lines 60 $selector_box_lines "$gpus_with_default")
 
     local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
     export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
         "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-  	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+      $total_lines 60 $selector_box_lines "$gpus_with_default")
 
     ## Maybe include these in an advanced menu?
     # export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
     # if [ "$GPU_PER_NODE" = "" ]; then
-    # 	  return 0
+    #     return 0
     # fi
     # export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
     # if [ "$GPU_MACHINE_TYPE" = "" ]; then
-    # 	  return 0
+    #     return 0
     # fi
     export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
     if [ "$GPU_NODE_MIN_SIZE" = "" ]; then
-  	  return 0
+      return 0
     fi
     export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "${GPU_NODE_MAX_SIZE:-4}")
     if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
-  	  return 0
+      return 0
     fi
     infobox "Loading..."
 
@@ -406,29 +406,29 @@ function configure_gke() {
     -e GKE_BUCKET \
     -e NODE_MIN_SIZE \
     -e NODE_MAX_SIZE \
-	  -e GKE_COMPUTE_REGION \
-	  -e GKE_MACHINE_TYPE \
+    -e GKE_COMPUTE_REGION \
+    -e GKE_MACHINE_TYPE \
     -e PREDICTION_GPU_TYPE \
     -e TRAINING_GPU_TYPE \
     -e GPU_PER_NODE \
-	  -e GPU_MACHINE_TYPE \
+    -e GPU_MACHINE_TYPE \
     -e GPU_NODE_MIN_SIZE \
-	  -e GPU_NODE_MAX_SIZE \
-	  -e GPU_MAX_TIMES_TWO \
-	  -e GPU_MAX_TIMES_THREE \
-	  -e GPU_MAX_TIMES_FOUR \
-	  -e GPU_MAX_TIMES_FIVE \
-	  -e GPU_MAX_TIMES_TEN \
-	  -e GPU_MAX_TIMES_TWENTY \
-	  -e GPU_MAX_TIMES_THIRTY \
+    -e GPU_NODE_MAX_SIZE \
+    -e GPU_MAX_TIMES_TWO \
+    -e GPU_MAX_TIMES_THREE \
+    -e GPU_MAX_TIMES_FOUR \
+    -e GPU_MAX_TIMES_FIVE \
+    -e GPU_MAX_TIMES_TEN \
+    -e GPU_MAX_TIMES_TWENTY \
+    -e GPU_MAX_TIMES_THIRTY \
     -e GPU_MAX_TIMES_FOURTY \
     -e GPU_MAX_TIMES_FIFTY \
     -e GPU_MAX_TIMES_SEVENTY_FIVE \
     -e GPU_MAX_TIMES_ONE_HUNDRED \
     -e GPU_MAX_TIMES_TWO_HUNDRED \
-	  -e GPU_MAX_DIVIDED_BY_TWO \
-	  -e GPU_MAX_DIVIDED_BY_THREE \
-	  -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
+    -e GPU_MAX_DIVIDED_BY_TWO \
+    -e GPU_MAX_DIVIDED_BY_THREE \
+    -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
 }
 
 function shell() {
@@ -451,9 +451,9 @@ function destroy() {
 function view() {
   local title="Deepcell Cluster Address"
   if [ -f ./cluster_address ]; then
-	  local cluster_address=$(cat ./cluster_address | sed 's/export CLUSTER_ADDRESS=\([[:graph:]]\+\)/\1/')
+    local cluster_address=$(cat ./cluster_address | sed 's/export CLUSTER_ADDRESS=\([[:graph:]]\+\)/\1/')
   else
-	  local cluster_address="No current address -- no cluster has been started yet."
+    local cluster_address="No current address -- no cluster has been started yet."
   fi
   clear
   echo "The cluster's address is: " ${cluster_address}
@@ -478,7 +478,7 @@ function main() {
   dialog --sleep 1 --msgbox "Loading..." 12 60
   #infobox "Loading..."
   msgbox "Welcome!" \
-	 "Welcome to the Deepcell Kiosk!
+   "Welcome to the Deepcell Kiosk!
 
 This Kiosk was developed by the Van Valen Lab at the California Institute of Technology.
 
