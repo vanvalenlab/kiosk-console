@@ -307,6 +307,7 @@ function configure_gke() {
   	  return 0
     fi
 
+    infobox "Loading..."
     local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
     local gpus_with_default=${gpus_in_region/nvidia-tesla-t4 _ OFF/nvidia-tesla-t4 _ ON}
     local base_box_height=7
@@ -338,6 +339,7 @@ function configure_gke() {
     if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
   	  return 0
     fi
+    infobox "Loading..."
 
   fi
 
