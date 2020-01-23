@@ -276,27 +276,6 @@ function configure_gke() {
     export PREDICTION_GPU_TYPE=nvidia-tesla-t4
     export TRAINING_GPU_TYPE=nvidia-tesla-v100
 
-    local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
-    local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-    local region_zone_array=($all_region_zones)
-    local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
-    local region_zones_gpu=()
-    for i in "${region_zone_array[@]}"
-    do
-        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-            region_zones_gpu+=(${i})
-        fi
-    done
-    local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
-    local region_zones_all_gpus=()
-    for i in "${region_zones_gpu[@]}"
-    do
-        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-            region_zones_all_gpus+=(${i})
-        fi
-    done
-    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
-
     export GPU_NODE_MIN_SIZE=0
     export GPU_NODE_MAX_SIZE=1
 
@@ -342,27 +321,6 @@ function configure_gke() {
         "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
   	  $total_lines 60 $selector_box_lines "$gpus_with_default")
 
-    local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
-    local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-    local region_zone_array=($all_region_zones)
-    local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
-    local region_zones_gpu=()
-    for i in "${region_zone_array[@]}"
-    do
-        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-            region_zones_gpu+=(${i})
-        fi
-    done
-    local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
-    local region_zones_all_gpus=()
-    for i in "${region_zones_gpu[@]}"
-    do
-        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-            region_zones_all_gpus+=(${i})
-        fi
-    done
-    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
-
     ## Maybe include these in an advanced menu?
     # export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
     # if [ "$GPU_PER_NODE" = "" ]; then
@@ -382,6 +340,27 @@ function configure_gke() {
     fi
 
   fi
+
+  local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
+  local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
+  local region_zone_array=($all_region_zones)
+  local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
+  local region_zones_gpu=()
+  for i in "${region_zone_array[@]}"
+  do
+      if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+          region_zones_gpu+=(${i})
+      fi
+  done
+  local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
+  local region_zones_all_gpus=()
+  for i in "${region_zones_gpu[@]}"
+  do
+      if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+          region_zones_all_gpus+=(${i})
+      fi
+  done
+  export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
 
   local message=("The following are zones in your region with the specified GPU type(s):"
                  "\n\n    $REGION_ZONES_WITH_GPUS"
