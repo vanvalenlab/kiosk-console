@@ -94,7 +94,7 @@ function tailcmd() {
 # cluster has been created yet.
 function menu() {
   local value
-  local header_text=("Use the UP/DOWN arrow keys or the first\n"
+  local header_text=(" Use the UP/DOWN arrow keys or the first\n"
                      "letter of the choice as a hot key to\n"
                      "select an option.\n"
                      "Choose a task.")
@@ -107,8 +107,8 @@ function menu() {
               --menu "${header_text[*]}" 15 50 5 \
                   "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                   "GKE"     "Configure Google ${cloud_providers[gke]}" \
-          		  "Create"    "Create ${CLOUD_PROVIDER^^} Cluster" \
-  		          "Shell"     "Drop to the shell" \
+                  "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+                  "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
             )
@@ -119,8 +119,8 @@ function menu() {
                   "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
                   "GKE"     "Configure Google ${cloud_providers[gke]}" \
                   "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
-  		          "View"      "View Cluster Address" \
-  		          "Shell"     "Drop to the shell" \
+                  "View"    "View Cluster Address" \
+                  "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
             )
@@ -128,7 +128,6 @@ function menu() {
   retval $?
   echo $value
 }
-
 
 function configure_aws() {
   if [ -z "${NAMESPACE}" ]; then
@@ -138,52 +137,52 @@ function configure_aws() {
 
   export AWS_ACCESS_KEY_ID=$(inputbox "Amazon Web Services" "Access Key ID" "${AWS_ACCESS_KEY_ID:-invalid_default}")
   if [ "$AWS_ACCESS_KEY_ID" = "" ]; then
-	  return 0
+    return 0
   fi
   export AWS_SECRET_ACCESS_KEY=$(inputbox "Amazon Web Services" "AWS Secret Key" "${AWS_SECRET_ACCESS_KEY:-invalid_default}")
   if [ "$AWS_SECRET_ACCESS_KEY" = "" ]; then
-	  return 0
+    return 0
   fi
   export AWS_S3_BUCKET=$(inputbox "Amazon Web Services" "AWS S3 Bucket Name" "${AWS_S3_BUCKET:-$RANDOM_DEFAULT}")
   if [ "$AWS_S3_BUCKET" = "" ]; then
-	  return 0
+    return 0
   fi
   export NAMESPACE=$(inputbox "Deepcell" "Cluster Name" "${NAMESPACE:-deepcell-aws-cluster}")
   export NAMESPACE=$(echo ${NAMESPACE} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$NAMESPACE" = "" ]; then
-	  return 0
+    return 0
   fi
   export MASTER_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Master Node Machine Type" "${MASTER_MACHINE_TYPE:-m4.large}")
   if [ "$MASTER_MACHINE_TYPE" = "" ]; then
-	  return 0
+    return 0
   fi
   export NODE_MACHINE_TYPE=$(inputbox "Amazon Web Services" "Worker Nodes Machine Type" "${NODE_MACHINE_TYPE:-m4.large}")
   if [ "$NODE_MACHINE_TYPE" = "" ]; then
-	  return 0
+    return 0
   fi
 
   # let's just hardcode the menu, since all instance types are apparently available in all regions
   # and there's no built-in way to list type in the aws-cli
   local gpu_types="g3.xlarge 1GPU OFF
-	  g3.4xlarge 1GPU OFF
-	  g3.8xlarge 2GPUs OFF
-	  g3.16xlarge 4GPUs OFF
-	  p2.xlarge 1GPU ON
-	  p2.8xlarge 8GPUs OFF
-	  p2.16xlarge 16GPUs OFF
-	  p3.2xlarge 1GPU OFF
-	  p3.8xlarge 4GPUs OFF
-	  p3.16xlarge 8GPUs OFF"
+    g3.4xlarge 1GPU OFF
+    g3.8xlarge 2GPUs OFF
+    g3.16xlarge 4GPUs OFF
+    p2.xlarge 1GPU ON
+    p2.8xlarge 8GPUs OFF
+    p2.16xlarge 16GPUs OFF
+    p3.2xlarge 1GPU OFF
+    p3.8xlarge 4GPUs OFF
+    p3.16xlarge 8GPUs OFF"
   export AWS_GPU_MACHINE_TYPE=$(radiobox "Amazon Web Services" \
-	  "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
+    "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
 
   export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "${AWS_MIN_GPU_NODES:-0}")
   if [ "$AWS_MIN_GPU_NODES" = "" ]; then
-	  return 0
+    return 0
   fi
   export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "${AWS_MAX_GPU_NODES:-4}")
   if [ "$AWS_MAX_GPU_NODES" = "" ]; then
-	  return 0
+    return 0
   fi
 
   # create some derivative GPU-related variables for use in autoscaling
@@ -211,26 +210,28 @@ function configure_aws() {
 
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE \
-	  -e AWS_MIN_GPU_NODES \
-	  -e AWS_MAX_GPU_NODES \
-	  -e GPU_MAX_TIMES_TWO \
-	  -e GPU_MAX_TIMES_THREE \
-	  -e GPU_MAX_TIMES_FOUR \
-	  -e GPU_MAX_TIMES_FIVE \
-	  -e GPU_MAX_TIMES_TEN \
-	  -e GPU_MAX_TIMES_TWENTY \
-	  -e GPU_MAX_TIMES_THIRTY \
+  printenv | grep -E GPU_NODE_MAX_SIZE \
+    -e AWS_SECRET_ACCESS_KEY \
+    -e AWS_S3_BUCKET \
+    -e NAMESPACE \
+    -e AWS_MIN_GPU_NODES \
+    -e AWS_MAX_GPU_NODES \
+    -e GPU_MAX_TIMES_TWO \
+    -e GPU_MAX_TIMES_THREE \
+    -e GPU_MAX_TIMES_FOUR \
+    -e GPU_MAX_TIMES_FIVE \
+    -e GPU_MAX_TIMES_TEN \
+    -e GPU_MAX_TIMES_TWENTY \
+    -e GPU_MAX_TIMES_THIRTY \
     -e GPU_MAX_TIMES_FOURTY \
     -e GPU_MAX_TIMES_FIFTY \
     -e GPU_MAX_TIMES_SEVENTY_FIVE \
     -e GPU_MAX_TIMES_ONE_HUNDRED \
     -e GPU_MAX_TIMES_TWO_HUNDRED \
-	  -e GPU_MAX_DIVIDED_BY_TWO \
-	  -e GPU_MAX_DIVIDED_BY_THREE \
-	  -e GPU_MAX_DIVIDED_BY_FOUR \
-      -E GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.gke
-  #printenv | grep -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_S3_BUCKET -e NAMESPACE -e KOPS_CLUSTER_NAME -e KOPS_DNS_ZONE -e KOPS_STATE_STORE > ${CACHE_PATH}/env.aws
+    -e GPU_MAX_DIVIDED_BY_TWO \
+    -e GPU_MAX_DIVIDED_BY_THREE \
+    -e GPU_MAX_DIVIDED_BY_FOUR \
+    -E GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.aws
 }
 
 function configure_gke() {
@@ -242,30 +243,22 @@ function configure_gke() {
   export PROJECT="${NEW_PROJECT}"
 
   make gke/login
-  gcloud config set project ${PROJECT}
+  gcloud config set project ${PROJECT} --quiet
+
   export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-$RANDOM_DEFAULT}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
-	  return 0
+    return 0
   fi
-  export GKE_BUCKET=$(inputbox "Deepcell" "Bucket Name\n\nThe bucket should be a unique existing bucket on google cloud. It acts as a storage area for models, data, and more. Please do not use underscores (_) in your bucket name." "${GKE_BUCKET:-$RANDOM_DEFAULT}" 13 60)
+  local bucket_text=("Bucket Name"
+                     "\n\nThe bucket should be a unique existing bucket on google cloud."
+                     "It acts as a storage area for models, data, and more."
+                     "Please do not use underscores (_) in your bucket name.")
+  export GKE_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${GKE_BUCKET:-$RANDOM_DEFAULT}" 13 60)
 
   if [ "$GKE_BUCKET" = "" ]; then
-	  return 0
+    return 0
   fi
-
-  # Custom vs Advanced build options
-
-
-  # local setup_options="Default test ON
-  #   Custom test OFF"
-  # local CLUSTER_SETUP_METHOD=$(radiobox "Kiosk Setup" \
-  #   "Choose a method of configuring your cluser: " \
-  #   15 60 7 "$setup_options")
-  # if [ "$CLUSTER_SETUP_METHOD" = "" ]; then
-  #   return 0
-  # fi
-
 
   local setup_opt_value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
               --title "  Configuration Options  " \
@@ -287,40 +280,12 @@ function configure_gke() {
     export PREDICTION_GPU_TYPE=nvidia-tesla-t4
     export TRAINING_GPU_TYPE=nvidia-tesla-v100
 
-    local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
-    local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-    local region_zone_array=($all_region_zones)
-    local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
-    local region_zones_gpu=()
-    for i in "${region_zone_array[@]}"
-    do
-        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-            region_zones_gpu+=(${i})
-        fi
-    done
-    local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
-    local region_zones_all_gpus=()
-    for i in "${region_zones_gpu[@]}"
-    do
-        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-            region_zones_all_gpus+=(${i})
-        fi
-    done
-    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
-
-    msgbox "Caution!" \
-        "Here are the zones in your chosen region that host the GPU type(s) you chose:
-
-  $REGION_ZONES_WITH_GPUS
-
-If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
-
     export GPU_NODE_MIN_SIZE=0
     export GPU_NODE_MAX_SIZE=1
 
   else
-    infobox "Loading..."
     # Advanced
+    infobox "Loading..."
     local regions=$(gcloud compute regions list | grep "-" | awk '{print $1 " _ OFF"}')
     local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
     local base_box_height=7
@@ -328,24 +293,25 @@ If you see either 0 or 1 zones listed above, please reconfigure the cluster befo
     local total_lines=$(($base_box_height + $selector_box_lines))
     export GKE_COMPUTE_REGION=$(radiobox "Google Cloud" \
         "Choose a region for hosting your cluster: \nPress the spacebar to select and Enter to continue." \
-  	  $total_lines 60 $selector_box_lines "$regions_with_default")
+      $total_lines 60 $selector_box_lines "$regions_with_default")
     if [ "$GKE_COMPUTE_REGION" = "" ]; then
-  	  return 0
+      return 0
     fi
 
     export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-1}")
     if [ "$GKE_MACHINE_TYPE" = "" ]; then
-  	  return 0
+      return 0
     fi
     export NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of Compute (non-GPU) Nodes" "${NODE_MIN_SIZE:-1}")
     if [ "$NODE_MIN_SIZE" = "" ]; then
-  	  return 0
+      return 0
     fi
     export NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of Compute (non-GPU) Nodes" "${NODE_MAX_SIZE:-11}")
     if [ "$NODE_MAX_SIZE" = "" ]; then
-  	  return 0
+      return 0
     fi
 
+    infobox "Loading..."
     local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
     local gpus_with_default=${gpus_in_region/nvidia-tesla-t4 _ OFF/nvidia-tesla-t4 _ ON}
     local base_box_height=7
@@ -353,64 +319,66 @@ If you see either 0 or 1 zones listed above, please reconfigure the cluster befo
     local total_lines=$(($base_box_height + $selector_box_lines))
     export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
         "Choose a GPU for prediction (not training) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-  	  $total_lines 60 $selector_box_lines "$gpus_with_default")
+      $total_lines 60 $selector_box_lines "$gpus_with_default")
 
     local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
     export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
         "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-  	  $total_lines 60 $selector_box_lines "$gpus_with_default")
-
-    local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
-    local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-    local region_zone_array=($all_region_zones)
-    local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
-    local region_zones_gpu=()
-    for i in "${region_zone_array[@]}"
-    do
-        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-            region_zones_gpu+=(${i})
-        fi
-    done
-    local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
-    local region_zones_all_gpus=()
-    for i in "${region_zones_gpu[@]}"
-    do
-        if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-            region_zones_all_gpus+=(${i})
-        fi
-    done
-    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
-
-    msgbox "Caution!" \
-        "Here are the zones in your chosen region that host the GPU type(s) you chose:
-
-  $REGION_ZONES_WITH_GPUS
-
-If you see either 0 or 1 zones listed above, please reconfigure the cluster before deploying. Different choices of GPU(s) and/or region will be necessary."
+      $total_lines 60 $selector_box_lines "$gpus_with_default")
 
     ## Maybe include these in an advanced menu?
-    #export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
-    #if [ "$GPU_PER_NODE" = "" ]; then
-    #	  return 0
-    #fi
-    #export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
-    #if [ "$GPU_MACHINE_TYPE" = "" ]; then
-    #	  return 0
-    #fi
+    # export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
+    # if [ "$GPU_PER_NODE" = "" ]; then
+    #     return 0
+    # fi
+    # export GPU_MACHINE_TYPE=$(inputbox "Google Cloud" "GPU Node Type" "${GPU_MACHINE_TYPE:-n1-highmem-2}")
+    # if [ "$GPU_MACHINE_TYPE" = "" ]; then
+    #     return 0
+    # fi
     export GPU_NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of GPU Nodes" "${GPU_NODE_MIN_SIZE:-0}")
     if [ "$GPU_NODE_MIN_SIZE" = "" ]; then
-  	  return 0
+      return 0
     fi
     export GPU_NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of GPU Nodes" "${GPU_NODE_MAX_SIZE:-4}")
     if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
-  	  return 0
+      return 0
     fi
+    infobox "Loading..."
 
   fi
 
-  dialog --msgbox "Configuration Complete!
+  local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
+  local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
+  local region_zone_array=($all_region_zones)
+  local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
+  local region_zones_gpu=()
+  for i in "${region_zone_array[@]}"
+  do
+      if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+          region_zones_gpu+=(${i})
+      fi
+  done
+  local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
+  local region_zones_all_gpus=()
+  for i in "${region_zones_gpu[@]}"
+  do
+      if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+          region_zones_all_gpus+=(${i})
+      fi
+  done
+  export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
 
-Cluster now available for creation" 12 60
+  local message=("The following are zones in your region with the specified GPU type(s):"
+                 "\n\n    $REGION_ZONES_WITH_GPUS"
+                 "\n\nIf you see either 0 or 1 zones listed above,"
+                 "please reconfigure the cluster before deploying."
+                 "Different choices of GPU(s) and/or region will be necessary.")
+  msgbox "Caution!" "${message[*]}"
+
+  local success_text=("Configuration Complete!"
+                      "\n\nThe cluster is now available for creation.")
+  dialog --msgbox "${success_text[*]}" 12 60
+
   export CLOUD_PROVIDER=gke
 
   # create some derivative GPU-related variables for use in autoscaling
@@ -433,30 +401,35 @@ Cluster now available for creation" 12 60
 
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e PROJECT -e CLUSTER_NAME -e GKE_BUCKET \
-      -e NODE_MIN_SIZE -e NODE_MAX_SIZE \
-	  -e GKE_COMPUTE_REGION \
-	  -e GKE_MACHINE_TYPE -e PREDICTION_GPU_TYPE \
-      -e TRAINING_GPU_TYPE -e GPU_PER_NODE \
-	  -e GPU_MACHINE_TYPE -e GPU_NODE_MIN_SIZE \
-	  -e GPU_NODE_MAX_SIZE \
-	  -e GPU_MAX_TIMES_TWO \
-	  -e GPU_MAX_TIMES_THREE \
-	  -e GPU_MAX_TIMES_FOUR \
-	  -e GPU_MAX_TIMES_FIVE \
-	  -e GPU_MAX_TIMES_TEN \
-	  -e GPU_MAX_TIMES_TWENTY \
-	  -e GPU_MAX_TIMES_THIRTY \
-      -e GPU_MAX_TIMES_FOURTY \
-      -e GPU_MAX_TIMES_FIFTY \
-      -e GPU_MAX_TIMES_SEVENTY_FIVE \
-      -e GPU_MAX_TIMES_ONE_HUNDRED \
-      -e GPU_MAX_TIMES_TWO_HUNDRED \
-	  -e GPU_MAX_DIVIDED_BY_TWO \
-	  -e GPU_MAX_DIVIDED_BY_THREE \
-	  -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
+  printenv | grep -e PROJECT \
+    -e CLUSTER_NAME \
+    -e GKE_BUCKET \
+    -e NODE_MIN_SIZE \
+    -e NODE_MAX_SIZE \
+    -e GKE_COMPUTE_REGION \
+    -e GKE_MACHINE_TYPE \
+    -e PREDICTION_GPU_TYPE \
+    -e TRAINING_GPU_TYPE \
+    -e GPU_PER_NODE \
+    -e GPU_MACHINE_TYPE \
+    -e GPU_NODE_MIN_SIZE \
+    -e GPU_NODE_MAX_SIZE \
+    -e GPU_MAX_TIMES_TWO \
+    -e GPU_MAX_TIMES_THREE \
+    -e GPU_MAX_TIMES_FOUR \
+    -e GPU_MAX_TIMES_FIVE \
+    -e GPU_MAX_TIMES_TEN \
+    -e GPU_MAX_TIMES_TWENTY \
+    -e GPU_MAX_TIMES_THIRTY \
+    -e GPU_MAX_TIMES_FOURTY \
+    -e GPU_MAX_TIMES_FIFTY \
+    -e GPU_MAX_TIMES_SEVENTY_FIVE \
+    -e GPU_MAX_TIMES_ONE_HUNDRED \
+    -e GPU_MAX_TIMES_TWO_HUNDRED \
+    -e GPU_MAX_DIVIDED_BY_TWO \
+    -e GPU_MAX_DIVIDED_BY_THREE \
+    -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
 }
-
 
 function shell() {
   clear
@@ -478,9 +451,9 @@ function destroy() {
 function view() {
   local title="Deepcell Cluster Address"
   if [ -f ./cluster_address ]; then
-	  local cluster_address=$(cat ./cluster_address | sed 's/export CLUSTER_ADDRESS=\([[:graph:]]\+\)/\1/')
+    local cluster_address=$(cat ./cluster_address | sed 's/export CLUSTER_ADDRESS=\([[:graph:]]\+\)/\1/')
   else
-	  local cluster_address="No current address -- no cluster has been started yet."
+    local cluster_address="No current address -- no cluster has been started yet."
   fi
   clear
   echo "The cluster's address is: " ${cluster_address}
@@ -498,67 +471,14 @@ function confirm() {
   esac
 }
 
-# function benchmarking() {
-#   local benchmark_types="1-image,1-CPU _ ON
-# 	  10-images,1-CPU _ OFF
-# 	  100-images,1-CPU _ OFF
-# 	  1000-images,1-CPU _ OFF
-# 	  10000-images,1-CPU _ OFF
-# 	  100000-images,1-CPU _ OFF
-# 	  1000000-images,1-CPU _ OFF
-# 	  1-image,1-GPU _ OFF
-#       10-images,1-GPU _ OFF
-# 	  100-images,1-GPU _ OFF
-# 	  1000-images,1-GPU _ OFF
-# 	  10000-images,1-GPU _ OFF
-# 	  100000-images,1-GPU _ OFF
-# 	  1000000-images,1-GPU _ OFF
-# 	  1-image,2-GPU _ OFF
-#       10-images,2-GPU _ OFF
-# 	  100-images,2-GPU _ OFF
-# 	  1000-images,2-GPU _ OFF
-# 	  10000-images,2-GPU _ OFF
-# 	  100000-images,2-GPU _ OFF
-# 	  1000000-images,2-GPU _ OFF
-# 	  1-image,4-GPU _ OFF
-#       10-images,4-GPU _ OFF
-# 	  100-images,4-GPU _ OFF
-# 	  1000-images,4-GPU _ OFF
-# 	  10000-images,4-GPU _ OFF
-# 	  100000-images,4-GPU _ OFF
-# 	  1000000-images,4-GPU _ OFF
-# 	  1-image,8-GPU _ OFF
-#       10-images,8-GPU _ OFF
-# 	  100-images,8-GPU _ OFF
-# 	  1000-images,8-GPU _ OFF
-# 	  10000-images,8-GPU _ OFF
-# 	  100000-images,8-GPU _ OFF
-# 	  1000000-images,8-GPU _ OFF
-# 	  1-image,16-GPU _ OFF
-#       10-images,16-GPU _ OFF
-# 	  100-images,16-GPU _ OFF
-# 	  1000-images,16-GPU _ OFF
-# 	  10000-images,16-GPU _ OFF
-# 	  100000-images,16-GPU _ OFF
-# 	  1000000-images,16-GPU _ OFF"
-#   export BENCHMARK_TYPE=$(radiobox "Deepcell" \
-# 	  "Choose your Benchmark Type:" 15 60 7 "$benchmark_types")
-#   export BENCHMARKING_PU_TYPE_AND_NUMBER=$(echo $BENCHMARK_TYPE | cut -f2 -d',' | sed 's/-/ /')
-#   export BENCHMARKING_PU_TYPE=$(echo $BENCHMARKING_PU_TYPE_AND_NUMBER | cut -f2 -d' ')
-#   export IMG_NUM=$(echo $BENCHMARK_TYPE | grep -o '[0-9]\+-image' | grep -o '[0-9]\+')
-#   export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
-#   # redeploy benchmarking pod, now that environmental variables have been set
-#   helm delete benchmarking --purge
-#   helmfile --selector name=benchmarking sync
-# }
-
 function main() {
   export MENU=true
-  # The following two lines constitute a workaround for a bug where the first dialog call after startup fails before user input is possible.
+  # The following line is a workaround for a bug where the first dialog call
+  # after startup fails before user input is possible.
   dialog --sleep 1 --msgbox "Loading..." 12 60
   #infobox "Loading..."
   msgbox "Welcome!" \
-	 "Welcome to the Deepcell Kiosk!
+   "Welcome to the Deepcell Kiosk!
 
 This Kiosk was developed by the Van Valen Lab at the California Institute of Technology.
 
