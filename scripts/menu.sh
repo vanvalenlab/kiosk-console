@@ -280,8 +280,8 @@ function configure_gke() {
     export GPU_NODE_MAX_SIZE=1
 
   else
-    infobox "Loading..."
     # Advanced
+    infobox "Loading..."
     local regions=$(gcloud compute regions list | grep "-" | awk '{print $1 " _ OFF"}')
     local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
     local base_box_height=7
