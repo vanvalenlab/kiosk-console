@@ -13,6 +13,10 @@ Software Infrastructure
 
     Add image of software architecture
 
+.. todo::
+
+    Description of hwo data flows through the different components of the consumer.
+
 kiosk-frontend
 --------------
 | **Source Code:** https://github.com/vanvalenlab/kiosk-frontend
