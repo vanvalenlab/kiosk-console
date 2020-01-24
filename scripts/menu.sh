@@ -273,7 +273,7 @@ function configure_gke() {
 
     infobox "Loading default values..." 7 60
 
-    export GKE_COMPUTE_REGION=us-west1
+    export GCLOUD_REGION=us-west1
     export GKE_MACHINE_TYPE=n1-standard-1
     export NODE_MIN_SIZE=1
     export NODE_MAX_SIZE=10
@@ -291,10 +291,10 @@ function configure_gke() {
     local base_box_height=7
     local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
     local total_lines=$(($base_box_height + $selector_box_lines))
-    export GKE_COMPUTE_REGION=$(radiobox "Google Cloud" \
+    export GCLOUD_REGION=$(radiobox "Google Cloud" \
         "Choose a region for hosting your cluster: \nPress the spacebar to select and Enter to continue." \
       $total_lines 60 $selector_box_lines "$regions_with_default")
-    if [ "$GKE_COMPUTE_REGION" = "" ]; then
+    if [ "$GCLOUD_REGION" = "" ]; then
       return 0
     fi
 
@@ -312,7 +312,7 @@ function configure_gke() {
     fi
 
     infobox "Loading..."
-    local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GKE_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
+    local gpus_in_region=$(gcloud compute accelerator-types list | grep ${GCLOUD_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
     local gpus_with_default=${gpus_in_region/nvidia-tesla-t4 _ OFF/nvidia-tesla-t4 _ ON}
     local base_box_height=7
     local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
@@ -347,7 +347,7 @@ function configure_gke() {
 
   fi
 
-  local zones=$(gcloud compute zones list | grep "${GKE_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
+  local zones=$(gcloud compute zones list | grep "${GCLOUD_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
   local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
   local region_zone_array=($all_region_zones)
   local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
@@ -406,7 +406,7 @@ function configure_gke() {
     -e GKE_BUCKET \
     -e NODE_MIN_SIZE \
     -e NODE_MAX_SIZE \
-    -e GKE_COMPUTE_REGION \
+    -e GCLOUD_REGION \
     -e GKE_MACHINE_TYPE \
     -e PREDICTION_GPU_TYPE \
     -e TRAINING_GPU_TYPE \
