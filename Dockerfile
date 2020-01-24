@@ -21,7 +21,7 @@ ENV MAKE="make -s"
 ENV AWS_REGION="us-west-2"
 
 # Google Cloud Region
-ENV GCLOUD_REGION="us-west1"
+ENV CLOUDSDK_COMPUTE_REGION="us-west1"
 
 # kops config
 ENV KOPS_CLUSTER_NAME="cluster.k8s.local"

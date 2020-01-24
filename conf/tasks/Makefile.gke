@@ -33,9 +33,6 @@ export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
 # Cluster name ust be unique within the project
 export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
 
-# Bucket name need not be unique
-export CLOUDSDK_BUCKET ?= $(GKE_BUCKET)
-
 ## Login to Google Cloud
 gke/login:
 	@gcloud-login.sh

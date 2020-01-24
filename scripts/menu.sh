@@ -245,9 +245,9 @@ function configure_gke() {
                      "\n\nThe bucket should be a unique existing bucket on google cloud."
                      "It acts as a storage area for models, data, and more."
                      "Please do not use underscores (_) in your bucket name.")
-  export GKE_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${GKE_BUCKET:-$CLUSTER_NAME}" 13 60)
+  export CLOUDSDK_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${CLOUDSDK_BUCKET:-$CLUSTER_NAME}" 13 60)
 
-  if [ "$GKE_BUCKET" = "" ]; then
+  if [ "$CLOUDSDK_BUCKET" = "" ]; then
     return 0
   fi
 
@@ -378,7 +378,7 @@ function configure_gke() {
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT \
     -e CLUSTER_NAME \
-    -e GKE_BUCKET \
+    -e CLOUDSDK_BUCKET \
     -e NODE_MIN_SIZE \
     -e NODE_MAX_SIZE \
     -e GCLOUD_REGION \
