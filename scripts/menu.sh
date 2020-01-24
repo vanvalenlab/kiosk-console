@@ -2,8 +2,6 @@
 
 export BRAND="Caltech Van Valen Lab"
 
-export RANDOM_DEFAULT="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
-
 #dialog --print-maxsize
 
 #trap ctrl_c SIGINT
@@ -245,7 +243,11 @@ function configure_gke() {
   make gke/login
   gcloud config set project ${PROJECT} --quiet
 
-  export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-$RANDOM_DEFAULT}")
+  if [ -z ${CLUSTER_NAME} ]; then
+    export CLUSTER_NAME="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
+  fi
+
+  export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell-cluster}")
   export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLUSTER_NAME" = "" ]; then
     return 0
@@ -254,7 +256,7 @@ function configure_gke() {
                      "\n\nThe bucket should be a unique existing bucket on google cloud."
                      "It acts as a storage area for models, data, and more."
                      "Please do not use underscores (_) in your bucket name.")
-  export GKE_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${GKE_BUCKET:-$RANDOM_DEFAULT}" 13 60)
+  export GKE_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${GKE_BUCKET:-$CLUSTER_NAME}" 13 60)
 
   if [ "$GKE_BUCKET" = "" ]; then
     return 0
