@@ -45,7 +45,7 @@ gke/create/cluster:
 	@echo "Using the following command: "
 	gcloud container clusters create $(CLUSTER_NAME) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region=$(GCLOUD_REGION) \
+		--region=$(CLOUDSDK_COMPUTE_REGION) \
 		--node-locations=$(REGION_ZONES_WITH_GPUS) \
 		--max-nodes=$(NODE_MAX_SIZE) \
 		--min-nodes=$(NODE_MIN_SIZE) \
@@ -61,7 +61,7 @@ gke/create/cluster:
 ## Destroy GKE cluster
 gke/destroy/cluster:
 	@echo "Destroying cluster..."
-	@-gcloud container clusters --region $(GCLOUD_REGION) delete $(CLUSTER_NAME) --quiet
+	@-gcloud container clusters --region $(CLOUDSDK_COMPUTE_REGION) delete $(KOPS_CLUSTER_NAME) --quiet
 	@echo "Cluster destruction finished."
 	@echo " "
 	@echo " "
@@ -69,8 +69,8 @@ gke/destroy/cluster:
 ## Set context to use GKE cluster (e.g. with kubectl)
 gke/use/cluster:
 	@gcloud config set project $(CLOUDSDK_CORE_PROJECT)
-	@gcloud config set compute/region $(GCLOUD_REGION)
 	@gcloud container clusters get-credentials $(CLUSTER_NAME)
+	@gcloud config set compute/region $(CLOUDSDK_COMPUTE_REGION)
 
 ## List all GKE projects
 gke/list/projects:
@@ -97,7 +97,7 @@ gke/create/node-pools:
 	gcloud container node-pools create consumer-cpu \
 		--cluster $(CLUSTER_NAME) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region $(GCLOUD_REGION) \
+		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes 1 \
 		--min-nodes 1 \
 		--max-nodes ${NODE_MAX_SIZE} \
@@ -115,7 +115,7 @@ gke/create/node-pools:
 		--cluster $(CLUSTER_NAME) \
 		--accelerator type=$(PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region $(GCLOUD_REGION) \
+		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
 		--max-nodes $(GPU_NODE_MAX_SIZE) \
@@ -132,7 +132,7 @@ gke/create/node-pools:
 		--cluster $(CLUSTER_NAME) \
 		--accelerator type=$(TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region $(GCLOUD_REGION) \
+		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
 		--max-nodes $(GPU_NODE_MAX_SIZE) \
@@ -153,8 +153,8 @@ gke/create/elk-node-pools:
 		echo "Using the following command: ";\
 		gcloud container node-pools create elasticsearch-cpu \
 			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-			--region $(GCLOUD_REGION) \
 			--cluster $(CLUSTER_NAME) \
+			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 2 \
 			--min-nodes 1 \
 			--max-nodes 2 \
@@ -170,8 +170,8 @@ gke/create/elk-node-pools:
 		echo "Using the following command: ";\
 		gcloud container node-pools create logstash-cpu \
 			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-			--region $(GCLOUD_REGION) \
 			--cluster $(CLUSTER_NAME) \
+			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 3 \
 			--min-nodes 1 \
 			--max-nodes 20 \
