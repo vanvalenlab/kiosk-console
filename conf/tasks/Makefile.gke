@@ -12,7 +12,7 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
 export CLUSTER_NAME ?= deepcell
 export GKE_MACHINE_TYPE ?= n1-standard-1
-export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
+export GCP_SERVICE_ACCOUNT ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
 # Non-GPU machine type
 export CONSUMER_MACHINE_TYPE ?= n1-highmem-2
@@ -44,7 +44,7 @@ gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
 	gcloud container clusters create $(CLUSTER_NAME) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region=$(CLOUDSDK_COMPUTE_REGION) \
 		--node-locations=$(REGION_ZONES_WITH_GPUS) \
 		--max-nodes=$(NODE_MAX_SIZE) \
@@ -96,7 +96,7 @@ gke/create/node-pools:
 	@echo "Using the following command: "
 	gcloud container node-pools create consumer-cpu \
 		--cluster $(CLUSTER_NAME) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes 1 \
 		--min-nodes 1 \
@@ -113,8 +113,8 @@ gke/create/node-pools:
 	@echo "Using the following command: "
 	gcloud container node-pools create prediction-gpu \
 		--cluster $(CLUSTER_NAME) \
-		--accelerator type=$(PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
+		--accelerator type=$(GCP_PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
@@ -130,8 +130,8 @@ gke/create/node-pools:
 	@echo "Using the following command: "
 	gcloud container node-pools create training-gpu \
 		--cluster $(CLUSTER_NAME) \
-		--accelerator type=$(TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--accelerator type=$(GCP_TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
@@ -152,8 +152,8 @@ gke/create/elk-node-pools:
 		echo "Creating elasticsearch CPU node pool...";\
 		echo "Using the following command: ";\
 		gcloud container node-pools create elasticsearch-cpu \
-			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 			--cluster $(CLUSTER_NAME) \
+			--service-account=$(GCP_SERVICE_ACCOUNT) \
 			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 2 \
 			--min-nodes 1 \
@@ -169,8 +169,8 @@ gke/create/elk-node-pools:
 		echo "Creating logstash CPU node pool...";\
 		echo "Using the following command: ";\
 		gcloud container node-pools create logstash-cpu \
-			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 			--cluster $(CLUSTER_NAME) \
+			--service-account=$(GCP_SERVICE_ACCOUNT) \
 			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 3 \
 			--min-nodes 1 \
@@ -217,7 +217,7 @@ gke/create/service-account:
 	@echo "Creating GKE service account..."
 	@gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "
@@ -225,8 +225,8 @@ gke/create/service-account:
 ## Delete Service Account used by deepcell
 gke/destroy/service-account:
 	@echo "Destroying GKE service-account..."
-	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
-	@-gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --quiet
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+	@-gcloud iam service-accounts delete $(GCP_SERVICE_ACCOUNT) --quiet
 	@echo "GKE service-account destruction finished."
 	@echo " "
 	@echo " "
@@ -236,7 +236,7 @@ gke/create/bucket:
 	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
 	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) \
 		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
-	@-gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET)
+	@-gsutil acl ch -u $(GCP_SERVICE_ACCOUNT):O gs://$(CLOUDSDK_BUCKET)
 	@echo "Google Cloud Storage Bucket creation finished."
 	@echo " "
 	@echo " "
