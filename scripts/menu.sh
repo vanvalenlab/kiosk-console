@@ -267,8 +267,8 @@ function configure_gke() {
     export GKE_MACHINE_TYPE=n1-standard-1
     export NODE_MIN_SIZE=1
     export NODE_MAX_SIZE=10
-    export PREDICTION_GPU_TYPE=nvidia-tesla-t4
-    export TRAINING_GPU_TYPE=nvidia-tesla-v100
+    export GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
+    export GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
 
     export GPU_NODE_MIN_SIZE=0
     export GPU_NODE_MAX_SIZE=1
@@ -308,12 +308,12 @@ function configure_gke() {
     local base_box_height=7
     local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
     local total_lines=$(($base_box_height + $selector_box_lines))
-    export PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
+    export GCP_PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
         "Choose a GPU for prediction (not training) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
       $total_lines 60 $selector_box_lines "$gpus_with_default")
 
     local gpus_with_default=${gpus_in_region/nvidia-tesla-v100 _ OFF/nvidia-tesla-v100 _ ON}
-    export TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
+    export GCP_TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
         "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
       $total_lines 60 $selector_box_lines "$gpus_with_default")
 
@@ -341,7 +341,7 @@ function configure_gke() {
   local zones=$(gcloud compute zones list | grep "${CLOUDSDK_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
   local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
   local region_zone_array=($all_region_zones)
-  local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${PREDICTION_GPU_TYPE}" | awk '{print $2}')
+  local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${GCP_PREDICTION_GPU_TYPE}" | awk '{print $2}')
   local region_zones_gpu=()
   for i in "${region_zone_array[@]}"
   do
@@ -349,7 +349,7 @@ function configure_gke() {
           region_zones_gpu+=(${i})
       fi
   done
-  local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${TRAINING_GPU_TYPE}" | awk '{print $2}')
+  local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${GCP_TRAINING_GPU_TYPE}" | awk '{print $2}')
   local region_zones_all_gpus=()
   for i in "${region_zones_gpu[@]}"
   do
@@ -384,8 +384,8 @@ function configure_gke() {
     -e CLOUDSDK_COMPUTE_REGION \
     -e GKE_MACHINE_TYPE \
     -e REGION_ZONES_WITH_GPUS \
-    -e PREDICTION_GPU_TYPE \
-    -e TRAINING_GPU_TYPE \
+    -e GCP_PREDICTION_GPU_TYPE \
+    -e GCP_TRAINING_GPU_TYPE \
     -e GPU_PER_NODE \
     -e GPU_MACHINE_TYPE \
     -e GPU_NODE_MIN_SIZE \
