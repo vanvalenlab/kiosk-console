@@ -20,6 +20,9 @@ ENV MAKE="make -s"
 # AWS Region
 ENV AWS_REGION="us-west-2"
 
+# Google Cloud Region
+ENV GCLOUD_REGION="us-west1"
+
 # kops config
 ENV KOPS_CLUSTER_NAME="cluster.k8s.local"
 ENV KOPS_DNS_ZONE=${KOPS_CLUSTER_NAME}
@@ -33,8 +36,6 @@ ENV NODE_MACHINE_TYPE="t2.medium"
 ENV NODE_MAX_SIZE="10"
 ENV NODE_MIN_SIZE="1"
 
-# Google Cloud Region
-ENV GCLOUD_REGION="us-west1"
 
 # Deployment config
 ENV ELK_DEPLOYMENT_TOGGLE="OFF"
