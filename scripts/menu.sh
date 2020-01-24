@@ -88,6 +88,28 @@ function tailcmd() {
          --tailbox "${tmpfile}" $((LINES-5)) $((COLUMNS-3))
 }
 
+function export_gpu_constants() {
+  # create some derivative GPU-related variables for use in autoscaling
+  if [ ! -z "${GPU_NODE_MAX_SIZE}" ]; then
+    export GPU_MAX_TIMES_TWO=$(($GPU_NODE_MAX_SIZE*2))
+    export GPU_MAX_TIMES_THREE=$(($GPU_NODE_MAX_SIZE*3))
+    export GPU_MAX_TIMES_FOUR=$(($GPU_NODE_MAX_SIZE*4))
+    export GPU_MAX_TIMES_FIVE=$(($GPU_NODE_MAX_SIZE*5))
+    export GPU_MAX_TIMES_TEN=$(($GPU_NODE_MAX_SIZE*10))
+    export GPU_MAX_TIMES_TWENTY=$(($GPU_NODE_MAX_SIZE*20))
+    export GPU_MAX_TIMES_THIRTY=$(($GPU_NODE_MAX_SIZE*30))
+    export GPU_MAX_TIMES_FOURTY=$(($GPU_NODE_MAX_SIZE*40))
+    export GPU_MAX_TIMES_FIFTY=$(($GPU_NODE_MAX_SIZE*50))
+    export GPU_MAX_TIMES_SEVENTY_FIVE=$(($GPU_NODE_MAX_SIZE*75))
+    export GPU_MAX_TIMES_ONE_HUNDRED=$(($GPU_NODE_MAX_SIZE*100))
+    export GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=$(($GPU_NODE_MAX_SIZE*150))
+    export GPU_MAX_TIMES_TWO_HUNDRED=$(($GPU_NODE_MAX_SIZE*200))
+    export GPU_MAX_DIVIDED_BY_TWO=$(($GPU_NODE_MAX_SIZE/2))
+    export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))
+    export GPU_MAX_DIVIDED_BY_FOUR=$(($GPU_NODE_MAX_SIZE/4))
+  fi
+}
+
 # Show different functions in the main menu depending on whether the
 # cluster has been created yet.
 function menu() {
@@ -181,28 +203,12 @@ function configure_aws() {
     return 0
   fi
 
-  # create some derivative GPU-related variables for use in autoscaling
-  export GPU_MAX_TIMES_TWO=$(($AWS_MAX_GPU_NODES*2))
-  export GPU_MAX_TIMES_THREE=$(($AWS_MAX_GPU_NODES*3))
-  export GPU_MAX_TIMES_FOUR=$(($AWS_MAX_GPU_NODES*4))
-  export GPU_MAX_TIMES_FIVE=$(($AWS_MAX_GPU_NODES*5))
-  export GPU_MAX_TIMES_TEN=$(($AWS_MAX_GPU_NODES*10))
-  export GPU_MAX_TIMES_TWENTY=$(($AWS_MAX_GPU_NODES*20))
-  export GPU_MAX_TIMES_THIRTY=$(($AWS_MAX_GPU_NODES*30))
-  export GPU_MAX_TIMES_FOURTY=$(($AWS_MAX_GPU_NODES*40))
-  export GPU_MAX_TIMES_FIFTY=$(($AWS_MAX_GPU_NODES*50))
-  export GPU_MAX_TIMES_SEVENTY_FIVE=$(($AWS_MAX_GPU_NODES*75))
-  export GPU_MAX_TIMES_ONE_HUNDRED=$(($AWS_MAX_GPU_NODES*100))
-  export GPU_MAX_TIMES_TWO_HUNDRED=$(($AWS_MAX_GPU_NODES*200))
-  export GPU_MAX_DIVIDED_BY_TWO=$(($AWS_MAX_GPU_NODES/2))
-  export GPU_MAX_DIVIDED_BY_THREE=$(($AWS_MAX_GPU_NODES/3))
-  export GPU_MAX_DIVIDED_BY_FOUR=$(($AWS_MAX_GPU_NODES/4))
-  export GPU_NODE_MAX_SIZE=${AWS_MAX_GPU_NODES}
-
   export KOPS_CLUSTER_NAME=${NAMESPACE}.k8s.local
   export KOPS_DNS_ZONE=${NAMESPACE}.k8s.local
   export KOPS_STATE_STORE=s3://${NAMESPACE}
   export CLOUD_PROVIDER=aws
+
+  export_gpu_constants
 
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
@@ -210,24 +216,9 @@ function configure_aws() {
     -e AWS_SECRET_ACCESS_KEY \
     -e AWS_S3_BUCKET \
     -e NAMESPACE \
-    -e AWS_MIN_GPU_NODES \
-    -e AWS_MAX_GPU_NODES \
-    -e GPU_MAX_TIMES_TWO \
-    -e GPU_MAX_TIMES_THREE \
-    -e GPU_MAX_TIMES_FOUR \
-    -e GPU_MAX_TIMES_FIVE \
-    -e GPU_MAX_TIMES_TEN \
-    -e GPU_MAX_TIMES_TWENTY \
-    -e GPU_MAX_TIMES_THIRTY \
-    -e GPU_MAX_TIMES_FOURTY \
-    -e GPU_MAX_TIMES_FIFTY \
-    -e GPU_MAX_TIMES_SEVENTY_FIVE \
-    -e GPU_MAX_TIMES_ONE_HUNDRED \
-    -e GPU_MAX_TIMES_TWO_HUNDRED \
-    -e GPU_MAX_DIVIDED_BY_TWO \
-    -e GPU_MAX_DIVIDED_BY_THREE \
-    -e GPU_MAX_DIVIDED_BY_FOUR \
-    -E GPU_NODE_MAX_SIZE > ${CACHE_PATH}/env.aws
+    -e GPU_NODE_MIN_SIZE \
+    -e GPU_NODE_MAX_SIZE \
+    -e GPU_MAX > ${CACHE_PATH}/env.aws
 }
 
 function configure_gke() {
@@ -381,23 +372,7 @@ function configure_gke() {
 
   export CLOUD_PROVIDER=gke
 
-  # create some derivative GPU-related variables for use in autoscaling
-  export GPU_MAX_TIMES_TWO=$(($GPU_NODE_MAX_SIZE*2))
-  export GPU_MAX_TIMES_THREE=$(($GPU_NODE_MAX_SIZE*3))
-  export GPU_MAX_TIMES_FOUR=$(($GPU_NODE_MAX_SIZE*4))
-  export GPU_MAX_TIMES_FIVE=$(($GPU_NODE_MAX_SIZE*5))
-  export GPU_MAX_TIMES_TEN=$(($GPU_NODE_MAX_SIZE*10))
-  export GPU_MAX_TIMES_TWENTY=$(($GPU_NODE_MAX_SIZE*20))
-  export GPU_MAX_TIMES_THIRTY=$(($GPU_NODE_MAX_SIZE*30))
-  export GPU_MAX_TIMES_FOURTY=$(($GPU_NODE_MAX_SIZE*40))
-  export GPU_MAX_TIMES_FIFTY=$(($GPU_NODE_MAX_SIZE*50))
-  export GPU_MAX_TIMES_SEVENTY_FIVE=$(($GPU_NODE_MAX_SIZE*75))
-  export GPU_MAX_TIMES_ONE_HUNDRED=$(($GPU_NODE_MAX_SIZE*100))
-  export GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=$(($GPU_NODE_MAX_SIZE*150))
-  export GPU_MAX_TIMES_TWO_HUNDRED=$(($GPU_NODE_MAX_SIZE*200))
-  export GPU_MAX_DIVIDED_BY_TWO=$(($GPU_NODE_MAX_SIZE/2))
-  export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))
-  export GPU_MAX_DIVIDED_BY_FOUR=$(($GPU_NODE_MAX_SIZE/4))
+  export_gpu_constants
 
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
@@ -408,27 +383,14 @@ function configure_gke() {
     -e NODE_MAX_SIZE \
     -e GCLOUD_REGION \
     -e GKE_MACHINE_TYPE \
+    -e REGION_ZONES_WITH_GPUS \
     -e PREDICTION_GPU_TYPE \
     -e TRAINING_GPU_TYPE \
     -e GPU_PER_NODE \
     -e GPU_MACHINE_TYPE \
     -e GPU_NODE_MIN_SIZE \
     -e GPU_NODE_MAX_SIZE \
-    -e GPU_MAX_TIMES_TWO \
-    -e GPU_MAX_TIMES_THREE \
-    -e GPU_MAX_TIMES_FOUR \
-    -e GPU_MAX_TIMES_FIVE \
-    -e GPU_MAX_TIMES_TEN \
-    -e GPU_MAX_TIMES_TWENTY \
-    -e GPU_MAX_TIMES_THIRTY \
-    -e GPU_MAX_TIMES_FOURTY \
-    -e GPU_MAX_TIMES_FIFTY \
-    -e GPU_MAX_TIMES_SEVENTY_FIVE \
-    -e GPU_MAX_TIMES_ONE_HUNDRED \
-    -e GPU_MAX_TIMES_TWO_HUNDRED \
-    -e GPU_MAX_DIVIDED_BY_TWO \
-    -e GPU_MAX_DIVIDED_BY_THREE \
-    -e GPU_MAX_DIVIDED_BY_FOUR > ${CACHE_PATH}/env.gke
+    -e GPU_MAX > ${CACHE_PATH}/env.gke
 }
 
 function shell() {
