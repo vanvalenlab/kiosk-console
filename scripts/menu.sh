@@ -477,12 +477,12 @@ function main() {
   # after startup fails before user input is possible.
   dialog --sleep 1 --msgbox "Loading..." 12 60
   #infobox "Loading..."
-  msgbox "Welcome!" \
-   "Welcome to the Deepcell Kiosk!
 
-This Kiosk was developed by the Van Valen Lab at the California Institute of Technology.
-
-https://vanvalenlab.caltech.edu"
+  local welcome_text=("Welcome to the Deepcell Kiosk!"
+                      "\n\nThis Kiosk was developed by the Van Valen Lab at"
+                      "the California Institute of Technology."
+                      "\n\nhttps://vanvalenlab.caltech.edu")
+  msgbox "Welcome!" "${welcome_text[*]}"
 
   while true; do
     ACTION=$(menu)
