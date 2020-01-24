@@ -103,8 +103,7 @@ function menu() {
     value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 15 50 5 \
-                  "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
-                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
+                  "Setup"   "Configure Google ${cloud_providers[gke]}" \
                   "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
                   "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
@@ -114,8 +113,7 @@ function menu() {
     value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 17 50 6 \
-                  "AWS"     "Configure Amazon ${cloud_providers[aws]}" \
-                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
+                  "Setup"   "Configure Google ${cloud_providers[gke]}" \
                   "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
                   "View"    "View Cluster Address" \
                   "Shell"   "Drop to the shell" \
@@ -494,8 +492,8 @@ https://vanvalenlab.caltech.edu"
 
     case $ACTION in
       "Shell") shell ;;
-      "AWS") configure_aws ;;
-      "GKE") configure_gke ;;
+      # "AWS") configure_aws ;;
+      "Setup") configure_gke ;;
       "Create") create ;;
       "Destroy"*)
         confirm
