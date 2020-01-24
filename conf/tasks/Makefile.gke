@@ -12,20 +12,13 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
 export CLUSTER_NAME ?= deepcell
 export GKE_MACHINE_TYPE ?= n1-standard-1
-export NODE_MIN_SIZE ?= 1
-export NODE_MAX_SIZE ?= 10
 export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
 # Non-GPU machine type
 export CONSUMER_MACHINE_TYPE ?= n1-highmem-2
 
 # Not all GPU types are available in all regions/availability zones
-export PREDICTION_GPU_TYPE ?= nvidia-tesla-t4
-export TRAINING_GPU_TYPE ?= nvidia-tesla-v100
 export GPU_MACHINE_TYPE ?= n1-highmem-2
-export GPU_NODE_MIN_SIZE ?= 0
-export GPU_NODE_MAX_SIZE ?= 4
-export GPU_PER_NODE ?= 1
 
 # Project name must be globally unique
 export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
