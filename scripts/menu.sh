@@ -172,12 +172,12 @@ function configure_aws() {
   export AWS_GPU_MACHINE_TYPE=$(radiobox "Amazon Web Services" \
     "Choose your GPU Instance Type:" 15 60 7 "$gpu_types")
 
-  export AWS_MIN_GPU_NODES=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "${AWS_MIN_GPU_NODES:-0}")
-  if [ "$AWS_MIN_GPU_NODES" = "" ]; then
+  export GPU_NODE_MIN_SIZE=$(inputbox "Amazon Web Services" "Minimum Number of GPU Instances" "${GPU_NODE_MIN_SIZE:-0}")
+  if [ "$GPU_NODE_MIN_SIZE" = "" ]; then
     return 0
   fi
-  export AWS_MAX_GPU_NODES=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "${AWS_MAX_GPU_NODES:-4}")
-  if [ "$AWS_MAX_GPU_NODES" = "" ]; then
+  export GPU_NODE_MAX_SIZE=$(inputbox "Amazon Web Services" "Maximum Number of GPU Instances" "${GPU_NODE_MAX_SIZE:-4}")
+  if [ "$GPU_NODE_MAX_SIZE" = "" ]; then
     return 0
   fi
 
