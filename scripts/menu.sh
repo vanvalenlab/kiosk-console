@@ -122,20 +122,20 @@ function menu() {
   declare -A cloud_providers
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
   if [ -z "${CLUSTER_ADDRESS}" ]; then
-    value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
+    value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 15 50 5 \
-                  "Setup"   "Configure Google ${cloud_providers[gke]}" \
+                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
                   "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
                   "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
             )
   else
-    value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
+    value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 17 50 6 \
-                  "Setup"   "Configure Google ${cloud_providers[gke]}" \
+                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
                   "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
                   "View"    "View Cluster Address" \
                   "Shell"   "Drop to the shell" \
@@ -465,7 +465,7 @@ function main() {
     case $ACTION in
       "Shell") shell ;;
       # "AWS") configure_aws ;;
-      "Setup") configure_gke ;;
+      "GKE") configure_gke ;;
       "Create") create ;;
       "Destroy"*)
         confirm
