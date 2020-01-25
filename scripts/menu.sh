@@ -355,7 +355,7 @@ function configure_gke() {
   local region_zones_all_gpus=()
   for i in "${region_zones_gpu[@]}"
   do
-    if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+    if [[ $zones_with_training_gpus == *${i}* ]]; then
       region_zones_all_gpus+=(${i})
     fi
   done
