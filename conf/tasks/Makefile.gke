@@ -70,6 +70,7 @@ gke/list/accelerator-types:
 gke/list/billing-accounts:
 	@gcloud alpha billing accounts list
 
+## Node pool creation
 gke/create/consumer-node-pool:
 	@echo "Creating consumer CPU node pool..."
 	@echo "Using the following command: "
@@ -131,8 +132,8 @@ gke/create/training-node-pool:
 #		--enable-autoupgrade
 gke/create/node-pools:
 	gke/create/consumer-node-pool \
-	gke/create/prediction-node-pool \
-	gke/create/training-node-pool
+	gke/create/prediction-node-pool
+	# gke/create/training-node-pool
 	@echo "All node pools created."
 	@echo " "
 	@echo " "

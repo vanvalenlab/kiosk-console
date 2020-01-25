@@ -312,14 +312,14 @@ function configure_gke() {
     local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
     local total_lines=$(($base_box_height + $selector_box_lines))
     export GCP_PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
-        "Choose a GPU for prediction (not training) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
+        "Choose a GPU for prediction from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
       $total_lines 60 $selector_box_lines "$gpus_with_default")
 
-    local default_gpu=${GCP_TRAINING_GPU_TYPE}
-    local gpus_with_default=${gpus_in_region/$default_gpu _ OFF/$default_gpu _ ON}
-    export GCP_TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
-        "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-      $total_lines 60 $selector_box_lines "$gpus_with_default")
+    # local default_gpu=${GCP_TRAINING_GPU_TYPE}
+    # local gpus_with_default=${gpus_in_region/$default_gpu _ OFF/$default_gpu _ ON}
+    # export GCP_TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
+    #     "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
+    #   $total_lines 60 $selector_box_lines "$gpus_with_default")
 
     ## Maybe include these in an advanced menu?
     # export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
@@ -354,16 +354,16 @@ function configure_gke() {
                                --filter "name = ${GCP_PREDICTION_GPU_TYPE}" \
                                | grep -E "${zone_filter}" |  awk '{print $2}')
 
-  local training_gpu_zones=$(gcloud compute accelerator-types list --verbosity "error" \
-                             --filter "name = ${GCP_TRAINING_GPU_TYPE}" \
-                             | grep -E "${zone_filter}" |  awk '{print $2}')
+  # local training_gpu_zones=$(gcloud compute accelerator-types list --verbosity "error" \
+  #                            --filter "name = ${GCP_TRAINING_GPU_TYPE}" \
+  #                            | grep -E "${zone_filter}" |  awk '{print $2}')
 
   # For each zone, check if it is available for each node pool, it is valid.
   local valid_zones=()
   for i in $available_zones
   do
-    if [[ $prediction_gpu_zones =~ (^|[[:space:]])$i($|[[:space:]]) ]] && \
-       [[ $training_gpu_zones =~ (^|[[:space:]])$i($|[[:space:]]) ]]; then
+    if [[ $prediction_gpu_zones =~ (^|[[:space:]])$i($|[[:space:]]) ]]; then # && \
+       # [[ $training_gpu_zones =~ (^|[[:space:]])$i($|[[:space:]]) ]]; then
       valid_zones+=(${i})
     fi
   done

@@ -52,7 +52,7 @@ releases:
       env:
         DEBUG: "true"
         INTERVAL: "5"
-        QUEUES: "predict,train,track"
+        QUEUES: "predict,track"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
         AUTOSCALING: >
