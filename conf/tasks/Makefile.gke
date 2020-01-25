@@ -8,15 +8,6 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 #
 # Increase quotas: https://console.cloud.google.com/iam-admin/quotas
 
-export GKE_MACHINE_TYPE ?= n1-standard-1
-export GCP_SERVICE_ACCOUNT ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
-
-# Non-GPU machine type
-export CONSUMER_MACHINE_TYPE ?= n1-highmem-2
-
-# Not all GPU types are available in all regions/availability zones
-export GPU_MACHINE_TYPE ?= n1-highmem-2
-
 ## Login to Google Cloud
 gke/login:
 	@gcloud-login.sh

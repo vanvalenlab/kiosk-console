@@ -373,23 +373,31 @@ function configure_gke() {
   dialog --msgbox "${success_text[*]}" 12 60
 
   export CLOUD_PROVIDER=gke
+  export GCP_SERVICE_ACCOUNT=${CLOUDSDK_CONTAINER_CLUSTER}@${CLOUDSDK_CORE_PROJECT}.iam.gserviceaccount.com
+
+  # These 2 values are hard-coded for now, menu is commented out above.
+  export GPU_MACHINE_TYPE=n1-highmem-2
+  export GPU_PER_NODE=1
+
+  # The type of node for the consumer node pools
+  export CONSUMER_MACHINE_TYPE=n1-highmem-2
 
   export_gpu_constants
 
   make create_cache_path
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT \
-    -e CLUSTER_NAME \
     -e CLOUDSDK \
+    -e GCP_SERVICE_ACCOUNT \
     -e NODE_MIN_SIZE \
     -e NODE_MAX_SIZE \
-    -e CLOUDSDK_COMPUTE_REGION \
     -e GKE_MACHINE_TYPE \
+    -e CONSUMER_MACHINE_TYPE \
+    -e GPU_MACHINE_TYPE \
     -e REGION_ZONES_WITH_GPUS \
     -e GCP_PREDICTION_GPU_TYPE \
     -e GCP_TRAINING_GPU_TYPE \
     -e GPU_PER_NODE \
-    -e GPU_MACHINE_TYPE \
     -e GPU_NODE_MIN_SIZE \
     -e GPU_NODE_MAX_SIZE \
     -e GPU_MAX > ${CACHE_PATH}/env.gke
