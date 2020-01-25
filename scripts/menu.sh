@@ -258,7 +258,10 @@ function configure_gke() {
               --output-fd 1 \
             )
 
-  if [ "$setup_opt_value" = "Default" ]; then
+  if [ -z "$setup_opt_value" ]; then
+    return 0
+
+  elif [ "$setup_opt_value" = "Default" ]; then
     # Default
     infobox "Loading default values..." 7 60
     export GKE_MACHINE_TYPE=n1-standard-1
