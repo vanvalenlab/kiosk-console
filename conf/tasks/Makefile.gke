@@ -10,7 +10,6 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 #
 # Increase quotas: https://console.cloud.google.com/iam-admin/quotas
 
-export CLUSTER_NAME ?= deepcell
 export GKE_MACHINE_TYPE ?= n1-standard-1
 export GCP_SERVICE_ACCOUNT ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
 
@@ -19,12 +18,6 @@ export CONSUMER_MACHINE_TYPE ?= n1-highmem-2
 
 # Not all GPU types are available in all regions/availability zones
 export GPU_MACHINE_TYPE ?= n1-highmem-2
-
-# Project name must be globally unique
-export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
-
-# Cluster name ust be unique within the project
-export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
 
 ## Login to Google Cloud
 gke/login:
@@ -43,7 +36,7 @@ gke/destroy/project:
 gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
-	gcloud container clusters create $(CLUSTER_NAME) \
+	gcloud container clusters create $(CLOUDSDK_CONTAINER_CLUSTER) \
 		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region=$(CLOUDSDK_COMPUTE_REGION) \
 		--node-locations=$(REGION_ZONES_WITH_GPUS) \
@@ -69,7 +62,7 @@ gke/destroy/cluster:
 ## Set context to use GKE cluster (e.g. with kubectl)
 gke/use/cluster:
 	@gcloud config set project $(CLOUDSDK_CORE_PROJECT)
-	@gcloud container clusters get-credentials $(CLUSTER_NAME)
+	@gcloud container clusters get-credentials $(CLOUDSDK_CONTAINER_CLUSTER)
 	@gcloud config set compute/region $(CLOUDSDK_COMPUTE_REGION)
 
 ## List all GKE projects
@@ -95,7 +88,7 @@ gke/create/node-pools:
 	@echo "Creating consumer CPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create consumer-cpu \
-		--cluster $(CLUSTER_NAME) \
+		--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
 		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes 1 \
@@ -112,7 +105,7 @@ gke/create/node-pools:
 	@echo "Creating prediction GPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create prediction-gpu \
-		--cluster $(CLUSTER_NAME) \
+		--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
 		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--accelerator type=$(GCP_PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
@@ -129,7 +122,7 @@ gke/create/node-pools:
 	@echo "Creating training GPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create training-gpu \
-		--cluster $(CLUSTER_NAME) \
+		--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
 		--accelerator type=$(GCP_TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
@@ -152,7 +145,7 @@ gke/create/elk-node-pools:
 		echo "Creating elasticsearch CPU node pool...";\
 		echo "Using the following command: ";\
 		gcloud container node-pools create elasticsearch-cpu \
-			--cluster $(CLUSTER_NAME) \
+			--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
 			--service-account=$(GCP_SERVICE_ACCOUNT) \
 			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 2 \
@@ -169,7 +162,7 @@ gke/create/elk-node-pools:
 		echo "Creating logstash CPU node pool...";\
 		echo "Using the following command: ";\
 		gcloud container node-pools create logstash-cpu \
-			--cluster $(CLUSTER_NAME) \
+			--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
 			--service-account=$(GCP_SERVICE_ACCOUNT) \
 			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 3 \
@@ -215,7 +208,7 @@ gke/destroy/pds:
 ## Create Service Account used by deepcell
 gke/create/service-account:
 	@echo "Creating GKE service account..."
-	@gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" || \
+	@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
 	@echo "GKE service account creation complete."

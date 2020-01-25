@@ -223,29 +223,29 @@ function configure_aws() {
 
 function configure_gke() {
 
-  local NEW_PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${PROJECT:-invalid_default}")
+  local NEW_PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${CLOUDSDK_CORE_PROJECT:-undefined}")
   if [ -z $NEW_PROJECT ]; then
     return 0
   fi
-  export PROJECT="${NEW_PROJECT}"
+  export CLOUDSDK_CORE_PROJECT="${NEW_PROJECT}"
 
   make gke/login
-  gcloud config set project ${PROJECT} --quiet
+  gcloud config set project ${CLOUDSDK_CORE_PROJECT} --quiet
 
-  if [ -z ${CLUSTER_NAME} ]; then
-    export CLUSTER_NAME="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
+  if [ -z ${CLOUDSDK_CONTAINER_CLUSTER} ]; then
+    export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
   fi
 
-  export CLUSTER_NAME=$(inputbox "Deepcell" "Cluster Name" "${CLUSTER_NAME:-deepcell-cluster}")
-  export CLUSTER_NAME=$(echo ${CLUSTER_NAME} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
-  if [ "$CLUSTER_NAME" = "" ]; then
+  export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
+  export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
+  if [ "$CLOUDSDK_CONTAINER_CLUSTER" = "" ]; then
     return 0
   fi
   local bucket_text=("Bucket Name"
                      "\n\nThe bucket should be a unique existing bucket on google cloud."
                      "It acts as a storage area for models, data, and more."
                      "Please do not use underscores (_) in your bucket name.")
-  export CLOUDSDK_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${CLOUDSDK_BUCKET:-$CLUSTER_NAME}" 13 60)
+  export CLOUDSDK_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${CLOUDSDK_BUCKET:-$CLOUDSDK_CONTAINER_CLUSTER}" 13 60)
 
   if [ "$CLOUDSDK_BUCKET" = "" ]; then
     return 0
@@ -378,7 +378,7 @@ function configure_gke() {
   printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
   printenv | grep -e PROJECT \
     -e CLUSTER_NAME \
-    -e CLOUDSDK_BUCKET \
+    -e CLOUDSDK \
     -e NODE_MIN_SIZE \
     -e NODE_MAX_SIZE \
     -e CLOUDSDK_COMPUTE_REGION \
