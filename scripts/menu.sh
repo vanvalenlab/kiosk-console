@@ -276,7 +276,8 @@ function configure_gke() {
     # Advanced
     infobox "Loading..."
     local regions=$(gcloud compute regions list | grep "-" | awk '{print $1 " _ OFF"}')
-    local regions_with_default=${regions/us-west1 _ OFF/us-west1 _ ON}
+    local default_region=${CLOUDSDK_COMPUTE_REGION:-us-west1}
+    local regions_with_default=${regions/$default_region _ OFF/$default_region _ ON}
     local base_box_height=7
     local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
     local total_lines=$(($base_box_height + $selector_box_lines))
