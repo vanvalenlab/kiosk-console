@@ -223,11 +223,11 @@ function configure_aws() {
 
 function configure_gke() {
 
-  local NEW_PROJECT=$(inputbox "Google Cloud" "Existing Project ID" "${CLOUDSDK_CORE_PROJECT:-undefined}")
-  if [ -z $NEW_PROJECT ]; then
+  local new_project=$(inputbox "Google Cloud" "Existing Project ID" "${CLOUDSDK_CORE_PROJECT:-undefined}")
+  if [ -z $new_project ]; then
     return 0
   fi
-  export CLOUDSDK_CORE_PROJECT="${NEW_PROJECT}"
+  export CLOUDSDK_CORE_PROJECT="${new_project}"
 
   make gke/login
 
