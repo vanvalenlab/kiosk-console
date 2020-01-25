@@ -70,10 +70,7 @@ gke/list/accelerator-types:
 gke/list/billing-accounts:
 	@gcloud alpha billing accounts list
 
-# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
-## Create GKE GPU node pool
-#		--enable-autoupgrade
-gke/create/node-pools:
+gke/create/consumer-node-pool:
 	@echo "Creating consumer CPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create consumer-cpu \
@@ -91,6 +88,8 @@ gke/create/node-pools:
 		--node-labels consumer=yes \
 		--node-taints consumer=yes:NoSchedule \
 		|| echo "Consumer CPU node pool creation failed."
+
+gke/create/prediction-node-pool:
 	@echo "Creating prediction GPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create prediction-gpu \
@@ -108,6 +107,8 @@ gke/create/node-pools:
 		--preemptible \
 		--node-taints prediction_gpu=yes:NoSchedule \
 		|| echo "Prediction GPU node pool creation failed."
+
+gke/create/training-node-pool:
 	@echo "Creating training GPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create training-gpu \
@@ -124,7 +125,15 @@ gke/create/node-pools:
 		--no-enable-autoupgrade \
 		--node-taints training_gpu=yes:NoSchedule \
 		|| echo "Training GPU node pool creation failed."
-	@echo "GPU node pool creation finished."
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
+## Create GKE GPU node pool
+#		--enable-autoupgrade
+gke/create/node-pools:
+	gke/create/consumer-node-pool \
+	gke/create/prediction-node-pool \
+	gke/create/training-node-pool
+	@echo "All node pools created."
 	@echo " "
 	@echo " "
 
