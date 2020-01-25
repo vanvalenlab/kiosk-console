@@ -250,7 +250,7 @@ function configure_gke() {
     return 0
   fi
 
-  local setup_opt_value=$(dialog --clear  --help-button --backtitle "${BRAND}" \
+  local setup_opt_value=$(dialog --clear --backtitle "${BRAND}" \
               --title "  Configuration Options  " \
               --menu "${header_text[*]}" 10 70 3 \
                   "Default"     "Use default options to setup cluster" \
