@@ -340,23 +340,29 @@ function configure_gke() {
 
   fi
 
-  local zones=$(gcloud compute zones list | grep "${CLOUDSDK_COMPUTE_REGION}" | grep "UP" | awk '{print $1 " _ OFF"}')
-  local all_region_zones=$(echo $zones | grep -o '\b\w\+-\w\+-\w\+\b')
-  local region_zone_array=($all_region_zones)
-  local zones_with_prediction_gpus=$(gcloud compute accelerator-types list | grep "${GCP_PREDICTION_GPU_TYPE}" | awk '{print $2}')
-  local region_zones_gpu=()
-  for i in "${region_zone_array[@]}"
+  # Find at least 2 zones to deploy the cluster.
+  # If GPUs are not available in at least 2 zones, the user must restart.
+  local available_zones=$(gcloud compute zones list | grep "UP" \
+                          | grep "${CLOUDSDK_COMPUTE_REGION}" | awk '{print $1}')
+  local region_zone_array=($available_zones)
+  local zone_filter=$(IFS="|" ; echo "${region_zone_array[*]}")
+
+  # locate the zones for all GPU node pools
+  local prediction_gpu_zones=$(gcloud compute accelerator-types list --verbosity "error" \
+                               --filter "name = ${GCP_PREDICTION_GPU_TYPE}" \
+                               | grep -E "${zone_filter}" |  awk '{print $2}')
+
+  local training_gpu_zones=$(gcloud compute accelerator-types list --verbosity "error" \
+                             --filter "name = ${GCP_TRAINING_GPU_TYPE}" \
+                             | grep -E "${zone_filter}" |  awk '{print $2}')
+
+  # For each zone, check if it is available for each node pool, it is valid.
+  local valid_zones=()
+  for i in $available_zones
   do
-    if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-      region_zones_gpu+=(${i})
-    fi
-  done
-  local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${GCP_TRAINING_GPU_TYPE}" | awk '{print $2}')
-  local region_zones_all_gpus=()
-  for i in "${region_zones_gpu[@]}"
-  do
-    if [[ $zones_with_training_gpus == *${i}* ]]; then
-      region_zones_all_gpus+=(${i})
+    if [[ $prediction_gpu_zones =~ (^|[[:space:]])$i($|[[:space:]]) ]] && \
+       [[ $training_gpu_zones =~ (^|[[:space:]])$i($|[[:space:]]) ]]; then
+      valid_zones+=(${i})
     fi
   done
   export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
