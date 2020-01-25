@@ -376,11 +376,11 @@ function configure_gke() {
   export GCP_SERVICE_ACCOUNT=${CLOUDSDK_CONTAINER_CLUSTER}@${CLOUDSDK_CORE_PROJECT}.iam.gserviceaccount.com
 
   # These 2 values are hard-coded for now, menu is commented out above.
-  export GPU_MACHINE_TYPE=n1-highmem-2
-  export GPU_PER_NODE=1
+  export GPU_MACHINE_TYPE=${GPU_MACHINE_TYPE:-n1-highmem-2}
+  export GPU_PER_NODE=${GPU_PER_NODE:-1}
 
   # The type of node for the consumer node pools
-  export CONSUMER_MACHINE_TYPE=n1-highmem-2
+  export CONSUMER_MACHINE_TYPE=${CONSUMER_MACHINE_TYPE:-n1-highmem-2}
 
   export_gpu_constants
 
