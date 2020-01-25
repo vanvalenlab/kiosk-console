@@ -260,15 +260,12 @@ function configure_gke() {
 
   if [ "$setup_opt_value" = "Default" ]; then
     # Default
-
     infobox "Loading default values..." 7 60
-
     export GKE_MACHINE_TYPE=n1-standard-1
     export NODE_MIN_SIZE=1
     export NODE_MAX_SIZE=10
     export GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
     export GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
-
     export GPU_NODE_MIN_SIZE=0
     export GPU_NODE_MAX_SIZE=1
 
@@ -344,17 +341,17 @@ function configure_gke() {
   local region_zones_gpu=()
   for i in "${region_zone_array[@]}"
   do
-      if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-          region_zones_gpu+=(${i})
-      fi
+    if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+      region_zones_gpu+=(${i})
+    fi
   done
   local zones_with_training_gpus=$(gcloud compute accelerator-types list | grep "${GCP_TRAINING_GPU_TYPE}" | awk '{print $2}')
   local region_zones_all_gpus=()
   for i in "${region_zones_gpu[@]}"
   do
-      if [[ $zones_with_prediction_gpus == *${i}* ]]; then
-          region_zones_all_gpus+=(${i})
-      fi
+    if [[ $zones_with_prediction_gpus == *${i}* ]]; then
+      region_zones_all_gpus+=(${i})
+    fi
   done
   export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
 
