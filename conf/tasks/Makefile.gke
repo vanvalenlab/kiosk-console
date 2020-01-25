@@ -1,7 +1,5 @@
 # FIXME: GPU AZs and GKE AZ might not be same
 
-export KUBERNETES_VERSION=latest
-
 export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
 # https://cloud.google.com/kubernetes-engine/docs/quickstart
