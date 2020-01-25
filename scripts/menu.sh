@@ -365,14 +365,17 @@ function configure_gke() {
       valid_zones+=(${i})
     fi
   done
-  export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${region_zones_all_gpus[*]}"; IFS=$' \t\n')
 
-  local message=("The following are zones in your region with the specified GPU type(s):"
-                 "\n\n    $REGION_ZONES_WITH_GPUS"
-                 "\n\nIf you see either 0 or 1 zones listed above,"
-                 "please reconfigure the cluster before deploying."
-                 "Different choices of GPU(s) and/or region will be necessary.")
-  msgbox "Caution!" "${message[*]}"
+  export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
+
+  if [ ${#valid_zones[@]} -lt 2 ]; then
+    local message=("The following are zones in your region with the specified GPU type(s):"
+                   "\n\n    $REGION_ZONES_WITH_GPUS"
+                   "\n\nKubernetes needs at least 2 available zones."
+                   "Please re-configure with a different region/GPU type combination.")
+    msgbox "Error!" "${message[*]}"
+    return 0
+  fi
 
   local success_text=("Configuration Complete!"
                       "\n\nThe cluster is now available for creation.")
