@@ -35,6 +35,7 @@ kubectl/display/ip:
 
 ## Tear down prometheus-operator and it's CRDs
 kubectl/destroy/prometheus/operator:
+	@echo "Deleting prometheus-operator..."
 	@helm delete prometheus-operator --purge
 	@kubectl delete crd prometheuses.monitoring.coreos.com
 	@kubectl delete crd prometheusrules.monitoring.coreos.com
