@@ -229,6 +229,7 @@ function configure_gke() {
   fi
   export CLOUDSDK_CORE_PROJECT="${new_project}"
 
+  # TODO: check if authenticated already.
   make gke/login
 
   if [ -z ${CLOUDSDK_CONTAINER_CLUSTER} ]; then
@@ -264,6 +265,7 @@ function configure_gke() {
   elif [ "$setup_opt_value" = "Default" ]; then
     # Default
     infobox "Loading default values..." 7 60
+    export CLOUDSDK_COMPUTE_REGION=us-west1
     export GKE_MACHINE_TYPE=n1-standard-1
     export NODE_MIN_SIZE=1
     export NODE_MAX_SIZE=10
