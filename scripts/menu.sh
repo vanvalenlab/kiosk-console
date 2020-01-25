@@ -230,7 +230,6 @@ function configure_gke() {
   export CLOUDSDK_CORE_PROJECT="${NEW_PROJECT}"
 
   make gke/login
-  gcloud config set project ${CLOUDSDK_CORE_PROJECT} --quiet
 
   if [ -z ${CLOUDSDK_CONTAINER_CLUSTER} ]; then
     export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
