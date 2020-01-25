@@ -43,7 +43,7 @@ gke/create/cluster:
 ## Destroy GKE cluster
 gke/destroy/cluster:
 	@echo "Destroying cluster..."
-	@-gcloud container clusters --region $(CLOUDSDK_COMPUTE_REGION) delete $(KOPS_CLUSTER_NAME) --quiet
+	@-gcloud container clusters --region $(CLOUDSDK_COMPUTE_REGION) delete $(CLOUDSDK_CONTAINER_CLUSTER) --quiet
 	@echo "Cluster destruction finished."
 	@echo " "
 	@echo " "
