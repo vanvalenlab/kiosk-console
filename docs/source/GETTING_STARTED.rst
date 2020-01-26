@@ -26,7 +26,22 @@ Google Cloud Setup
 
 .. note:: Google offers a number of GPU types. The DeepCell Kiosk uses `nvidia-tesla-t4` GPUs for inference by default.
 
-5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_. This will be used to store data and models. Record the bucket name (you will need this in step 9). Please do not use underscores (`_`) in your bucket name.
+5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_. This will be used to store data and models. Record the bucket name (you will need this in step 9). Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
+
+.. code-block:: bash
+
+    gs://[BUCKET-NAME]
+    |-- models
+        |-- Exported model 1 folder
+        |-- Exported model 2 folder
+    |-- uploads
+    |-- output
+
+| ``/models`` can be changed by modifying the ``MODEL_PREFIX`` environmental variable in the ``tf-serving`` helmfile. Similarly, ``/uploads`` can be configured by modifying ``UPLOAD_PREFIX`` in the ``frontend`` helmfile. The contents of ``/uploads`` and ``/output`` are managed by the |kiosk-bucket-monitor| according to rules described in :ref:`Software Infrastructure <SOFTWARE_INFRASTRUCTURE:kiosk-bucket-monitor>`
+
+.. |kiosk-bucket-monitor| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk-bucket-monitor">kiosk-bucket-monitor</a></tt>
 
 .. warning:: The DeepCell Kiosk is optimized for cost-effectiveness. However, please ensure that your bucket and Kubernetes cluster are in the same region. See `here <https://cloud.google.com/storage/pricing>`_ for details but, simply put, you pay significantly more if your Kubernetes cluster and bucket are not in the same region.
 
