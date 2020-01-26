@@ -60,11 +60,32 @@ function radiobox() {
   echo $value
 }
 
+function radiobox_from_array() {
+  local title=$1
+  local default_value=$2
+  local message=$3
+  local arr=$4
+
+  local base_box_height=7
+  local selector_box_lines=$(echo "${arr}" | tr -cd '\n' | wc -c)
+  local selector_box_lines=$(($selector_box_lines+1))
+  local total_lines=$(($base_box_height + $selector_box_lines))
+
+  local formatted_arr=$(echo "${arr}" | awk '{print $1 " _ OFF"}')
+  local arr_with_default=${formatted_arr/$default_value _ OFF/$default_value _ ON}
+
+  local fullmessage="${message}\nPress the spacebar to select and Enter to continue."
+
+  local selected_value=$(radiobox "${title}" "${fullmessage}" $total_lines \
+                         60 $selector_box_lines "${arr_with_default}")
+  echo $selected_value
+}
+
 function infobox() {
   local message="$1"
   local h=${2:-3}
   local w=${3:-20}
-  dialog --infobox "$message" $h $w
+  dialog --backtitle "$BRAND" --infobox "$message" $h $w
 }
 
 function tailcmd() {
@@ -222,18 +243,11 @@ function configure_aws() {
 }
 
 function configure_gke() {
-
-  local new_project=$(inputbox "Google Cloud" "Existing Project ID" "${CLOUDSDK_CORE_PROJECT:-undefined}")
-  if [ $new_project = "" ]; then
-    return 0
-  fi
-  export CLOUDSDK_CORE_PROJECT="${new_project}"
-
-  # authenticate with gcloud
-  local current_account=$(gcloud config list --format 'value(core.account)')
   # if logged in, confirm the user wants to continue with this account
+  local current_account=$(gcloud config list --format 'value(core.account)')
   if [ ! "${current_account}" = "" ]; then
-    dialog --yesno "Do you want to continue as: \n\n    ${current_account}" 10 60
+    dialog --backtitle "${BRAND}" \
+           --yesno "Do you want to continue as: \n\n    ${current_account}" 10 60
     response=$?
     # No 0 case, as it just continues to the next screen.
     case $response in
@@ -241,30 +255,46 @@ function configure_gke() {
       255) return 0;;
     esac
   fi
-
+  # authenticate with gcloud if necessary
   if [ "${current_account}" = "" ]; then
     make gke/login
   fi
 
+  # select a project with GPUs available
+  infobox "Loading..."
+  local projects=$(gcloud projects list | grep -v NAME | awk '{print $1}')
+  local default_project=$(echo ${projects} | awk '{print $1}')
+  local default_project=${CLOUDSDK_CORE_PROJECT:-$default_project}
+  local message="Select a project with GPU quotas enabled:"
+  export CLOUDSDK_CORE_PROJECT=$(radiobox_from_array "Google Cloud" \
+                                 $default_project "${message}" "${projects}")
+  if [ "$CLOUDSDK_CORE_PROJECT" = "" ]; then
+    return 0
+  else
+    echo "$CLOUDSDK_CORE_PROJECT"
+  fi
+
+  # Get the cluster name from the user or the environment
   if [ -z ${CLOUDSDK_CONTAINER_CLUSTER} ]; then
     export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
   fi
-
   export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
   export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   if [ "$CLOUDSDK_CONTAINER_CLUSTER" = "" ]; then
     return 0
   fi
+
+  # Get the bucket name from the user or the environment
   local bucket_text=("Bucket Name"
                      "\n\nThe bucket should be a unique existing bucket on google cloud."
                      "It acts as a storage area for models, data, and more."
                      "Please do not use underscores (_) in your bucket name.")
   export CLOUDSDK_BUCKET=$(inputbox "Deepcell" "${bucket_text[*]}" "${CLOUDSDK_BUCKET:-$CLOUDSDK_CONTAINER_CLUSTER}" 13 60)
-
   if [ "$CLOUDSDK_BUCKET" = "" ]; then
     return 0
   fi
 
+  # use default settings or use the advanced menu
   local setup_opt_value=$(dialog --clear --backtitle "${BRAND}" \
               --title "  Configuration Options  " \
               --menu "${header_text[*]}" 10 70 3 \
@@ -277,7 +307,7 @@ function configure_gke() {
     return 0
 
   elif [ "$setup_opt_value" = "Default" ]; then
-    # Default
+    # Default settings
     infobox "Loading default values..." 7 60
     export CLOUDSDK_COMPUTE_REGION=us-west1
     export GKE_MACHINE_TYPE=n1-standard-1
@@ -289,18 +319,13 @@ function configure_gke() {
     export GPU_NODE_MAX_SIZE=1
 
   else
-    # Advanced
+    # Advanced menu
     infobox "Loading..."
-    local regions=$(gcloud compute regions list | grep "-" | awk '{print $1 " _ OFF"}')
+    local regions=$(gcloud compute regions list | grep "-" | awk '{print $1}')
     local default_region=${CLOUDSDK_COMPUTE_REGION:-us-west1}
-    local regions_with_default=${regions/$default_region _ OFF/$default_region _ ON}
-    local base_box_height=7
-    local selector_box_lines=$(echo "${regions}" | tr -cd '\n' | wc -c)
-    local total_lines=$(($base_box_height + $selector_box_lines))
-
-    export CLOUDSDK_COMPUTE_REGION=$(radiobox "Google Cloud" \
-        "Choose a region for hosting your cluster: \nPress the spacebar to select and Enter to continue." \
-      $total_lines 60 $selector_box_lines "$regions_with_default")
+    local message="Choose a region for hosting your cluster:"
+    export CLOUDSDK_COMPUTE_REGION=$(radiobox_from_array "Google Cloud" \
+                                     $default_region "${message}" "${regions}")
     if [ "$CLOUDSDK_COMPUTE_REGION" = "" ]; then
       return 0
     fi
@@ -319,21 +344,17 @@ function configure_gke() {
     fi
 
     infobox "Loading..."
-    local gpus_in_region=$(gcloud compute accelerator-types list | grep ${CLOUDSDK_COMPUTE_REGION} | awk '{print $1}' | sort -u | awk '{print $1 " _ OFF"}')
-    local default_gpu=${GCP_PREDICTION_GPU_TYPE}
-    local gpus_with_default=${gpus_in_region/$default_gpu _ OFF/$default_gpu _ ON}
-    local base_box_height=7
-    local selector_box_lines=$(($(echo "${gpus_in_region}" | tr -cd '\n' | wc -c) + 1))
-    local total_lines=$(($base_box_height + $selector_box_lines))
-    export GCP_PREDICTION_GPU_TYPE=$(radiobox "Google Cloud" \
-        "Choose a GPU for prediction from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-      $total_lines 60 $selector_box_lines "$gpus_with_default")
+    local gpus_in_region=$(gcloud compute accelerator-types list | grep ${CLOUDSDK_COMPUTE_REGION} | awk '{print $1}' | sort -u)
+    local default_prediction_gpu=${GCP_PREDICTION_GPU_TYPE:-nvidia-tesla-t4}
+    # local message="Choose a GPU for prediction (not training) from the GPU types available in your region:"
+    local message="Choose a GPU for prediction from the GPU types available in your region:"
+    export GCP_PREDICTION_GPU_TYPE=$(radiobox_from_array "Google Cloud" \
+                                     $default_prediction_gpu "${message}" "${gpus_in_region}")
 
-    # local default_gpu=${GCP_TRAINING_GPU_TYPE}
-    # local gpus_with_default=${gpus_in_region/$default_gpu _ OFF/$default_gpu _ ON}
-    # export GCP_TRAINING_GPU_TYPE=$(radiobox "Google Cloud" \
-    #     "Choose a GPU for training (not prediction) from the GPU types available in your region: \nPress the spacebar to select and Enter to continue." \
-    #   $total_lines 60 $selector_box_lines "$gpus_with_default")
+    # local default_training_gpu=${GCP_TRAINING_GPU_TYPE:-nvidia-tesla-v100}
+    # local message="Choose a GPU for training (not prediction) from the GPU types available in your region"
+    # export GCP_TRAINING_GPU_TYPE=$(radiobox_from_array "Google Cloud" \
+    #                                $default_training_gpu "${message}" "${gpus_in_region}")
 
     ## Maybe include these in an advanced menu?
     # export GPU_PER_NODE=$(inputbox "Google Cloud" "GPUs per GPU Node" "${GPU_PER_NODE:-1}")
@@ -393,9 +414,7 @@ function configure_gke() {
     return 0
   fi
 
-  local success_text=("Configuration Complete!"
-                      "\n\nThe cluster is now available for creation.")
-  dialog --msgbox "${success_text[*]}" 12 60
+  msgbox "Configuration Complete!" "\nThe cluster is now available for creation." 12 60
 
   export CLOUD_PROVIDER=gke
   export GCP_SERVICE_ACCOUNT=${CLOUDSDK_CONTAINER_CLUSTER}@${CLOUDSDK_CORE_PROJECT}.iam.gserviceaccount.com
@@ -459,7 +478,7 @@ function view() {
 
 function confirm() {
 
-  dialog --yesno "Are you sure?" 7 60
+  dialog --backtitle "${BRAND}" --yesno "Are you sure?" 7 60
   response=$?
   case $response in
     0) return 0;;
@@ -472,7 +491,7 @@ function main() {
   export MENU=true
   # The following line is a workaround for a bug where the first dialog call
   # after startup fails before user input is possible.
-  dialog --sleep 1 --msgbox "Loading..." 12 60
+  dialog --backtitle "$BRAND" --sleep 1 --msgbox "Loading..." 12 60
   #infobox "Loading..."
 
   local welcome_text=("Welcome to the Deepcell Kiosk!"
