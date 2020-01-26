@@ -229,8 +229,22 @@ function configure_gke() {
   fi
   export CLOUDSDK_CORE_PROJECT="${new_project}"
 
-  # TODO: check if authenticated already.
-  make gke/login
+  # authenticate with gcloud
+  local current_account=$(gcloud config list --format 'value(core.account)')
+  # if logged in, confirm the user wants to continue with this account
+  if [ ! "${current_account}" = "" ]; then
+    dialog --yesno "Do you want to continue as: \n\n    ${current_account}" 10 60
+    response=$?
+    # No 0 case, as it just continues to the next screen.
+    case $response in
+      1) local current_account="";;
+      255) return 0;;
+    esac
+  fi
+
+  if [ "${current_account}" = "" ]; then
+    make gke/login
+  fi
 
   if [ -z ${CLOUDSDK_CONTAINER_CLUSTER} ]; then
     export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
