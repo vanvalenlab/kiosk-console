@@ -52,5 +52,5 @@ releases:
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         BUCKET: {{ env "BUCKET" | default "broken_default" }}
 {{ else }}
-        BUCKET: {{ env "GKE_BUCKET" | default "broken_default" }}
+        BUCKET: {{ env "CLOUDSDK_BUCKET" | default "broken_default" }}
 {{ end }}

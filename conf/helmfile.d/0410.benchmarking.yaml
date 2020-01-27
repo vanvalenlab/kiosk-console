@@ -58,7 +58,7 @@ releases:
         EXPIRE_TIME: 3600
         CONCURRENT_REQUESTS_PER_HOST: 1
 {{ if eq (env "CLOUD_PROVIDER" | default "gke") "gke" }}
-        STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "invalid-bucket" }}'
+        STORAGE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "invalid-bucket" }}'
 {{ else }}
         STORAGE_BUCKET: '{{ env "AWS_BUCKET" | default "invalid-bucket" }}'
 {{ end }}
