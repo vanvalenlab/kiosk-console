@@ -26,7 +26,7 @@ releases:
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tensorboard'
   version: "0.1.0"
   values:
-    - replicas: 1
+    - replicas: 0
 
       image:
         repository: "vanvalenlab/kiosk-tensorboard"
@@ -66,4 +66,4 @@ releases:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+        GKE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
