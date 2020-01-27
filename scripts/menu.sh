@@ -71,14 +71,17 @@ function radiobox_from_array() {
   local selector_box_lines=$(($selector_box_lines+1))
   local total_lines=$(($base_box_height + $selector_box_lines))
 
-  local formatted_arr=$(echo "${arr}" | awk '{print $1 " _ OFF"}')
-  local arr_with_default=${formatted_arr/$default_value _ OFF/$default_value _ ON}
+  local formatted_arr=$(echo "${arr}" | awk '{print NR " " $1 " OFF"}')
+  local arr_with_default=${formatted_arr/$default_value OFF/$default_value ON}
 
   local fullmessage="${message}\nPress the spacebar to select and Enter to continue."
 
   local selected_value=$(radiobox "${title}" "${fullmessage}" $total_lines \
                          60 $selector_box_lines "${arr_with_default}")
-  echo $selected_value
+
+  # echo the value with the selected row number
+  local result=$(echo "${arr}" | awk -v i=$selected_value 'NR==i {print $1}')
+  echo "${result}"
 }
 
 function infobox() {
@@ -270,8 +273,6 @@ function configure_gke() {
                                  $default_project "${message}" "${projects}")
   if [ "$CLOUDSDK_CORE_PROJECT" = "" ]; then
     return 0
-  else
-    echo "$CLOUDSDK_CORE_PROJECT"
   fi
 
   # Get the cluster name from the user or the environment
