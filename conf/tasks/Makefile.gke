@@ -130,7 +130,7 @@ gke/create/training-node-pool:
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
 #		--enable-autoupgrade
-gke/create/node-pools:
+gke/create/node-pools: \
 	gke/create/consumer-node-pool \
 	gke/create/prediction-node-pool
 	# gke/create/training-node-pool
