@@ -1,4 +1,4 @@
-export CLOUD_PROVIDER ?= aws
+export CLOUD_PROVIDER ?= gke
 
 include /build-harness/templates/Makefile.build-harness
 

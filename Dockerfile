@@ -47,6 +47,7 @@ ENV GCP_PREDICTION_GPU_TYPE="nvidia-tesla-t4"
 ENV GCP_TRAINING_GPU_TYPE="nvidia-tesla-v100"
 
 # Deployment config
+ENV CLOUD_PROVIDER="gke"
 ENV ELK_DEPLOYMENT_TOGGLE="OFF"
 
 # Filesystem entry for tfstate
