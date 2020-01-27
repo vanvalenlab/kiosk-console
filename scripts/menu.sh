@@ -488,7 +488,7 @@ function main() {
   export MENU=true
   # The following line is a workaround for a bug where the first dialog call
   # after startup fails before user input is possible.
-  # dialog --backtitle "$BRAND" --sleep 1 --msgbox "Loading..." 12 60
+  dialog --backtitle "$BRAND" --sleep 1 --msgbox "Loading..." 12 60
 
   local welcome_text=("Welcome to the Deepcell Kiosk!"
                       "\n\nThis Kiosk was developed by the Van Valen Lab at"
