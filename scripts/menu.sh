@@ -385,12 +385,12 @@ function configure_gke() {
   local zone_filter=$(IFS="|" ; echo "${region_zone_array[*]}")
 
   # locate the zones for all GPU node pools
-  local prediction_gpu_zones=$(gcloud compute accelerator-types list --verbosity "error" \
-                               --filter "name = ${GCP_PREDICTION_GPU_TYPE}" \
+  local prediction_gpu_zones=$(gcloud compute accelerator-types list \
+                               | grep -e "${GCP_PREDICTION_GPU_TYPE}" \
                                | grep -E "${zone_filter}" |  awk '{print $2}')
 
-  # local training_gpu_zones=$(gcloud compute accelerator-types list --verbosity "error" \
-  #                            --filter "name = ${GCP_TRAINING_GPU_TYPE}" \
+  # local training_gpu_zones=$(gcloud compute accelerator-types list \
+  #                            | grep -e "${GCP_TRAINING_GPU_TYPE}" \
   #                            | grep -E "${zone_filter}" |  awk '{print $2}')
 
   # For each zone, check if it is available for each node pool, it is valid.
