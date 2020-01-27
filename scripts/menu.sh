@@ -447,7 +447,6 @@ function configure_gke() {
 function shell() {
   clear
   echo "Type 'exit' to return to the menu."
-  # TODO: how to pass environment variables from now to shell?
   bash -l
 }
 
