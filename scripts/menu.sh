@@ -335,10 +335,12 @@ function configure_gke() {
     if [ "$GKE_MACHINE_TYPE" = "" ]; then
       return 0
     fi
+
     export NODE_MIN_SIZE=$(inputbox "Google Cloud" "Minimum Number of Compute (non-GPU) Nodes" "${NODE_MIN_SIZE:-1}")
     if [ "$NODE_MIN_SIZE" = "" ]; then
       return 0
     fi
+
     export NODE_MAX_SIZE=$(inputbox "Google Cloud" "Maximum Number of Compute (non-GPU) Nodes" "${NODE_MAX_SIZE:-11}")
     if [ "$NODE_MAX_SIZE" = "" ]; then
       return 0
