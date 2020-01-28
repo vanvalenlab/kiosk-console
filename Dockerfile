@@ -74,6 +74,6 @@ COPY scripts/ /usr/local/bin/
 COPY rootfs/ /
 
 # Enable the menu
-RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/99.menu.sh
+RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/menu.sh
 
 WORKDIR /conf/
