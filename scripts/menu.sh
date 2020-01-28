@@ -143,14 +143,21 @@ function menu() {
                      "select an option.\n"
                      "Choose a task.")
 
+  local cloud="${CLOUD_PROVIDER^^}"
   declare -A cloud_providers
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
+  if [ "${cloud}" = "GKE" ]; then
+    local ready=$([[ ! -z "${CLOUDSDK_CORE_PROJECT}" ]] && echo "(ready!)" || echo "")
+  elif [ "${cloud}" = "AWS" ]; then
+    local ready=$([[ ! -z "${CLOUDSDK_CORE_PROJECT}" ]] && echo "(ready!)" || echo "")
+  fi
+
   if [ -z "${CLUSTER_ADDRESS}" ]; then
     value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 15 50 5 \
-                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
-                  "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+                  "GKE"     "Configure GKE" \
+                  "Create"  "Create ${cloud} Cluster ${ready}" \
                   "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
@@ -159,8 +166,8 @@ function menu() {
     value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 17 50 6 \
-                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
-                  "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
+                  "GKE"     "Configure GKE" \
+                  "Destroy" "Destroy ${cloud} Cluster" \
                   "View"    "View Cluster Address" \
                   "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
