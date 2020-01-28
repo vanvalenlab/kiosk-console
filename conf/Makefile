@@ -1,4 +1,4 @@
-export CLOUD_PROVIDER ?= aws
+export CLOUD_PROVIDER ?= gke
 
 include /build-harness/templates/Makefile.build-harness
 
@@ -17,10 +17,3 @@ destroy: \
   helmfile/destroy/all \
   $(CLOUD_PROVIDER)/destroy/all
 	@echo "Cluster destroyed"
-
-## Create $CACHE_PATH directory, if it doesn't already exist
-create_cache_path:
-	@if [ ! -z "$(CACHE_PATH)" ] && [ ! -d "$(CACHE_PATH)" ]; \
-	then \
-	  mkdir $(CACHE_PATH); \
-	fi

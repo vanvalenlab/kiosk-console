@@ -232,17 +232,14 @@ function configure_aws() {
   export KOPS_STATE_STORE=s3://${NAMESPACE}
   export CLOUD_PROVIDER=aws
 
-  export_gpu_constants
-
-  make create_cache_path
-  printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -E GPU_NODE_MAX_SIZE \
+  printenv | grep  -e CLOUD_PROVIDER \
+    -e GPU_NODE_MAX_SIZE \
     -e AWS_SECRET_ACCESS_KEY \
     -e AWS_S3_BUCKET \
     -e NAMESPACE \
     -e GPU_NODE_MIN_SIZE \
     -e GPU_NODE_MAX_SIZE \
-    -e GPU_MAX > ${CACHE_PATH}/env.aws
+    -e GPU_MAX > ${GEODESIC_CONFIG_HOME}/preferences
 }
 
 function configure_gke() {
@@ -431,11 +428,8 @@ function configure_gke() {
 
   export_gpu_constants
 
-  make create_cache_path
-  printenv | grep -e CLOUD_PROVIDER > ${CACHE_PATH}/env
-  printenv | grep -e PROJECT \
+  printenv | grep -e CLOUD_PROVIDER \
     -e CLOUDSDK \
-    -e GCP_SERVICE_ACCOUNT \
     -e NODE_MIN_SIZE \
     -e NODE_MAX_SIZE \
     -e GKE_MACHINE_TYPE \
@@ -447,7 +441,7 @@ function configure_gke() {
     -e GPU_PER_NODE \
     -e GPU_NODE_MIN_SIZE \
     -e GPU_NODE_MAX_SIZE \
-    -e GPU_MAX > ${CACHE_PATH}/env.gke
+    -e GPU_MAX > ${GEODESIC_CONFIG_HOME}/preferences
 }
 
 function shell() {
@@ -492,10 +486,6 @@ function confirm() {
 
 function main() {
   export MENU=true
-  # The following line is a workaround for a bug where the first dialog call
-  # after startup fails before user input is possible.
-  dialog --backtitle "$BRAND" --sleep 1 --msgbox "Loading..." 12 60
-  #infobox "Loading..."
 
   local welcome_text=("Welcome to the Deepcell Kiosk!"
                       "\n\nThis Kiosk was developed by the Van Valen Lab at"

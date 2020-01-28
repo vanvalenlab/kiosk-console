@@ -42,11 +42,17 @@ ENV GPU_PER_NODE="1"
 ENV KUBERNETES_VERSION="latest"
 ENV CLOUDSDK_CORE_PROJECT=""
 ENV CLOUDSDK_CONTAINER_CLUSTER=""
+ENV CLOUDSDK_BUCKET=""
 ENV CLOUDSDK_COMPUTE_REGION="us-west1"
+ENV GCP_SERVICE_ACCOUNT=${CLOUDSDK_CONTAINER_CLUSTER}@${CLOUDSDK_CORE_PROJECT}.iam.gserviceaccount.com
 ENV GCP_PREDICTION_GPU_TYPE="nvidia-tesla-t4"
 ENV GCP_TRAINING_GPU_TYPE="nvidia-tesla-v100"
+ENV GKE_MACHINE_TYPE="n1-standard-1"
+ENV GPU_MACHINE_TYPE="n1-highmem-2"
+ENV CONSUMER_MACHINE_TYPE="n1-highmem-2"
 
 # Deployment config
+ENV CLOUD_PROVIDER="gke"
 ENV ELK_DEPLOYMENT_TOGGLE="OFF"
 
 # Filesystem entry for tfstate
@@ -68,6 +74,6 @@ COPY scripts/ /usr/local/bin/
 COPY rootfs/ /
 
 # Enable the menu
-RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/99.menu.sh
+RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/ΩΩ.menu.sh
 
 WORKDIR /conf/
