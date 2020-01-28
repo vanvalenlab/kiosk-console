@@ -1,3 +1,5 @@
+# overriding https://github.com/cloudposse/geodesic/blob/master/rootfs/etc/profile.d/banner.sh
+
 COLOR_RESET="[0m"
 BANNER_COMMAND="${BANNER_COMMAND:-figurine}"
 BANNER_COLOR="${BANNER_COLOR:-[36m}"
