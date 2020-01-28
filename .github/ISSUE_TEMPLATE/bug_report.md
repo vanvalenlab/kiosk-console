@@ -1,8 +1,8 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
-labels: enhancement
+title: New Bug
+labels: bug
 assignees: ''
 
 ---
@@ -12,8 +12,8 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
-1. Enter '...'
-2. Run '....'
+1. Run '...'
+2. Enter '....'
 3. See error
 
 **Expected behavior**
