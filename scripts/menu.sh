@@ -134,9 +134,9 @@ function export_gpu_constants() {
   fi
 }
 
-# Show different functions in the main menu depending on whether the
-# cluster has been created yet.
 function menu() {
+  # Show different functions in the main menu depending on whether the
+  # cluster has been created yet.
   local value
   local header_text=(" Use the UP/DOWN arrow keys or the first\n"
                      "letter of the choice as a hot key to\n"
