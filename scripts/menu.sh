@@ -146,18 +146,13 @@ function menu() {
   local cloud="${CLOUD_PROVIDER^^}"
   declare -A cloud_providers
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
-  if [ "${cloud}" = "GKE" ]; then
-    local ready=$([[ ! -z "${CLOUDSDK_CORE_PROJECT}" ]] && echo "(ready!)" || echo "")
-  elif [ "${cloud}" = "AWS" ]; then
-    local ready=$([[ ! -z "${CLOUDSDK_CORE_PROJECT}" ]] && echo "(ready!)" || echo "")
-  fi
 
   if [ -z "${CLUSTER_ADDRESS}" ]; then
     value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 15 50 5 \
                   "GKE"     "Configure GKE" \
-                  "Create"  "Create ${cloud} Cluster ${ready}" \
+                  "Create"  "Create ${cloud} Cluster" \
                   "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
@@ -459,8 +454,12 @@ function shell() {
 
 function create() {
   #todo: check if status is active and if not echo that fact and request config
-  tailcmd "Create Cluster" "---COMPLETE---" make create
-  export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
+  if [ -z "${CLOUD_PROVIDER^^}" ]; then
+    msgbox "Warning!" "Cluster configuration is required."
+  else
+    tailcmd "Create Cluster" "---COMPLETE---" make create
+    export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
+  fi
 }
 
 function destroy() {
