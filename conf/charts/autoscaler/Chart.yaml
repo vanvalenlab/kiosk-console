@@ -1,6 +1,6 @@
 apiVersion: v1
 name: autoscaler
-version: 0.1.0
+version: 0.2.0
 #kubeVersion: ^1.10.0
 description: This project monitors the Redis database to scale the GPU nodes and tf-serving and flask containers as necessary.
 keywords:

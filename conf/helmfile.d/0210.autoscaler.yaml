@@ -30,7 +30,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-autoscaler"
-        tag: "0.3.0"
+        tag: "0.4.0-rc"
         pullPolicy: "Always"
 
       serviceAccount:
@@ -48,14 +48,18 @@ releases:
         #   cpu: 100m
         #   memory: 64Mi
 
-# 1|{{ env "GPU_NODE_MAX_SIZE" | default 10 }}|1|deepcell|deployment|segmentation|zip-consumer;
       env:
+        QUEUES: "segmentation,tracking"
+        QUEUE_DELIMITER: ","
+        RESOURCE_NAME: "tf-serving"
+        RESOURCE_TYPE: "deployment"
+        RESOURCE_NAMESPACE: "deepcell"
         DEBUG: "true"
-        INTERVAL: "5"
-        QUEUES: "predict,track"
+        INTERVAL: 5
         REDIS_HOST: "redis"
-        REDIS_PORT: "26379"
-        AUTOSCALING: >
-            {{ env "GPU_NODE_MIN_SIZE" | default 0 }}|{{ env "GPU_NODE_MAX_SIZE" | default 5 }}|1|deepcell|deployment|segmentation|tf-serving;
-            {{ env "GPU_NODE_MIN_SIZE" | default 0 }}|{{ env "GPU_NODE_MAX_SIZE" | default 5 }}|1|deepcell|deployment|tracking|tf-serving;
-            0|4|1|deepcell|job|train|training
+        REDIS_PORT: 26379
+        REDIS_INTERVAL: 1
+        # These should not change
+        MAX_PODS: 1
+        MIN_PODS: 0
+        KEYS_PER_POD: 1
