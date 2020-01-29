@@ -52,7 +52,7 @@ ENV GPU_MACHINE_TYPE="n1-highmem-2"
 ENV CONSUMER_MACHINE_TYPE="n1-highmem-2"
 
 # Deployment config
-ENV CLOUD_PROVIDER="gke"
+ENV CLOUD_PROVIDER=""
 ENV ELK_DEPLOYMENT_TOGGLE="OFF"
 
 # Filesystem entry for tfstate
