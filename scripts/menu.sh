@@ -134,23 +134,25 @@ function export_gpu_constants() {
   fi
 }
 
-# Show different functions in the main menu depending on whether the
-# cluster has been created yet.
 function menu() {
+  # Show different functions in the main menu depending on whether the
+  # cluster has been created yet.
   local value
   local header_text=(" Use the UP/DOWN arrow keys or the first\n"
                      "letter of the choice as a hot key to\n"
                      "select an option.\n"
                      "Choose a task.")
 
+  local cloud="${CLOUD_PROVIDER^^}"
   declare -A cloud_providers
   cloud_providers[${CLOUD_PROVIDER:-none}]="(active)"
+
   if [ -z "${CLUSTER_ADDRESS}" ]; then
     value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 15 50 5 \
-                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
-                  "Create"  "Create ${CLOUD_PROVIDER^^} Cluster" \
+                  "GKE"     "Configure GKE" \
+                  "Create"  "Create ${cloud} Cluster" \
                   "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
               --output-fd 1 \
@@ -159,8 +161,8 @@ function menu() {
     value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
               --menu "${header_text[*]}" 17 50 6 \
-                  "GKE"     "Configure Google ${cloud_providers[gke]}" \
-                  "Destroy" "Destroy ${CLOUD_PROVIDER^^} Cluster" \
+                  "GKE"     "Configure GKE" \
+                  "Destroy" "Destroy ${cloud} Cluster" \
                   "View"    "View Cluster Address" \
                   "Shell"   "Drop to the shell" \
                   "Exit"    "Exit this kiosk" \
@@ -452,8 +454,12 @@ function shell() {
 
 function create() {
   #todo: check if status is active and if not echo that fact and request config
-  tailcmd "Create Cluster" "---COMPLETE---" make create
-  export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
+  if [ -z "${CLOUD_PROVIDER^^}" ]; then
+    msgbox "Warning!" "Cluster configuration is required."
+  else
+    tailcmd "Create Cluster" "---COMPLETE---" make create
+    export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
+  fi
 }
 
 function destroy() {
