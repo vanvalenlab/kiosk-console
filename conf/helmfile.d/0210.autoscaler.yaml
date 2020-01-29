@@ -61,5 +61,5 @@ releases:
         REDIS_INTERVAL: 1
         # These should not change
         MAX_PODS: 1
-        MIN_PODS: 0
+        MIN_PODS: '{{ env "GPU_NODE_MIN_SIZE" | default 0 }}'
         KEYS_PER_POD: 1
