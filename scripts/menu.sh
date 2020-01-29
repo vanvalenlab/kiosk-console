@@ -497,7 +497,9 @@ function main() {
                       "\n\nThis Kiosk was developed by the Van Valen Lab at"
                       "the California Institute of Technology."
                       "\n\nhttps://vanvalenlab.caltech.edu")
-  msgbox "Welcome!" "${welcome_text[*]}"
+
+  dialog --backtitle "$BRAND" --title "Welcome!" --clear --msgbox \
+         "${welcome_text[*]}" 12 60
 
   while true; do
     ACTION=$(menu)
