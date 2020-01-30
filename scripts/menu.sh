@@ -262,7 +262,7 @@ function configure_gke() {
     if ! make gke/login; then
       export CLOUD_PROVIDER=""
       local error_text=("\n\nAuthorization failed. Unable to continue setup procedure."
-                      "\n\nPlease verify your Google Cloud credentials and try again.")
+                        "\n\nPlease verify your Google Cloud credentials and try again.")
 
       dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 10 65
