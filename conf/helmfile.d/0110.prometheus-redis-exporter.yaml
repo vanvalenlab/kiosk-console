@@ -29,7 +29,7 @@ releases:
 
         script:
           configmap: prometheus-redis-exporter-script
-          key: script
+          keyname: script
 
         service:
           annotations:
