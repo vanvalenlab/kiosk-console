@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: prometheus-redis-exporter-script
 data:
-  script:  |
+  script: |
     -- Based on https://github.com/soveran/rediscan.lua by GitHub user Soveran.
 
     local function get_queue_count(queue)
