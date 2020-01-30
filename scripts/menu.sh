@@ -260,7 +260,7 @@ function configure_gke() {
   # authenticate with gcloud if necessary
   if [ "${current_account}" = "" ]; then
     if ! make gke/login; then
-
+      export CLOUD_PROVIDER=""
       local error_text=("\n\nAuthorization failed. Unable to continue setup procedure."
                       "\n\nPlease verify your Google Cloud credentials and try again.")
 
