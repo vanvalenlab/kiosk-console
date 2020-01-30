@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-redis-exporter-script
+  namespace: monitoring
 data:
   script: |
     -- Based on https://github.com/soveran/rediscan.lua by GitHub user Soveran.
