@@ -24,7 +24,9 @@ function retval() {
 function msgbox() {
   local title=$1
   local message=$2
-  dialog --backtitle "$BRAND" --title "$title" --clear --msgbox "$message" 12 60
+  local h=${3:-12}
+  local w=${4:-60}
+  dialog --backtitle "$BRAND" --title "$title" --clear --msgbox "$message" "$h" "$w"
   retval $?
 }
 
@@ -249,7 +251,7 @@ function configure_gke() {
   local current_account=$(gcloud config list --format 'value(core.account)')
   if [ ! "${current_account}" = "" ]; then
     dialog --backtitle "${BRAND}" \
-           --yesno "Do you want to continue as: \n\n    ${current_account}" 8 60
+           --yesno "Do you want to continue as: \n\n    ${current_account}" 8 55
     response=$?
     # No 0 case, as it just continues to the next screen.
     case $response in
@@ -306,7 +308,7 @@ function configure_gke() {
   # use default settings or use the advanced menu
   local setup_opt_value=$(dialog --clear --backtitle "${BRAND}" \
               --title "  Configuration Options  " \
-              --menu "${header_text[*]}" 10 70 3 \
+              --menu "${header_text[*]}" 10 70 2 \
                   "Default"     "Use default options to setup cluster" \
                   "Advanced"    "Specify custom cluster creation options" \
               --output-fd 1 \
@@ -317,7 +319,7 @@ function configure_gke() {
 
   elif [ "$setup_opt_value" = "Default" ]; then
     # Default settings
-    infobox "Loading default values..." 7 60
+    infobox "Loading default values..." 5 55
     export CLOUDSDK_COMPUTE_REGION=us-west1
     export GKE_MACHINE_TYPE=n1-standard-1
     export NODE_MIN_SIZE=1
@@ -501,19 +503,30 @@ function confirm() {
 
 function confirm_cluster_launch() {
 
-  local notice_text=("\nYou are about to launch a cluster with the name: "
-                     "\n${CLOUDSDK_CORE_PROJECT}"
-                     "\n\nPlease note that this process will take several minutes."
-                     "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
-                     "\n\nWould you like to continue?")
+  local current_account=$(gcloud config list --format 'value(core.account)')
+  if [ "${current_account}" = "" ]; then
+    local error_text=("\nAuthorization failed. Unable to continue setup procedure."
+                      "\n\nPlease verify your Google Cloud credentials and try again."
+                      "\n")
+    dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
+         "${error_text[*]}" 9 65
+  else
+    local notice_text=("\nYou are about to launch a cluster using the following:"
+                       "\n    Cloud Account - ${current_account}"
+                       "\n    Project       - ${CLOUDSDK_CORE_PROJECT}"
+                       "\n\nPlease note that this process will take several minutes."
+                       "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
+                       "\n\nWould you like to continue?")
 
-  dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" 12 58
-  response=$?
-  case $response in
-    0) return 0;;
-    1) return 1;;
-    255) return 1;;
-  esac
+    dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" 15 60
+    response=$?
+    case $response in
+      0) return 0;;
+      1) return 1;;
+      255) return 1;;
+    esac
+
+  fi
 }
 
 function main() {
