@@ -18,6 +18,7 @@ import shlex
 from datetime import datetime
 
 sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
 
@@ -62,6 +63,8 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'm2r',
+    'sphinx.ext.autosectionlabel',
+    'hidden_code_block'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -204,7 +207,7 @@ autodoc_mock_imports = ["tensorflow", "sklearn", "skimage",
 
 intersphinx_mapping = {
     'deepcell': ('https://deepcell.readthedocs.io/en/{}/'.format(rtd_version), None),
-    'kiosk-redis-consumer': ('https://deepcell-kiosk.readthedocs.io/projects/kiosk-redis-consumer/en/{}/'.format(rtd_version), None),
+    'redis_consumer': ('https://deepcell-kiosk.readthedocs.io/projects/kiosk-redis-consumer/en/{}/'.format('mrgn-docs-autodoc'), None),
     'kiosk-frontend': ('https://deepcell-kiosk.readthedocs.io/projects/kiosk-frontend/en/{}/'.format(rtd_version), None)
 }
 
@@ -214,6 +217,10 @@ intersphinx_cache_limit = 0
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# -- Options for autosectionlabel extension ---------------------------------
+
+autosectionlabel_prefix_document = True
 
 # -- Custom Document processing ----------------------------------------------
 

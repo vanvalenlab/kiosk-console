@@ -17,38 +17,41 @@ Software Infrastructure
 
     Description of hwo data flows through the different components of the consumer.
 
+Helm and Helmfiles
+------------------
+
 kiosk-frontend
---------------
+^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-frontend
-| **Documentation:**
+| **Documentation:** :ref:`kiosk-frontend:index`
 | **Purpose**
 
 kiosk-redis-consumer
---------------------
+^^^^^^^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-redis-consumer
 | **Documentation:** :ref:`Label name <kiosk-redis-consumer:index>`
 | **Purpose**
 
 kiosk-bucket-monitor
---------------------
+^^^^^^^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-bucket-monitor
 | **Documentation:**
-| **Purpose**
+| **Purpose:** The ``bucket-monitor`` will monitor all bucket folders listed in the ``PREFIX`` environment variable (defaults to ``PREFIX: "uploads/,output/"``). Any files that are older than 3 days (configured the ``AGE_THRESHOLD`` environment variable) will be deleted.
 
 kiosk-tf-serving
-----------------
+^^^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-tf-serving
 | **Documentation:**
 | **Purpose**
 
 kiosk-benchmarking
-------------------
+^^^^^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-benchmarking
 | **Documentation:**
 | **Purpose:**
 
 kiosk-autoscaler
-----------------
+^^^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-autoscaler
 | **Documentation:**
 | **Purpose**

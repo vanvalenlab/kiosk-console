@@ -3,10 +3,16 @@
 
 .. toctree::
     :caption: Deepcell Kiosk
-    :maxdepth: 2
+    :maxdepth: 3
 
+    Getting Started <GETTING_STARTED>
+    Troubleshooting <TROUBLESHOOTING>
+    Tutorial: Custom Jobs <CUSTOM-JOB>
+    Advanced Documentation <ADVANCED_DOCUMENTATION>
+    Software Infrastructure <SOFTWARE_INFRASTRUCTURE>
+    Developer Documentation <DEVELOPER>
 
 .. toctree::
     :caption: Container Reference
-    :maxdepth: 2
+    :maxdepth: 3
 
