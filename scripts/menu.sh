@@ -512,13 +512,15 @@ function confirm_cluster_launch() {
          "${error_text[*]}" 9 65
   else
     local notice_text=("\nYou are about to launch a cluster using the following:"
-                       "\n    Cloud Account - ${current_account}"
+                       "\n\n    Cloud Account - ${current_account}"
                        "\n    Project       - ${CLOUDSDK_CORE_PROJECT}"
+                       "\n    Cluster Name  - ${CLOUDSDK_CONTAINER_CLUSTER}"
+                       "\n    Bucket Name   - ${CLOUDSDK_BUCKET}"
                        "\n\nPlease note that this process will take several minutes."
                        "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
                        "\n\nWould you like to continue?")
 
-    dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" 15 60
+    dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" 18 60
     response=$?
     case $response in
       0) return 0;;
