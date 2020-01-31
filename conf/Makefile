@@ -7,7 +7,7 @@ include tasks/Makefile.*
 ## Create cluster
 create: \
   $(CLOUD_PROVIDER)/create/all \
-	kubectl/create/prometheus-redis-exporter-script \
+  kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
   kubectl/display/ip \
   kubectl/implement/autoscaling
