@@ -119,7 +119,7 @@ releases:
                     < on()
                     clamp_max(
                       (
-                        avg_over_time(redis_script_value{key="segmentation_image_keys"}[15s])
+                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[15s])
                         / on()
                         (
                           avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
@@ -131,7 +131,7 @@ releases:
                     or
                     clamp_max(
                       (
-                        avg_over_time(redis_script_value{key="segmentation_image_keys"}[15s])
+                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[15s])
                         / on()
                         (
                           avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
@@ -183,7 +183,7 @@ releases:
                 service: segmentation-scaling-service
             - record: zip_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_value{key="segmentation_zip_keys"}[15s])
+                avg_over_time(redis_script_values{key="segmentation_zip_keys"}[15s])
                 / on()
                 (
                   avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[15s])
@@ -195,7 +195,7 @@ releases:
                 service: zip-scaling-service
             - record: tracking_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_value{key="tracking_image_keys"}[15s])
+                avg_over_time(redis_script_values{key="tracking_image_keys"}[15s])
                 / on()
                 (
                   avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
