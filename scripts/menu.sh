@@ -66,7 +66,7 @@ function radiobox_from_array() {
   local message=$3
   local arr=$4
 
-  local base_box_height=7
+  local base_box_height=9
   local selector_box_lines=$(echo "${arr}" | tr -cd '\n' | wc -c)
   local selector_box_lines=$(($selector_box_lines+1))
   local total_lines=$(($base_box_height + $selector_box_lines))
@@ -74,7 +74,7 @@ function radiobox_from_array() {
   local formatted_arr=$(echo "${arr}" | awk '{print NR " " $1 " OFF"}')
   local arr_with_default=${formatted_arr/$default_value OFF/$default_value ON}
 
-  local fullmessage="${message}\nPress the spacebar to select and Enter to continue."
+  local fullmessage="\n${message}\n\nPress the spacebar to select and Enter to continue.\n"
 
   local selected_value=$(radiobox "${title}" "${fullmessage}" $total_lines \
                          60 $selector_box_lines "${arr_with_default}")
@@ -138,10 +138,10 @@ function menu() {
   # Show different functions in the main menu depending on whether the
   # cluster has been created yet.
   local value
-  local header_text=(" Use the UP/DOWN arrow keys or the first\n"
+  local header_text=("\n Use the UP/DOWN arrow keys or the first\n"
                      "letter of the choice as a hot key to\n"
                      "select an option.\n"
-                     "Choose a task.")
+                     "\n")
 
   local cloud="${CLOUD_PROVIDER^^}"
   declare -A cloud_providers
@@ -150,22 +150,22 @@ function menu() {
   if [ -z "${CLUSTER_ADDRESS}" ]; then
     value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
-              --menu "${header_text[*]}" 15 50 5 \
-                  "GKE"     "Configure GKE" \
-                  "Create"  "Create ${cloud} Cluster" \
-                  "Shell"   "Drop to the shell" \
-                  "Exit"    "Exit this kiosk" \
+              --menu "${header_text[*]}" 15 50 4 \
+                  "GKE"       "Configure GKE" \
+                  "Create"    "Create ${cloud} Cluster" \
+                  "Shell"     "Drop to the shell" \
+                  "Exit"      "Exit this kiosk" \
               --output-fd 1 \
             )
   else
     value=$(dialog --clear --backtitle "${BRAND}" \
               --title "[ M A I N - M E N U ]" \
-              --menu "${header_text[*]}" 17 50 6 \
-                  "GKE"     "Configure GKE" \
-                  "Destroy" "Destroy ${cloud} Cluster" \
-                  "View"    "View Cluster Address" \
-                  "Shell"   "Drop to the shell" \
-                  "Exit"    "Exit this kiosk" \
+              --menu "${header_text[*]}" 17 50 5 \
+                  "GKE"       "Configure GKE" \
+                  "Destroy"   "Destroy ${cloud} Cluster" \
+                  "View"      "View Cluster Address" \
+                  "Shell"     "Drop to the shell" \
+                  "Exit"      "Exit this kiosk" \
               --output-fd 1 \
             )
   fi
@@ -249,7 +249,7 @@ function configure_gke() {
   local current_account=$(gcloud config list --format 'value(core.account)')
   if [ ! "${current_account}" = "" ]; then
     dialog --backtitle "${BRAND}" \
-           --yesno "Do you want to continue as: \n\n    ${current_account}" 10 60
+           --yesno "Do you want to continue as: \n\n    ${current_account}" 8 60
     response=$?
     # No 0 case, as it just continues to the next screen.
     case $response in
@@ -261,11 +261,11 @@ function configure_gke() {
   if [ "${current_account}" = "" ]; then
     if ! make gke/login; then
       export CLOUD_PROVIDER=""
-      local error_text=("\n\nAuthorization failed. Unable to continue setup procedure."
-                        "\n\nPlease verify your Google Cloud credentials and try again.")
-
+      local error_text=("\nAuthorization failed. Unable to continue setup procedure."
+                        "\n\nPlease verify your Google Cloud credentials and try again."
+                        "\n")
       dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
-         "${error_text[*]}" 10 65
+         "${error_text[*]}" 9 65
 
       return 0
     fi
@@ -358,7 +358,7 @@ function configure_gke() {
     local gpus_in_region=$(gcloud compute accelerator-types list | grep ${CLOUDSDK_COMPUTE_REGION} | awk '{print $1}' | sort -u)
     local default_prediction_gpu=${GCP_PREDICTION_GPU_TYPE:-nvidia-tesla-t4}
     # local message="Choose a GPU for prediction (not training) from the GPU types available in your region:"
-    local message="Choose a GPU for prediction from the GPU types available in your region:"
+    local message="Choose a GPU from the GPU types available in your region:"
     export GCP_PREDICTION_GPU_TYPE=$(radiobox_from_array "Google Cloud" \
                                      $default_prediction_gpu "${message}" "${gpus_in_region}")
 
@@ -425,7 +425,7 @@ function configure_gke() {
     return 0
   fi
 
-  msgbox "Configuration Complete!" "\nThe cluster is now available for creation." 12 60
+  msgbox "Configuration Complete!" "\nThe cluster is now available for creation." 7 55
 
   export CLOUD_PROVIDER=gke
   export GCP_SERVICE_ACCOUNT=${CLOUDSDK_CONTAINER_CLUSTER}@${CLOUDSDK_CORE_PROJECT}.iam.gserviceaccount.com
@@ -464,7 +464,7 @@ function shell() {
 function create() {
   #todo: check if status is active and if not echo that fact and request config
   if [ -z "${CLOUD_PROVIDER^^}" ]; then
-    msgbox "Warning!" "Cluster configuration is required."
+    msgbox "Warning!" "Cluster configuration is required." 6 55
   else
     tailcmd "Create Cluster" "---COMPLETE---" make create
     export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
@@ -490,7 +490,7 @@ function view() {
 
 function confirm() {
 
-  dialog --backtitle "${BRAND}" --yesno "Are you sure?" 7 60
+  dialog --backtitle "${BRAND}" --yesno "Are you sure?" 6 55
   response=$?
   case $response in
     0) return 0;;
@@ -499,16 +499,18 @@ function confirm() {
   esac
 }
 
+
+
 function main() {
   export MENU=true
 
-  local welcome_text=("Welcome to the Deepcell Kiosk!"
+  local welcome_text=("\nWelcome to the Deepcell Kiosk!"
                       "\n\nThis Kiosk was developed by the Van Valen Lab at"
                       "the California Institute of Technology."
                       "\n\nhttps://vanvalenlab.caltech.edu")
 
   dialog --backtitle "$BRAND" --title "Welcome!" --clear --msgbox \
-         "${welcome_text[*]}" 12 60
+         "${welcome_text[*]}" 12 58
 
   while true; do
     ACTION=$(menu)
