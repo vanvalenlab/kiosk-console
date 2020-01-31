@@ -358,7 +358,7 @@ function configure_gke() {
     local gpus_in_region=$(gcloud compute accelerator-types list | grep ${CLOUDSDK_COMPUTE_REGION} | awk '{print $1}' | sort -u)
     local default_prediction_gpu=${GCP_PREDICTION_GPU_TYPE:-nvidia-tesla-t4}
     # local message="Choose a GPU for prediction (not training) from the GPU types available in your region:"
-    local message="Choose a GPU from the GPU types available in your region:"
+    local message="Choose a GPU from the types available in your region:"
     export GCP_PREDICTION_GPU_TYPE=$(radiobox_from_array "Google Cloud" \
                                      $default_prediction_gpu "${message}" "${gpus_in_region}")
 
@@ -499,7 +499,22 @@ function confirm() {
   esac
 }
 
+function confirm_cluster_launch() {
 
+  local notice_text=("\nYou are about to launch a cluster with the name: "
+                     "\n${CLOUDSDK_CORE_PROJECT}"
+                     "\n\nPlease note that this process will take several minutes."
+                     "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
+                     "\n\nWould you like to continue?")
+
+  dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" 12 58
+  response=$?
+  case $response in
+    0) return 0;;
+    1) return 1;;
+    255) return 1;;
+  esac
+}
 
 function main() {
   export MENU=true
@@ -522,7 +537,11 @@ function main() {
       "Shell") shell ;;
       # "AWS") configure_aws ;;
       "GKE") configure_gke ;;
-      "Create") create ;;
+      "Create"*)
+        confirm_cluster_launch
+        if [ $? = 0 ]; then
+          create
+        fi;;
       "Destroy"*)
         confirm
         if [ $? = 0 ]; then
