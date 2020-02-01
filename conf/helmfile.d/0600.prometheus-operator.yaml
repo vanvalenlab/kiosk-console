@@ -27,7 +27,7 @@ releases:
     vendor: "coreos"
     default: "true"
   chart: "stable/prometheus-operator"
-  version: "5.4.1"
+  version: "5.19.0"
   wait: true
   values:
     # Default values for prometheus-operator.
@@ -119,7 +119,7 @@ releases:
                     < on()
                     clamp_max(
                       (
-                        avg_over_time(redis_script_value{key="segmentation_image_keys"}[15s])
+                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[15s])
                         / on()
                         (
                           avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
@@ -131,7 +131,7 @@ releases:
                     or
                     clamp_max(
                       (
-                        avg_over_time(redis_script_value{key="segmentation_image_keys"}[15s])
+                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[15s])
                         / on()
                         (
                           avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
@@ -183,7 +183,7 @@ releases:
                 service: segmentation-scaling-service
             - record: zip_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_value{key="segmentation_zip_keys"}[15s])
+                avg_over_time(redis_script_values{key="segmentation_zip_keys"}[15s])
                 / on()
                 (
                   avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[15s])
@@ -195,7 +195,7 @@ releases:
                 service: zip-scaling-service
             - record: tracking_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_value{key="tracking_image_keys"}[15s])
+                avg_over_time(redis_script_values{key="tracking_image_keys"}[15s])
                 / on()
                 (
                   avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
@@ -457,19 +457,7 @@ releases:
         ##
         defaultDashboardsEnabled: true
 
-        dashboardProviders:
-          dashboardproviders.yaml:
-            apiVersion: 1
-            providers:
-            - name: 'vendor'
-              orgId: 1
-              folder: ''
-              type: file
-              disableDeletion: false
-              updateIntervalSeconds: 15
-              editable: true
-              options:
-                path: /var/lib/grafana/dashboards/vendor
+        adminPassword: prom-operator
 
         dashboards:
           vendor:
@@ -483,8 +471,6 @@ releases:
               gnetId: 763
               revision: 2
               datasource: Prometheus
-
-        adminPassword: prom-operator
 
         ingress:
           ## If true, Grafana Ingress will be created
@@ -527,6 +513,11 @@ releases:
           datasources:
             enabled: true
             defaultDatasourceEnabled: true
+            ## Create datasource for each Pod of Prometheus StatefulSet;
+            ## this uses headless service `prometheus-operated` which is
+            ## created by Prometheus Operator
+            ## ref: https://git.io/fjaBS
+            createPrometheusReplicasDatasources: false
             label: grafana_datasource
 
         extraConfigmapMounts: []

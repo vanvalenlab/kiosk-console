@@ -18,9 +18,8 @@ releases:
   - name: "prometheus-redis-exporter"
     labels:
       chart: "prometheus-redis-exporter"
-    chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/prometheus-redis-exporter'
-    # chart: "stable/prometheus-redis-exporter"
-    version: "1.0.2"
+    chart: "stable/prometheus-redis-exporter"
+    version: "3.2.1"
     namespace: "monitoring"
     values:
       - resources:
@@ -28,77 +27,9 @@ releases:
             cpu: 100m
             memory: 100Mi
 
-        extraArgs:
-          script: /custom-redis-script/custom-redis-metrics.lua
-
-        storage:
-          create: true
-          volume:
-            name: script-volume
-            mountPath: /custom-redis-script
-
-          configMap:
-            name:
-            data:
-              custom-redis-metrics.lua: |
-                -- Based on https://github.com/soveran/rediscan.lua by GitHub user Soveran.
-
-                local function get_queue_count(queue)
-                  -- Find number of keys in the queue
-                  local queue_size = redis.call("LLEN", queue)
-
-                  -- Get all processing queues
-                  local queue_regex = "processing-" .. queue .. ":*"
-
-                  local count = 0
-
-                  local cursor = "0"
-                  local done = false
-
-                  repeat
-
-                    local result = redis.call("SCAN", cursor, "MATCH", queue_regex, "COUNT", 1000)
-                    cursor = result[1]
-
-                    for i, key in ipairs(result[2]) do
-                      -- How many keys are in each queue (should be 1)
-                      local keys_in_queue = redis.call("LLEN", key)
-                      count = count + keys_in_queue
-                    end
-
-                    if cursor == "0" then
-                      done = true
-                    end
-
-                  until done
-
-                  return count + queue_size
-                end
-
-                -- Final table to output
-                local results = {}
-
-                -- All Queues to Monitor:
-                local queues = {}
-
-                queues[#queues+1] = "segmentation"
-                queues[#queues+1] = "tracking"
-
-                for _,queue in ipairs(queues) do
-                  local zip_queue = queue .. "-zip"
-
-                  local queue_count = get_queue_count(queue)
-                  local zip_queue_count = get_queue_count(zip_queue)
-
-                  table.insert(results, queue .. "_image_keys")
-                  table.insert(results, tostring(queue_count))
-
-                  table.insert(results, queue .. "_zip_keys")
-                  table.insert(results, tostring(zip_queue_count))
-
-                end
-
-                return results
+        script:
+          configmap: prometheus-redis-exporter-script
+          keyname: script
 
         service:
           annotations:
