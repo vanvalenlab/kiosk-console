@@ -471,13 +471,8 @@ function shell() {
 }
 
 function create() {
-  #todo: check if status is active and if not echo that fact and request config
-  if [ -z "${CLOUD_PROVIDER^^}" ]; then
-    msgbox "Warning!" "Cluster configuration is required." 6 55
-  else
-    tailcmd "Create Cluster" "---COMPLETE---" make create
-    export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
-  fi
+  tailcmd "Create Cluster" "---COMPLETE---" make create
+  export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
 }
 
 function destroy() {
@@ -511,6 +506,11 @@ function confirm() {
 function confirm_cluster_launch() {
 
   local current_account=$(gcloud config list --format 'value(core.account)')
+  if [ -z "${CLOUD_PROVIDER^^}" ]; then
+    msgbox "Warning!" "Cluster configuration is required." 6 55
+    return 1
+  fi
+
   if [ "${current_account}" = "" ]; then
     local error_text=("\nAuthorization failed. Unable to continue setup procedure."
                       "\n\nPlease verify your Google Cloud credentials and try again."
