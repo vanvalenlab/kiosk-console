@@ -41,12 +41,12 @@ kubectl/display/ip:
 ## Tear down prometheus-operator and it's CRDs
 kubectl/destroy/prometheus/operator:
 	@echo "Deleting prometheus-operator..."
-	@helm delete prometheus-operator --purge
-	@kubectl delete crd prometheuses.monitoring.coreos.com
-	@kubectl delete crd prometheusrules.monitoring.coreos.com
-	@kubectl delete crd servicemonitors.monitoring.coreos.com
-	@kubectl delete crd alertmanagers.monitoring.coreos.com
-	# @kubectl delete crd podmonitors.monitoring.coreos.com
+	-@helm delete prometheus-operator --purge
+	-@kubectl delete crd prometheuses.monitoring.coreos.com
+	-@kubectl delete crd prometheusrules.monitoring.coreos.com
+	-@kubectl delete crd servicemonitors.monitoring.coreos.com
+	-@kubectl delete crd alertmanagers.monitoring.coreos.com
+	-@kubectl delete crd podmonitors.monitoring.coreos.com
 
 ## Create horizontal pod autoscalers for all relevant deployments
 kubectl/implement/autoscaling:
