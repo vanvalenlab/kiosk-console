@@ -397,6 +397,36 @@ function configure_gke() {
 
   fi
 
+  # Validate account status and quotas
+  infobox "Loading..."
+  local project_info=$(gcloud compute project-info describe)
+  # Check if firewalls is 200, which is standard for an upgraded project
+  local firewalls=$(echo "${project_info}" | \
+                    grep FIREWALLS -B1 | \
+                    grep limit | \
+                    awk '{split($0, a, ": "); print a[2]}' | \
+                    awk '{split($0, a, "."); print a[1]}')
+  if [ $firewalls -lt 200 ]; then
+    error_text=("\nYour project must be upgraded in Google Cloud console"
+                "before you can deploy a cluster.")
+    msgbox "Warning!" "${error_text[*]}"
+    return 0
+  fi
+  # At least 16 IN_USE_ADDRESSES are required.
+  local min_addresses=16
+  local in_use_addresses=$(echo "${project_info}" | \
+                           grep IN_USE_ADDRESSES -B1 | \
+                           grep limit | \
+                           awk '{split($0, a, ": "); print a[2]}' | \
+                           awk '{split($0, a, "."); print a[1]}')
+  if [ $in_use_addresses -lt $min_addresses ]; then
+    error_text=("\nThe cluster requires at least ${min_addresses} In-use IP Addresses."
+                "\n\nPlease request a quota increase from the Google Cloud console.")
+    msgbox "Warning!" "${error_text[*]}"
+    return 0
+  fi
+  # TODO: Should have a quota of at leat 1 GPU of the requested type.
+
   # Find at least 2 zones to deploy the cluster.
   # If GPUs are not available in at least 2 zones, the user must restart.
   local available_zones=$(gcloud compute zones list | grep "UP" \
