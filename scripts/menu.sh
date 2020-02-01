@@ -305,6 +305,13 @@ function configure_gke() {
     return 0
   fi
 
+  # Get information about the project from gcloud
+  infobox "Loading..."
+  local default_region=$(gcloud compute project-info describe | \
+                         grep google-compute-default-region -A1 | \
+                         grep value | \
+                         awk '{split($0, a, ": "); print a[2]}')
+
   # use default settings or use the advanced menu
   local setup_opt_value=$(dialog --clear --backtitle "${BRAND}" \
               --title "  Configuration Options  " \
@@ -320,7 +327,7 @@ function configure_gke() {
   elif [ "$setup_opt_value" = "Default" ]; then
     # Default settings
     infobox "Loading default values..." 5 55
-    export CLOUDSDK_COMPUTE_REGION=us-west1
+    export CLOUDSDK_COMPUTE_REGION=${default_region:-us-west1}
     export GKE_MACHINE_TYPE=n1-standard-1
     export NODE_MIN_SIZE=1
     export NODE_MAX_SIZE=10
@@ -333,7 +340,7 @@ function configure_gke() {
     # Advanced menu
     infobox "Loading..."
     local regions=$(gcloud compute regions list | grep "-" | awk '{print $1}')
-    local default_region=${CLOUDSDK_COMPUTE_REGION:-us-west1}
+    local default_region=${CLOUDSDK_COMPUTE_REGION:-$default_region}
     local message="Choose a region for hosting your cluster:"
     export CLOUDSDK_COMPUTE_REGION=$(radiobox_from_array "Google Cloud" \
                                      $default_region "${message}" "${regions}")
