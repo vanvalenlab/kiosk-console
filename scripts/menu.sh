@@ -348,7 +348,14 @@ function configure_gke() {
       return 0
     fi
 
-    export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-1}")
+    infobox "Loading..."
+    local machines=($(gcloud compute machine-types list | \
+                     grep "${CLOUDSDK_COMPUTE_REGION}" | \
+                     awk '{print $1}'))
+    local machines=$(printf "%s\n" "${machines[@]}" | sort -u)
+    export GKE_MACHINE_TYPE=$(radiobox_from_array "Google Cloud" \
+                              "${GKE_MACHINE_TYPE:-n1-standard-1}" \
+                              "Node (non-GPU) Type" "${machines}")
     if [ "$GKE_MACHINE_TYPE" = "" ]; then
       return 0
     fi
