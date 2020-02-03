@@ -349,9 +349,9 @@ function configure_gke() {
     fi
 
     infobox "Loading..."
-    local machines=($(gcloud compute machine-types list | \
-                     grep "${CLOUDSDK_COMPUTE_REGION}" | \
-                     awk '{print $1}'))
+    local machines=($(gcloud compute machine-types list --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" | \
+                      grep -v NAME | \
+                      awk '{print $1}'))
     local machines=$(printf "%s\n" "${machines[@]}" | sort -u)
     export GKE_MACHINE_TYPE=$(radiobox_from_array "Google Cloud" \
                               "${GKE_MACHINE_TYPE:-n1-standard-1}" \
