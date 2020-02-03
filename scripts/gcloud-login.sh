@@ -1,21 +1,11 @@
 #!/usr/bin/env bash
 
-# fetch a login URL
-long_url=$(gcloud auth login --no-launch-browser </dev/null 2>&1 | grep https:// | tr -d ' ')
-short_url=$(curl -sS "http://tinyurl.com/api-create.php?url=$long_url")
 clear
-# qrencode -t utf8 "$long_url"
-echo "Deploying a cluster on Google Cloud requires authorization.
 
-Please go to this website to authorize access to your Google Cloud account:
+echo "Deploying a cluster on Google Cloud requires authorization."
+echo ""
 
-$long_url
-"
-
-echo -n "Enter authorization code: "
-read code
-
-echo "$code" | gcloud auth login --no-launch-browser --quiet >/dev/null 2>&1
+gcloud auth login --no-launch-browser --verbosity "error"
 
 if [ $? -eq 0 ]; then
   echo "Success!"
