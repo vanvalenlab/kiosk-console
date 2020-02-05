@@ -78,7 +78,7 @@ releases:
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         beta.kubernetes.io/instance-type: '{{ env "AWS_GPU_MACHINE_TYPE" | default "p2.xlarge" }}'
 {{ else }}
-        cloud.google.com/gke-accelerator: '{{ env "PREDICTION_GPU_TYPE" | default "nvidia-tesla-k80" }}'
+        cloud.google.com/gke-accelerator: '{{ env "GCP_PREDICTION_GPU_TYPE" | default "nvidia-tesla-k80" }}'
         cloud.google.com/gke-preemptible: "true"
 {{ end }}
 
