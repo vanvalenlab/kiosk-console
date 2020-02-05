@@ -3,17 +3,17 @@ Tutorial: Creating a custom job
 
 Rationale
 ---------
-.. todo::
 
-    Write material that explains why a user might want to build their own consumer. Make a decision about which portions of this documentation should be in the readme of the kiosk-redis-consumer as opposed to here.
+In the kubernetes environment created by the kiosk, the task of processing images is coordinated by the redis-consumer. The number of consumers at work in any point in time is automatically scaled to match the number of images waiting in a work queue since each redis-consumer can only process one image at a time. Ultimately the redis-consumer is responsible for sending data to tf-serving containers to retrieve model predictions, but it also handles any pre- and post-processing steps that are required by a particular model.
 
-Exporting a model
------------------
+Currently, `deepcell.org <www.deepcell.org>`_ supports a cell tracking feature which is facilitated by the ``tracking-consumer``, which handles the multi-step process of cell tracking:
 
-:func:`~deepcell.utils.export_utils.export_model`
+  1. Send each frame of the dataset for segmentation
+  2. Retrive model predictions and run post-processing to generate cell segmentation masks
+  3. Send cell segmentation masks for cell tracking predictions
+  4. Compile final tracking results and post for download
 
-Names to specify
-----------------
+New data processing pipelines can be implemented by writing a custom consumer. The model can be exported for tf-serving using :func:`~deepcell.utils.export_utils.export_model`.
 
 The following variables will be used throughout the setup of the custom consumer. Pick out names that are appropriate for your consumer.
 
@@ -119,23 +119,23 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
 
 3. In the ``/conf/helmfile.d/`` folder in your kiosk environment, add a new helmfile following the convention ``02##.custom-consumer.yaml``. The text for the helmfile can be copied from ``0250.tracking-consumer.yaml`` as shown below. Then make the following changes to customize the helmfile to your consumer.
 
-* Line 13: Change ``name`` to :data:`consumer_name`
-* Lines 32-33: Change docker image repository and tag
-* Line 36: Change ``nameOverride`` to :data:`consumer_name`
-* Line 57: Change ``QUEUE`` to :data:`queue_name`
-* Line 58: Change ``CONSUMER_TYPE`` to :data:`consumer_type`
+  * Line 13: Change ``name`` to :data:`consumer_name`
+  * Lines 32-33: Change docker image repository and tag
+  * Line 36: Change ``nameOverride`` to :data:`consumer_name`
+  * Line 57: Change ``QUEUE`` to :data:`queue_name`
+  * Line 58: Change ``CONSUMER_TYPE`` to :data:`consumer_type`
 
-.. todo::
+  .. todo::
 
     Confirm list of required helmfile changes
 
-.. hidden-code-block:: yaml
+  .. hidden-code-block:: yaml
     :starthidden: true
     :label: + Show/Hide example helmfile
     :linenos:
 
     helmDefaults:
-    args:
+      args:
         - "--wait"
         - "--timeout=600"
         - "--force"
@@ -154,94 +154,93 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
     - name: "tracking-consumer"
     namespace: "deepcell"
     labels:
-        chart: "redis-consumer"
-        component: "deepcell"
-        namespace: "deepcell"
-        vendor: "vanvalenlab"
-        default: "true"
+      chart: "redis-consumer"
+      component: "deepcell"
+      namespace: "deepcell"
+      vendor: "vanvalenlab"
+      default: "true"
     chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
     version: "0.1.0"
     values:
-        - replicas: 1
+      - replicas: 1
 
         image:
-            repository: "vanvalenlab/kiosk-redis-consumer"
-            tag: "0.4.1"
-            pullPolicy: "Always"
+          repository: "vanvalenlab/kiosk-redis-consumer"
+          tag: "0.4.1"
+          pullPolicy: "Always"
 
         nameOverride: "tracking-consumer"
 
         resources:
-            requests:
+          requests:
             cpu: 300m
             memory: 256Mi
-            # limits:
-            #   cpu: 100m
-            #   memory: 1024Mi
+          # limits:
+          #   cpu: 100m
+          #   memory: 1024Mi
 
         tolerations:
-            - key: consumer
+          - key: consumer
             operator: Exists
             effect: NoSchedule
 
         nodeSelector:
-            consumer: "yes"
+          consumer: "yes"
 
         env:
-            DEBUG: "true"
-            INTERVAL: 1
-            QUEUE: "track"
-            CONSUMER_TYPE: "tracking"
-            EMPTY_QUEUE_TIMEOUT: 5
-            GRPC_TIMEOUT: 20
-            GRPC_BACKOFF: 3
+          DEBUG: "true"
+          INTERVAL: 1
+          QUEUE: "track"
+          CONSUMER_TYPE: "tracking"
+          EMPTY_QUEUE_TIMEOUT: 5
+          GRPC_TIMEOUT: 20
+          GRPC_BACKOFF: 3
 
-            REDIS_HOST: "redis"
-            REDIS_PORT: 26379
-            REDIS_TIMEOUT: 3
+          REDIS_HOST: "redis"
+          REDIS_PORT: 26379
+          REDIS_TIMEOUT: 3
 
-            TF_HOST: "tf-serving"
-            TF_PORT: 8500
-            TF_TENSOR_NAME: "image"
-            TF_TENSOR_DTYPE: "DT_FLOAT"
+          TF_HOST: "tf-serving"
+          TF_PORT: 8500
+          TF_TENSOR_NAME: "image"
+          TF_TENSOR_DTYPE: "DT_FLOAT"
 
-            AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
-            CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
-            GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
+          AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
+          CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+          GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-            NUCLEAR_MODEL: "panoptic:3"
-            NUCLEAR_POSTPROCESS: "retinanet-semantic"
+          NUCLEAR_MODEL: "panoptic:3"
+          NUCLEAR_POSTPROCESS: "retinanet-semantic"
 
-            PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
-            PHASE_POSTPROCESS: "retinanet"
+          PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
+          PHASE_POSTPROCESS: "retinanet"
 
-            CYTOPLASM_MODEL: "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
-            CYTOPLASM_POSTPROCESS: "retinanet"
+          CYTOPLASM_MODEL: "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
+          CYTOPLASM_POSTPROCESS: "retinanet"
 
-            LABEL_DETECT_ENABLED: "true"
-            LABEL_DETECT_MODEL: "LabelDetection:0"
-            LABEL_RESHAPE_SIZE: 216
-            LABEL_DETECT_SAMPLE: 10
+          LABEL_DETECT_ENABLED: "true"
+          LABEL_DETECT_MODEL: "LabelDetection:0"
+          LABEL_RESHAPE_SIZE: 216
+          LABEL_DETECT_SAMPLE: 10
 
-            SCALE_DETECT_ENABLED: "true"
-            SCALE_DETECT_MODEL: "ScaleDetection:0"
-            SCALE_RESHAPE_SIZE: 216
-            SCALE_DETECT_SAMPLE: 10
+          SCALE_DETECT_ENABLED: "true"
+          SCALE_DETECT_MODEL: "ScaleDetection:0"
+          SCALE_RESHAPE_SIZE: 216
+          SCALE_DETECT_SAMPLE: 10
 
-            DRIFT_CORRECT_ENABLED: "false"
-            NORMALIZE_TRACKING: "true"
+          DRIFT_CORRECT_ENABLED: "false"
+          NORMALIZE_TRACKING: "true"
 
-            TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-            TRACKING_SEGMENT_MODEL: "panoptic:3"
-            TRACKING_POSTPROCESS_FUNCTION: "retinanet"
+          TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
+          TRACKING_SEGMENT_MODEL: "panoptic:3"
+          TRACKING_POSTPROCESS_FUNCTION: "retinanet"
 
         secrets:
-            AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
-            AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-            AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-            GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+          AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+          AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+          AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+          GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
 
-|
 4. Deploy your new helmfile to the cluster with:
 
 .. code-block:: bash
@@ -265,11 +264,135 @@ To effectively scale your new consumer, some small edits will be needed in the f
 * |prometheus-operator.yaml|
 * |hpa.yaml|
 
-Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the ``prometheus-redis-exporter``, the custom rule is defined in ``prometheus-operator``, and the Horizontal Pod Autoscaler is created and configured to use the new rule in the ``hpa.yaml`` file. Please use custom metric ``redis_consumer_key_ratio`` as an example.
+Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the ``prometheus-redis-exporter``, the custom rule is defined in ``prometheus-operator``, and the Horizontal Pod Autoscaler is created and configured to use the new rule in the ``hpa.yaml`` file.
+
+1. |prometheus-redis-exporter.yaml|
+
+  Add a line to the ``custom-redis-metrics.lua`` function after lines 41-42 (see below) that specifies the name of the new queue (:data:`queue_name`).
+
+  .. hidden-code-block:: lua
+    :starthidden: true
+    :label: + Show/Hide custom-redis-metrics.lua
+    :linenos:
+
+    -- Based on https://github.com/soveran/rediscan.lua by GitHub user Soveran.
+
+    local function get_queue_count(queue)
+        -- Find number of keys in the queue
+        local queue_size = redis.call("LLEN", queue)
+
+        -- Get all processing queues
+        local queue_regex = "processing-" .. queue .. ":*"
+
+        local count = 0
+
+        local cursor = "0"
+        local done = false
+
+        repeat
+
+        local result = redis.call("SCAN", cursor, "MATCH", queue_regex, "COUNT", 1000)
+        cursor = result[1]
+
+        for i, key in ipairs(result[2]) do
+            -- How many keys are in each queue (should be 1)
+            local keys_in_queue = redis.call("LLEN", key)
+            count = count + keys_in_queue
+        end
+
+        if cursor == "0" then
+            done = true
+        end
+
+        until done
+
+        return count + queue_size
+    end
+
+    -- Final table to output
+    local results = {}
+
+    -- All Queues to Monitor:
+    local queues = {}
+
+    queues[#queues+1] = "predict"
+    queues[#queues+1] = "track"
+
+    for _,queue in ipairs(queues) do
+        local zip_queue = queue .. "-zip"
+
+        local queue_count = get_queue_count(queue)
+        local zip_queue_count = get_queue_count(zip_queue)
+
+        table.insert(results, queue .. "_image_keys")
+        table.insert(results, tostring(queue_count))
+
+        table.insert(results, queue .. "_zip_keys")
+        table.insert(results, tostring(zip_queue_count))
+
+    end
+
+    return results
+
+2. |prometheus-operator.yaml|
+
+  Add a new ``record`` under ``- name: custom-redis-metrics``. In the example below, make the following modifications.
+
+  * Line 1: replace ``tracking`` with :data:`consumer_type`
+  * Line 3: replace ``track`` with :data:`queue_name`
+  * Line 12: replace ``tracking`` with :data:`consumer_type`
+
+  .. code-block:: yaml
+    :linenos:
+
+    - record: tracking_consumer_key_ratio
+      expr: |-
+        avg_over_time(redis_script_value{key="track_image_keys"}[15s])
+        / on()
+        (
+            avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
+            +
+            1
+        )
+      labels:
+        namespace: deepcell
+        service: tracking-scaling-service
+
+3. |hpa.yaml|
+
+  Add a new section based on the example below to the bottom of ``hpa.yaml`` following a ``---``.
+
+  * Lines 4 & 10: replace ``tracking-consumer`` with :data:`consumer_name`
+  * Line 16 & 20: replace ``tracking`` with :data:`consumer_type`
+
+  .. code-block:: yaml
+    :linenos:
+
+    apiVersion: autoscaling/v2beta1
+    kind: HorizontalPodAutoscaler
+    metadata:
+      name: tracking-consumer
+      namespace: deepcell
+    spec:
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: tracking-consumer
+      minReplicas: 1
+      maxReplicas: $GPU_MAX_TIMES_FIFTY
+      metrics:
+      - type: Object
+        object:
+          metricName: tracking_consumer_key_ratio
+          target:
+            apiVersion: v1
+            kind: Namespace
+            name: tracking_consumer_key_ratio
+          targetValue: 1
 
 .. todo::
 
-    Where is this example ``redis_consumer_key_ratio``? Can we provide a bit more information about the actually contents of what would need to be added to the documents listed above
+    Do we have guidelines or recommendations for how to set the actual parameters for scaling?
 
 .. |hpa.yaml| raw:: html
 
