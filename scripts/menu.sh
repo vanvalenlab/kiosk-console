@@ -305,6 +305,13 @@ function configure_gke() {
     return 0
   fi
 
+  # Get information about the project from gcloud
+  infobox "Loading..."
+  local default_region=$(gcloud compute project-info describe | \
+                         grep google-compute-default-region -A1 | \
+                         grep value | \
+                         awk '{split($0, a, ": "); print a[2]}')
+
   # use default settings or use the advanced menu
   local setup_opt_value=$(dialog --clear --backtitle "${BRAND}" \
               --title "  Configuration Options  " \
@@ -320,7 +327,7 @@ function configure_gke() {
   elif [ "$setup_opt_value" = "Default" ]; then
     # Default settings
     infobox "Loading default values..." 5 55
-    export CLOUDSDK_COMPUTE_REGION=us-west1
+    export CLOUDSDK_COMPUTE_REGION=${default_region:-us-west1}
     export GKE_MACHINE_TYPE=n1-standard-1
     export NODE_MIN_SIZE=1
     export NODE_MAX_SIZE=10
@@ -333,7 +340,7 @@ function configure_gke() {
     # Advanced menu
     infobox "Loading..."
     local regions=$(gcloud compute regions list | grep "-" | awk '{print $1}')
-    local default_region=${CLOUDSDK_COMPUTE_REGION:-us-west1}
+    local default_region=${CLOUDSDK_COMPUTE_REGION:-$default_region}
     local message="Choose a region for hosting your cluster:"
     export CLOUDSDK_COMPUTE_REGION=$(radiobox_from_array "Google Cloud" \
                                      $default_region "${message}" "${regions}")
@@ -341,7 +348,14 @@ function configure_gke() {
       return 0
     fi
 
-    export GKE_MACHINE_TYPE=$(inputbox "Google Cloud" "Node (non-GPU) Type" "${GKE_MACHINE_TYPE:-n1-standard-1}")
+    infobox "Loading..."
+    local machines=($(gcloud compute machine-types list --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" | \
+                      grep -v NAME | \
+                      awk '{print $1}'))
+    local machines=$(printf "%s\n" "${machines[@]}" | sort -u)
+    export GKE_MACHINE_TYPE=$(radiobox_from_array "Google Cloud" \
+                              "${GKE_MACHINE_TYPE:-n1-standard-1}" \
+                              "Node (non-GPU) Type" "${machines}")
     if [ "$GKE_MACHINE_TYPE" = "" ]; then
       return 0
     fi
@@ -389,6 +403,36 @@ function configure_gke() {
     infobox "Loading..."
 
   fi
+
+  # Validate account status and quotas
+  infobox "Loading..."
+  local project_info=$(gcloud compute project-info describe)
+  # Check if firewalls is 200, which is standard for an upgraded project
+  local firewalls=$(echo "${project_info}" | \
+                    grep FIREWALLS -B1 | \
+                    grep limit | \
+                    awk '{split($0, a, ": "); print a[2]}' | \
+                    awk '{split($0, a, "."); print a[1]}')
+  if [ $firewalls -lt 200 ]; then
+    error_text=("\nYour project must be upgraded in Google Cloud console"
+                "before you can deploy a cluster.")
+    msgbox "Warning!" "${error_text[*]}"
+    return 0
+  fi
+  # At least 16 IN_USE_ADDRESSES are required.
+  local min_addresses=16
+  local in_use_addresses=$(echo "${project_info}" | \
+                           grep IN_USE_ADDRESSES -B1 | \
+                           grep limit | \
+                           awk '{split($0, a, ": "); print a[2]}' | \
+                           awk '{split($0, a, "."); print a[1]}')
+  if [ $in_use_addresses -lt $min_addresses ]; then
+    error_text=("\nThe cluster requires at least ${min_addresses} In-use IP Addresses."
+                "\n\nPlease request a quota increase from the Google Cloud console.")
+    msgbox "Warning!" "${error_text[*]}"
+    return 0
+  fi
+  # TODO: Should have a quota of at leat 1 GPU of the requested type.
 
   # Find at least 2 zones to deploy the cluster.
   # If GPUs are not available in at least 2 zones, the user must restart.
@@ -464,13 +508,8 @@ function shell() {
 }
 
 function create() {
-  #todo: check if status is active and if not echo that fact and request config
-  if [ -z "${CLOUD_PROVIDER^^}" ]; then
-    msgbox "Warning!" "Cluster configuration is required." 6 55
-  else
-    tailcmd "Create Cluster" "---COMPLETE---" make create
-    export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
-  fi
+  tailcmd "Create Cluster" "---COMPLETE---" make create
+  export CLUSTER_ADDRESS=$(sed -E 's/^export CLUSTER_ADDRESS=(.+)$/\1/' ./cluster_address)
 }
 
 function destroy() {
@@ -504,6 +543,11 @@ function confirm() {
 function confirm_cluster_launch() {
 
   local current_account=$(gcloud config list --format 'value(core.account)')
+  if [ -z "${CLOUD_PROVIDER^^}" ]; then
+    msgbox "Warning!" "Cluster configuration is required." 6 55
+    return 1
+  fi
+
   if [ "${current_account}" = "" ]; then
     local error_text=("\nAuthorization failed. Unable to continue setup procedure."
                       "\n\nPlease verify your Google Cloud credentials and try again."
