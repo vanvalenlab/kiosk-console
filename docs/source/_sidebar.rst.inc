@@ -3,7 +3,7 @@
 
 .. toctree::
     :caption: Deepcell Kiosk
-    :maxdepth: 3
+    :maxdepth: 2
 
     Getting Started <GETTING_STARTED>
     Troubleshooting <TROUBLESHOOTING>
@@ -14,5 +14,5 @@
 
 .. toctree::
     :caption: Container Reference
-    :maxdepth: 3
+    :maxdepth: 2
 
