@@ -1,9 +1,7 @@
 helmDefaults:
-  args:
-    - "--wait"
-    - "--timeout=600"
-    - "--force"
-    - "--reset-values"
+  wait: true
+  timeout: 600
+  force: true
 
 releases:
 
@@ -30,7 +28,7 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.4.1"
+        tag: "0.4.4"
         pullPolicy: "Always"
 
       nameOverride: zip-consumer
@@ -52,6 +50,7 @@ releases:
         consumer: "yes"
 
       env:
+        QUEUE: "segmentation"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
@@ -68,4 +67,4 @@ releases:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+        GKE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
