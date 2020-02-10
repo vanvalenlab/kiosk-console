@@ -1182,11 +1182,11 @@ releases:
 
           ## Interval between consecutive scrapes.
           ##
-          scrapeInterval: ""
+          scrapeInterval: 15s
 
           ## Interval between consecutive evaluations.
           ##
-          evaluationInterval: ""
+          evaluationInterval: 15s
 
           ## ListenLocal makes the Prometheus server listen on loopback, so that it does not bind against the Pod IP.
           ##
