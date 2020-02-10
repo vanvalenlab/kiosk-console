@@ -28,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-benchmarking
-        tag: 0.2.3
+        tag: 0.2.4
         pullPolicy: Always
 
       resources:
@@ -38,6 +38,8 @@ releases:
 
       env:
         JOB_TYPE: "segmentation"
+        SCALE: 1
+        LABEL: ""
         NUM_CYCLES: 1
         NUM_GPUS: '{{ env "GPU_NODE_MAX_SIZE" | default "MIA" }}'
         GRAFANA_USER: admin
