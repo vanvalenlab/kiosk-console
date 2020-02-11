@@ -287,7 +287,7 @@ function configure_gke() {
 
   # Get the cluster name from the user or the environment
   if [ -z ${CLOUDSDK_CONTAINER_CLUSTER} ]; then
-    export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
+    export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$((1 + RANDOM % 100))"
   fi
 
   export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
