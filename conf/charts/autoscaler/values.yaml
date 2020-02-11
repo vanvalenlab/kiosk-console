@@ -5,9 +5,9 @@
 replicas: 1
 
 image:
-  repository: "vanvalenlab/kiosk-autoscaler"
-  tag: "latest"
-  pullPolicy: "Always"
+  repository: vanvalenlab/kiosk-autoscaler
+  tag: latest
+  pullPolicy: IfNotPresent
 
 resources: {}
 

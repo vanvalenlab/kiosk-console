@@ -5,12 +5,12 @@
 replicas: 0
 
 image:
-  repository: "vanvalenlab/kiosk-tf-serving"
-  tag: "latest"
-  pullPolicy: "Always"
+  repository: vanvalenlab/kiosk-tf-serving
+  tag: latest
+  pullPolicy: IfNotPresent
 
 service:
-  type: "ClusterIP"
+  type: ClusterIP
 
   httpIngressEnabled: true
   internalHttpPort: 8501
