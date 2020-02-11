@@ -24,9 +24,16 @@ rbac:
   pspEnabled: false
 
 env:
+  RESOURCE_NAME: "tf-serving"
+  RESOURCE_TYPE: "deployment"
+  RESOURCE_NAMESPACE: "default"
   DEBUG: "true"
-  INTERVAL: 10
+  INTERVAL: 5
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
-  QUEUES: "predict,train,track"
-  AUTOSCALING: "3|10|5|deployment|example; 3|5|3|development|example2"
+  REDIS_INTERVAL: 1
+  QUEUES: "segmentation,tracking"
+  QUEUE_DELIMITER: ","
+  MAX_PODS: 1
+  MIN_PODS: 0
+  KEYS_PER_POD: 1

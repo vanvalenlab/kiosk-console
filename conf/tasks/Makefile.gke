@@ -1,7 +1,5 @@
 # FIXME: GPU AZs and GKE AZ might not be same
 
-export KUBERNETES_VERSION=latest
-
 export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 
 # https://cloud.google.com/kubernetes-engine/docs/quickstart
@@ -9,34 +7,6 @@ export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
 # https://cloud.google.com/compute/pricing
 #
 # Increase quotas: https://console.cloud.google.com/iam-admin/quotas
-
-export CLUSTER_NAME ?= deepcell
-export GKE_COMPUTE_REGION ?= us-west1
-export GKE_MACHINE_TYPE ?= n1-standard-1
-export NODE_MIN_SIZE ?= 1
-export NODE_MAX_SIZE ?= 10
-export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
-
-# Non-GPU machine type
-export CONSUMER_MACHINE_TYPE ?= n1-highmem-2
-
-# Not all GPU types are available in all regions/availability zones
-export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
-export PREDICTION_GPU_TYPE ?= nvidia-tesla-t4
-export TRAINING_GPU_TYPE ?= nvidia-tesla-v100
-export GPU_MACHINE_TYPE ?= n1-highmem-2
-export GPU_NODE_MIN_SIZE ?= 0
-export GPU_NODE_MAX_SIZE ?= 4
-export GPU_PER_NODE ?= 1
-
-# Project name must be globally unique
-export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
-
-# Cluster name ust be unique within the project
-export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
-
-# Bucket name need not be unique
-export CLOUDSDK_BUCKET ?= $(GKE_BUCKET)
 
 ## Login to Google Cloud
 gke/login:
@@ -55,9 +25,9 @@ gke/destroy/project:
 gke/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
-	gcloud container clusters create $(CLUSTER_NAME) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region=$(GKE_COMPUTE_REGION) \
+	gcloud container clusters create $(CLOUDSDK_CONTAINER_CLUSTER) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
+		--region=$(CLOUDSDK_COMPUTE_REGION) \
 		--node-locations=$(REGION_ZONES_WITH_GPUS) \
 		--max-nodes=$(NODE_MAX_SIZE) \
 		--min-nodes=$(NODE_MIN_SIZE) \
@@ -72,7 +42,7 @@ gke/create/cluster:
 ## Destroy GKE cluster
 gke/destroy/cluster:
 	@echo "Destroying cluster..."
-	@-gcloud container clusters --region $(GKE_COMPUTE_REGION) delete $(CLUSTER_NAME) --quiet
+	@-gcloud container clusters --region $(CLOUDSDK_COMPUTE_REGION) delete $(CLOUDSDK_CONTAINER_CLUSTER) --quiet
 	@echo "Cluster destruction finished."
 	@echo " "
 	@echo " "
@@ -80,8 +50,8 @@ gke/destroy/cluster:
 ## Set context to use GKE cluster (e.g. with kubectl)
 gke/use/cluster:
 	@gcloud config set project $(CLOUDSDK_CORE_PROJECT)
-	@gcloud config set compute/region $(GKE_COMPUTE_REGION)
-	@gcloud container clusters get-credentials $(CLUSTER_NAME)
+	@gcloud container clusters get-credentials $(CLOUDSDK_CONTAINER_CLUSTER)
+	@gcloud config set compute/region $(CLOUDSDK_COMPUTE_REGION)
 
 ## List all GKE projects
 gke/list/projects:
@@ -99,16 +69,14 @@ gke/list/accelerator-types:
 gke/list/billing-accounts:
 	@gcloud alpha billing accounts list
 
-# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
-## Create GKE GPU node pool
-#		--enable-autoupgrade
-gke/create/node-pools:
+## Node pool creation
+gke/create/consumer-node-pool:
 	@echo "Creating consumer CPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create consumer-cpu \
-		--cluster $(CLUSTER_NAME) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region $(GKE_COMPUTE_REGION) \
+		--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
+		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes 1 \
 		--min-nodes 1 \
 		--max-nodes ${NODE_MAX_SIZE} \
@@ -119,13 +87,15 @@ gke/create/node-pools:
 		--preemptible \
 		--node-labels consumer=yes \
 		--node-taints consumer=yes:NoSchedule
+
+gke/create/prediction-node-pool:
 	@echo "Creating prediction GPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create prediction-gpu \
-		--cluster $(CLUSTER_NAME) \
-		--accelerator type=$(PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region $(GPU_COMPUTE_REGION) \
+		--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
+		--accelerator type=$(GCP_PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
+		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
 		--max-nodes $(GPU_NODE_MAX_SIZE) \
@@ -135,13 +105,15 @@ gke/create/node-pools:
 		--no-enable-autoupgrade \
 		--preemptible \
 		--node-taints prediction_gpu=yes:NoSchedule
+
+gke/create/training-node-pool:
 	@echo "Creating training GPU node pool..."
 	@echo "Using the following command: "
 	gcloud container node-pools create training-gpu \
-		--cluster $(CLUSTER_NAME) \
-		--accelerator type=$(TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-		--region $(GPU_COMPUTE_REGION) \
+		--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
+		--accelerator type=$(GCP_TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
+		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
 		--max-nodes $(GPU_NODE_MAX_SIZE) \
@@ -150,7 +122,15 @@ gke/create/node-pools:
 		--enable-autorepair \
 		--no-enable-autoupgrade \
 		--node-taints training_gpu=yes:NoSchedule
-	@echo "GPU node pool creation finished."
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
+## Create GKE GPU node pool
+#		--enable-autoupgrade
+gke/create/node-pools: \
+	gke/create/consumer-node-pool \
+	gke/create/prediction-node-pool
+	# gke/create/training-node-pool
+	@echo "All node pools created."
 	@echo " "
 	@echo " "
 
@@ -160,9 +140,9 @@ gke/create/elk-node-pools:
 		echo "Creating elasticsearch CPU node pool...";\
 		echo "Using the following command: ";\
 		gcloud container node-pools create elasticsearch-cpu \
-			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-			--region $(GKE_COMPUTE_REGION) \
-			--cluster $(CLUSTER_NAME) \
+			--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
+			--service-account=$(GCP_SERVICE_ACCOUNT) \
+			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 2 \
 			--min-nodes 1 \
 			--max-nodes 2 \
@@ -176,9 +156,9 @@ gke/create/elk-node-pools:
 		echo "Creating logstash CPU node pool..."; \
 		echo "Using the following command: "; \
 		gcloud container node-pools create logstash-cpu \
-			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
-			--region $(GKE_COMPUTE_REGION) \
-			--cluster $(CLUSTER_NAME) \
+			--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
+			--service-account=$(GCP_SERVICE_ACCOUNT) \
+			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 3 \
 			--min-nodes 1 \
 			--max-nodes 20 \
@@ -221,9 +201,9 @@ gke/destroy/pds:
 ## Create Service Account used by deepcell
 gke/create/service-account:
 	@echo "Creating GKE service account..."
-	@gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" || \
+	@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "
@@ -231,8 +211,8 @@ gke/create/service-account:
 ## Delete Service Account used by deepcell
 gke/destroy/service-account:
 	@echo "Destroying GKE service-account..."
-	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
-	@-gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --quiet
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+	@-gcloud iam service-accounts delete $(GCP_SERVICE_ACCOUNT) --quiet
 	@echo "GKE service-account destruction finished."
 	@echo " "
 	@echo " "
@@ -242,7 +222,7 @@ gke/create/bucket:
 	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
 	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) \
 		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
-	@-gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET)
+	@-gsutil acl ch -u $(GCP_SERVICE_ACCOUNT):O gs://$(CLOUDSDK_BUCKET)
 	@echo "Google Cloud Storage Bucket creation finished."
 	@echo " "
 	@echo " "

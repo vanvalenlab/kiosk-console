@@ -1,9 +1,7 @@
 helmDefaults:
-  args:
-    - "--wait"
-    - "--timeout=600"
-    - "--force"
-    - "--reset-values"
+  wait: true
+  timeout: 600
+  force: true
 
 releases:
 
@@ -64,4 +62,4 @@ releases:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+        GKE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'

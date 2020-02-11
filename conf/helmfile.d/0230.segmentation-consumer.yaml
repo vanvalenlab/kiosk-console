@@ -1,9 +1,7 @@
 helmDefaults:
-  args:
-    - "--wait"
-    - "--timeout=600"
-    - "--force"
-    - "--reset-values"
+  wait: true
+  timeout: 600
+  force: true
 
 releases:
 
@@ -15,7 +13,7 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "redis-consumer"
+- name: "segmentation-consumer"
   namespace: "deepcell"
   labels:
     chart: "redis-consumer"
@@ -30,8 +28,10 @@ releases:
 
       image:
         repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.4.3"
+        tag: "0.4.4"
         pullPolicy: "Always"
+
+      nameOverride: "segmentation-consumer"
 
       resources:
         requests:
@@ -52,7 +52,7 @@ releases:
       env:
         DEBUG: "true"
         INTERVAL: 1
-        QUEUE: "predict"
+        QUEUE: "segmentation"
         CONSUMER_TYPE: "image"
         EMPTY_QUEUE_TIMEOUT: 5
         GRPC_TIMEOUT: 20
@@ -94,4 +94,4 @@ releases:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+        GKE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'

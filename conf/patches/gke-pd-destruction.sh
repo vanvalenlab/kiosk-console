@@ -12,4 +12,4 @@ do
     sleep 30
   done
   echo "Successfully deleted persistent disk ${VAR_NAME}."
-done < <(gcloud compute disks list | grep $CLUSTER_NAME)
+done < <(gcloud compute disks list | grep $CLOUDSDK_CONTAINER_CLUSTER)

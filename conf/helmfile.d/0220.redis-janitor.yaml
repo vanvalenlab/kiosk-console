@@ -1,9 +1,7 @@
 helmDefaults:
-  args:
-    - "--wait"
-    - "--timeout=600"
-    - "--force"
-    - "--reset-values"
+  wait: true
+  timeout: 600
+  force: true
 
 releases:
 
@@ -49,7 +47,7 @@ releases:
         #   memory: 64Mi
 
       env:
-        QUEUES: "predict,track"
+        QUEUES: "segmentation,tracking"
         DEBUG: "true"
         INTERVAL: "5"
         REDIS_HOST: "redis"

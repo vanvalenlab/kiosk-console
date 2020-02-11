@@ -1,9 +1,7 @@
 helmDefaults:
-  args:
-    - "--wait"
-    - "--timeout=600"
-    - "--force"
-    - "--reset-values"
+  wait: true
+  timeout: 600
+  force: true
 
 releases:
 
@@ -30,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-benchmarking
-        tag: 0.2.1
+        tag: 0.2.3
         pullPolicy: Always
 
       resources:
@@ -39,6 +37,7 @@ releases:
           memory: 128Mi
 
       env:
+        JOB_TYPE: "segmentation"
         NUM_CYCLES: 1
         NUM_GPUS: '{{ env "GPU_NODE_MAX_SIZE" | default "MIA" }}'
         GRAFANA_USER: admin
@@ -58,7 +57,7 @@ releases:
         EXPIRE_TIME: 3600
         CONCURRENT_REQUESTS_PER_HOST: 1
 {{ if eq (env "CLOUD_PROVIDER" | default "gke") "gke" }}
-        STORAGE_BUCKET: '{{ env "GKE_BUCKET" | default "invalid-bucket" }}'
+        STORAGE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "invalid-bucket" }}'
 {{ else }}
         STORAGE_BUCKET: '{{ env "AWS_BUCKET" | default "invalid-bucket" }}'
 {{ end }}

@@ -1,9 +1,7 @@
 helmDefaults:
-  args:
-    - "--wait"
-    - "--timeout=600"
-    - "--force"
-    - "--reset-values"
+  wait: true
+  timeout: 600
+  force: true
 
 releases:
 
@@ -27,7 +25,7 @@ releases:
     vendor: "coreos"
     default: "true"
   chart: "stable/prometheus-adapter"
-  version: "v0.5.0"
+  version: "1.2.0"
   wait: true
   values:
     - affinity: {}
