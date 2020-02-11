@@ -268,7 +268,6 @@ function configure_gke() {
                         "\n")
       dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 9 65
-
       return 0
     fi
   fi
