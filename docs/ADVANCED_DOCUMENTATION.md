@@ -2,6 +2,7 @@
 
 Welcome to the advanced documentation for DeepCell Kiosk developers. We will go over cluster customization, accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
 
+* [Preliminaries](#adtoc0)
 * [Building custom consumer pipelines](#adtoc1)
    * [Deploying custom consumers](#adtoc1)
    * [Autoscaling custom consumers](#adtoc1b)
@@ -17,6 +18,12 @@ Welcome to the advanced documentation for DeepCell Kiosk developers. We will go 
    * [Google Cloud (Google Kubernetes Engine)](#failcd)
 * [Design decisions](#adtoc5)
    * [Database conventions](#adtoc5)
+
+<a name="adtoc0"></a>
+### Preliminaries
+
+	When testing new features or workflows, DeepCell Kiosk developers will often find themselves using the built-in terminal inside the Kiosk. (Accessible via the Kiosk's main menu as the "Shell" option.) This is a standard `bash` shell and should be familiar to most developers. Note that, if you are utilizing any of the advanced Kiosk deployment workflows, there can be a significant amount of latency in your terminal response time. Most of the time, this won't be a problem at all.
+	However, in some extreme cases where a lot of text is being printed to the terminal (like if you query the logs of busy pods inside a long-running Kubernetes cluster), your terminal can be rendered effectively frozen for long periods of time (say, possibly an hour). In our opinion, this situation is best avoided. To this end, we recommend piping any command that might print a large amount of text to the terminal through a `tail` command (e.g., `kubectl logs [pod_name] | tail`) when using an advanced Kiosk deployment workflow.
 
 <a name="adtoc1"></a>
 ### Building custom consumer pipelines
