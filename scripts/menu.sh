@@ -298,7 +298,7 @@ function configure_gke() {
     if [ "$CLOUDSDK_CONTAINER_CLUSTER" = "" ]; then
       return 0
     elif [ ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]; then
-      msgbox "Warning!" "Please make sure your cluster name is less than 18 characters."
+      msgbox "Warning!" "Please make sure your cluster name is no more than 18 characters."
     fi
     export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
     export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
