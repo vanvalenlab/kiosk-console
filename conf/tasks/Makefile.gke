@@ -34,8 +34,7 @@ gke/create/cluster:
 		--machine-type=$(GKE_MACHINE_TYPE) \
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
-		--no-enable-autoupgrade \
-		|| echo "Apparently, the cluster already exists."
+		--no-enable-autoupgrade
 	@echo "GKE cluster creation complete."
 	@echo " "
 	@echo " "
@@ -87,8 +86,7 @@ gke/create/consumer-node-pool:
 		--no-enable-autoupgrade \
 		--preemptible \
 		--node-labels consumer=yes \
-		--node-taints consumer=yes:NoSchedule \
-		|| echo "Consumer CPU node pool creation failed."
+		--node-taints consumer=yes:NoSchedule
 
 gke/create/prediction-node-pool:
 	@echo "Creating prediction GPU node pool..."
@@ -106,8 +104,7 @@ gke/create/prediction-node-pool:
 		--enable-autorepair \
 		--no-enable-autoupgrade \
 		--preemptible \
-		--node-taints prediction_gpu=yes:NoSchedule \
-		|| echo "Prediction GPU node pool creation failed."
+		--node-taints prediction_gpu=yes:NoSchedule
 
 gke/create/training-node-pool:
 	@echo "Creating training GPU node pool..."
@@ -124,8 +121,7 @@ gke/create/training-node-pool:
 		--enable-autoscaling \
 		--enable-autorepair \
 		--no-enable-autoupgrade \
-		--node-taints training_gpu=yes:NoSchedule \
-		|| echo "Training GPU node pool creation failed."
+		--node-taints training_gpu=yes:NoSchedule
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
 ## Create GKE GPU node pool
@@ -156,10 +152,9 @@ gke/create/elk-node-pools:
 			--no-enable-autoupgrade \
 			--preemptible \
 			--node-labels elasticsearch_data=yes \
-			--node-taints elasticsearch_data=yes:NoSchedule \
-			|| echo "Elasticsearch CPU node pool creation failed.";\
-		echo "Creating logstash CPU node pool...";\
-		echo "Using the following command: ";\
+			--node-taints elasticsearch_data=yes:NoSchedule; \
+		echo "Creating logstash CPU node pool..."; \
+		echo "Using the following command: "; \
 		gcloud container node-pools create logstash-cpu \
 			--cluster $(CLOUDSDK_CONTAINER_CLUSTER) \
 			--service-account=$(GCP_SERVICE_ACCOUNT) \
@@ -173,12 +168,11 @@ gke/create/elk-node-pools:
 			--no-enable-autoupgrade \
 			--preemptible \
 			--node-labels logstash=yes \
-			--node-taints logstash=yes:NoSchedule \
-			|| echo "Elasticsearch CPU node pool creation failed.";\
+			--node-taints logstash=yes:NoSchedule; \
+		echo "ELK node pools created."; \
 	else\
 		echo "ELK stack is disabled.";\
 	fi
-	@echo "ELK node pools created."
 	@shopt -u nocasematch
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool

@@ -102,8 +102,22 @@ function tailcmd() {
   :> $tmpfile
   (
     $* 2>&1
-    echo
-    echo "${completed_message}"
+    if [[ $? -eq 0 ]]; then
+      echo
+      echo "${completed_message}"
+    else
+      echo
+      echo "---------------------------------"
+      echo "There was an error during cluster deployment!"
+      echo
+      echo "To view the logs for this deployment attempt, choose \"Shell\" from"
+      echo "the Kiosk's main menu and execute \"cat ${tmpfile}\"."
+      echo
+      echo "For further assistance, please consult the Troubleshooting section"
+      echo "of the DeepCell Kiosk documentation."
+      echo
+      echo "--- CLUSTER DEPLOYMENT FAILED ---"
+    fi
   ) > $tmpfile &
 
   dialog --clear \
@@ -268,14 +282,13 @@ function configure_gke() {
                         "\n")
       dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 9 65
-
       return 0
     fi
   fi
 
   # select a project with GPUs available
   infobox "Loading..."
-  local projects=$(gcloud projects list | grep -v NAME | awk '{print $1}')
+  local projects=$(gcloud projects list --format="value(projectId)" --sort-by "projectId")
   local default_project=$(echo ${projects} | awk '{print $1}')
   local default_project=${CLOUDSDK_CORE_PROJECT:-$default_project}
   local message="Select a project with GPU quotas enabled:"
@@ -287,13 +300,22 @@ function configure_gke() {
 
   # Get the cluster name from the user or the environment
   if [ -z ${CLOUDSDK_CONTAINER_CLUSTER} ]; then
-    export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
+    export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$((1 + RANDOM % 100))"
   fi
+
   export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
   export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
-  if [ "$CLOUDSDK_CONTAINER_CLUSTER" = "" ]; then
-    return 0
-  fi
+  # If clusters are longer than 18 characters, Persistent Disks can get stranded.
+  while [ "${CLOUDSDK_CONTAINER_CLUSTER}" = "" -o ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]
+  do
+    if [ "$CLOUDSDK_CONTAINER_CLUSTER" = "" ]; then
+      return 0
+    elif [ ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]; then
+      msgbox "Warning!" "Please make sure your cluster name is no more than 18 characters."
+    fi
+    export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
+    export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
+  done
 
   # Get the bucket name from the user or the environment
   local bucket_text=("Bucket Name"
@@ -307,10 +329,10 @@ function configure_gke() {
 
   # Get information about the project from gcloud
   infobox "Loading..."
-  local default_region=$(gcloud compute project-info describe | \
-                         grep google-compute-default-region -A1 | \
-                         grep value | \
-                         awk '{split($0, a, ": "); print a[2]}')
+  local default_region=$(gcloud compute project-info describe \
+                         --flatten "commonInstanceMetadata.items[]" \
+                         --format "value(commonInstanceMetadata.items.key, commonInstanceMetadata.items.value)" \
+                         | grep google-compute-default-region | awk '{ print $2 }')
 
   # use default settings or use the advanced menu
   local setup_opt_value=$(dialog --clear --backtitle "${BRAND}" \
@@ -339,7 +361,7 @@ function configure_gke() {
   else
     # Advanced menu
     infobox "Loading..."
-    local regions=$(gcloud compute regions list | grep "-" | awk '{print $1}')
+    local regions=$(gcloud compute regions list --format="value(name)")
     local default_region=${CLOUDSDK_COMPUTE_REGION:-$default_region}
     local message="Choose a region for hosting your cluster:"
     export CLOUDSDK_COMPUTE_REGION=$(radiobox_from_array "Google Cloud" \
@@ -349,10 +371,10 @@ function configure_gke() {
     fi
 
     infobox "Loading..."
-    local machines=($(gcloud compute machine-types list --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" | \
-                      grep -v NAME | \
-                      awk '{print $1}'))
-    local machines=$(printf "%s\n" "${machines[@]}" | sort -u)
+    local machines=$(gcloud compute machine-types list \
+                     --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" \
+                     --format "value(name)" | sort -u)
+    # local machines=$(printf "%s\n" "${machines[@]}")
     export GKE_MACHINE_TYPE=$(radiobox_from_array "Google Cloud" \
                               "${GKE_MACHINE_TYPE:-n1-standard-1}" \
                               "Node (non-GPU) Type" "${machines}")
@@ -371,7 +393,10 @@ function configure_gke() {
     fi
 
     infobox "Loading..."
-    local gpus_in_region=$(gcloud compute accelerator-types list | grep ${CLOUDSDK_COMPUTE_REGION} | awk '{print $1}' | sort -u)
+      local gpus_in_region=$(gcloud compute accelerator-types list \
+                             --format "value(name)" \
+                             --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" \
+                             | sort -u)
     local default_prediction_gpu=${GCP_PREDICTION_GPU_TYPE:-nvidia-tesla-t4}
     # local message="Choose a GPU for prediction (not training) from the GPU types available in your region:"
     local message="Choose a GPU from the types available in your region:"
@@ -406,13 +431,11 @@ function configure_gke() {
 
   # Validate account status and quotas
   infobox "Loading..."
-  local project_info=$(gcloud compute project-info describe)
+  local all_quotas=$(gcloud compute project-info describe \
+                     --flatten "quotas[]" \
+                     --format "value(quotas.metric, quotas.limit)")
   # Check if firewalls is 200, which is standard for an upgraded project
-  local firewalls=$(echo "${project_info}" | \
-                    grep FIREWALLS -B1 | \
-                    grep limit | \
-                    awk '{split($0, a, ": "); print a[2]}' | \
-                    awk '{split($0, a, "."); print a[1]}')
+  local firewalls=$(echo "${all_quotas}" | grep FIREWALLS | awk '{print int($2)}')
   if [ $firewalls -lt 200 ]; then
     error_text=("\nYour project must be upgraded in Google Cloud console"
                 "before you can deploy a cluster.")
@@ -421,11 +444,7 @@ function configure_gke() {
   fi
   # At least 16 IN_USE_ADDRESSES are required.
   local min_addresses=16
-  local in_use_addresses=$(echo "${project_info}" | \
-                           grep IN_USE_ADDRESSES -B1 | \
-                           grep limit | \
-                           awk '{split($0, a, ": "); print a[2]}' | \
-                           awk '{split($0, a, "."); print a[1]}')
+  local in_use_addresses=$(echo "${all_quotas}" | grep IN_USE_ADDRESSES | awk '{print int($2)}')
   if [ $in_use_addresses -lt $min_addresses ]; then
     error_text=("\nThe cluster requires at least ${min_addresses} In-use IP Addresses."
                 "\n\nPlease request a quota increase from the Google Cloud console.")
@@ -436,19 +455,18 @@ function configure_gke() {
 
   # Find at least 2 zones to deploy the cluster.
   # If GPUs are not available in at least 2 zones, the user must restart.
-  local available_zones=$(gcloud compute zones list | grep "UP" \
-                          | grep "${CLOUDSDK_COMPUTE_REGION}" | awk '{print $1}')
-  local region_zone_array=($available_zones)
-  local zone_filter=$(IFS="|" ; echo "${region_zone_array[*]}")
+  local available_zones=$(gcloud compute zones list \
+                          --filter "status = UP AND region = ${CLOUDSDK_COMPUTE_REGION}" \
+                          --format "value(name)")
 
   # locate the zones for all GPU node pools
   local prediction_gpu_zones=$(gcloud compute accelerator-types list \
-                               | grep -e "${GCP_PREDICTION_GPU_TYPE}" \
-                               | grep -E "${zone_filter}" |  awk '{print $2}')
+                               --filter "name : ${GCP_PREDICTION_GPU_TYPE} AND zone : ${CLOUDSDK_COMPUTE_REGION}" \
+                               --format "value(zone)" | sort -u)
 
   # local training_gpu_zones=$(gcloud compute accelerator-types list \
-  #                            | grep -e "${GCP_TRAINING_GPU_TYPE}" \
-  #                            | grep -E "${zone_filter}" |  awk '{print $2}')
+  #                            --filter "name : ${GCP_TRAINING_GPU_TYPE} AND zone : ${CLOUDSDK_COMPUTE_REGION}" \
+  #                            --format "value(zone)" | sort -u)
 
   # For each zone, check if it is available for each node pool, it is valid.
   local valid_zones=()

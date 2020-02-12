@@ -7,12 +7,30 @@ Welcome to the advanced documentation for DeepCell Kiosk developers. We will go 
 
 .. contents:: :local:
 
+Preliminaries
+-------------
+
 Kiosk Setup Parameters
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. todo::
 
     Write a description of the parameters and their defaults
+
+Shell Latency
+^^^^^^^^^^^^^
+
+When testing new features or workflows, DeepCell Kiosk developers will often find themselves using the built-in terminal inside the Kiosk. (Accessible via the Kiosk's main menu as the "Shell" option.) This is a standard ``bash`` shell and should be familiar to most developers. If you are using one of the :ref:`advanced Kiosk deployment workflows <Getting Started:Cloud-Based Jumpbox Workflow>` (which increases shell latency slightly), you should avoid printing unknown and potentially large amounts of text to the screen.
+
+This usually only comes up in the context of logs. To prevent this issue, we recommend the following:
+
+  1. |stern| is useful for tailing logs of multiple pods using can use human-readable time lengths. For example, ``stern consumer -s 10m`` will tail the last 10 minutes of logs for all pods with "consumer" in their name.
+
+  2. When using ``kubectl logs`` be sure to include the ``--tail N`` option to limit the total number of lines being returned. For example, ``kubectl logs [POD_NAME] --tail 100`` to return the last 100 lines of the pod's logs.
+
+.. |stern| raw:: html
+
+    <tt><a href="https://github.com/wercker/stern">stern</a></tt>
 
 Building custom consumer pipelines
 ----------------------------------
@@ -20,10 +38,6 @@ Building custom consumer pipelines
 If you are interested in deploying your own specialized models using the kiosk, you can easily develop a custom consumer.
 
 For a guide on how to build a custom pipeline, please see :ref:`CUSTOM-JOB`.
-
-.. todo::
-
-    Write material that explains why a user might want to build their own consumer. Make a decision about which portions of this documentation should be in the readme of the kiosk-redis-consumer as opposed to here.
 
 Accessing cluster metrics and logging using OpenVPN
 ---------------------------------------------------
@@ -67,3 +81,20 @@ Logging
 
 7. Similar to step 5, you can connect to Kibana by going to ``[service_IP]:[service_port]`` for the relevant service from any web browser on your local machine.
 
+Recovering from failed Kiosk creations or destructions
+------------------------------------------------------
+
+There may be occasions where the Kiosk fails to deploy or the cluster destruction doesn't execute properly and leaves orphaned cloud resources active. Both failed cluster deployment and failed cluster destruction after deployment can be the result of any number of issues. Before you re-lauch any future clusters, and to prevent you from unkowingly leaking money, you should remove all the vestigial cloud resources left from the failed launch/destruction.
+
+Google Cloud (Google Kubernetes Engine)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Google Cloud. When the cluster is fully deployed, a wide array of Google Cloud resources will be in use. If a cluster creation or destruction fails, you should login to the Google Cloud web interface and delete the following resources by hand (**n.b.** the name of each resource will contain at least part of the cluster name in it):
+
+1. Kubernetes cluster (Remember the cluster name for the following steps. This will delete most of the resources and the proceeding steps will clean up the rest.)
+2. any Firewall Rules associated with your cluster
+3. any LoadBalancers associated with your cluster
+4. any Target Pools associated with your cluster
+5. any Persistent Disks associated with your cluster
+
+While we hope this list is comprehensive, there could be some lingering resources used by Google Cloud and not deleted automatically that we're not aware of.
