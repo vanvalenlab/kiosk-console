@@ -32,7 +32,7 @@ This usually only comes up in the context of logs. To prevent this issue, we rec
 
   1. [`stern`](https://github.com/wercker/stern) is useful for tailing logs of multiple pods using can use human-readable time lengths. For example, `stern consumer -s 10m` will tail the last 10 minutes of logs for all pods with "consumer" in their name.
 
-  2. When using `kubectl logs` be sure to include the `--tail N` option to limit the total number of lines being returned (`kubectl logs [POD_NAME] --tail 100` to return the last 100 lines of the pod's logs).
+  2. When using `kubectl logs` be sure to include the `--tail N` option to limit the total number of lines being returned. For example, `kubectl logs [POD_NAME] --tail 100` to return the last 100 lines of the pod's logs.
 
 <a name="adtoc1"></a>
 ### Building custom consumer pipelines
