@@ -2,6 +2,7 @@
 
 Welcome to the advanced documentation for DeepCell Kiosk developers. We will go over cluster customization, accessing cluster logs and metrics, less-common deployment workflows, a few design decisions that may be of interest to other developers, and other topics.
 
+* [Preliminaries](#adtoc0)
 * [Building custom consumer pipelines](#adtoc1)
    * [Deploying custom consumers](#adtoc1)
    * [Autoscaling custom consumers](#adtoc1b)
@@ -17,6 +18,19 @@ Welcome to the advanced documentation for DeepCell Kiosk developers. We will go 
    * [Google Cloud (Google Kubernetes Engine)](#failcd)
 * [Design decisions](#adtoc5)
    * [Database conventions](#adtoc5)
+
+<a name="adtoc0"></a>
+### Preliminaries
+
+#### Shell Latency
+
+When testing new features or workflows, DeepCell Kiosk developers will often find themselves using the built-in terminal inside the Kiosk. (Accessible via the Kiosk's main menu as the "Shell" option.) This is a standard `bash` shell and should be familiar to most developers. If you are using one of the [advanced Kiosk deployment workflows](#jumpbox) (which increases shell latency slightly), you should avoid printing unknown and potentially large amounts of text to the screen.
+
+This usually only comes up in the context of logs. To prevent this issue, we recommend the following:
+
+  1. [`stern`](https://github.com/wercker/stern) is useful for tailing logs of multiple pods using can use human-readable time lengths. For example, `stern consumer -s 10m` will tail the last 10 minutes of logs for all pods with "consumer" in their name.
+
+  2. When using `kubectl logs` be sure to include the `--tail N` option to limit the total number of lines being returned. For example, `kubectl logs [POD_NAME] --tail 100` to return the last 100 lines of the pod's logs.
 
 <a name="adtoc1"></a>
 ### Building custom consumer pipelines
