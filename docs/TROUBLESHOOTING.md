@@ -36,7 +36,7 @@ Quota Limits: A commonly-encountered problem during cluster creation, especially
 
 * Make sure that you select "Default" for the "Configuration Options" in the "Create" menu when setting up the Kiosk. The default configuration options are intended to be the minimum requirequments for cluster creation and image prediction. The "Advanced" option allows users to select higher quantites of compute resources, but users should ensure that Google has provided access to these resources (by requesting and confirming a quota increase) before launching a cluster with these parameters.
 
-Miscellaneous Creation/Destruction Errors: The Google Cloud API may encounter occasional failures which can interrupt cluster creation or destruction. If this occurs during cluster creation, you may need to recreate the cluster after waiting brief a time-out period.
+Miscellaneous Creation/Destruction Errors: The Google Cloud API may encounter occasional failures which can interrupt cluster creation or destruction. If this occurs during cluster creation, you may need to recreate the cluster after waiting a brief time-out period.
 
 If these pieces of catch-all advice don't help you, please submit an issue! We'll do our best to resolve your problem and add your situation to our documentation for the benefit of future users.
 
