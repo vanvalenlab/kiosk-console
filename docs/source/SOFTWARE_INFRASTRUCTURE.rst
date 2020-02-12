@@ -7,15 +7,7 @@ Software Infrastructure
 
 .. todo::
 
-    Write description of the various components of the kiosk and how they work together
-
-.. todo::
-
     Add image of software architecture
-
-.. todo::
-
-    Description of hwo data flows through the different components of the consumer.
 
 Helm and Helmfiles
 ------------------
@@ -24,13 +16,13 @@ kiosk-frontend
 ^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-frontend
 | **Documentation:** :ref:`kiosk-frontend:index`
-| **Purpose**
+| **Purpose:** DeepCell graphical user interface built using React, Babel, Webpack.
 
 kiosk-redis-consumer
 ^^^^^^^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-redis-consumer
-| **Documentation:** :ref:`Label name <kiosk-redis-consumer:index>`
-| **Purpose**
+| **Documentation:** :ref:`kiosk-redis-consumer:index`
+| **Purpose:** Retrieves items from the queue and handles the processing pipeline for that item. Each consumer handles one item at a time.
 
 kiosk-bucket-monitor
 ^^^^^^^^^^^^^^^^^^^^
@@ -42,7 +34,7 @@ kiosk-tf-serving
 ^^^^^^^^^^^^^^^^
 | **Source Code:** https://github.com/vanvalenlab/kiosk-tf-serving
 | **Documentation:**
-| **Purpose**
+| **Purpose:** Receives data from ``redis-consumers`` and runs model predictions on that data.
 
 kiosk-benchmarking
 ^^^^^^^^^^^^^^^^^^
