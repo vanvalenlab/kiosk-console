@@ -102,8 +102,22 @@ function tailcmd() {
   :> $tmpfile
   (
     $* 2>&1
-    echo
-    echo "${completed_message}"
+    if [[ $? -eq 0 ]]; then
+      echo
+      echo "${completed_message}"
+    else
+      echo
+      echo "---------------------------------"
+      echo "There was an error during cluster deployment!"
+      echo
+      echo "To view the logs for this deployment attempt, choose \"Shell\" from"
+      echo "the Kiosk's main menu and execute \"cat ${tmpfile}\"."
+      echo
+      echo "For further assistance, please consult the Troubleshooting section"
+      echo "of the DeepCell Kiosk documentation."
+      echo
+      echo "--- CLUSTER DEPLOYMENT FAILED ---"
+    fi
   ) > $tmpfile &
 
   dialog --clear \

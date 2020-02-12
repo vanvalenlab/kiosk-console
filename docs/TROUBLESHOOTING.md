@@ -30,9 +30,17 @@ A prediction job may also never finish if the `tf-serving` pod never comes up. I
 <a name="ttoc3"></a>
 #### I hit an error during cluster creation/destruction
 
-The Google Cloud API may encounter occasional failures which can interrupt cluster creation or destruction. If this occurs during cluster creation, you may need to  recreate the cluster after waiting brief a time-out period.
+Quota Limits: A commonly-encountered problem during cluster creation, especially for new users, is a "quota shortage." Google Cloud refers to the limits it places on your use of different resources as "quotas." If your available quota for a given resource (e.g. `n1-highmem-2` compute instances) is lower than what the DeepCell Kiosk is requesting, then your cluster creation will fail with a quota-related error message. If this occurs, please make sure of the following:
 
-If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](ADVANCED_DOCUMENTATION.md#failcd).
+* You have followed the direction given in the [Preliminary setup](https://github.com/vanvalenlab/kiosk#toc1) section of the Getting started portion of the README. Pay special attention to steps 2, 3, and 4.
+
+* Make sure that you select "Default" for the "Configuration Options" in the "Create" menu when setting up the Kiosk. The default configuration options are intended to be the minimum requirequments for cluster creation and image prediction. The "Advanced" option allows users to select higher quantites of compute resources, but users should ensure that Google has provided access to these resources (by requesting and confirming a quota increase) before launching a cluster with these parameters.
+
+Miscellaneous Creation/Destruction Errors: The Google Cloud API may encounter occasional failures which can interrupt cluster creation or destruction. If this occurs during cluster creation, you may need to recreate the cluster after waiting a brief time-out period.
+
+If these pieces of catch-all advice don't help you, please submit an issue! We'll do our best to resolve your problem and add your situation to our documentation for the benefit of future users.
+
+* Note on Failed Cluster Destruction: If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](ADVANCED_DOCUMENTATION.md#failcd).
 
 <a name="ttoc4"></a>
 #### I killed my docker container!
