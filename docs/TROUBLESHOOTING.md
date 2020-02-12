@@ -38,9 +38,9 @@ Quota Limits: A commonly-encountered problem during cluster creation, especially
 
 Miscellaneous Creation/Destruction Errors: The Google Cloud API may encounter occasional failures which can interrupt cluster creation or destruction. If this occurs during cluster creation, you may need to recreate the cluster after waiting brief a time-out period.
 
-* If these pieces of catch-all advice don't help you, please submit an issue! We'll do our best to resolve your problem and add your situation to our documentation for the benefit of future users.
+If these pieces of catch-all advice don't help you, please submit an issue! We'll do our best to resolve your problem and add your situation to our documentation for the benefit of future users.
 
-- <b>Note on Failed Cluster Destruction:</b> If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](ADVANCED_DOCUMENTATION.md#failcd).
+* Note on Failed Cluster Destruction: If the cluster destruction script did not successfully complete, it is likely that there are still resources active in your [Google Cloud Console](https://console.cloud.google.com).  Please make sure to delete your Kubernetes Engine Cluster and any Persistent Disks/Load Balancers associated with it. To read more, please consult the [Advanced Documentation](ADVANCED_DOCUMENTATION.md#failcd).
 
 <a name="ttoc4"></a>
 #### I killed my docker container!
