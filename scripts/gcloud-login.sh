@@ -19,9 +19,8 @@ else
   # If so, just ignore the error.
   # NB: Ideally, we'd grab this info directly from the gcloud auth login command,
   # but the command is written in such a way that that's very difficult.
-  project_failure=$( \
-	  cat $(gcloud info --format "value(logs.last_log)") | \
-	  grep "ERROR    root            (gcloud.auth.login) The project property is set to the empty string, which is invalid.")
+  auth_logfile=$(gcloud info --format "value(logs.last_log)")
+  project_failure=$(grep -E 'ERROR.*The project property is set to the empty string, which is invalid.' $auth_logfile)
   if [[ -z "${project_failure}" ]]; then
     echo "Login failed!"
     exit 1
