@@ -28,8 +28,11 @@ When testing new features or workflows, DeepCell Kiosk developers will often fin
 
 This usually only comes up in the context of logs. We know of two safe options for viewing logs:
 
-	1. `stern [pod_name_pattern] -s [duration]` (https://github.com/wercker/stern), which is useful when you want to view logs from now until `[duration]` minutes/seconds/etc. in the past for all pod's whose names match `[pod_name_duration]`
-	2. `kubectl logs [pod_name] --tail [N]`, which will print the last `[N]` lines of `[pod_name]`s logs
+This usually only comes up in the context of logs. To prevent this issue, we recommend the following:
+
+  1. [`stern`](https://github.com/wercker/stern) is useful for tailing logs of multiple pods using can use human-readable time lengths. For example, `stern consumer -s 10m` will tail the last 10 minutes of logs for all pods with "consumer" in their name.
+
+	2. When using `kubectl logs` be sure to include the `--tail N` option to limit the total number of lines being returned (`kubectl logs [POD_NAME] --tail 100` to return the last 100 lines of the pod's logs).
 
 <a name="adtoc1"></a>
 ### Building custom consumer pipelines
