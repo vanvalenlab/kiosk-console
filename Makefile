@@ -45,8 +45,9 @@ test:
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
 	gcloud auth list
 	gcloud config set account continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-	gcloud auth list
-	gcloud projects get-iam-policy deepcell-209717
+	#gcloud auth list
+	#gcloud projects get-iam-policy deepcell-209717
+	gcloud version
 	#gcloud projects add-iam-policy-binding deepcell-209717 --member serviceAccount:continuous-integration-test@deepcell-209717.iam.gserviceaccount.com --role roles/owner
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	echo $(CLOUDSDK_CONFIG)
