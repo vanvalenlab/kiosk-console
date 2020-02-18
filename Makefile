@@ -58,6 +58,7 @@ test:
 	cd ./conf/tasks && make -f Makefile.gke gke/create/bucket
 	cd ./conf/tasks && make -f Makefile.gke gke/deploy/helm
 	cd ./conf/tasks && make -f Makefile.gke gke/deploy/nvidia
+	kubectl version --client
 	cd ./conf/tasks && make -f Makefile.helmfile helmfile/create/all && make -f Makefile.kubectl kubectl/display/ip && make -f Makefile.kubectl kubectl/implement/autoscaling
 	echo "TESTED"
 	#gcloud config set project $(PROJECT) && \

@@ -37,7 +37,7 @@ env:
   GKE_MACHINE_TYPE: n1-standard-4
   GPU_MAX_TIMES_FOURTY: 160 
   GPU_MAX_TIMES_TWENTY: 80
-  CLUSTER_NAME: deepcell-ci-testing2
+  CLUSTER_NAME: deepcell-ci-testing3
   GKE_NODE_SERVICE_ACCOUNT_EMAIL: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   #GKE_NODE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GKE_EMAIL }}
   REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
