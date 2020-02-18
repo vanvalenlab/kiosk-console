@@ -7,7 +7,7 @@ helmfile/create/all:
 	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
 		cp /home/runner/work/kiosk/kiosk/conf/ELK_helmfiles/* /home/runner/work/kiosk/kiosk/conf/helmfile.d;\
 	fi
-	/conf/patches/gke-helmfile-deployment.sh
+	/home/runner/work/kiosk/kiosk/conf/patches/gke-helmfile-deployment.sh
 	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "
