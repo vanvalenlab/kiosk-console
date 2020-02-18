@@ -53,14 +53,15 @@ test:
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
 	# 
-	cd ./conf && make create
-	#cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
-	#cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
-	#cd ./conf/tasks && make -f Makefile.gke gke/create/bucket
-	#cd ./conf/tasks && make -f Makefile.gke gke/deploy/helm
-	#cd ./conf/tasks && make -f Makefile.gke gke/deploy/nvidia
-	#kubectl version --client
-	#cd ./conf && make -f ./tasks/Makefile.helmfile helmfile/create/all && make -f ./tasks/Makefile.kubectl kubectl/display/ip && make -f ./tasks/Makefile.kubectl kubectl/implement/autoscaling
+	#cd ./conf && make create
+	# 
+	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
+	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
+	cd ./conf/tasks && make -f Makefile.gke gke/create/bucket
+	cd ./conf/tasks && make -f Makefile.gke gke/deploy/helm
+	cd ./conf/tasks && make -f Makefile.gke gke/deploy/nvidia
+	kubectl version --client
+	cd ./conf && make -f ./tasks/Makefile.helmfile helmfile/create/all && make -f ./tasks/Makefile.kubectl kubectl/display/ip && make -f ./tasks/Makefile.kubectl kubectl/implement/autoscaling
 	# 
 	echo "TESTED"
 	#gcloud config set project $(PROJECT) && \
