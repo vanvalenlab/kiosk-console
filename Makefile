@@ -58,6 +58,8 @@ test:
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
 	cd ./conf/tasks && make -f Makefile.gke gke/create/bucket
+	# everything's fine up to here
+	kubectl config view
 	cd ./conf/tasks && make -f Makefile.gke gke/deploy/helm
 	cd ./conf/tasks && make -f Makefile.gke gke/deploy/nvidia
 	kubectl version --client
