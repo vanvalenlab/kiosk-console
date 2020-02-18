@@ -49,7 +49,8 @@ test:
 	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
 	echo "deb http://apt.kubernetes.io/ kubernetes-yakkety main" | sudo tee /etc/apt/sources.list.d/kubernetes.list && \
 	sudo apt-get update && \
-	sudo apt-get install -y kubeadm=1.14
+	sudo snap install --channel=1.14/stable --classic kubeadm
+	#sudo apt-get install -y kubeadm=1.14
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
 	gcloud auth list
 	gcloud config set account continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
