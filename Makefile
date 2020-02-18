@@ -40,38 +40,28 @@ test:
 	pwd
 	ls
 	make init
-	#gcloud config set project $(PROJECT) && \
-	#gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) &&
+	# 
 	# Before we get into all the gcloud commands, we need to install the helmfile binary
 	wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
 	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
-	# Uninstall version 1.17 of kubectl
-	## sudo apt-get purge kubectl && \
-	## sudo apt-get autoremove && \
-	## sudo rm -rf ~/.kube
-	# Install version 1.14 of kubectl
-	## curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
-	## echo "deb http://apt.kubernetes.io/ kubernetes-yakkety main" | sudo tee /etc/apt/sources.list.d/kubernetes.list && \
-	## sudo apt-get update && \
-	## sudo snap install --channel=1.14/stable --classic kubectl && \
-	## kubectl version --client
+	# 
 	kubectl version --client
-	#sudo apt-get install -y kubeadm=1.14
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
 	gcloud auth list
 	gcloud config set account continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-	#gcloud auth list
 	gcloud projects get-iam-policy deepcell-209717
 	gcloud version
-	#gcloud projects add-iam-policy-binding deepcell-209717 --member serviceAccount:continuous-integration-test@deepcell-209717.iam.gserviceaccount.com --role roles/owner
-	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	echo $(CLOUDSDK_CONFIG)
-	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
-	cd ./conf/tasks && make -f Makefile.gke gke/create/bucket
-	cd ./conf/tasks && make -f Makefile.gke gke/deploy/helm
-	cd ./conf/tasks && make -f Makefile.gke gke/deploy/nvidia
-	kubectl version --client
-	cd ./conf/tasks && make -f Makefile.helmfile helmfile/create/all && make -f Makefile.kubectl kubectl/display/ip && make -f Makefile.kubectl kubectl/implement/autoscaling
+	# 
+	cd ./conf && make create
+	#cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
+	#cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
+	#cd ./conf/tasks && make -f Makefile.gke gke/create/bucket
+	#cd ./conf/tasks && make -f Makefile.gke gke/deploy/helm
+	#cd ./conf/tasks && make -f Makefile.gke gke/deploy/nvidia
+	#kubectl version --client
+	#cd ./conf && make -f ./tasks/Makefile.helmfile helmfile/create/all && make -f ./tasks/Makefile.kubectl kubectl/display/ip && make -f ./tasks/Makefile.kubectl kubectl/implement/autoscaling
+	# 
 	echo "TESTED"
 	#gcloud config set project $(PROJECT) && \
 	#gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" && \
