@@ -253,7 +253,7 @@ gke/destroy/bucket:
 ## Deploy helm tiller with service account
 gke/deploy/helm:
 	@echo "Deploying kubernetes resources..."
-	@kubectl create serviceaccount --namespace kube-system tiller 2> /dev/null || echo "Kubernetes already appears to be deployed."
+	@kubectl create serviceaccount --namespace kube-system tiller || echo "Kubernetes already appears to be deployed."
 	@-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 	@-helm init --service-account tiller --upgrade --wait
 	@echo "Kubernetes resource deployment finished."
