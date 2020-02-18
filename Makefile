@@ -47,7 +47,7 @@ test:
 	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
 	# Install version 1.14 of kubectl
 	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
-	echo "deb http://apt.kubernetes.io/ kubernetes-bionic main" | sudo tee /etc/apt/sources.list.d/kubernetes.list && \
+	echo "deb http://apt.kubernetes.io/ kubernetes-yakkety main" | sudo tee /etc/apt/sources.list.d/kubernetes.list && \
 	sudo apt-get update && \
 	sudo apt-get install -y kubeadm=1.14
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
