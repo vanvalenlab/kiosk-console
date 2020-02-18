@@ -1,0 +1,294 @@
+# FIXME: GPU AZs and GKE AZ might not be same
+
+export KUBERNETES_VERSION=latest
+
+export CLOUDSDK_CONFIG ?= /localhost/.config/gcloud/
+
+# https://cloud.google.com/kubernetes-engine/docs/quickstart
+# https://cloud.google.com/compute/docs/machine-types
+# https://cloud.google.com/compute/pricing
+#
+# Increase quotas: https://console.cloud.google.com/iam-admin/quotas
+
+# Project name must be globally unique
+export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
+
+# Cluster name ust be unique within the project
+export CLUSTER_NAME ?= deepcell
+export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
+
+# Bucket name need not be unique
+export CLOUDSDK_BUCKET ?= $(GKE_BUCKET)
+
+export GKE_COMPUTE_REGION ?= us-west1
+export GKE_MACHINE_TYPE ?= n1-standard-2
+export NODE_MIN_SIZE ?= 1
+export NODE_MAX_SIZE ?= 10
+export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
+
+# Non-GPU machine type
+export RC_DP_MACHINE_TYPE ?= n1-standard-8
+
+# Not all GPU types are available in all regions/availability zones
+export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
+export PREDICTION_GPU_TYPE ?= nvidia-tesla-t4
+export TRAINING_GPU_TYPE ?= nvidia-tesla-v100
+export GPU_MACHINE_TYPE ?= n1-highmem-2
+export GPU_NODE_MIN_SIZE ?= 0
+export GPU_NODE_MAX_SIZE ?= 4
+export GPU_PER_NODE ?= 1
+
+## Login to Google Cloud
+gke/test/login:
+	@gcloud-login.sh
+
+## Create a new project
+gke/test/create/project:
+	@gcloud projects create $(CLOUDSDK_CORE_PROJECT)
+#	@gcloud alpha billing accounts projects link $(CLOUDSDK_CORE_PROJECT --account-id=$(BILLING_ACCOUNT_ID)
+
+## Destroy project
+gke/test/destroy/project:
+	@gcloud projects delete $(CLOUDSDK_CORE_PROJECT)
+
+## Create a new GKE cluster
+gke/test/create/cluster:
+	@echo "Creating GKE cluster..."
+	@echo "Using the following command: "
+	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
+	gcloud auth list && \
+	gcloud container clusters create $(CLUSTER_NAME) \
+		--project=$(PROJECT) \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--region=$(GKE_COMPUTE_REGION) \
+		--node-locations=$(REGION_ZONES_WITH_GPUS) \
+		--max-nodes=$(NODE_MAX_SIZE) \
+		--min-nodes=$(NODE_MIN_SIZE) \
+		--machine-type=$(GKE_MACHINE_TYPE) \
+		--cluster-version $(KUBERNETES_VERSION) \
+		--enable-autoscaling \
+		--no-enable-autoupgrade \
+		|| echo "Apparently, the cluster already exists."
+	@echo "GKE cluster creation complete."
+	@echo " "
+	@echo " "
+
+## Destroy GKE cluster
+gke/test/destroy/cluster:
+	@echo "Destroying cluster..."
+	@-gcloud container clusters --region $(GKE_COMPUTE_REGION) delete $(CLUSTER_NAME) --quiet
+	@echo "Cluster destruction finished."
+	@echo " "
+	@echo " "
+
+## Set context to use GKE cluster (e.g. with kubectl)
+gke/test/use/cluster:
+	@gcloud config set project $(CLOUDSDK_CORE_PROJECT)
+	@gcloud config set compute/region $(GKE_COMPUTE_REGION)
+	@gcloud container clusters get-credentials $(CLUSTER_NAME)
+
+## List all GKE projects
+gke/test/list/projects:
+	@gcloud projects list
+
+## List all availability zones
+gke/test/list/zones:
+	@gcloud compute zones list
+
+## List all accelerator machine types
+gke/test/list/accelerator-types:
+	@gcloud compute accelerator-types list
+
+## List all billing accounts
+gke/test/list/billing-accounts:
+	@gcloud alpha billing accounts list
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
+## Create GKE GPU node pool
+#		--enable-autoupgrade
+gke/test/create/node-pools:
+	#@gcloud components install beta --quiet
+	@echo "Creating redis-consumer and data-processing CPU node pool..."
+	@echo "Using the following command: "
+	gcloud container node-pools create rc-dp-cpu \
+		--cluster $(CLUSTER_NAME) \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--region $(GKE_COMPUTE_REGION) \
+		--num-nodes 1 \
+		--min-nodes 1 \
+		--max-nodes ${NODE_MAX_SIZE} \
+		--machine-type=${RC_DP_MACHINE_TYPE} \
+		--enable-autoscaling \
+		--enable-autorepair \
+		--no-enable-autoupgrade \
+		--preemptible \
+		--node-labels rc_dp=yes \
+		--node-taints rc_dp=yes:NoSchedule \
+		|| echo "Elasticsearch CPU node pool creation failed."
+	@echo "Creating prediction GPU node pool..."
+	@echo "Using the following command: "
+	gcloud container node-pools create prediction-gpu \
+		--cluster $(CLUSTER_NAME) \
+		--accelerator type=$(PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--region $(GPU_COMPUTE_REGION) \
+		--num-nodes $(GPU_NODE_MIN_SIZE) \
+		--min-nodes $(GPU_NODE_MIN_SIZE) \
+		--max-nodes $(GPU_NODE_MAX_SIZE) \
+		--machine-type=$(GPU_MACHINE_TYPE) \
+		--enable-autoscaling \
+		--enable-autorepair \
+		--no-enable-autoupgrade \
+		--preemptible \
+		--node-taints prediction_gpu=yes:NoSchedule \
+		|| echo "Prediction GPU node pool creation failed."
+	@echo "Creating training GPU node pool..."
+	@echo "Using the following command: "
+	gcloud container node-pools create training-gpu \
+		--cluster $(CLUSTER_NAME) \
+		--accelerator type=$(TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
+		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--region $(GPU_COMPUTE_REGION) \
+		--num-nodes $(GPU_NODE_MIN_SIZE) \
+		--min-nodes $(GPU_NODE_MIN_SIZE) \
+		--max-nodes $(GPU_NODE_MAX_SIZE) \
+		--machine-type=$(GPU_MACHINE_TYPE) \
+		--enable-autoscaling \
+		--enable-autorepair \
+		--no-enable-autoupgrade \
+		--node-taints training_gpu=yes:NoSchedule \
+		|| echo "Training GPU node pool creation failed."
+	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
+		make gke/deploy/elk;\
+	fi
+	@echo "GPU node pool creation finished."
+	@echo " "
+	@echo " "
+
+gke/test/deploy/elk:
+	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
+		@echo "Creating elasticsearch CPU node pool...";\
+		@echo "Using the following command: ";\
+		gcloud container node-pools create elasticsearch-cpu \
+			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+			--region $(GKE_COMPUTE_REGION) \
+			--cluster $(CLUSTER_NAME) \
+			--num-nodes 2 \
+			--min-nodes 1 \
+			--max-nodes 2 \
+			--machine-type=n1-highmem-2 \
+			--enable-autoscaling \
+			--enable-autorepair \
+			--no-enable-autoupgrade \
+			--preemptible \
+			--node-labels elasticsearch_data=yes \
+			--node-taints elasticsearch_data=yes:NoSchedule \
+			|| echo "Elasticsearch CPU node pool creation failed.";\
+		@echo "Creating logstash CPU node pool...";\
+		@echo "Using the following command: ";\
+		gcloud container node-pools create logstash-cpu \
+			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+			--region $(GKE_COMPUTE_REGION) \
+			--cluster $(CLUSTER_NAME) \
+			--num-nodes 3 \
+			--min-nodes 1 \
+			--max-nodes 20 \
+			--machine-type=n1-highmem-2 \
+			--enable-autoscaling \
+			--enable-autorepair \
+			--no-enable-autoupgrade \
+			--preemptible \
+			--node-labels logstash=yes \
+			--node-taints logstash=yes:NoSchedule \
+			|| echo "Elasticsearch CPU node pool creation failed.";\
+	fi
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
+# When you add a GPU node pool to an existing cluster that already runs a non-GPU node pool, GKE automatically taints the GPU nodes with the following node taint
+#		--node-taints "nvidia.com/gpu=:NoSchedule"
+
+## Destroy GKE GPU node pool
+gke/test/destroy/node-pools:
+	@echo "Destroying node pools."
+	@echo "Depending on cluster state, this process could take a while."
+	/home/runner/work/kiosk/kiosk/conf/patches/gke-node-pool-destruction.sh
+	@echo "Node pools destroyed."
+	@echo " "
+	@echo " "
+
+# https://cloud.google.com/storage/docs/access-control/iam-roles
+## Create Service Account used by deepcell
+gke/test/create/service-account:
+	@echo "Creating GKE service account..."
+	@gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" || \
+		echo "No need to create service account; it probably already exists."
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
+	@echo "GKE service account creation complete."
+	@echo " "
+	@echo " "
+
+## Delete Service Account used by deepcell
+gke/test/destroy/service-account:
+	@echo "Destroying GKE service-account..."
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
+	@-gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --quiet
+	@echo "GKE service-account destruction finished."
+	@echo " "
+	@echo " "
+
+## Create bucket used by deepcell
+gke/test/create/bucket:
+	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
+	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) \
+		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
+	@-gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET)
+	@echo "Google Cloud Storage Bucket creation finished."
+	@echo " "
+	@echo " "
+
+## Destroy bucket used by deepcell
+gke/test/destroy/bucket:
+	gsutil rm -r gs://$(CLOUDSDK_BUCKET) || echo "Bucket not destroyed."
+
+## Deploy helm tiller with service account
+gke/test/deploy/helm:
+	@echo "Deploying kubernetes resources..."
+	@kubectl create serviceaccount --namespace kube-system tiller || echo "Kubernetes already appears to be deployed."
+	@-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+	@-helm init --service-account tiller --upgrade --wait
+	@echo "Kubernetes resource deployment finished."
+	@echo " "
+	@echo " "
+
+gke/test/destroy/helm:
+	-helm reset --force --tiller-connection-timeout=2
+	-kubectl delete clusterrolebinding tiller-cluster-rule
+	-kubectl delete serviceaccount --namespace kube-system tiller
+	
+## Deploy GKE Nvidia drivers
+gke/test/deploy/nvidia:
+	@echo "Deploying NVIDIA drivers for GPU instances..."
+	@kubectl apply --validate=false -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
+		echo "These drivers are not being installed. They may already be installed."
+	@echo "NVIDIA GPU driver deployment finished."
+	@echo " "
+	@echo " "
+
+## Create Cluster
+gke/test/create/all: \
+	gke/test/create/service-account \
+	gke/test/create/cluster \
+	gke/test/create/node-pools \
+	gke/test/create/bucket \
+	gke/test/deploy/helm \
+	gke/test/deploy/nvidia
+	@echo "GKE cluster created" 
+	@exit 0
+
+## Destroy Cluster
+gke/test/destroy/all: \
+	gke/test/destroy/node-pools \
+	gke/test/destroy/cluster \
+	gke/test/destroy/service-account 
+	@echo "GKE cluster destroyed" 
+	@exit 0
