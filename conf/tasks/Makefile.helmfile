@@ -5,7 +5,7 @@ helmfile/create/all:
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
 	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
-		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
+		cp /home/runner/work/kiosk/kiosk/conf/ELK_helmfiles/* /home/runner/work/kiosk/kiosk/conf/helmfile.d;\
 	fi
 	/conf/patches/gke-helmfile-deployment.sh
 	@echo "Helmfile deployment finished."
@@ -14,7 +14,7 @@ helmfile/create/all:
 
 helmfile/create/elk:
 	@if [ "$(ELK_DEPLOYMENT_TOGGLE)" == "ON" ] || [ "$(ELK_DEPLOYMENT_TOGGLE)" == "on" ]; then\
-		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
+		cp /home/runner/work/kiosk/kiosk/conf/ELK_helmfiles/* /home/runner/work/kiosk/kiosk/conf/helmfile.d;\
 		helmfile --selector name=elasticsearch sync;\
 		helmfile --selector name=kibana sync;\
 		helmfile --selector name=logstash sync;\
@@ -24,7 +24,7 @@ helmfile/create/elk:
 helmfile/destroy/all:
 	@echo " "
 	@echo "Destroying all Kubernetes resources using helmfiles..."
-	/conf/patches/gke-helmfile-destruction.sh
+	/home/runner/work/kiosk/kiosk/conf/patches/gke-helmfile-destruction.sh
 	@echo "Helmfile destruction finished."
 	@echo " "
 	@echo " "
