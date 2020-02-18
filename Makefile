@@ -46,8 +46,7 @@ test:
 	wget https://github.com/roboll/helmfile/releases/download/v0.100.0/helmfile_linux_amd64
 	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
 	# Uninstall version 1.17 of kubectl
-	kubeadm reset && \
-	sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube* && \
+	sudo apt-get purge kubectl && \
 	sudo apt-get autoremove && \
 	sudo rm -rf ~/.kube
 	# Install version 1.14 of kubectl
