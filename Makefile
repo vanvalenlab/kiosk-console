@@ -53,7 +53,7 @@ test:
 	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
 	echo "deb http://apt.kubernetes.io/ kubernetes-yakkety main" | sudo tee /etc/apt/sources.list.d/kubernetes.list && \
 	sudo apt-get update && \
-	sudo snap install --channel=1.14/stable --classic kubeadm && \
+	sudo snap install --channel=1.14/stable --classic kubectl && \
 	kubectl version --client
 	kubectl version --client
 	#sudo apt-get install -y kubeadm=1.14
