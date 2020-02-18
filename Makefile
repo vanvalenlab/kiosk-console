@@ -46,7 +46,7 @@ test:
 	wget https://github.com/roboll/helmfile/releases/download/v0.100.0/helmfile_linux_amd64
 	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
 	# Install version 1.14 of kubectl
-	apt-get install -qy kubeadm=1.14
+	sudo apt-get install -qy kubeadm=1.14
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
 	gcloud auth list
 	gcloud config set account continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
