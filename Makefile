@@ -50,8 +50,13 @@ test:
 	gcloud version
 	#gcloud projects add-iam-policy-binding deepcell-209717 --member serviceAccount:continuous-integration-test@deepcell-209717.iam.gserviceaccount.com --role roles/owner
 	# Need to manually install gcloud alpha and beta components when in the github actions environment.
-	sudo apt-get install google-cloud-sdk -y
-	
+	# This is non-trivial, since we apparently can't use apt for this installation.
+	#sudo apt-get install wget
+	#sudo apt purge autoremove google-cloud-sdk
+	#wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-280.0.0-linux-x86_64.tar.gz
+	#tar -xzf google-cloud-sdk-280.0.0-linux-x86_64.tar.gz
+	#sudo ./google-cloud-sdk/install.sh
+	# Need to start a new shell? No, bc every command runs in a new shell...?
 	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
 	echo $(CLOUDSDK_CONFIG)
 	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
