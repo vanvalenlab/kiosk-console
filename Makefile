@@ -43,18 +43,18 @@ test:
 	#gcloud config set project $(PROJECT) && \
 	#gcloud config set account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) &&
 	# Before we get into all the gcloud commands, we need to install the helmfile binary
-	wget https://github.com/roboll/helmfile/releases/download/v0.100.0/helmfile_linux_amd64
+	wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
 	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
 	# Uninstall version 1.17 of kubectl
-	sudo apt-get purge kubectl && \
-	sudo apt-get autoremove && \
-	sudo rm -rf ~/.kube
+	## sudo apt-get purge kubectl && \
+	## sudo apt-get autoremove && \
+	## sudo rm -rf ~/.kube
 	# Install version 1.14 of kubectl
-	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
-	echo "deb http://apt.kubernetes.io/ kubernetes-yakkety main" | sudo tee /etc/apt/sources.list.d/kubernetes.list && \
-	sudo apt-get update && \
-	sudo snap install --channel=1.14/stable --classic kubectl && \
-	kubectl version --client
+	## curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add - && \
+	## echo "deb http://apt.kubernetes.io/ kubernetes-yakkety main" | sudo tee /etc/apt/sources.list.d/kubernetes.list && \
+	## sudo apt-get update && \
+	## sudo snap install --channel=1.14/stable --classic kubectl && \
+	## kubectl version --client
 	kubectl version --client
 	#sudo apt-get install -y kubeadm=1.14
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
