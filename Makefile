@@ -55,15 +55,15 @@ test:
 	# 
 	#cd ./conf && make create
 	# 
-	cd ./conf/tasks && make -f Makefile.gke gke/create/cluster
-	cd ./conf/tasks && make -f Makefile.gke gke/create/node-pools
-	cd ./conf/tasks && make -f Makefile.gke gke/create/bucket
+	cd ./conf/tasks && make -f Makefile.gke.test gke/test/create/cluster
+	cd ./conf/tasks && make -f Makefile.gke.test gke/test/create/node-pools
+	cd ./conf/tasks && make -f Makefile.gke.test gke/test/create/bucket
 	# everything's fine up to here
 	kubectl config view
-	cd ./conf/tasks && make -f Makefile.gke gke/deploy/helm
-	cd ./conf/tasks && make -f Makefile.gke gke/deploy/nvidia
+	cd ./conf/tasks && make -f Makefile.gke.test gke/test/deploy/helm
+	cd ./conf/tasks && make -f Makefile.gke.test gke/test/deploy/nvidia
 	kubectl version --client
-	cd ./conf && make -f ./tasks/Makefile.helmfile helmfile/create/all && make -f ./tasks/Makefile.kubectl kubectl/display/ip && make -f ./tasks/Makefile.kubectl kubectl/implement/autoscaling
+	cd ./conf && make -f ./tasks/Makefile.helmfile.test helmfile/test/create/all && make -f ./tasks/Makefile.kubectl kubectl/display/ip && make -f ./tasks/Makefile.kubectl kubectl/implement/autoscaling
 	# 
 	echo "TESTED"
 	#gcloud config set project $(PROJECT) && \
