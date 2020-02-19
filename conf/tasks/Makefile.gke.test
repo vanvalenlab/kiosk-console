@@ -1,7 +1,5 @@
 # FIXME: GPU AZs and GKE AZ might not be same
 
-export KUBERNETES_VERSION=latest
-
 export CLOUDSDK_CONFIG ?= /localhost/.config/gcloud/
 
 # https://cloud.google.com/kubernetes-engine/docs/quickstart
@@ -9,34 +7,6 @@ export CLOUDSDK_CONFIG ?= /localhost/.config/gcloud/
 # https://cloud.google.com/compute/pricing
 #
 # Increase quotas: https://console.cloud.google.com/iam-admin/quotas
-
-# Project name must be globally unique
-export CLOUDSDK_CORE_PROJECT ?= $(PROJECT)
-
-# Cluster name ust be unique within the project
-export CLUSTER_NAME ?= deepcell
-export CLOUDSDK_CONTAINER_CLUSTER ?= $(CLUSTER_NAME)
-
-# Bucket name need not be unique
-export CLOUDSDK_BUCKET ?= $(GKE_BUCKET)
-
-export GKE_COMPUTE_REGION ?= us-west1
-export GKE_MACHINE_TYPE ?= n1-standard-2
-export NODE_MIN_SIZE ?= 1
-export NODE_MAX_SIZE ?= 10
-export GKE_NODE_SERVICE_ACCOUNT_EMAIL ?= $(CLOUDSDK_CONTAINER_CLUSTER)@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
-
-# Non-GPU machine type
-export RC_DP_MACHINE_TYPE ?= n1-standard-8
-
-# Not all GPU types are available in all regions/availability zones
-export GPU_COMPUTE_REGION ?= $(GKE_COMPUTE_REGION)
-export PREDICTION_GPU_TYPE ?= nvidia-tesla-t4
-export TRAINING_GPU_TYPE ?= nvidia-tesla-v100
-export GPU_MACHINE_TYPE ?= n1-highmem-2
-export GPU_NODE_MIN_SIZE ?= 0
-export GPU_NODE_MAX_SIZE ?= 4
-export GPU_PER_NODE ?= 1
 
 ## Login to Google Cloud
 gke/test/login:
@@ -58,7 +28,6 @@ gke/test/create/cluster:
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
 	gcloud auth list && \
 	gcloud container clusters create $(CLUSTER_NAME) \
-		--project=$(PROJECT) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region=$(GKE_COMPUTE_REGION) \
 		--node-locations=$(REGION_ZONES_WITH_GPUS) \
