@@ -129,8 +129,8 @@ gke/test/create/training-node-pool:
 ## Create GKE GPU node pool
 #		--enable-autoupgrade
 gke/test/create/node-pools: \
-	gke/create/consumer-node-pool \
-	gke/create/prediction-node-pool
+	gke/test/create/consumer-node-pool \
+	gke/test/create/prediction-node-pool
 	# gke/create/training-node-pool
 	@echo "All node pools created."
 	@echo " "
