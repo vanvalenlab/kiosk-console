@@ -37,7 +37,7 @@ env:
   GKE_MACHINE_TYPE: n1-standard-4
   GPU_MAX_TIMES_FOURTY: 160 
   GPU_MAX_TIMES_TWENTY: 80
-  CLUSTER_NAME: deepcell-ci-testing6
+  CLUSTER_NAME: deepcell-ci-testing7
   GKE_NODE_SERVICE_ACCOUNT_EMAIL: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   #GKE_NODE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GKE_EMAIL }}
   REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
@@ -49,6 +49,11 @@ env:
   #CLOUDSDK_CORE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   CLOUDSDK_CORE_VERBOSITY: debug
   KUBERNETES_VERSION: latest
+  CLOUDSDK_CORE_PROJECT: deepcell-209717
+  CLOUDSDK_CONTAINER_CLUSTER: deepcell-ci-testing7
+  CLOUDSDK_BUCKET: deepcell-output-benchmarking
+  CLOUDSDK_COMPUTE_REGION: us-west1
+  GCP_SERVICE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
 
 jobs:
   build:
