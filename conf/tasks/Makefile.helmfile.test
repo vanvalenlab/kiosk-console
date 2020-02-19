@@ -7,19 +7,19 @@ helmfile/test/create/all:
 	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
 		cp /home/runner/work/kiosk/kiosk/conf/conf/ELK_helmfiles/* /home/runner/work/kiosk/kiosk/conf/helmfile.d;\
 	fi
-	@shopt -u nocasematch
+	@bash shopt -u nocasematch
 	/home/runner/work/kiosk/kiosk/conf/patches/gke-helmfile-deployment.sh
 	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "
 
 helmfile/test/create/elk:
-	@shopt -s nocasematch
+	@bash shopt -s nocasematch
 	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
 		cp /home/runner/work/kiosk/kiosk/conf/ELK_helmfiles/* /home/runner/work/kiosk/kiosk/conf/helmfile.d;\
 		helmfile --selector namespace=elk sync;\
 	fi
-	@shopt -u nocasematch
+	@bash shopt -u nocasematch
 
 helmfile/test/destroy/all:
 	@echo " "
