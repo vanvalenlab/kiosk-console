@@ -53,6 +53,12 @@ env:
   CLOUDSDK_BUCKET: deepcell-output-benchmarking
   CLOUDSDK_COMPUTE_REGION: us-west1
   GCP_SERVICE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
+  GCP_PREDICTION_GPU_TYPE: nvidia-tesla-t4
+  GCP_TRAINING_GPU_TYPE: nvidia-tesla-v100
+  GKE_MACHINE_TYPE: n1-standard-1
+  GPU_MACHINE_TYPE: n1-highmem-2
+  CONSUMER_MACHINE_TYPE: n1-highmem-2
+  GPU_PER_NODE: 1
 
 jobs:
   build:
