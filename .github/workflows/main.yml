@@ -48,6 +48,7 @@ env:
   CLOUDSDK_CORE_PROJECT: deepcell-209717
   #CLOUDSDK_CORE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   CLOUDSDK_CORE_VERBOSITY: debug
+  KUBERNETES_VERSION: latest
 
 jobs:
   build:
