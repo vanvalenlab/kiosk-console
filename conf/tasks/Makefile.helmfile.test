@@ -4,6 +4,7 @@
 helmfile/test/create/all:
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
+	#@shopt -s nocasematch
 	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
 		cp /home/runner/work/kiosk/kiosk/conf/conf/ELK_helmfiles/* /home/runner/work/kiosk/kiosk/conf/helmfile.d;\
 	fi
