@@ -36,6 +36,7 @@ run:
 ## Target for testing cluster deployment
 test:
 	echo "TEST"
+	printenv
 	echo $(CLOUDSDK_CORE_PROJECT) && echo $(HOME)
 	pwd
 	ls
