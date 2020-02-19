@@ -9,56 +9,49 @@ on:
 # Environment variables available to all jobs and steps in this workflow
 env:
   CLOUD_PROVIDER: gke
-  GPU_MAX_TIMES_THIRTY: 120 
-  TRAINING_GPU_TYPE: nvidia-tesla-v100
-  GPU_MAX_TIMES_ONE_HUNDRED_FIFTY: 600 
-  PREDICTION_GPU_TYPE: nvidia-tesla-v100
-  GPU_MAX_DIVIDED_BY_TWO: 2
-  GPU_MAX_TIMES_TWO_HUNDRED: 800 
-  GPU_MAX_TIMES_TEN: 40
-  GPU_MAX_TIMES_FIFTY: 200 
-  NODE_MAX_SIZE: 60
-  GPU_MAX_DIVIDED_BY_THREE: 1
-  GPU_NODE_MIN_SIZE: 0
-  GPU_MAX_TIMES_THREE: 12
-  GKE_BUCKET: deepcell-output-benchmarking
-  #GKE_BUCKET: ${{ secrets.GKE_BUCKET }}
-  PROJECT: deepcell-209717
-  #PROJECT: ${{ secrets.GKE_PROJECT }}
-  GPU_MAX_TIMES_FOUR: 16
-  GPU_MAX_TIMES_TWO: 8
-  GPU_MAX_TIMES_FIVE: 20
-  GKE_COMPUTE_REGION: us-west1
-  GPU_MAX_TIMES_ONE_HUNDRED: 400 
-  GPU_NODE_MAX_SIZE: 4
-  GPU_MAX_DIVIDED_BY_FOUR: 1
-  NODE_MIN_SIZE: 1
-  GPU_MAX_TIMES_SEVENTY_FIVE: 300 
-  GKE_MACHINE_TYPE: n1-standard-4
-  GPU_MAX_TIMES_FOURTY: 160 
-  GPU_MAX_TIMES_TWENTY: 80
-  CLUSTER_NAME: deepcell-ci-testing8
-  GKE_NODE_SERVICE_ACCOUNT_EMAIL: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-  #GKE_NODE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GKE_EMAIL }}
-  REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
-  #GKE_KEY_BASE64: ${{ secrets.GKE_KEY_BASE64 }}
-  #GITHUB_SHA: ${{ github.sha }}
-  CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
-  CLOUDSDK_PYTHON_SITEPACKAGES: 1
-  CLOUDSDK_CORE_PROJECT: deepcell-209717
-  #CLOUDSDK_CORE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-  CLOUDSDK_CORE_VERBOSITY: debug
-  KUBERNETES_VERSION: latest
-  CLOUDSDK_CONTAINER_CLUSTER: deepcell-ci-testing8
   CLOUDSDK_BUCKET: deepcell-output-benchmarking
   CLOUDSDK_COMPUTE_REGION: us-west1
+  CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
+  CLOUDSDK_CONTAINER_CLUSTER: deepcell-ci-testing8
+  CLOUDSDK_CORE_PROJECT: deepcell-209717
+  CLOUDSDK_CORE_VERBOSITY: debug
+  CLOUDSDK_PYTHON_SITEPACKAGES: 1
+  CLUSTER_NAME: deepcell-ci-testing8
+  CONSUMER_MACHINE_TYPE: n1-highmem-2
   GCP_SERVICE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   GCP_PREDICTION_GPU_TYPE: nvidia-tesla-t4
   GCP_TRAINING_GPU_TYPE: nvidia-tesla-v100
+  GKE_BUCKET: deepcell-output-benchmarking
+  GKE_COMPUTE_REGION: us-west1
   GKE_MACHINE_TYPE: n1-standard-1
+  GKE_NODE_SERVICE_ACCOUNT_EMAIL: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   GPU_MACHINE_TYPE: n1-highmem-2
-  CONSUMER_MACHINE_TYPE: n1-highmem-2
+  GPU_MAX_DIVIDED_BY_FOUR: 1
+  GPU_MAX_DIVIDED_BY_THREE: 1
+  GPU_MAX_DIVIDED_BY_TWO: 2
+  GPU_MAX_TIMES_FIFTY: 200 
+  GPU_MAX_TIMES_FIVE: 20
+  GPU_MAX_TIMES_FOUR: 16
+  GPU_MAX_TIMES_FOURTY: 160 
+  GPU_MAX_TIMES_ONE_HUNDRED: 400 
+  GPU_MAX_TIMES_ONE_HUNDRED_FIFTY: 600 
+  GPU_MAX_TIMES_SEVENTY_FIVE: 300 
+  GPU_MAX_TIMES_TEN: 40
+  GPU_MAX_TIMES_THIRTY: 120 
+  GPU_MAX_TIMES_THREE: 12
+  GPU_MAX_TIMES_TWENTY: 80
+  GPU_MAX_TIMES_TWO: 8
+  GPU_MAX_TIMES_TWO_HUNDRED: 800 
+  GPU_NODE_MIN_SIZE: 0
+  GPU_NODE_MAX_SIZE: 4
   GPU_PER_NODE: 1
+  KUBERNETES_VERSION: latest
+  NODE_MIN_SIZE: 1
+  NODE_MAX_SIZE: 60
+  PREDICTION_GPU_TYPE: nvidia-tesla-v100
+  PROJECT: deepcell-209717
+  REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
+  TRAINING_GPU_TYPE: nvidia-tesla-v100
 
 jobs:
   build:
