@@ -36,7 +36,7 @@ run:
 ## Target for testing cluster deployment
 test:
 	echo "TEST"
-	echo $(PROJECT) && echo $(HOME)
+	echo $(CLOUDSDK_CORE_PROJECT) && echo $(HOME)
 	pwd
 	ls
 	make init
@@ -53,8 +53,6 @@ test:
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
 	# 
-	#cd ./conf && make create
-	# 
 	cd ./conf/tasks && make -f Makefile.gke.test gke/test/create/cluster
 	cd ./conf/tasks && make -f Makefile.gke.test gke/test/create/node-pools
 	cd ./conf/tasks && make -f Makefile.gke.test gke/test/create/bucket
@@ -66,7 +64,3 @@ test:
 	cd ./conf && make -f ./tasks/Makefile.helmfile.test helmfile/test/create/all && make -f ./tasks/Makefile.kubectl kubectl/display/ip && make -f ./tasks/Makefile.kubectl kubectl/implement/autoscaling
 	# 
 	echo "TESTED"
-	#gcloud config set project $(PROJECT) && \
-	#gcloud iam service-accounts create $(CLUSTER_NAME) --display-name "Deepcell" && \
-	#gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin &&
-	#cd ./conf/tasks && make -f Makefile.gke gke/create/service-account
