@@ -45,6 +45,8 @@ test:
 	# Before we get into all the gcloud commands, we need to install the helmfile binary
 	wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
 	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
+	/home/runner/work/kiosk/kiosk/helmfile_linux_amd64 --version
+	helm version
 	# 
 	kubectl version --client
 	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
