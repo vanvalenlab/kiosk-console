@@ -137,7 +137,7 @@ gke/test/create/node-pools: \
 	@echo " "
 
 gke/test/create/elk-node-pools:
-	@shopt -s nocasematch
+	#@shopt -s nocasematch
 	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
 		echo "Creating elasticsearch CPU node pool...";\
 		echo "Using the following command: ";\
@@ -175,7 +175,7 @@ gke/test/create/elk-node-pools:
 	else\
 		echo "ELK stack is disabled.";\
 	fi
-	@shopt -u nocasematch
+	#@shopt -u nocasematch
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
 # When you add a GPU node pool to an existing cluster that already runs a non-GPU
