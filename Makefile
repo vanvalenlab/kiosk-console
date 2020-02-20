@@ -46,8 +46,12 @@ test:
 	wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
 	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
 	/home/runner/work/kiosk/kiosk/helmfile_linux_amd64 --version
+	# Also need to install gomplate
+	wget https://github.com/hairyhenderson/gomplate/releases/download/v3.1.0/gomplate_linux-amd64-slim
+	chmod 764 /home/runner/work/kiosk/kiosk/gomplate_linux-amd64-slim
+	/home/runner/work/kiosk/kiosk/gomplate_linux-amd64-slim --version
+	# Checking everyone's versions
 	helm version -c
-	# 
 	kubectl version --client
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
