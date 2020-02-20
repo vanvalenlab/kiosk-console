@@ -64,6 +64,6 @@ test:
 	cd ./conf/tasks && make -f Makefile.gke.test gke/test/deploy/helm
 	cd ./conf/tasks && make -f Makefile.gke.test gke/test/deploy/nvidia
 	kubectl version --client
-	cd ./conf && make -f ./tasks/Makefile.helmfile.test helmfile/test/create/all && make -f ./tasks/Makefile.kubectl kubectl/display/ip && make -f ./tasks/Makefile.kubectl kubectl/implement/autoscaling
+	cd ./conf && make -f ./tasks/Makefile.helmfile.test helmfile/test/create/all && make -f ./tasks/Makefile.kubectl kubectl/display/ip && make -f ./tasks/Makefile.kubectl.test kubectl/test/implement/autoscaling
 	# 
 	echo "TESTED"
