@@ -1,6 +1,6 @@
 export CLOUD_PROVIDER ?= gke
 
-include tasks/Makefile.*
+include tasks/Makefile.*.test
 
 ## Create cluster
 test/create: \
