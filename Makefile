@@ -49,7 +49,7 @@ test:
 	helm version -c
 	# 
 	kubectl version --client
-	@gcloud version
+	gcloud version
 	echo $(CLOUDSDK_CONFIG)
 	# 
 	cd ./conf && make -f Makefile.test test/create
