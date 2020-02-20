@@ -204,22 +204,7 @@ gke/test/destroy/pds:
 gke/test/create/service-account:
 	@echo "Creating GKE service account..."
 	@gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json
-	@gcloud auth list
-	@gcloud config set account continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-	@gcloud projects get-iam-policy deepcell-209717
-	#@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
-		echo "No need to create service account; it probably already exists."
-	#@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
 	@echo "GKE service account creation complete."
-	@echo " "
-	@echo " "
-
-## Delete Service Account used by deepcell
-gke/test/destroy/service-account:
-	@echo "Destroying GKE service-account..."
-	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
-	@-gcloud iam service-accounts delete $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --quiet
-	@echo "GKE service-account destruction finished."
 	@echo " "
 	@echo " "
 
@@ -277,7 +262,6 @@ gke/test/create/all: \
 gke/test/destroy/all: \
 	gke/test/destroy/node-pools \
 	gke/test/destroy/cluster \
-	gke/test/destroy/service-account \
 	gke/test/destroy/pds
 	@echo "GKE cluster destroyed"
 	@exit 0
