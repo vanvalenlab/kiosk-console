@@ -1,0 +1,18 @@
+export CLOUD_PROVIDER ?= gke
+
+include tasks/Makefile.*
+
+## Create cluster
+test/create: \
+  $(CLOUD_PROVIDER)/test/create/all \
+  kubectl/test/create/prometheus-redis-exporter-script \
+  helmfile/test/create/all \
+  kubectl/test/display/ip \
+  kubectl/test/implement/autoscaling
+	@echo "Cluster created"
+
+## Destroy cluster
+test/destroy: \
+  helmfile/test/destroy/all \
+  $(CLOUD_PROVIDER)/test/destroy/all
+	@echo "Cluster destroyed"
