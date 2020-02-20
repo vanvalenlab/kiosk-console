@@ -203,9 +203,13 @@ gke/test/destroy/pds:
 ## Create Service Account used by deepcell
 gke/test/create/service-account:
 	@echo "Creating GKE service account..."
-	@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
+	@gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json
+	@gcloud auth list
+	@gcloud config set account continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
+	@gcloud projects get-iam-policy deepcell-209717
+	#@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
+	#@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --role roles/storage.admin
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "

@@ -49,11 +49,7 @@ test:
 	helm version -c
 	# 
 	kubectl version --client
-	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
-	gcloud auth list
-	gcloud config set account continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-	gcloud projects get-iam-policy deepcell-209717
-	gcloud version
+	@gcloud version
 	echo $(CLOUDSDK_CONFIG)
 	# 
 	cd ./conf && make -f Makefile.test test/create
