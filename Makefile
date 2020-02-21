@@ -34,8 +34,8 @@ run:
 	$(CLUSTER)
 
 ## Target for testing cluster deployment
-test: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-$$RANDOM
-test: export CLUSTER_NAME = deepcell-$$RANDOM
+test: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-$(awk 'BEGIN{srand();printf("%d", 65536*rand())}')
+test: export CLUSTER_NAME = deepcell-$(awk 'BEGIN{srand();printf("%d", 65536*rand())}')
 test:
 	echo "TEST"
 	printenv
