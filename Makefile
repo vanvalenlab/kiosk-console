@@ -34,6 +34,7 @@ run:
 	$(CLUSTER)
 
 ## Target for testing cluster deployment
+#test: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-$(RANDOM)
 test:
 	echo "TEST"
 	printenv
@@ -41,7 +42,7 @@ test:
 	pwd
 	ls
 	make init
-	# 
+	# Fix up env vars
 	# Before we get into all the gcloud commands, we need to install the helmfile binary
 	wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
 	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
