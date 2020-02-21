@@ -50,6 +50,10 @@ test:
 	wget https://github.com/hairyhenderson/gomplate/releases/download/v3.1.0/gomplate_linux-amd64-slim
 	chmod 764 /home/runner/work/kiosk/kiosk/gomplate_linux-amd64-slim
 	/home/runner/work/kiosk/kiosk/gomplate_linux-amd64-slim --version
+	# And, finally, we need to install kubens
+	wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
+	mv /home/runner/work/kiosk/kiosk/kubens /home/runner/work/kiosk/kiosk/conf/kubens.sh
+	chmod 764 /home/runner/work/kiosk/kiosk/conf/kubens.sh
 	# Checking everyone's versions
 	helm version -c
 	kubectl version --client
