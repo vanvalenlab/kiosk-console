@@ -102,8 +102,22 @@ function tailcmd() {
   :> $tmpfile
   (
     $* 2>&1
-    echo
-    echo "${completed_message}"
+    if [[ $? -eq 0 ]]; then
+      echo
+      echo "${completed_message}"
+    else
+      echo
+      echo "---------------------------------"
+      echo "There was an error during cluster deployment!"
+      echo
+      echo "To view the logs for this deployment attempt, choose \"Shell\" from"
+      echo "the Kiosk's main menu and execute \"cat ${tmpfile}\"."
+      echo
+      echo "For further assistance, please consult the Troubleshooting section"
+      echo "of the DeepCell Kiosk documentation."
+      echo
+      echo "--- CLUSTER DEPLOYMENT FAILED ---"
+    fi
   ) > $tmpfile &
 
   dialog --clear \
@@ -268,7 +282,6 @@ function configure_gke() {
                         "\n")
       dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 9 65
-
       return 0
     fi
   fi
@@ -287,13 +300,22 @@ function configure_gke() {
 
   # Get the cluster name from the user or the environment
   if [ -z ${CLOUDSDK_CONTAINER_CLUSTER} ]; then
-    export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$(shuf -n 1 /etc/wordlist.txt)-$((1 + RANDOM % 100))"
+    export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$((1 + RANDOM % 100))"
   fi
+
   export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
   export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
-  if [ "$CLOUDSDK_CONTAINER_CLUSTER" = "" ]; then
-    return 0
-  fi
+  # If clusters are longer than 18 characters, Persistent Disks can get stranded.
+  while [ "${CLOUDSDK_CONTAINER_CLUSTER}" = "" -o ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]
+  do
+    if [ "$CLOUDSDK_CONTAINER_CLUSTER" = "" ]; then
+      return 0
+    elif [ ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]; then
+      msgbox "Warning!" "Please make sure your cluster name is no more than 18 characters."
+    fi
+    export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
+    export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
+  done
 
   # Get the bucket name from the user or the environment
   local bucket_text=("Bucket Name"
