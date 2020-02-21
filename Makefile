@@ -7,6 +7,7 @@ export DOCKER_BUILD_FLAGS =
 export README_DEPS ?= docs/targets.md
 export INSTALL_PATH ?= /usr/local/bin
 
+
 -include $(shell curl -sSL -o .build-harness "https://git.io/build-harness"; echo .build-harness)
 
 ## Initialize build-harness, install deps, build docker container, install wrapper script and run shell
