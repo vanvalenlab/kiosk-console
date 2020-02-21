@@ -13,11 +13,13 @@ env:
   CLOUDSDK_BUCKET: deepcell-output-benchmarking
   CLOUDSDK_COMPUTE_REGION: us-west1
   CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
-  CLOUDSDK_CONTAINER_CLUSTER: deepcell-ci-testing8
+  CLOUDSDK_CONTAINER_CLUSTER: deepcell-$((1 + RANDOM % 100))
+  #CLOUDSDK_CONTAINER_CLUSTER: deepcell-ci-testing8
   CLOUDSDK_CORE_PROJECT: deepcell-209717
   CLOUDSDK_CORE_VERBOSITY: debug
   CLOUDSDK_PYTHON_SITEPACKAGES: 1
-  CLUSTER_NAME: deepcell-ci-testing8
+  CLUSTER_NAME: deepcell-$((1 + RANDOM % 100))
+  #CLUSTER_NAME: deepcell-ci-testing8
   CONSUMER_MACHINE_TYPE: n1-highmem-2
   GCP_SERVICE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   GCP_PREDICTION_GPU_TYPE: nvidia-tesla-t4
