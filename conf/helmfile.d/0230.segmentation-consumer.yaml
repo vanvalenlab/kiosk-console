@@ -71,13 +71,13 @@ releases:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        NUCLEAR_MODEL: "panoptic:3"
+        NUCLEAR_MODEL: "NuclearSegmentation:0"
         NUCLEAR_POSTPROCESS: "retinanet-semantic"
 
-        PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
+        PHASE_MODEL: "PhaseCytoSegmentation:0"
         PHASE_POSTPROCESS: "retinanet"
 
-        CYTOPLASM_MODEL: "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
+        CYTOPLASM_MODEL: "FluoCytoSegmentation:0"
         CYTOPLASM_POSTPROCESS: "retinanet"
 
         LABEL_DETECT_ENABLED: "true"
