@@ -9,19 +9,15 @@ on:
 # Environment variables available to all jobs and steps in this workflow
 env:
   CHARTS_PATH: /home/runner/work/kiosk/kiosk/conf/charts
-  CLOUD_PROVIDER: gke
+  CLOUD_PROVIDER: gke 
   CLOUDSDK_BUCKET: deepcell-output-benchmarking
   CLOUDSDK_COMPUTE_REGION: us-west1
   CLOUDSDK_CONFIG: /home/runner/work/kiosk/.config/gcloud/
   CLOUDSDK_CORE_PROJECT: deepcell-209717
   CLOUDSDK_CORE_VERBOSITY: debug
-  CLOUDSDK_PYTHON_SITEPACKAGES: 1
   CONSUMER_MACHINE_TYPE: n1-highmem-2
-  GCP_SERVICE_ACCOUNT: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   GCP_PREDICTION_GPU_TYPE: nvidia-tesla-t4
   GCP_TRAINING_GPU_TYPE: nvidia-tesla-v100
-  GKE_BUCKET: deepcell-output-benchmarking
-  GKE_COMPUTE_REGION: us-west1
   GKE_MACHINE_TYPE: n1-standard-1
   GKE_NODE_SERVICE_ACCOUNT_EMAIL: continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
   GPU_MACHINE_TYPE: n1-highmem-2
@@ -44,13 +40,7 @@ env:
   GPU_NODE_MIN_SIZE: 0
   GPU_NODE_MAX_SIZE: 4
   GPU_PER_NODE: 1
-  KUBERNETES_VERSION: latest
-  NODE_MIN_SIZE: 1
-  NODE_MAX_SIZE: 60
-  PREDICTION_GPU_TYPE: nvidia-tesla-v100
-  PROJECT: deepcell-209717
   REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
-  TRAINING_GPU_TYPE: nvidia-tesla-v100
 
 jobs:
   build:
