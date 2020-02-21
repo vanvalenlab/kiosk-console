@@ -73,13 +73,13 @@ releases:
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
         NUCLEAR_MODEL: "NuclearSegmentation:0"
-        NUCLEAR_POSTPROCESS: "retinanet-semantic"
+        NUCLEAR_POSTPROCESS: "deep_watershed"
 
         PHASE_MODEL: "PhaseCytoSegmentation:0"
-        PHASE_POSTPROCESS: "retinanet"
+        PHASE_POSTPROCESS: "deep_watershed"
 
         CYTOPLASM_MODEL: "FluoCytoSegmentation:0"
-        CYTOPLASM_POSTPROCESS: "retinanet"
+        CYTOPLASM_POSTPROCESS: "deep_watershed"
 
         LABEL_DETECT_ENABLED: "true"
         LABEL_DETECT_MODEL: "LabelDetection:0"
