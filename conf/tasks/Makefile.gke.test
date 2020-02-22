@@ -200,6 +200,8 @@ gke/test/destroy/pds:
 	@echo " "
 
 # https://cloud.google.com/storage/docs/access-control/iam-roles
+# Currently, using Editor and Kubernetes Engine Admin roles for the testing-ci service account.
+# It might be possible to replace Editor with someting more specific, but more research would be needed.
 ## Create Service Account used by deepcell
 gke/test/create/service-account:
 	@echo "Creating GKE service account..."
