@@ -38,7 +38,7 @@ Docker User group
 
 **Solution:** If you are running Linux, you can add yourself to the ``docker`` user group with the following command: ``usermod -a -G docker $(whoami)``. Then log out and log back in.
 
-If that command returns an error, you may not be on Linux. If you are on Linux, you may need to prepend that command with ``sudo ``. In order for the sudo command to work, though, your current user must have root privileges.
+If that command returns an error, you may not be on Linux. If you are on Linux, you may need to prepend that command with ``sudo``. In order for the sudo command to work, though, your current user must have root privileges.
 
 Docker User Group
 ^^^^^^^^^^^^^^^^^
