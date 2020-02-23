@@ -57,10 +57,6 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
   * Change ``releases.values.env.QUEUE`` to :data:`queue_name`
   * Change ``releases.values.env.CONSUMER_TYPE`` to :data:`consumer_type`
 
-  .. todo::
-
-    Confirm list of required helmfile changes
-
   .. hidden-code-block:: yaml
     :starthidden: true
     :label: + Show/Hide example helmfile
