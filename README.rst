@@ -7,9 +7,13 @@ DeepCell Kiosk: A Scalable and User-Friendly Environment for Biological Image An
     :target: https://travis-ci.org/vanvalenlab/kiosk
     :alt: Build Status
 
-.. image:: https://readthedocs.org/projects/deepcell-kiosk/badge/?version=master
+.. image:: https://img.shields.io/readthedocs/kiosk?logo=Read-the-Docs
     :target: https://deepcell-kiosk.readthedocs.io/en/master/?badge=master
     :alt: Documentation Status
+
+.. image:: https://img.shields.io/github/issues/vanvalenlab/kiosk?logo=github
+    :target: https://github.com/vanvalenlab/kiosk/issues
+    :alt: Github Issues
 
 The DeepCell Kiosk is the entry point for users to spin up an end-to-end DeepCell environment in the cloud using `Kubernetes <https://kubernetes.io/>`_. It is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models [1]_.
 
@@ -42,14 +46,13 @@ The kiosk is part of a software infastructure system built by the Van Valen Lab 
 
 Contribute
 ----------
-
-Please refer to our `Developer Documentation <https://deepcell-kiosk.readthedocs.io/en/master/DEVELOPER.html>`_ for information on how to contribute to the kiosk.
+We welcome contributions to the kiosk. If you are interested, please refer to our `Developer Documentation <https://deepcell-kiosk.readthedocs.io/en/master/DEVELOPER.html>`_, `Code of Conduct <https://github.com/vanvalenlab/kiosk/blob/master/CODE_OF_CONDUCT.md>`_ and `Contributing Guidelines <https://github.com/vanvalenlab/kiosk/blob/master/CONTRIBUTING.md>`_.
 
 Support
 -------
 
-* Issue Tracker: https://github.com/vanvalenlab/kiosk/issues
-* Documentation: https://deepcell-kiosk.readthedocs.io/
+Issues are managed through `Github <https://github.com/vanvalenlab/kiosk/issues>`_.
+Documentation is hosted on `Read the Docs <https://deepcell-kiosk.readthedocs.io/en/master/?badge=master>`_.
 
 Footnotes
 ---------
