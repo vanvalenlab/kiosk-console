@@ -47,15 +47,15 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
 
 1. If you do not already have an account on `Docker Hub <https://hub.docker.com/>`_. Sign in to docker in your local environment using ``docker login``.
 
-2. In an environment of your choice, run ``docker build <image>:<tag>`` and then ``docker push <image>:<tag>``.
+2. From the root of the ``kiosk-redis-consumer`` folder, run ``docker build <image>:<tag>`` and then ``docker push <image>:<tag>``.
 
 3. In the ``/conf/helmfile.d/`` folder in your kiosk environment, add a new helmfile following the convention ``02##.custom-consumer.yaml``. The text for the helmfile can be copied from ``0250.tracking-consumer.yaml`` as shown below. Then make the following changes to customize the helmfile to your consumer.
 
-  * Line 13: Change ``name`` to :data:`consumer_name`
-  * Lines 32-33: Change docker image repository and tag
-  * Line 36: Change ``nameOverride`` to :data:`consumer_name`
-  * Line 57: Change ``QUEUE`` to :data:`queue_name`
-  * Line 58: Change ``CONSUMER_TYPE`` to :data:`consumer_type`
+  * Change ``releases.name`` to :data:`consumer_name`
+  * Change ``releases.values.image.repository`` and ``releases.values.image.tag``
+  * Change ``releases.values.nameOverride`` to :data:`consumer_name`
+  * Change ``releases.values.env.QUEUE`` to :data:`queue_name`
+  * Change ``releases.values.env.CONSUMER_TYPE`` to :data:`consumer_type`
 
   .. todo::
 
@@ -64,7 +64,6 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
   .. hidden-code-block:: yaml
     :starthidden: true
     :label: + Show/Hide example helmfile
-    :linenos:
 
     helmDefaults:
       args:
@@ -84,94 +83,94 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
     #   - [web address of Helm chart's YAML file]
     #
     - name: "tracking-consumer"
-    namespace: "deepcell"
-    labels:
-      chart: "redis-consumer"
-      component: "deepcell"
       namespace: "deepcell"
-      vendor: "vanvalenlab"
-      default: "true"
-    chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-    version: "0.1.0"
-    values:
-      - replicas: 1
+      labels:
+        chart: "redis-consumer"
+        component: "deepcell"
+        namespace: "deepcell"
+        vendor: "vanvalenlab"
+        default: "true"
+      chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
+      version: "0.1.0"
+      values:
+        - replicas: 1
 
-        image:
-          repository: "vanvalenlab/kiosk-redis-consumer"
-          tag: "0.4.1"
-          pullPolicy: "Always"
+          image:
+            repository: "vanvalenlab/kiosk-redis-consumer"
+            tag: "0.4.1"
+            pullPolicy: "Always"
 
-        nameOverride: "tracking-consumer"
+          nameOverride: "tracking-consumer"
 
-        resources:
-          requests:
-            cpu: 300m
-            memory: 256Mi
-          # limits:
-          #   cpu: 100m
-          #   memory: 1024Mi
+          resources:
+            requests:
+              cpu: 300m
+              memory: 256Mi
+            # limits:
+            #   cpu: 100m
+            #   memory: 1024Mi
 
-        tolerations:
-          - key: consumer
-            operator: Exists
-            effect: NoSchedule
+          tolerations:
+            - key: consumer
+              operator: Exists
+              effect: NoSchedule
 
-        nodeSelector:
-          consumer: "yes"
+          nodeSelector:
+            consumer: "yes"
 
-        env:
-          DEBUG: "true"
-          INTERVAL: 1
-          QUEUE: "track"
-          CONSUMER_TYPE: "tracking"
-          EMPTY_QUEUE_TIMEOUT: 5
-          GRPC_TIMEOUT: 20
-          GRPC_BACKOFF: 3
+          env:
+            DEBUG: "true"
+            INTERVAL: 1
+            QUEUE: "track"
+            CONSUMER_TYPE: "tracking"
+            EMPTY_QUEUE_TIMEOUT: 5
+            GRPC_TIMEOUT: 20
+            GRPC_BACKOFF: 3
 
-          REDIS_HOST: "redis"
-          REDIS_PORT: 26379
-          REDIS_TIMEOUT: 3
+            REDIS_HOST: "redis"
+            REDIS_PORT: 26379
+            REDIS_TIMEOUT: 3
 
-          TF_HOST: "tf-serving"
-          TF_PORT: 8500
-          TF_TENSOR_NAME: "image"
-          TF_TENSOR_DTYPE: "DT_FLOAT"
+            TF_HOST: "tf-serving"
+            TF_PORT: 8500
+            TF_TENSOR_NAME: "image"
+            TF_TENSOR_DTYPE: "DT_FLOAT"
 
-          AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
-          CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
-          GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
+            AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
+            CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+            GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-          NUCLEAR_MODEL: "panoptic:3"
-          NUCLEAR_POSTPROCESS: "retinanet-semantic"
+            NUCLEAR_MODEL: "panoptic:3"
+            NUCLEAR_POSTPROCESS: "retinanet-semantic"
 
-          PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
-          PHASE_POSTPROCESS: "retinanet"
+            PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
+            PHASE_POSTPROCESS: "retinanet"
 
-          CYTOPLASM_MODEL: "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
-          CYTOPLASM_POSTPROCESS: "retinanet"
+            CYTOPLASM_MODEL:   "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
+            CYTOPLASM_POSTPROCESS: "retinanet"
 
-          LABEL_DETECT_ENABLED: "true"
-          LABEL_DETECT_MODEL: "LabelDetection:0"
-          LABEL_RESHAPE_SIZE: 216
-          LABEL_DETECT_SAMPLE: 10
+            LABEL_DETECT_ENABLED: "true"
+            LABEL_DETECT_MODEL: "LabelDetection:0"
+            LABEL_RESHAPE_SIZE: 216
+            LABEL_DETECT_SAMPLE: 10
 
-          SCALE_DETECT_ENABLED: "true"
-          SCALE_DETECT_MODEL: "ScaleDetection:0"
-          SCALE_RESHAPE_SIZE: 216
-          SCALE_DETECT_SAMPLE: 10
+            SCALE_DETECT_ENABLED: "true"
+            SCALE_DETECT_MODEL: "ScaleDetection:0"
+            SCALE_RESHAPE_SIZE: 216
+            SCALE_DETECT_SAMPLE: 10
 
-          DRIFT_CORRECT_ENABLED: "false"
-          NORMALIZE_TRACKING: "true"
+            DRIFT_CORRECT_ENABLED: "false"
+            NORMALIZE_TRACKING: "true"
 
-          TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-          TRACKING_SEGMENT_MODEL: "panoptic:3"
-          TRACKING_POSTPROCESS_FUNCTION: "retinanet"
+            TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
+            TRACKING_SEGMENT_MODEL: "panoptic:3"
+            TRACKING_POSTPROCESS_FUNCTION: "retinanet"
 
-        secrets:
-          AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
-          AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-          AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-          GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+          secrets:
+            AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+            AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+            AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+            GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
 
 4. Deploy your new helmfile to the cluster with:
 
