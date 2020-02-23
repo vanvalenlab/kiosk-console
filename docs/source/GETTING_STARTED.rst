@@ -52,6 +52,7 @@ One of the enabling technologies the DeepCell Kiosk utilizes is `Docker <https:/
 
 If you plan on maintaining the DeepCell kiosk as a persistent tool, we recommend using the jumpbox workflow, which allows you to manage the kiosk from a Google Cloud VM. This prevents computer shutdowns from interfering with your ability to manage the kiosk.
 
+.. _DOCKER_INSTALLATION:
 6. Select the docker installation that is best for you:
 
 * `Local Docker Installation - Windows`_

@@ -10,8 +10,8 @@ We've done our best to make the DeepCell Kiosk robust to common use cases, howev
 Docker Related Errors
 ---------------------
 
-Docker Installation
-^^^^^^^^^^^^^^^^^^^
+``DOCKER not defined in docker/build``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -19,10 +19,10 @@ Docker Installation
     [directory]/kiosk/build-harness/modules/docker/Makefile.build:9: recipe for target 'docker/build' failed
     make: *** [docker/build] Error 1
 
-**Explanation:** Docker is not installed.
+Docker is not installed. Refer to :ref:`GETTING_STARTED:DOCKER_INSTALLATION` for guidance on how to install docker.
 
-Docker User group
-^^^^^^^^^^^^^^^^^
+``Permission denied while trying to connect to the Docker daemon socket``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -34,14 +34,12 @@ Docker User group
     [directory]/kiosk/build-harness/modules/docker/Makefile.build:9: recipe for target 'docker/build' failed
     make: \*\*\* [docker/build] Error 1
 
-**Explanation:** This means that your current user is not a member of the ``docker`` user group.
-
-**Solution:** If you are running Linux, you can add yourself to the ``docker`` user group with the following command: ``usermod -a -G docker $(whoami)``. Then log out and log back in.
+This error means that your current user is not a member of the ``docker`` user group. If you are running Linux, you can add yourself to the ``docker`` user group with the following command: ``usermod -a -G docker $(whoami)``. Then log out and log back in.
 
 If that command returns an error, you may not be on Linux. If you are on Linux, you may need to prepend that command with ``sudo``. In order for the sudo command to work, though, your current user must have root privileges.
 
-Docker User Group
-^^^^^^^^^^^^^^^^^
+``Recipe for target 'docker/build' failed make: *** [docker/build] Error 1``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -52,7 +50,7 @@ Docker User Group
     [directory]/kiosk/build-harness/modules/docker/Makefile.build:9: recipe for target 'docker/build' failed
     make: *** [docker/build] Error 1
 
-**Explanation:** You probably just added yourself to the ``docker`` user group but haven't logged and logged back in yet.
+You probably just added yourself to the ``docker`` user group but haven't logged and logged back in yet.
 
 My prediction never finishes
 ----------------------------
