@@ -7,11 +7,8 @@ We've done our best to make the DeepCell Kiosk robust to common use cases, howev
 
 .. contents:: :local:
 
-Docker Related Errors
----------------------
-
 ``DOCKER not defined in docker/build``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------
 
 .. code-block:: bash
 
@@ -22,7 +19,7 @@ Docker Related Errors
 Docker is not installed. Refer to :ref:`GETTING_STARTED:DOCKER_INSTALLATION` for guidance on how to install docker.
 
 ``Permission denied while trying to connect to the Docker daemon socket``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------------------------------------------------
 
 .. code-block:: bash
 
@@ -39,7 +36,7 @@ This error means that your current user is not a member of the ``docker`` user g
 If that command returns an error, you may not be on Linux. If you are on Linux, you may need to prepend that command with ``sudo``. In order for the sudo command to work, though, your current user must have root privileges.
 
 ``Recipe for target 'docker/build' failed make: *** [docker/build] Error 1``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------------------------------------------
 
 .. code-block:: bash
 
