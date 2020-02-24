@@ -10,7 +10,7 @@ jobs:
   include:
     - stage: test
       env:
-        - CHARTS_PATH=/home/runner/work/kiosk/kiosk/conf/charts
+        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk
         - CLOUD_PROVIDER=gke 
         - CLOUDSDK_BUCKET=deepcell-output-benchmarking
         - CLOUDSDK_COMPUTE_REGION=us-west1
