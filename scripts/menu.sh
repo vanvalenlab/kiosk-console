@@ -73,6 +73,13 @@ function radiobox_from_array() {
   local selector_box_lines=$(($selector_box_lines+1))
   local total_lines=$(($base_box_height + $selector_box_lines))
 
+  # make sure the box stays within the screen
+  local screen_height=$(tput lines)
+  if [ $screen_height -lt $(($total_lines+6)) ]; then
+    local selector_box_lines=$(($screen_height-15))
+    local total_lines=$(($base_box_height + $selector_box_lines))
+  fi
+
   local formatted_arr=$(echo "${arr}" | awk '{print NR " " $1 " OFF"}')
   local arr_with_default=${formatted_arr/$default_value OFF/$default_value ON}
 
