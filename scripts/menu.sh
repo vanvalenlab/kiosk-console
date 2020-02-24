@@ -75,8 +75,9 @@ function radiobox_from_array() {
 
   # make sure the box stays within the screen
   local screen_height=$(tput lines)
-  if [ $screen_height -lt $(($total_lines+6)) ]; then
-    local selector_box_lines=$(($screen_height-15))
+  local padding=6
+  if [ $screen_height -lt $(($total_lines+$padding)) ]; then
+    local selector_box_lines=$(($screen_height-($base_box_height+$padding)))
     local total_lines=$(($base_box_height + $selector_box_lines))
   fi
 
