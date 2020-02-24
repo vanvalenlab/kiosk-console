@@ -64,10 +64,6 @@ Local Docker Installation - Windows
 * `Install WSL <https://docs.microsoft.com/en-us/windows/wsl/install-win10>`_ and the Ubuntu Linux distribution
 * Once installed, follow the Docker installation instructions for `Linux <https://docs.docker.com/install/linux/docker-ce/ubuntu/>`_
 
-.. todo::
-
-    Can we provide guidance on which architecture users need to install?
-
 Local Docker Installation - MacOS and Linux
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Follow the docker installation `instructions <https://docs.docker.com/install/>`_ for your operating system
