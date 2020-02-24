@@ -46,16 +46,16 @@ test:
 	# Fix up env vars
 	# Before we get into all the gcloud commands, we need to install the helmfile binary
 	wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
-	chmod 764 /home/runner/work/kiosk/kiosk/helmfile_linux_amd64
-	/home/runner/work/kiosk/kiosk/helmfile_linux_amd64 --version
+	chmod 764 $(TEST_HOME_DIR)/helmfile_linux_amd64
+	$(TEST_HOME_DIR)/helmfile_linux_amd64 --version
 	# Also need to install gomplate
 	wget https://github.com/hairyhenderson/gomplate/releases/download/v3.1.0/gomplate_linux-amd64-slim
-	chmod 764 /home/runner/work/kiosk/kiosk/gomplate_linux-amd64-slim
-	/home/runner/work/kiosk/kiosk/gomplate_linux-amd64-slim --version
+	chmod 764 $(TEST_HOME_DIR)/gomplate_linux-amd64-slim
+	$(TEST_HOME_DIR)/gomplate_linux-amd64-slim --version
 	# And, finally, we need to install kubens
 	wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
-	mv /home/runner/work/kiosk/kiosk/kubens /home/runner/work/kiosk/kiosk/conf/kubens.sh
-	chmod 764 /home/runner/work/kiosk/kiosk/conf/kubens.sh
+	mv $(TEST_HOME_DIR)/kubens $(TEST_HOME_DIR)/conf/kubens.sh
+	chmod 764 $(TEST_HOME_DIR)/conf/kubens.sh
 	# Checking everyone's versions
 	helm version -c
 	kubectl version --client

@@ -186,7 +186,7 @@ gke/test/create/elk-node-pools:
 gke/test/destroy/node-pools:
 	@echo "Destroying node pools."
 	@echo "Depending on cluster state, this process could take a while."
-	/home/runner/work/kiosk/kiosk/conf/patches/gke-node-pool-destruction-TEST.sh
+	$(TEST_HOME_DIR)/conf/patches/gke-node-pool-destruction-TEST.sh
 	@echo "Node pools destroyed."
 	@echo " "
 	@echo " "
@@ -194,7 +194,7 @@ gke/test/destroy/node-pools:
 ## Destroy Orphaned GKE persistent disks
 gke/test/destroy/pds:
 	@echo "Destroying orphaned persistent disks."
-	/home/runner/work/kiosk/kiosk/conf/patches/gke-pd-destruction-TEST.sh
+	$(TEST_HOME_DIR)/conf/patches/gke-pd-destruction-TEST.sh
 	@echo "Orphaned persistent disks destroyed."
 	@echo " "
 	@echo " "

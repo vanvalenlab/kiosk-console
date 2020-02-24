@@ -10,11 +10,11 @@ jobs:
   include:
     - stage: test
       env:
-        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk
+        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
         - CLOUD_PROVIDER=gke 
         - CLOUDSDK_BUCKET=deepcell-output-benchmarking
         - CLOUDSDK_COMPUTE_REGION=us-west1
-        - CLOUDSDK_CONFIG=/home/runner/work/kiosk/.config/gcloud/
+        - CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk/.config/gcloud/
         - CLOUDSDK_CORE_PROJECT=deepcell-209717
         - CLOUDSDK_CORE_VERBOSITY=debug
         - CONSUMER_MACHINE_TYPE=n1-highmem-2
@@ -46,6 +46,7 @@ jobs:
         - NODE_MIN_SIZE=1
         - NODE_MAX_SIZE=60
         - REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+        - TEST_HOME_DIR=/home/travis/build/vanvalenlab/kiosk
       script:
       - make test
     - stage: deploy
