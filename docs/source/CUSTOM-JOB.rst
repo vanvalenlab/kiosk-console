@@ -34,7 +34,7 @@ The following variables will be used throughout the setup of the custom consumer
 Designing a custom consumer
 ---------------------------
 
-For guidance on the changes that need to be made to |kiosk-redis-consumer|, please see :doc:`kiosk-redis-consumer:CUSTOM_CONSUMER`
+For guidance on the changes that need to be made to |kiosk-redis-consumer|, please see :doc:`redis_consumer:CUSTOM_CONSUMER`
 
 .. |kiosk-redis-consumer| raw:: html
 
