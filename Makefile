@@ -37,38 +37,49 @@ run:
 ## Target for testing cluster deployment
 test: export CLUSTER_NAME = deepcell-test-$(shell bash -c 'echo $$RANDOM')
 test:
+	# Some debug info
 	echo "TEST"
 	printenv
 	echo $(CLOUDSDK_CORE_PROJECT) && echo $(HOME)
 	pwd
 	ls
 	make init
-	# Fix up env vars
-	# Before we get into all the gcloud commands, we need to install the helmfile binary
+	# Installations of binaries
+	## helmfile
 	wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
 	chmod 764 $(TEST_HOME_DIR)/helmfile_linux_amd64
 	$(TEST_HOME_DIR)/helmfile_linux_amd64 --version
-	# Also need to install gomplate
+	## gomplate
 	wget https://github.com/hairyhenderson/gomplate/releases/download/v3.1.0/gomplate_linux-amd64-slim
 	chmod 764 $(TEST_HOME_DIR)/gomplate_linux-amd64-slim
 	$(TEST_HOME_DIR)/gomplate_linux-amd64-slim --version
-	# And, finally, we need to install kubens
+	## kubectl
+	apt-get update && sudo apt-get install -y apt-transport-https
+	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+	echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
+	apt-get update
+	apt-get install -y kubectl
+	kubectl version --client
+	## kubens
 	wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
 	mv $(TEST_HOME_DIR)/kubens $(TEST_HOME_DIR)/conf/kubens.sh
 	chmod 764 $(TEST_HOME_DIR)/conf/kubens.sh
-	# Nvm, also install helm
+	## helm
 	wget https://get.helm.sh/helm-v2.16.3-linux-amd64.tar.gz
 	tar -xzvf helm-v2.16.3-linux-amd64.tar.gz
 	chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
 	chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
 	$(TEST_HOME_DIR)/linux-amd64/helm version -c
-	# Checking everyone's versions
-	#helm version -c
-	kubectl version --client
+	## gcloud
+	apt-get install apt-transport-https ca-certificates gnupg
+	echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+	apt-get update && apt-get install google-cloud-sdk
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
-	# 
+	# execute make targets 
 	cd ./conf && make -f Makefile.test test/create
 	cd ./conf && make -f Makefile.test test/destroy
-	# 
+	# celebrate
 	echo "TESTED"
+
