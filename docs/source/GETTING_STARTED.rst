@@ -3,6 +3,10 @@
 Getting Started
 ===============
 
+.. image:: https://img.shields.io/static/v1?label=RTD&logo=Read%20the%20Docs&message=View%20on%20Read%20the%20Docs&color=blue
+    :alt: View on Read the Docs
+    :target: https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STARTED.html
+
 .. contents:: :local:
 
 Google Cloud Setup
