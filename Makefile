@@ -76,8 +76,8 @@ test:
 	@curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 	@sudo apt-get update && sudo apt-get install google-cloud-sdk
 	mkdir -p $(TEST_HOME_DIR)/.config/gcloud
-	chmod 777 $(TEST_HOME_DIR)/.config
-	chmod 777 $(TEST_HOME_DIR)/.config/gcloud
+	#chmod 777 $(TEST_HOME_DIR)/.config
+	#chmod 777 $(TEST_HOME_DIR)/.config/gcloud
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
 	# execute make targets 
