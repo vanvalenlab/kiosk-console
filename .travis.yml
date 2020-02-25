@@ -9,6 +9,7 @@ language: bash
 jobs:
   include:
     - stage: test
+      if: type IS pull-request
       env:
         - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
         - CLOUD_PROVIDER=gke 
