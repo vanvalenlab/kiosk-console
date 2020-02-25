@@ -25,9 +25,7 @@ gke/test/destroy/project:
 gke/test/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
-	gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json && \
-	gcloud auth list && \
-	gcloud container clusters create $(CLUSTER_NAME) \
+	@gcloud container clusters create $(CLUSTER_NAME) \
 		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
 		--region=$(CLOUDSDK_COMPUTE_REGION) \
 		--node-locations=$(REGION_ZONES_WITH_GPUS) \
@@ -205,7 +203,7 @@ gke/test/destroy/pds:
 ## Create Service Account used by deepcell
 gke/test/create/service-account:
 	@echo "Creating GKE service account..."
-	@gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(HOME)/secrets/gke_service_account_key.json
+	@gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(TEST_HOME_DIR)/gcloud_key.json
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "
