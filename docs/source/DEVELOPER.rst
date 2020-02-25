@@ -92,23 +92,23 @@ Setting up OpenVPN
 
 1. After cluster startup, choose ``Shell`` from the main menu. On the command line, execute the following command:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-    POD_NAME=`kubectl get pods --namespace=kube-system -l type=openvpn | awk END'{ print $1 }'` \
-    && kubectl logs --namespace=kube-system $POD_NAME
+       POD_NAME=`kubectl get pods --namespace=kube-system -l type=openvpn | awk END'{ print $1 }'` \
+       && kubectl logs --namespace=kube-system $POD_NAME
 
-If the OpenVPN pod has already deployed, you should see something like "Mon Apr 29 21:15:53 2019 Initialization Sequence Completed" somewhere in the output.
+   If the OpenVPN pod has already deployed, you should see something like "Mon Apr 29 21:15:53 2019 Initialization Sequence Completed" somewhere in the output.
 
 2. If you see that line, then execute
 
-.. code-block:: bash
+   .. code-block:: bash
 
-    POD_NAME=`kubectl get pods --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
-    && SERVICE_NAME=`kubectl get svc --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
-    && SERVICE_IP=$(kubectl get svc --namespace kube-system $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].ip}') \
-    && KEY_NAME=kubeVPN \
-    && kubectl --namespace kube-system exec -it $POD_NAME /etc/openvpn/setup/newClientCert.sh $KEY_NAME $SERVICE_IP \
-    && kubectl --namespace kube-system exec -it $POD_NAME cat /etc/openvpn/certs/pki/$KEY_NAME.ovpn > $KEY_NAME.ovpn
+       POD_NAME=`kubectl get pods --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
+       && SERVICE_NAME=`kubectl get svc --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
+       && SERVICE_IP=$(kubectl get svc --namespace kube-system $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].ip}') \
+       && KEY_NAME=kubeVPN \
+       && kubectl --namespace kube-system exec -it $POD_NAME /etc/openvpn/setup/newClientCert.sh $KEY_NAME $SERVICE_IP \
+       && kubectl --namespace kube-system exec -it $POD_NAME cat /etc/openvpn/certs/pki/$KEY_NAME.ovpn > $KEY_NAME.ovpn
 
 3. Then, copy the newly-generated ``kubeVPN.ovpn`` file onto your local machine. (You can do this either by viewing the file's contents and copy-pasting them manually, or by using a file-copying tool like SCP).
 
@@ -129,7 +129,7 @@ Logging
 Recovering from failed Kiosk creations or destructions
 ------------------------------------------------------
 
-There may be occasions where the Kiosk fails to deploy or the cluster destruction doesn't execute properly and leaves orphaned cloud resources active. Both failed cluster deployment and failed cluster destruction after deployment can be the result of any number of issues. Before you re-lauch any future clusters, and to prevent you from unkowingly leaking money, you should remove all the vestigial cloud resources left from the failed launch/destruction.
+There may be occasions where the Kiosk fails to deploy or the cluster destruction doesn't execute properly and leaves orphaned cloud resources active. Both failed cluster deployment and failed cluster destruction after deployment can be the result of any number of issues. Before you re-launch any future clusters, and to prevent you from unknowingly leaking money, you should remove all the vestigial cloud resources left from the failed launch/destruction.
 
 Google Cloud (Google Kubernetes Engine)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

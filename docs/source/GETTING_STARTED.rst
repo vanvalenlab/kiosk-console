@@ -24,16 +24,16 @@ Google Cloud Setup
 
 5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_. This will be used to store data and models. Record the bucket name (you will need this in step 9). Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-    gs://[BUCKET-NAME]
-    |-- models
-        |-- Exported model 1 folder
-        |-- Exported model 2 folder
-    |-- uploads
-    |-- output
+       gs://[BUCKET-NAME]
+       |-- models
+           |-- Exported model 1 folder
+           |-- Exported model 2 folder
+       |-- uploads
+       |-- output
 
-| ``/models`` can be changed by modifying the ``MODEL_PREFIX`` environmental variable in the ``tf-serving`` helmfile. Similarly, ``/uploads`` can be configured by modifying ``UPLOAD_PREFIX`` in the ``frontend`` helmfile. The contents of ``/uploads`` and ``/output`` are managed by the |kiosk-bucket-monitor|.
+   | ``/models`` can be changed by modifying the ``MODEL_PREFIX`` environmental variable in the ``tf-serving`` helmfile. Similarly, ``/uploads`` can be configured by modifying ``UPLOAD_PREFIX`` in the ``frontend`` helmfile. The contents of ``/uploads`` and ``/output`` are managed by the |kiosk-bucket-monitor|.
 
 .. |kiosk-bucket-monitor| raw:: html
 
@@ -51,9 +51,9 @@ If you plan on maintaining the DeepCell kiosk as a persistent tool, we recommend
 .. _DOCKER_INSTALLATION:
 6. Select the docker installation that is best for you:
 
-* `Local Docker Installation - Windows`_
-* `Local Docker Installation - MacOS and Linux`_
-* `Cloud-Based Jumpbox Workflow`_
+   * `Local Docker Installation - Windows`_
+   * `Local Docker Installation - MacOS and Linux`_
+   * `Cloud-Based Jumpbox Workflow`_
 
 Local Docker Installation - Windows
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
