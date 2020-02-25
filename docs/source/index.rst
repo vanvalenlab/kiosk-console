@@ -1,6 +1,6 @@
 .. _index:
 
-.. includemd:: ../../README.md
+.. mdinclude:: ../../README.md
 
 .. include:: _sidebar.rst.inc
 
