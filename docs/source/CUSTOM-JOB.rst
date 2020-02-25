@@ -3,6 +3,10 @@
 Tutorial: Creating a custom job
 ===============================
 
+.. image:: https://img.shields.io/static/v1?label=RTD&logo=Read%20the%20Docs&message=Read%20the%20Docs&color=blue
+    :alt: View on Read the Docs
+    :target: https://deepcell-kiosk.readthedocs.io/en/master/CUSTOM-JOB.html
+
 Rationale
 ---------
 

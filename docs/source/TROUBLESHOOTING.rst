@@ -3,7 +3,11 @@
 Troubleshooting
 ===============
 
-We've done our best to make the DeepCell Kiosk robust to common use cases, however, there may be unforseen issues. In the following (as well as on our `FAQ <http://www.deepcell.org/faq>`_, we hope to cover some possible sources of fustration. If you run accross a new problem not listed in either location, please feel free to open an issue on the `DeepCell Kiosk repository <https://www.github.com/vanvalenlab/kiosk>`_.
+.. image:: https://img.shields.io/static/v1?label=RTD&logo=Read%20the%20Docs&message=Read%20the%20Docs&color=blue
+    :alt: View on Read the Docs
+    :target: https://deepcell-kiosk.readthedocs.io/en/master/TROUBLESHOOTING.html
+
+We've done our best to make the DeepCell Kiosk robust to common use cases, however, there may be unforeseen issues. In the following (as well as on our `FAQ <http://www.deepcell.org/faq>`_, we hope to cover some possible sources of fustration. If you run accross a new problem not listed in either location, please feel free to open an issue on the `DeepCell Kiosk repository <https://www.github.com/vanvalenlab/kiosk>`_.
 
 .. contents:: :local:
 
