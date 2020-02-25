@@ -46,35 +46,38 @@ test:
 	make init
 	# Installations of binaries
 	## helmfile
-	wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
-	chmod 764 $(TEST_HOME_DIR)/helmfile_linux_amd64
+	@wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
+	@chmod 764 $(TEST_HOME_DIR)/helmfile_linux_amd64
 	$(TEST_HOME_DIR)/helmfile_linux_amd64 --version
 	## gomplate
-	wget https://github.com/hairyhenderson/gomplate/releases/download/v3.1.0/gomplate_linux-amd64-slim
-	chmod 764 $(TEST_HOME_DIR)/gomplate_linux-amd64-slim
+	@wget https://github.com/hairyhenderson/gomplate/releases/download/v3.1.0/gomplate_linux-amd64-slim
+	@chmod 764 $(TEST_HOME_DIR)/gomplate_linux-amd64-slim
 	$(TEST_HOME_DIR)/gomplate_linux-amd64-slim --version
 	## kubectl
-	sudo apt-get update && sudo sudo apt-get install -y apt-transport-https
-	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-	echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
-	sudo apt-get update
-	sudo apt-get install -y kubectl
+	@sudo apt-get update && sudo sudo apt-get install -y apt-transport-https
+	@curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+	@echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+	@sudo apt-get update
+	@sudo apt-get install -y kubectl
 	kubectl version --client
 	## kubens
-	wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
-	mv $(TEST_HOME_DIR)/kubens $(TEST_HOME_DIR)/conf/kubens.sh
-	chmod 764 $(TEST_HOME_DIR)/conf/kubens.sh
+	@wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
+	@mv $(TEST_HOME_DIR)/kubens $(TEST_HOME_DIR)/conf/kubens.sh
+	@chmod 764 $(TEST_HOME_DIR)/conf/kubens.sh
 	## helm
-	wget https://get.helm.sh/helm-v2.16.3-linux-amd64.tar.gz
-	tar -xzvf helm-v2.16.3-linux-amd64.tar.gz
-	chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
-	chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
+	@wget https://get.helm.sh/helm-v2.16.3-linux-amd64.tar.gz
+	@tar -xzvf helm-v2.16.3-linux-amd64.tar.gz
+	@chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
+	@chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
 	$(TEST_HOME_DIR)/linux-amd64/helm version -c
 	## gcloud
-	sudo apt-get install apt-transport-https ca-certificates gnupg
-	echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-	sudo apt-get update && sudo apt-get install google-cloud-sdk
+	@sudo apt-get install apt-transport-https ca-certificates gnupg
+	@echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+	@curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+	@sudo apt-get update && sudo apt-get install google-cloud-sdk
+	mkdir -p $(TEST_HOME_DIR)/.config/gcloud
+	chmod 777 $(TEST_HOME_DIR)/.config
+	chmod 777 $(TEST_HOME_DIR)/.config/gcloud
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
 	# execute make targets 
