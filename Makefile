@@ -54,11 +54,11 @@ test:
 	chmod 764 $(TEST_HOME_DIR)/gomplate_linux-amd64-slim
 	$(TEST_HOME_DIR)/gomplate_linux-amd64-slim --version
 	## kubectl
-	apt-get update && sudo apt-get install -y apt-transport-https
-	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-	echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
-	apt-get update
-	apt-get install -y kubectl
+	sudo apt-get update && sudo sudo apt-get install -y apt-transport-https
+	curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+	echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+	sudo apt-get update
+	sudo apt-get install -y kubectl
 	kubectl version --client
 	## kubens
 	wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
