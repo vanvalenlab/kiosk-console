@@ -10,10 +10,10 @@ In the kubernetes environment created by the kiosk, the task of processing image
 
 Currently, `deepcell.org <www.deepcell.org>`_ supports a cell tracking feature which is facilitated by the ``tracking-consumer``, which handles the multi-step process of cell tracking:
 
-  1. Send each frame of the dataset for segmentation. Frames are processed in parallel utilizing scalability and drastically reducing processing time.
-  2. Retrive model predictions and run post-processing to generate cell segmentation masks
-  3. Send cell segmentation masks for cell tracking predictions
-  4. Compile final tracking results and post for download
+1. Send each frame of the dataset for segmentation. Frames are processed in parallel utilizing scalability and drastically reducing processing time.
+2. Retrieve model predictions and run post-processing to generate cell segmentation masks
+3. Send cell segmentation masks for cell tracking predictions
+4. Compile final tracking results and post for download
 
 New data processing pipelines can be implemented by writing a custom consumer. The model can be exported for tf-serving using :func:`~deepcell.utils.export_utils.export_model`.
 
@@ -51,15 +51,15 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
 
 3. In the ``/conf/helmfile.d/`` folder in your kiosk environment, add a new helmfile following the convention ``02##.custom-consumer.yaml``. The text for the helmfile can be copied from ``0250.tracking-consumer.yaml`` as shown below. Then make the following changes to customize the helmfile to your consumer.
 
-  * Change ``releases.name`` to :data:`consumer_name`
-  * Change ``releases.values.image.repository`` and ``releases.values.image.tag``
-  * Change ``releases.values.nameOverride`` to :data:`consumer_name`
-  * Change ``releases.values.env.QUEUE`` to :data:`queue_name`
-  * Change ``releases.values.env.CONSUMER_TYPE`` to :data:`consumer_type`
+   * Change ``releases.name`` to :data:`consumer_name`
+   * Change ``releases.values.image.repository`` and ``releases.values.image.tag``
+   * Change ``releases.values.nameOverride`` to :data:`consumer_name`
+   * Change ``releases.values.env.QUEUE`` to :data:`queue_name`
+   * Change ``releases.values.env.CONSUMER_TYPE`` to :data:`consumer_type`
 
-  .. hidden-code-block:: yaml
-    :starthidden: true
-    :label: + Show/Hide example helmfile
+   .. hidden-code-block:: yaml
+     :starthidden: true
+     :label: + Show/Hide example helmfile
 
     helmDefaults:
       args:
@@ -195,12 +195,12 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
 
 1. |prometheus-redis-exporter.yaml|
 
-  Add a line to the ``custom-redis-metrics.lua`` function after lines 41-42 (see below) that specifies the name of the new queue (:data:`queue_name`).
+   Add a line to the ``custom-redis-metrics.lua`` function after lines 41-42 (see below) that specifies the name of the new queue (:data:`queue_name`).
 
-  .. hidden-code-block:: lua
-    :starthidden: true
-    :label: + Show/Hide custom-redis-metrics.lua
-    :linenos:
+   .. hidden-code-block:: lua
+     :starthidden: true
+     :label: + Show/Hide custom-redis-metrics.lua
+     :linenos:
 
     -- Based on https://github.com/soveran/rediscan.lua by GitHub user Soveran.
 
@@ -263,14 +263,14 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
 
 2. |prometheus-operator.yaml|
 
-  Add a new ``record`` under ``- name: custom-redis-metrics``. In the example below, make the following modifications.
+   Add a new ``record`` under ``- name: custom-redis-metrics``. In the example below, make the following modifications.
 
-  * Line 1: replace ``tracking`` with :data:`consumer_type`
-  * Line 3: replace ``track`` with :data:`queue_name`
-  * Line 12: replace ``tracking`` with :data:`consumer_type`
+   * Line 1: replace ``tracking`` with :data:`consumer_type`
+   * Line 3: replace ``track`` with :data:`queue_name`
+   * Line 12: replace ``tracking`` with :data:`consumer_type`
 
-  .. code-block:: yaml
-    :linenos:
+   .. code-block:: yaml
+     :linenos:
 
     - record: tracking_consumer_key_ratio
       expr: |-
@@ -287,13 +287,13 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
 
 3. |hpa.yaml|
 
-  Add a new section based on the example below to the bottom of ``hpa.yaml`` following a ``---``.
+   Add a new section based on the example below to the bottom of ``hpa.yaml`` following a ``---``.
 
-  * Lines 4 & 10: replace ``tracking-consumer`` with :data:`consumer_name`
-  * Line 16 & 20: replace ``tracking`` with :data:`consumer_type`
+   * Lines 4 & 10: replace ``tracking-consumer`` with :data:`consumer_name`
+   * Line 16 & 20: replace ``tracking`` with :data:`consumer_type`
 
-  .. code-block:: yaml
-    :linenos:
+   .. code-block:: yaml
+      :linenos:
 
     apiVersion: autoscaling/v2beta1
     kind: HorizontalPodAutoscaler
