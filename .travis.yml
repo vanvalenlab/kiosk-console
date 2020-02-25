@@ -50,6 +50,7 @@ jobs:
       before_install:
         - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in secrets/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
+        - export PATH=/home/travis/build/vanvalenlab/kiosk:/home/travis/build/vanvalenlab/kiosk/linux-amd64:$PATH
       script:
       - make test
     - stage: deploy
