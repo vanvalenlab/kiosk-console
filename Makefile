@@ -71,10 +71,10 @@ test:
 	chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
 	$(TEST_HOME_DIR)/linux-amd64/helm version -c
 	## gcloud
-	apt-get install apt-transport-https ca-certificates gnupg
-	echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-	apt-get update && apt-get install google-cloud-sdk
+	sudo apt-get install apt-transport-https ca-certificates gnupg
+	echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+	sudo apt-get update && sudo apt-get install google-cloud-sdk
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
 	# execute make targets 
