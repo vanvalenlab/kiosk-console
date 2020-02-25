@@ -14,13 +14,9 @@ Google Cloud Setup
 
 2. Make sure the `Kubernetes Engine API <https://console.cloud.google.com/apis/api/container.googleapis.com/overview>`_ is enabled.
 
-3. In order to add accelerated hardware to the clusters you will launch, you will need to `upgrade <https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade>`_ your Google Cloud account.
+3. In order to add accelerated hardware to the clusters you will launch, you will need to `upgrade <https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade>`_ your Google Cloud account. Please note, this may take some time, as Google will need to approve the upgrade. You may also need to log in and out of your account for the upgrade to take effect. One way to verify that you have been upgraded is to take note of the number of rows available within your total quotas. Upgraded accounts contain significantly more available quotas than the free tier.
 
 .. note:: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google does not include these GPU nodes by default as part of its free tier thus necessitating the upgrade. For more information, please refer to `Google's blog post on the subject <https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available>`_
-
-.. note:: Please note, this may take some time, as Google will need to approve the upgrade.
-
-.. note:: You may also need to log in and out of your account for the upgrade to take effect. One way to verify that you have been upgraded is to take note of the number of rows available within your total quotas. Upgraded accounts contain significantly more available quotas than the free tier.
 
 4. You will also need to `apply <https://cloud.google.com/compute/quotas>`_ for a quota of at least 1 GPU using the ``GPUs (all regions)`` option. Please also request at least 16 *In-use IP addresses* for the *Compute Engine API* of your region (by default ``us-west1``). This may take some time, as Google will need to approve each these requests.
 
@@ -37,7 +33,7 @@ Google Cloud Setup
     |-- uploads
     |-- output
 
-| ``/models`` can be changed by modifying the ``MODEL_PREFIX`` environmental variable in the ``tf-serving`` helmfile. Similarly, ``/uploads`` can be configured by modifying ``UPLOAD_PREFIX`` in the ``frontend`` helmfile. The contents of ``/uploads`` and ``/output`` are managed by the |kiosk-bucket-monitor| according to rules described in :ref:`Software Infrastructure <SOFTWARE_INFRASTRUCTURE:kiosk-bucket-monitor>`
+| ``/models`` can be changed by modifying the ``MODEL_PREFIX`` environmental variable in the ``tf-serving`` helmfile. Similarly, ``/uploads`` can be configured by modifying ``UPLOAD_PREFIX`` in the ``frontend`` helmfile. The contents of ``/uploads`` and ``/output`` are managed by the |kiosk-bucket-monitor|.
 
 .. |kiosk-bucket-monitor| raw:: html
 
@@ -105,20 +101,20 @@ You are now ready to start the kiosk! Those interested in Kiosk development shou
 
 8. To start the kiosk, just run ``kiosk`` from the terminal shell
 
-.. todo::
+.. list-table::
 
-    Add screenshot of welcome screen
+    * .. image:: ../images/Kiosk-Welcome.png
+    * .. image:: ../images/Kiosk-Main-Menu.png
 
 DeepCell Kiosk Usage
 --------------------
 
-9. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported) and fill out the configuration values as needed. Each response is pre-populated with a default value appropriate for most users (for more detailed information on each of these values refer to our [advanced documentation](docs/ADVANCED_DOCUMENTATION.md)). Once the Kiosk has been configured, you will be returned to the main menu and the word ``(active)`` will appear next to that cloud provider's configuration option.
+9. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported). The next screen will prompt you to authenticate your account with gcloud or to continue with a previously authenticated account. The next several screens will prompt you to select a gcloud project, name your cluster and finally enter a bucket name for data storage. To complete cluster configuration you have the option to choose between "Default" and "Advanced" configuration. "Default" will set standard values for compute hardware and will be appropriate for most users. "Advanced" allows configure each setting individually.
 
-.. todo::
+10. At the completion of configuration, you will return to the home screen where you can select the "Create" option to trigger creation of the cluster based on your configured values. This may take up to 10 minutes. Following successful creation, you will see the confirmation  page shown below.
 
-    Write a complete description of each configuration option after the menu refactor is complete.
-
-10. With the Kiosk configured for the appropriate cloud provider, select the ``Create`` option from the Kiosk's main menu to create the cluster on the chosen cloud provider. This may take up to 10 minutes. Cluster creation is done when you see ``Cluster Created`` followed by ``---COMPLETE---`` printed to the terminal. If you see ``---COMPLETE---`` with error text immediately preceding it, cluster creation failed.
+.. image::
+    :alt: Kiosk cluster create confirmation
 
 11. Find the cluster's web address by choosing the ``View`` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".)
 
