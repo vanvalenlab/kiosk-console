@@ -1,7 +1,6 @@
 .. _index:
 
-.. include:: ../../README.rst
-    :end-before: include-end-marker
+.. includemd:: ../../README.md
 
 .. include:: _sidebar.rst.inc
 
