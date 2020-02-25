@@ -56,8 +56,14 @@ test:
 	wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
 	mv $(TEST_HOME_DIR)/kubens $(TEST_HOME_DIR)/conf/kubens.sh
 	chmod 764 $(TEST_HOME_DIR)/conf/kubens.sh
+	# Nvm, also install helm
+	wget https://get.helm.sh/helm-v2.16.3-linux-amd64.tar.gz
+	tar -xzvf helm-v2.16.3-linux-amd64.tar.gz
+	chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
+	chmod 764 $(TEST_HOME_DIR)/linux-amd64/helm
+	$(TEST_HOME_DIR)/linux-amd64/helm version -c
 	# Checking everyone's versions
-	helm version -c
+	#helm version -c
 	kubectl version --client
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
