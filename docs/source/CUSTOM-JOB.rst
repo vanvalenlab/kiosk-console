@@ -62,115 +62,116 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
    * Change ``releases.values.env.CONSUMER_TYPE`` to :data:`consumer_type`
 
    .. hidden-code-block:: yaml
-     :starthidden: true
-     :label: + Show/Hide example helmfile
+      :starthidden: true
+      :label: + Show/Hide example helmfile
 
-    helmDefaults:
-      args:
-        - "--wait"
-        - "--timeout=600"
-        - "--force"
-        - "--reset-values"
+      helmDefaults:
+        args:
+          - "--wait"
+          - "--timeout=600"
+          - "--force"
+          - "--reset-values"
 
-    releases:
+      releases:
 
-    ################################################################################
-    ## Custom-Consumer ################################################################
-    ################################################################################
+      ################################################################################
+      ## Custom-Consumer ################################################################
+      ################################################################################
 
-    #
-    # References:
-    #   - [web address of Helm chart's YAML file]
-    #
-    - name: "tracking-consumer"
-      namespace: "deepcell"
-      labels:
-        chart: "redis-consumer"
-        component: "deepcell"
+      #
+      # References:
+      #   - [web address of Helm chart's YAML file]
+      #
+      - name: "tracking-consumer"
         namespace: "deepcell"
-        vendor: "vanvalenlab"
-        default: "true"
-      chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-      version: "0.1.0"
-      values:
-        - replicas: 1
+        labels:
+          chart: "redis-consumer"
+          component: "deepcell"
+          namespace: "deepcell"
+          vendor: "vanvalenlab"
+          default: "true"
+        chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
+        version: "0.1.0"
+        values:
+          - replicas: 1
 
-          image:
-            repository: "vanvalenlab/kiosk-redis-consumer"
-            tag: "0.4.1"
-            pullPolicy: "Always"
+            image:
+              repository: "vanvalenlab/kiosk-redis-consumer"
+              tag: "0.4.1"
+              pullPolicy: "Always"
 
-          nameOverride: "tracking-consumer"
+            nameOverride: "tracking-consumer"
 
-          resources:
-            requests:
-              cpu: 300m
-              memory: 256Mi
-            # limits:
-            #   cpu: 100m
-            #   memory: 1024Mi
+            resources:
+              requests:
+                cpu: 300m
+                memory: 256Mi
+              # limits:
+              #   cpu: 100m
+              #   memory: 1024Mi
 
-          tolerations:
-            - key: consumer
-              operator: Exists
-              effect: NoSchedule
+            tolerations:
+              - key: consumer
+                operator: Exists
+                effect: NoSchedule
 
-          nodeSelector:
-            consumer: "yes"
+            nodeSelector:
+              consumer: "yes"
 
-          env:
-            DEBUG: "true"
-            INTERVAL: 1
-            QUEUE: "track"
-            CONSUMER_TYPE: "tracking"
-            EMPTY_QUEUE_TIMEOUT: 5
-            GRPC_TIMEOUT: 20
-            GRPC_BACKOFF: 3
+            env:
+              DEBUG: "true"
+              INTERVAL: 1
+              QUEUE: "track"
+              CONSUMER_TYPE: "tracking"
+              EMPTY_QUEUE_TIMEOUT: 5
+              GRPC_TIMEOUT: 20
+              GRPC_BACKOFF: 3
 
-            REDIS_HOST: "redis"
-            REDIS_PORT: 26379
-            REDIS_TIMEOUT: 3
+              REDIS_HOST: "redis"
+              REDIS_PORT: 26379
+              REDIS_TIMEOUT: 3
 
-            TF_HOST: "tf-serving"
-            TF_PORT: 8500
-            TF_TENSOR_NAME: "image"
-            TF_TENSOR_DTYPE: "DT_FLOAT"
+              TF_HOST: "tf-serving"
+              TF_PORT: 8500
+              TF_TENSOR_NAME: "image"
+              TF_TENSOR_DTYPE: "DT_FLOAT"
 
-            AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
-            CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
-            GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
+              AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
+              CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
+              GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-            NUCLEAR_MODEL: "panoptic:3"
-            NUCLEAR_POSTPROCESS: "retinanet-semantic"
+              NUCLEAR_MODEL: "panoptic:3"
+              NUCLEAR_POSTPROCESS: "retinanet-semantic"
 
-            PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
-            PHASE_POSTPROCESS: "retinanet"
+              PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
+              PHASE_POSTPROCESS: "retinanet"
 
-            CYTOPLASM_MODEL:   "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
-            CYTOPLASM_POSTPROCESS: "retinanet"
+              CYTOPLASM_MODEL:   "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
+              CYTOPLASM_POSTPROCESS: "retinanet"
 
-            LABEL_DETECT_ENABLED: "true"
-            LABEL_DETECT_MODEL: "LabelDetection:0"
-            LABEL_RESHAPE_SIZE: 216
-            LABEL_DETECT_SAMPLE: 10
+              LABEL_DETECT_ENABLED: "true"
+              LABEL_DETECT_MODEL: "LabelDetection:0"
+              LABEL_RESHAPE_SIZE: 216
+              LABEL_DETECT_SAMPLE: 10
 
-            SCALE_DETECT_ENABLED: "true"
-            SCALE_DETECT_MODEL: "ScaleDetection:0"
-            SCALE_RESHAPE_SIZE: 216
-            SCALE_DETECT_SAMPLE: 10
+              SCALE_DETECT_ENABLED: "true"
+              SCALE_DETECT_MODEL: "ScaleDetection:0"
+              SCALE_RESHAPE_SIZE: 216
+              SCALE_DETECT_SAMPLE: 10
 
-            DRIFT_CORRECT_ENABLED: "false"
-            NORMALIZE_TRACKING: "true"
+              DRIFT_CORRECT_ENABLED: "false"
+              NORMALIZE_TRACKING: "true"
 
-            TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-            TRACKING_SEGMENT_MODEL: "panoptic:3"
-            TRACKING_POSTPROCESS_FUNCTION: "retinanet"
+              TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
+              TRACKING_SEGMENT_MODEL: "panoptic:3"
+              TRACKING_POSTPROCESS_FUNCTION: "retinanet"
 
-          secrets:
-            AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
-            AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-            AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-            GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+            secrets:
+              AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+              AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+              AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+              GKE_BUCKET: '{{ env "GKE_BUCKET" | default "NA" }}'
+
 
 4. Deploy your new helmfile to the cluster with:
 
@@ -191,81 +192,29 @@ Autoscaling custom consumers
 
 To effectively scale your new consumer, some small edits will be needed in the following files:
 
-* |prometheus-redis-exporter.yaml|
-* |prometheus-operator.yaml|
-* |hpa.yaml|
+* |/conf/patches/redis-exporter-script.yaml|
+* |/conf/helmfile.d/0600.prometheus-operator.yaml|
+* |/conf/patches/hpa.yaml|
 
 Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the ``prometheus-redis-exporter``, the custom rule is defined in ``prometheus-operator``, and the Horizontal Pod Autoscaler is created and configured to use the new rule in the ``hpa.yaml`` file.
 
-1. |prometheus-redis-exporter.yaml|
+1. |/conf/patches/redis-exporter-script.yaml|
 
-   Add a line to the ``custom-redis-metrics.lua`` function after lines 41-42 (see below) that specifies the name of the new queue (:data:`queue_name`).
+   Within  ``data.script`` modify the section ``All Queues to Monitor`` to include the new queue (:data:`queue_name`).
 
-   .. hidden-code-block:: lua
-     :starthidden: true
-     :label: + Show/Hide custom-redis-metrics.lua
-     :linenos:
+   .. code-block::
 
-    -- Based on https://github.com/soveran/rediscan.lua by GitHub user Soveran.
+      -- All Queues to Monitor:
+      local queues = {}
 
-    local function get_queue_count(queue)
-        -- Find number of keys in the queue
-        local queue_size = redis.call("LLEN", queue)
+      queues[#queues+1] = "segmentation"
+      queues[#queues+1] = "tracking"
+      queues[#queues+1] = "Your New QUEUE"
 
-        -- Get all processing queues
-        local queue_regex = "processing-" .. queue .. ":*"
+      for _,queue in ipairs(queues) do
+          ...
 
-        local count = 0
-
-        local cursor = "0"
-        local done = false
-
-        repeat
-
-        local result = redis.call("SCAN", cursor, "MATCH", queue_regex, "COUNT", 1000)
-        cursor = result[1]
-
-        for i, key in ipairs(result[2]) do
-            -- How many keys are in each queue (should be 1)
-            local keys_in_queue = redis.call("LLEN", key)
-            count = count + keys_in_queue
-        end
-
-        if cursor == "0" then
-            done = true
-        end
-
-        until done
-
-        return count + queue_size
-    end
-
-    -- Final table to output
-    local results = {}
-
-    -- All Queues to Monitor:
-    local queues = {}
-
-    queues[#queues+1] = "predict"
-    queues[#queues+1] = "track"
-
-    for _,queue in ipairs(queues) do
-        local zip_queue = queue .. "-zip"
-
-        local queue_count = get_queue_count(queue)
-        local zip_queue_count = get_queue_count(zip_queue)
-
-        table.insert(results, queue .. "_image_keys")
-        table.insert(results, tostring(queue_count))
-
-        table.insert(results, queue .. "_zip_keys")
-        table.insert(results, tostring(zip_queue_count))
-
-    end
-
-    return results
-
-2. |prometheus-operator.yaml|
+2. |/conf/helmfile.d/0600.prometheus-operator.yaml|
 
    Add a new ``record`` under ``- name: custom-redis-metrics``. In the example below, make the following modifications.
 
@@ -274,68 +223,68 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
    * Line 12: replace ``tracking`` with :data:`consumer_type`
 
    .. code-block:: yaml
-     :linenos:
+      :linenos:
 
-    - record: tracking_consumer_key_ratio
-      expr: |-
-        avg_over_time(redis_script_value{key="track_image_keys"}[15s])
-        / on()
-        (
-            avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
-            +
-            1
-        )
-      labels:
-        namespace: deepcell
-        service: tracking-scaling-service
+      - record: tracking_consumer_key_ratio
+        expr: |-
+          avg_over_time(redis_script_value{key="track_image_keys"}[15s])
+          / on()
+          (
+              avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
+              +
+              1
+          )
+        labels:
+          namespace: deepcell
+          service: tracking-scaling-service
 
-3. |hpa.yaml|
+3. |/conf/patches/hpa.yaml|
 
    Add a new section based on the example below to the bottom of ``hpa.yaml`` following a ``---``.
 
-   * Lines 4 & 10: replace ``tracking-consumer`` with :data:`consumer_name`
-   * Line 16 & 20: replace ``tracking`` with :data:`consumer_type`
+   * Change ``metadata.name`` and ``spec.scaleTargetRef.name`` to :data:`consumer_name`
+   * Change ``spec.metrics.object.metricName`` and ``spec.metrics.object.target.name`` to :data:`consumer_type`
 
    .. code-block:: yaml
       :linenos:
 
-    apiVersion: autoscaling/v2beta1
-    kind: HorizontalPodAutoscaler
-    metadata:
-      name: tracking-consumer
-      namespace: deepcell
-    spec:
-      scaleTargetRef:
-        apiVersion: apps/v1
-        kind: Deployment
+      apiVersion: autoscaling/v2beta1
+      kind: HorizontalPodAutoscaler
+      metadata:
         name: tracking-consumer
-      minReplicas: 1
-      maxReplicas: $GPU_MAX_TIMES_FIFTY
-      metrics:
-      - type: Object
-        object:
-          metricName: tracking_consumer_key_ratio
-          target:
-            apiVersion: v1
-            kind: Namespace
-            name: tracking_consumer_key_ratio
-          targetValue: 1
+        namespace: deepcell
+      spec:
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: tracking-consumer
+        minReplicas: 1
+        maxReplicas: $GPU_MAX_TIMES_FIFTY
+        metrics:
+        - type: Object
+          object:
+            metricName: tracking_consumer_key_ratio
+            target:
+              apiVersion: v1
+              kind: Namespace
+              name: tracking_consumer_key_ratio
+            targetValue: 1
 
 .. todo::
 
     Do we have guidelines or recommendations for how to set the actual parameters for scaling?
 
-.. |hpa.yaml| raw:: html
+.. |/conf/patches/hpa.yaml| raw:: html
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/hpa.yaml">/conf/patches/hpa.yaml</a></tt>
 
-.. |prometheus-operator.yaml| raw:: html
+.. |/conf/helmfile.d/0600.prometheus-operator.yaml| raw:: html
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0600.prometheus-operator.yaml">/conf/helmfile.d/0600.prometheus-operator.yaml</a></tt>
 
-.. |prometheus-redis-exporter.yaml| raw:: html
+.. |/conf/patches/redis-exporter-script.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0110.prometheus-redis-exporter.yaml">/conf/helmfile.d/0110.prometheus-redis-exporter.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
 
 Connecting custom consumers with the frontend
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
