@@ -32,19 +32,19 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 ![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk/wg-docs-diagram/docs/images/Kiosk_Architecture.png)
 
-- <a href="https://github.com/vanvalenlab/kiosk-frontend">Frontend</a>: API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
+- [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
 
-- <a href="https://github.com/vanvalenlab/kiosk-redis-consumer">Consumer</a>: Retrieves items from the Job Queue and handles the processing pipeline for that item. Each consumer only works on one item at a time.
+- [Consumer](https://github.com/vanvalenlab/kiosk-redis-consumer): Retrieves items from the Job Queue and handles the processing pipeline for that item. Each consumer only works on one item at a time.
 
-- <a href="https://github.com/vanvalenlab/kiosk-tf-serving">Model Server</a>: Serves models over a gRPC API, allowing consumers to send data and get back predictions.
+- [Model Server](https://github.com/vanvalenlab/kiosk-tf-serving): Serves models over a gRPC API, allowing consumers to send data and get back predictions.
 
-- <a href="https://github.com/vanvalenlab/kiosk-autoscaler">GPU Autoscaler</a>: Automatically and efficiently scales Kubernetes GPU resources.
+- [GPU Autoscaler](https://github.com/vanvalenlab/kiosk-autoscaler): Automatically and efficiently scales Kubernetes GPU resources.
 
 - _Not pictured above_:
 
-  * <a href="https://github.com/vanvalenlab/kiosk-bucket-monitor">Bucket Monitor</a>: Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
+  * [Bucket Monitor](https://github.com/vanvalenlab/kiosk-bucket-monitor): Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
 
-  * <a href="https://github.com/vanvalenlab/kiosk-redis-janitor">Janitor</a>: Monitors in-progress items and makes sure no jobs get left un-finished.
+  * [Janitor](https://github.com/vanvalenlab/kiosk-redis-janitor): Monitors in-progress items and makes sure no jobs get left un-finished.
 
 
 ## Contribute
