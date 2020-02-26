@@ -22,7 +22,7 @@ def generate_sidebar(conf, conf_api):
 
     def toctree(name):
         lines.extend(
-            [".. toctree::", "    :caption: %s" % name, "    :maxdepth: 2", "    :hidden:", ""]
+            [".. toctree::", "    :caption: %s" % name, "    :maxdepth: 1", "    :hidden:", ""]
         )
 
     def endl():
