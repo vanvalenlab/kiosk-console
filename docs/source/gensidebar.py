@@ -22,7 +22,7 @@ def generate_sidebar(conf, conf_api):
 
     def toctree(name):
         lines.extend(
-            [".. toctree::", "    :caption: %s" % name, "    :maxdepth: 2", ""]
+            [".. toctree::", "    :caption: %s" % name, "    :maxdepth: 2", "    :hidden:", ""]
         )
 
     def endl():
@@ -41,25 +41,15 @@ def generate_sidebar(conf, conf_api):
 
         lines.append("    %s <%s>" % args)
 
-    def write_api(project, desc):
-        if project != conf_api:
-            if do_gen:
-                args = desc, project, version
-                lines.append(
-                    "    %s API <https://deepcell-kiosk.readthedocs.io/projects/%s/en/%s/api.html>"
-                    % args
-                )
-        else:
-            lines.append("    %s API <api>" % desc)
-
-    def write_subproject(project, desc):
+    def write_subproject(desc, project, link):
         if project != conf_api:
             if do_gen:
                 lines.append(
-                    '    {desc} <https://deepcell-kiosk.readthedocs.io/projects/{project}/en/{version}/>'.format(
+                    '    {desc} <https://deepcell-kiosk.readthedocs.io/projects/{project}/en/{version}/{link}.html>'.format(
                         desc=desc,
                         project=project,
-                        version=version
+                        version=version,
+                        link=link
                     )
                 )
         else:
@@ -70,15 +60,16 @@ def generate_sidebar(conf, conf_api):
     #
 
     toctree('Deepcell Kiosk')
+    write('Home', 'index')
     write('Getting Started', 'GETTING_STARTED')
     write('Troubleshooting', 'TROUBLESHOOTING')
     write('Tutorial: Custom Jobs', 'CUSTOM-JOB')
     write('Developer Documentation', 'DEVELOPER')
     endl()
 
-    toctree('Container Reference')
-    write_subproject('kiosk-redis-consumer', 'kiosk-redis-consumer')
-    write_subproject('kiosk-frontend', 'kiosk-frontend')
+    toctree('Kiosk Redis Consumer')
+    write_subproject('Home', 'kiosk-redis-consumer', 'index')
+    write_subproject('API', 'kiosk-redis-consumer', 'API')
     endl()
 
     print(lines)
