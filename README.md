@@ -16,6 +16,12 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 - Scalable platform that minimizes cost and inference time
 - Drag and drop interface for running predictions
 
+### Example
+
+Raw Image                  |  Segmented and Tracked
+:-------------------------:|:-------------------------:
+![](https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/raw.gif)  |  ![](https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/tracked.gif)
+
 ## Getting Started
 
 Start a terminal shell and install the DeepCell Kiosk wrapper script:
