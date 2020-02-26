@@ -4,7 +4,7 @@
 [![Read the Docs](https://img.shields.io/readthedocs/kiosk?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-The DeepCell Kiosk is the entry point for users to spin up an end-to-end DeepCell environment in the cloud using [Kubernetes](https://kubernetes.io/>). It is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models. To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
+The DeepCell Kiosk is the entry point for users to spin up an end-to-end DeepCell environment in the cloud using [Kubernetes](https://kubernetes.io/). It is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models. To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
 
 The scalability of the DeepCell Kiosk software is enabled by [cloud computing](https://en.wikipedia.org/wiki/Cloud_computing). At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/).
 
@@ -30,23 +30,27 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 ## Software Architecture
 
-![Kiosk Architecture](docs/images/Kiosk_Architecture.png)
+![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/Kiosk_Architecture.png)
 
-[`kiosk-frontend`](https://github.com/vanvalenlab/kiosk-frontend)
+<tt><a href="https://github.com/vanvalenlab/kiosk-frontend">kiosk-frontend</a></tt>
+
 - DeepCell graphical user interface built using React, Babel, Webpack.
 
-[`kiosk-redis-consumer`](https://github.com/vanvalenlab/kiosk-redis-consumer)
+<tt><a href="https://github.com/vanvalenlab/kiosk-redis-consumer">kiosk-redis-consumer</a></tt>
+
 - Retrieves items from the queue and handles the processing pipeline for that item. Each consumer handles one item at a time.
 
-[`kiosk-bucket-monitor`](https://github.com/vanvalenlab/kiosk-bucket-monitor)
+<tt><a href="https://github.com/vanvalenlab/kiosk-bucket-monitor">kiosk-bucket-monitor</a></tt>
+
 - The `bucket-monitor` will monitor all bucket folders listed in the `PREFIX` environment variable (defaults to `PREFIX: "uploads/,output/"`). Any files that are older than 3 days (configured the `AGE_THRESHOLD` environment variable) will be deleted.
 
-[`kiosk-tf-serving`](https://github.com/vanvalenlab/kiosk-tf-serving)
+<tt><a href="https://github.com/vanvalenlab/kiosk-tf-serving">kiosk-tf-serving</a></tt>
+
 - Receives data from `redis-consumers` and runs model predictions on that data.
 
-[`kiosk-benchmarking`](https://github.com/vanvalenlab/kiosk-benchmarking)
+<tt><a href="https://github.com/vanvalenlab/kiosk-autoscaler">kiosk-autoscaler</a></tt>
 
-[`kiosk-autoscaler`](https://github.com/vanvalenlab/kiosk-autoscaler)
+- Automatically and efficiently scale Kubernetes GPU resources
 
 ## Contribute
 
