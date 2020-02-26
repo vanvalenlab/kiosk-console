@@ -41,15 +41,18 @@ def generate_sidebar(conf, conf_api):
 
         lines.append("    %s <%s>" % args)
 
-    def write_subproject(desc, project, link):
+    def write_subproject(desc, project, link, subsection=None):
         if project != conf_api:
+            if subsection != None:
+                subsection = '#'+subsection
             if do_gen:
                 lines.append(
-                    '    {desc} <https://deepcell-kiosk.readthedocs.io/projects/{project}/en/{version}/{link}.html>'.format(
+                    '    {desc} <https://deepcell-kiosk.readthedocs.io/projects/{project}/en/{version}/{link}.html{subsection}>'.format(
                         desc=desc,
                         project=project,
                         version=version,
-                        link=link
+                        link=link,
+                        subsection=subsection
                     )
                 )
         else:
@@ -60,7 +63,7 @@ def generate_sidebar(conf, conf_api):
     #
 
     toctree('Deepcell Kiosk')
-    write('Home', 'index')
+    # write('Home', 'index')
     write('Getting Started', 'GETTING_STARTED')
     write('Troubleshooting', 'TROUBLESHOOTING')
     write('Tutorial: Custom Jobs', 'CUSTOM-JOB')
@@ -68,7 +71,7 @@ def generate_sidebar(conf, conf_api):
     endl()
 
     toctree('Kiosk Redis Consumer')
-    write_subproject('Home', 'kiosk-redis-consumer', 'index')
+    write_subproject('Custom Consumers', 'kiosk-redis-consumer', 'index', 'custom-consumers')
     write_subproject('API', 'kiosk-redis-consumer', 'API')
     endl()
 
