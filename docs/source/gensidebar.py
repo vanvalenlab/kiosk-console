@@ -45,6 +45,9 @@ def generate_sidebar(conf, conf_api):
         if project != conf_api:
             if subsection != None:
                 subsection = '#'+subsection
+            else:
+                subsection = ''
+
             if do_gen:
                 lines.append(
                     '    {desc} <https://deepcell-kiosk.readthedocs.io/projects/{project}/en/{version}/{link}.html{subsection}>'.format(
