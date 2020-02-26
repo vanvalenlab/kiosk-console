@@ -86,3 +86,7 @@ test:
 	cd ./conf && make test/destroy
 	# celebrate
 	echo "TESTED"
+
+test/elk: export ELK_DEPLOYMENT_TOGGLE = ON 
+test/elk: \
+	test

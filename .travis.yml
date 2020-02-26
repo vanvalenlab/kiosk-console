@@ -54,6 +54,8 @@ jobs:
         - export PATH=/home/travis/build/vanvalenlab/kiosk:/home/travis/build/vanvalenlab/kiosk/linux-amd64:$PATH
       script:
       - make test
+      script:
+      - make test/elk
     - stage: deploy
       if: tag IS present
       script:
