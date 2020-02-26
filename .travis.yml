@@ -18,11 +18,12 @@ jobs:
         - CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk/.config/gcloud/
         - CLOUDSDK_CORE_PROJECT=deepcell-209717
         - CLOUDSDK_CORE_VERBOSITY=debug
+        - CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk
         - CONSUMER_MACHINE_TYPE=n1-highmem-2
         - GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
         - GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
         - GKE_MACHINE_TYPE=n1-standard-1
-        - GKE_NODE_SERVICE_ACCOUNT_EMAIL=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
+        - GCP_SERVICE_ACCOUNT=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
         - GPU_MACHINE_TYPE=n1-highmem-2
         - GPU_MAX_DIVIDED_BY_FOUR=1
         - GPU_MAX_DIVIDED_BY_THREE=1
@@ -47,7 +48,6 @@ jobs:
         - NODE_MIN_SIZE=1
         - NODE_MAX_SIZE=60
         - REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
-        - TEST_HOME_DIR=/home/travis/build/vanvalenlab/kiosk
       before_install:
         - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in secrets/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json

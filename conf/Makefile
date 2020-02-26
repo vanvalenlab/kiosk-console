@@ -1,6 +1,9 @@
 export CLOUD_PROVIDER ?= gke
 
-include /build-harness/templates/Makefile.build-harness
+# The if statement is meant to keep this line from executing during testing.
+ifeq ($(CONF_PATH_PREFIX), )
+	include /build-harness/templates/Makefile.build-harness
+endif
 
 include tasks/Makefile.*
 

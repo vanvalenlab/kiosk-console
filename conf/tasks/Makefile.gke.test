@@ -26,7 +26,7 @@ gke/test/create/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
 	@gcloud container clusters create $(CLUSTER_NAME) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region=$(CLOUDSDK_COMPUTE_REGION) \
 		--node-locations=$(REGION_ZONES_WITH_GPUS) \
 		--max-nodes=$(NODE_MAX_SIZE) \
@@ -75,7 +75,7 @@ gke/test/create/consumer-node-pool:
 	@echo "Using the following command: "
 	gcloud container node-pools create consumer-cpu \
 		--cluster $(CLUSTER_NAME) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes 1 \
 		--min-nodes 1 \
@@ -93,7 +93,7 @@ gke/test/create/prediction-node-pool:
 	@echo "Using the following command: "
 	gcloud container node-pools create prediction-gpu \
 		--cluster $(CLUSTER_NAME) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--accelerator type=$(GCP_PREDICTION_GPU_TYPE),count=$(GPU_PER_NODE) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
@@ -112,7 +112,7 @@ gke/test/create/training-node-pool:
 	gcloud container node-pools create training-gpu \
 		--cluster $(CLUSTER_NAME) \
 		--accelerator type=$(GCP_TRAINING_GPU_TYPE),count=$(GPU_PER_NODE) \
-		--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region $(CLOUDSDK_COMPUTE_REGION) \
 		--num-nodes $(GPU_NODE_MIN_SIZE) \
 		--min-nodes $(GPU_NODE_MIN_SIZE) \
@@ -141,7 +141,7 @@ gke/test/create/elk-node-pools:
 		echo "Using the following command: ";\
 		gcloud container node-pools create elasticsearch-cpu \
 			--cluster $(CLUSTER_NAME) \
-			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+			--service-account=$(GCP_SERVICE_ACCOUNT) \
 			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 2 \
 			--min-nodes 1 \
@@ -157,7 +157,7 @@ gke/test/create/elk-node-pools:
 		echo "Using the following command: "; \
 		gcloud container node-pools create logstash-cpu \
 			--cluster $(CLUSTER_NAME) \
-			--service-account=$(GKE_NODE_SERVICE_ACCOUNT_EMAIL) \
+			--service-account=$(GCP_SERVICE_ACCOUNT) \
 			--region $(CLOUDSDK_COMPUTE_REGION) \
 			--num-nodes 3 \
 			--min-nodes 1 \
@@ -184,7 +184,7 @@ gke/test/create/elk-node-pools:
 gke/test/destroy/node-pools:
 	@echo "Destroying node pools."
 	@echo "Depending on cluster state, this process could take a while."
-	$(TEST_HOME_DIR)/conf/patches/gke-node-pool-destruction-TEST.sh
+	$(CONF_PATH_PREFIX)/conf/patches/gke-node-pool-destruction-TEST.sh
 	@echo "Node pools destroyed."
 	@echo " "
 	@echo " "
@@ -192,7 +192,7 @@ gke/test/destroy/node-pools:
 ## Destroy Orphaned GKE persistent disks
 gke/test/destroy/pds:
 	@echo "Destroying orphaned persistent disks."
-	$(TEST_HOME_DIR)/conf/patches/gke-pd-destruction-TEST.sh
+	$(CONF_PATH_PREFIX)/conf/patches/gke-pd-destruction-TEST.sh
 	@echo "Orphaned persistent disks destroyed."
 	@echo " "
 	@echo " "
@@ -203,7 +203,7 @@ gke/test/destroy/pds:
 ## Create Service Account used by deepcell
 gke/test/create/service-account:
 	@echo "Creating GKE service account..."
-	@gcloud auth activate-service-account $(GKE_NODE_SERVICE_ACCOUNT_EMAIL) --key-file=$(TEST_HOME_DIR)/gcloud_key.json
+	@gcloud auth activate-service-account $(GCP_SERVICE_ACCOUNT) --key-file=$(CONF_PATH_PREFIX)/gcloud_key.json
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "
@@ -213,7 +213,7 @@ gke/test/create/bucket:
 	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
 	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) \
 		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
-	@-gsutil acl ch -u $(GKE_NODE_SERVICE_ACCOUNT_EMAIL):O gs://$(CLOUDSDK_BUCKET)
+	@-gsutil acl ch -u $(GCP_SERVICE_ACCOUNT):O gs://$(CLOUDSDK_BUCKET)
 	@echo "Google Cloud Storage Bucket creation finished."
 	@echo " "
 	@echo " "

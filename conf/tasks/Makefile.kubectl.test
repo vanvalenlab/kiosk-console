@@ -11,15 +11,15 @@ kubectl/test/create/rbac:
 ## Deploy ConfigMap with prometheus-redis-exporter script.
 kubectl/test/create/prometheus-redis-exporter-script:
 	-@kubectl create namespace monitoring 2>/dev/null || true
-	$(TEST_HOME_DIR)/gomplate_linux-amd64-slim -f patches/redis-exporter-script.yaml | kubectl apply -f -
+	$(CONF_PATH_PREFIX)/gomplate_linux-amd64-slim -f patches/redis-exporter-script.yaml | kubectl apply -f -
 
 ## Provision cluster autoscaler
 kubectl/test/create/autoscaler:
-	$(TEST_HOME_DIR)/gomplate_linux-amd64-slim -f addons/cluster-autoscaler.yaml | kubectl apply -f -
+	$(CONF_PATH_PREFIX)/gomplate_linux-amd64-slim -f addons/cluster-autoscaler.yaml | kubectl apply -f -
 
 ## Provision cluster autoscaler
 kubectl/test/create/nvidia-drivers:
-	$(TEST_HOME_DIR)/gomplate_linux-amd64-slim -f addons/nvidia-device-plugin.yaml | kubectl apply -f -
+	$(CONF_PATH_PREFIX)/gomplate_linux-amd64-slim -f addons/nvidia-device-plugin.yaml | kubectl apply -f -
 
 ## Provision all extra resources with kubectl
 kubectl/test/create/all: \
@@ -52,4 +52,4 @@ kubectl/test/destroy/prometheus/operator:
 kubectl/test/implement/autoscaling:
 	@envsubst < patches/hpa.yaml  > patches/hpa_subbed.yaml
 	@kubectl apply -f patches/hpa_subbed.yaml
-	@$(TEST_HOME_DIR)/conf/kubens.sh deepcell
+	@$(CONF_PATH_PREFIX)/conf/kubens.sh deepcell

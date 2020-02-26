@@ -6,10 +6,10 @@ helmfile/test/create/all:
 	@echo "Syncing all Kubernetes resources using helmfiles..."
 	#@shopt -s nocasematch
 	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
-		cp $(TEST_HOME_DIR)/conf/ELK_helmfiles/* $(TEST_HOME_DIR)/conf/helmfile.d;\
+		cp $(CONF_PATH_PREFIX)/conf/ELK_helmfiles/* $(CONF_PATH_PREFIX)/conf/helmfile.d;\
 	fi
 	#@shopt -u nocasematch
-	$(TEST_HOME_DIR)/conf/patches/gke-helmfile-deployment-TEST.sh
+	$(CONF_PATH_PREFIX)/conf/patches/gke-helmfile-deployment-TEST.sh
 	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "
@@ -17,7 +17,7 @@ helmfile/test/create/all:
 helmfile/test/create/elk:
 	#@shopt -s nocasematch
 	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
-		cp $(TEST_HOME_DIR)/conf/ELK_helmfiles/* $(TEST_HOME_DIR)/conf/helmfile.d;\
+		cp $(CONF_PATH_PREFIX)/conf/ELK_helmfiles/* $(CONF_PATH_PREFIX)/conf/helmfile.d;\
 		helmfile --selector namespace=elk sync;\
 	fi
 	#@shopt -u nocasematch
