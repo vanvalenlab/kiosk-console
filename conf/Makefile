@@ -21,3 +21,18 @@ destroy: \
   helmfile/destroy/all \
   $(CLOUD_PROVIDER)/destroy/all
 	@echo "Cluster destroyed"
+
+## Create test cluster
+test/create: \
+  $(CLOUD_PROVIDER)/test/create/all \
+  kubectl/create/prometheus-redis-exporter-script \
+  helmfile/create/all \
+  kubectl/display/ip \
+  kubectl/implement/autoscaling
+	@echo "Cluster created"
+
+## Destroy cluster
+test/destroy: \
+  helmfile/destroy/all \
+  $(CLOUD_PROVIDER)/test/destroy/all
+	@echo "Cluster destroyed"

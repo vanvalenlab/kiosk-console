@@ -82,7 +82,7 @@ test:
 	gcloud version
 	echo $(CLOUDSDK_CONFIG)
 	# execute make targets 
-	cd ./conf && make -f Makefile test/create
-	cd ./conf && make -f Makefile test/destroy
+	cd ./conf && make test/create
+	cd ./conf && make test/destroy
 	# celebrate
 	echo "TESTED"
