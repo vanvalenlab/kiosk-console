@@ -234,7 +234,7 @@ gke/destroy/bucket:
 ## Deploy helm tiller with service account
 gke/deploy/helm:
 	@echo "Deploying kubernetes resources..."
-	@kubectl create serviceaccount --namespace kube-system tiller || echo "Kubernetes already appears to be deployed."
+	@kubectl create serviceaccount --namespace kube-system tiller
 	@-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 	@-helm init --service-account tiller --upgrade --wait
 	@echo "Kubernetes resource deployment finished."
@@ -249,8 +249,7 @@ gke/destroy/helm:
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
 	@echo "Deploying NVIDIA drivers for GPU instances..."
-	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
-		echo "These drivers are not being installed. They may already be installed."
+	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/cos/daemonset-preloaded.yaml
 	@echo "NVIDIA GPU driver deployment finished."
 	@echo " "
 	@echo " "
