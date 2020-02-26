@@ -64,7 +64,7 @@ test:
 	kubectl version --client
 	## kubens
 	@wget https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
-	@chmod 764 $(CONF_PATH_PREFIX)/conf/kubens
+	@chmod 764 $(CONF_PATH_PREFIX)/kubens
 	## helm
 	@wget https://get.helm.sh/helm-v2.16.3-linux-amd64.tar.gz
 	@tar -xzvf helm-v2.16.3-linux-amd64.tar.gz
