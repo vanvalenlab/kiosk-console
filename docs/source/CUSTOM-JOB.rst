@@ -202,7 +202,7 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
 
    Within  ``data.script`` modify the section ``All Queues to Monitor`` to include the new queue (:data:`queue_name`).
 
-   .. code-block::
+   .. code-block:: lua
 
       -- All Queues to Monitor:
       local queues = {}
