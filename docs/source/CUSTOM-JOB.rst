@@ -12,7 +12,7 @@ Rationale
 
 In the kubernetes environment created by the kiosk, the task of processing images is coordinated by the redis-consumer. The number of consumers at work in any point in time is automatically scaled to match the number of images waiting in a work queue since each redis-consumer can only process one image at a time. Ultimately the redis-consumer is responsible for sending data to tf-serving containers to retrieve model predictions, but it also handles any pre- and post-processing steps that are required by a particular model.
 
-Currently, `deepcell.org <www.deepcell.org>`_ supports a cell tracking feature which is facilitated by the ``tracking-consumer``, which handles the multi-step process of cell tracking:
+Currently, `deepcell.org <http://www.deepcell.org>`_ supports a cell tracking feature which is facilitated by the ``tracking-consumer``, which handles the multi-step process of cell tracking:
 
 1. Send each frame of the dataset for segmentation. Frames are processed in parallel utilizing scalability and drastically reducing processing time.
 2. Retrieve model predictions and run post-processing to generate cell segmentation masks
