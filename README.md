@@ -42,9 +42,9 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 - _Not pictured above_:
 
-⋅⋅* <a href="https://github.com/vanvalenlab/kiosk-bucket-monitor">Bucket Monitor</a>: Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
+  * <a href="https://github.com/vanvalenlab/kiosk-bucket-monitor">Bucket Monitor</a>: Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
 
-⋅⋅* <a href="https://github.com/vanvalenlab/kiosk-redis-janitor">Janitor</a>: Monitors in-progress items and makes sure no jobs get left un-finished.
+  * <a href="https://github.com/vanvalenlab/kiosk-redis-janitor">Janitor</a>: Monitors in-progress items and makes sure no jobs get left un-finished.
 
 
 ## Contribute
