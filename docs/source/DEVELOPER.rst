@@ -86,7 +86,7 @@ Building custom consumer pipelines
 
 If you are interested in deploying your own specialized models using the kiosk, you can easily develop a custom consumer.
 
-For a guide on how to build a custom pipeline, please see :ref:`CUSTOM-JOB`.
+For a guide on how to build a custom pipeline, please see :doc:`CUSTOM-JOB`.
 
 Accessing cluster metrics and logging using OpenVPN
 ---------------------------------------------------
