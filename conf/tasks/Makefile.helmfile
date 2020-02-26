@@ -6,7 +6,7 @@ helmfile/create/all:
 	#@shopt -s nocasematch
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
-	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
+	@if [ "${ELK_DEPLOYMENT_TOGGLE^^}" = "ON" ]; then\
 		cp ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/* ${CONF_PATH_PREFIX}/conf/helmfile.d;\
 	fi
 	#@shopt -u nocasematch
@@ -17,7 +17,7 @@ helmfile/create/all:
 
 helmfile/create/elk:
 	#@shopt -s nocasematch
-	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
+	@if [ "${ELK_DEPLOYMENT_TOGGLE^^}" = "ON" ]; then\
 		cp ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/* ${CONF_PATH_PREFIX}/conf/helmfile.d;\
 		helmfile --selector namespace=elk sync;\
 	fi
