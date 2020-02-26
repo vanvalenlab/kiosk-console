@@ -53,7 +53,7 @@ test:
 	## gomplate
 	@wget https://github.com/hairyhenderson/gomplate/releases/download/v3.1.0/gomplate_linux-amd64-slim
 	@chmod 764 $(CONF_PATH_PREFIX)/gomplate_linux-amd64-slim
-	@mv gomplate_linus-amd64-slim gomplate
+	@mv gomplate_linux-amd64-slim gomplate
 	gomplate --version
 	## kubectl
 	@sudo apt-get update && sudo sudo apt-get install -y apt-transport-https
