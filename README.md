@@ -32,7 +32,7 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 ![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk/wg-docs-diagram/docs/images/Kiosk_Architecture.png)
 
-- <a href="https://github.com/vanvalenlab/kiosk-frontend">Frontend</a>: API for creating and managing jobs, and a React-based DeepCell graphical user interface built using React, Babel, Webpack.
+- <a href="https://github.com/vanvalenlab/kiosk-frontend">Frontend</a>: API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
 
 - <a href="https://github.com/vanvalenlab/kiosk-redis-consumer">Consumer</a>: Retrieves items from the Job Queue and handles the processing pipeline for that item. Each consumer only works on one item at a time.
 
