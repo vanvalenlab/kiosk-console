@@ -286,25 +286,47 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
 
-Connecting custom consumers with the frontend
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Connecting custom consumers with the Kiosk
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Finally, in order to use the frontend interface to interact with your new consumer, you will need to add the new queue to the |kiosk-frontend|.
+A number of Kiosk components will need the new queue name in order to fully integrate the new job.
 
-In the |kiosk-frontend| helmfile (|frontend.yaml|), add or modify the ``env`` variable ``JOB_TYPES`` and replace with :data:`consumer_type`.
+1. |frontend.yaml|
 
-.. code-block:: yaml
+   In the |kiosk-frontend| helmfile (|frontend.yaml|), add or modify the ``env`` variable ``JOB_TYPES`` and replace with :data:`consumer_type`.
 
-    env:
-        JOB_TYPES: "segmentation,tracking,<new job name>"
+   .. code-block:: yaml
+
+       env:
+           JOB_TYPES: "segmentation,tracking,<new job name>"
+
+2. |redis-janitor.yaml|
+
+   The |kiosk-redis-janitor| monitors queues in an ``env`` variable ``QUEUES`` for stalled jobs, and restarts them. :data:`consumer_type` must be added here as well.
+
+   .. code-block:: yaml
+
+       env:
+           QUEUES: "segmentation,tracking,<new job name>"
+
+3. |autoscaler.yaml|
+
+  The |kiosk-autoscaler| also has an ``env`` variable ``QUEUES`` which it uses to determine whether a GPU must be activated. Add :data:`consumer_type` to this variable too.
+
+  .. code-block:: yaml
+
+      env:
+          QUEUES: "segmentation,tracking,<new job name>"
 
 You will need to sync your helmfile in order to update your frontend website to reflect the change to the helmfile. Please run the following:
 
 .. code-block:: bash
 
     helm delete --purge frontend; helmfile -l name=frontend sync
+    helm delete --purge redis-janitor; helmfile -l name=redis-janitor sync
+    helm delete --purge autoscaler; helmfile -l name=autoscaler sync
 
-After a few minutes, your frontend website should be updated with your new job option in the drop-down menu.
+In a few minutes the Kiosk will be ready to process the new job type.
 
 .. |kiosk-frontend| raw:: html
 
@@ -313,3 +335,19 @@ After a few minutes, your frontend website should be updated with your new job o
 .. |frontend.yaml| raw:: html
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0300.frontend.yaml">/conf/helmfile.d/0300.frontend.yaml</a></tt>
+
+.. |kiosk-redis-janitor| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk-redis-janitor">kiosk-redis-janitor</a></tt>
+
+.. |redis-janitor.yaml| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0220.redis-janitor.yaml">/conf/helmfile.d/0220.redis-janitor.yaml</a></tt>
+
+.. |kiosk-autoscaler| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk-autoscaler">kiosk-autoscaler</a></tt>
+
+.. |autoscaler.yaml| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0210.autoscaler.yaml">/conf/helmfile.d/0210.autoscaler.yaml</a></tt>
