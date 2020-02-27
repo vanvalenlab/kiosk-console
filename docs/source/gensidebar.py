@@ -74,7 +74,6 @@ def generate_sidebar(conf, conf_api):
     endl()
 
     toctree('Kiosk Redis Consumer')
-    write_subproject('Custom Consumers', 'kiosk-redis-consumer', 'CUSTOM_CONSUMER')
     write_subproject('API', 'kiosk-redis-consumer', 'API')
     endl()
 
