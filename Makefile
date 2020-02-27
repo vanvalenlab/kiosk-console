@@ -89,4 +89,4 @@ test:
 
 test/elk: export ELK_DEPLOYMENT_TOGGLE = ON 
 test/elk: \
-	test
+	return 1
