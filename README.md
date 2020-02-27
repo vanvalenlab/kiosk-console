@@ -38,25 +38,20 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 ![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/Kiosk_Architecture.png)
 
-<tt><a href="https://github.com/vanvalenlab/kiosk-frontend">kiosk-frontend</a></tt>
+- [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
 
-- DeepCell graphical user interface built using React, Babel, Webpack.
+- [Consumer](https://github.com/vanvalenlab/kiosk-redis-consumer): Retrieves items from the Job Queue and handles the processing pipeline for that item. Each consumer only works on one item at a time.
 
-<tt><a href="https://github.com/vanvalenlab/kiosk-redis-consumer">kiosk-redis-consumer</a></tt>
+- [Model Server](https://github.com/vanvalenlab/kiosk-tf-serving): Serves models over a gRPC API, allowing consumers to send data and get back predictions.
 
-- Retrieves items from the queue and handles the processing pipeline for that item. Each consumer handles one item at a time.
+- [GPU Autoscaler](https://github.com/vanvalenlab/kiosk-autoscaler): Automatically and efficiently scales Kubernetes GPU resources.
 
-<tt><a href="https://github.com/vanvalenlab/kiosk-bucket-monitor">kiosk-bucket-monitor</a></tt>
+- _Not pictured above_:
 
-- The `bucket-monitor` will monitor all bucket folders listed in the `PREFIX` environment variable (defaults to `PREFIX: "uploads/,output/"`). Any files that are older than 3 days (configured the `AGE_THRESHOLD` environment variable) will be deleted.
+  * [Bucket Monitor](https://github.com/vanvalenlab/kiosk-bucket-monitor): Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
 
-<tt><a href="https://github.com/vanvalenlab/kiosk-tf-serving">kiosk-tf-serving</a></tt>
+  * [Janitor](https://github.com/vanvalenlab/kiosk-redis-janitor): Monitors in-progress items and makes sure no jobs get left un-finished.
 
-- Receives data from `redis-consumers` and runs model predictions on that data.
-
-<tt><a href="https://github.com/vanvalenlab/kiosk-autoscaler">kiosk-autoscaler</a></tt>
-
-- Automatically and efficiently scale Kubernetes GPU resources
 
 ## Contribute
 
