@@ -190,11 +190,12 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
 Autoscaling custom consumers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Each consumer is scaled by a Kubernetes Horizontal Pod Autoscaler (HPA), which is defined in |/conf/patches/hpa.yaml|.
-This HPA reads a consumer-specific custom metric, defined in |/conf/helmfile.d/0600.prometheus-operator.yaml|.
+Kubernetes scales each consumer using a <a href="https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/">Horizontal Pod Autoscaler</a> (HPA).
+Each HPA is configured in |/conf/patches/hpa.yaml|.
+The HPA reads a consumer-specific custom metric, defined in |/conf/helmfile.d/0600.prometheus-operator.yaml|.
 Each custom metric maximizes the work being done by balancing the amount of work left in the consumer's Redis queue (made available by the ``prometheus-redis-exporter``) and the current GPU utilization.
 
-Each job may have its own scaling requirements, and custom metrics can be tweaked to meet those requirements.
+Every job may have its own scaling requirements, and custom metrics can be tweaked to meet those requirements.
 For example, the ``segmentation_consumer_key_ratio`` in |/conf/helmfile.d/0600.prometheus-operator.yaml| demonstrates a more complex metric that tries to balance the ratio of TensorFlow Servers and consumers to throttle the requests-per-second.
 
 To effectively scale your new consumer, some small edits will be needed in the following files:
