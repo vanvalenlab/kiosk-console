@@ -195,7 +195,7 @@ This HPA reads a consumer-specific custom metric, defined in |/conf/helmfile.d/0
 Each custom metric maximizes the work being done by balancing the amount of work left in the consumer's Redis queue (made available by the ``prometheus-redis-exporter``) and the current GPU utilization.
 
 Each job may have its own scaling requirements, and custom metrics can be tweaked to meet those requirements.
-For example, the ``segmentation_consumer_key_ratio`` in |/conf/helmfile.d/0600.prometheus-operator.yaml| demonstrates a more complex metric that also takes into account the current number of TensorFlow Servers and the number of consumers, in order to not scale either component too quickly.
+For example, the ``segmentation_consumer_key_ratio`` in |/conf/helmfile.d/0600.prometheus-operator.yaml| demonstrates a more complex metric that tries to balance the ratio of TensorFlow Servers and consumers to throttle the requests-per-second.
 
 To effectively scale your new consumer, some small edits will be needed in the following files:
 
