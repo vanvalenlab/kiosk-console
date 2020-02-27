@@ -225,4 +225,4 @@ autosectionlabel_prefix_document = True
 
 import gensidebar
 
-gensidebar.generate_sidebar(globals(), "deepcell-kiosk")
+gensidebar.generate_sidebar(globals(), "deepcell-kiosk", False)
