@@ -10,7 +10,7 @@ jobs:
   include:
     - stage: test
       name: "Integration test - no ELK"
-      if: type = pull-request
+      #if: type = pull-request
       env:
         - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
         - CLOUD_PROVIDER=gke 
@@ -56,7 +56,7 @@ jobs:
       script: make test
     - stage: test
       name: "Integration test - with ELK"
-      if: type = pull-request
+      #if: type = pull-request
       env:
         - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
         - CLOUD_PROVIDER=gke 
