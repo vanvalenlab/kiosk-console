@@ -7,6 +7,9 @@ git:
 language: bash
 
 jobs:
+  allow_failures:
+    - script: make test/elk
+  fast_finish: true
   include:
     - stage: test
       name: "Integration test - no ELK"
