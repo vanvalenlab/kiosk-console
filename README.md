@@ -17,10 +17,29 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 - Drag and drop interface for running predictions
 
 ### Example
+<table width="700" border="1" cellpadding="5">
 
-Raw Image                  |  Segmented and Tracked
-:-------------------------:|:-------------------------:
-![](https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/raw.gif)  |  ![](https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/tracked.gif)
+<tr>
+<td align="center" valign="center">
+Raw Image
+</td>
+
+<td align="center" valign="center">
+Tracked Image
+</td>
+</tr>
+
+<tr>
+<td align="center" valign="center">
+<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/raw.gif" alt="Raw Image" />
+</td>
+
+<td align="center" valign="center">
+<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/tracked.gif" alt="Tracked Image" />
+</td>
+</tr>
+
+</table>
 
 ## Getting Started
 
