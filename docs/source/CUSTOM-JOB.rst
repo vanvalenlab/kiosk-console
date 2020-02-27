@@ -311,9 +311,9 @@ A number of Kiosk components will need the new queue name in order to fully inte
 
 3. |autoscaler.yaml|
 
-  The |kiosk-autoscaler| also has an ``env`` variable ``QUEUES`` which it uses to determine whether a GPU must be activated. Add :data:`consumer_type` to this variable too.
+   The |kiosk-autoscaler| also has an ``env`` variable ``QUEUES`` which it uses to determine whether a GPU must be activated. Add :data:`consumer_type` to this variable too.
 
-  .. code-block:: yaml
+   .. code-block:: yaml
 
       env:
           QUEUES: "segmentation,tracking,<new job name>"
