@@ -35,8 +35,8 @@ run:
 	$(CLUSTER)
 
 ## Target for testing cluster deployment
-test: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$RANDOM')
-test:
+test/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$RANDOM')
+test/gke/deploy:
 	# Some debug info
 	echo "TEST"
 	printenv
@@ -87,6 +87,6 @@ test:
 	# celebrate
 	echo "TESTED"
 
-test/elk: export ELK_DEPLOYMENT_TOGGLE = ON 
-test/elk: \
-	return 1
+test/gke/deploy/elk: export ELK_DEPLOYMENT_TOGGLE = ON
+test/gke/deploy/elk: \
+	test/gke/deploy
