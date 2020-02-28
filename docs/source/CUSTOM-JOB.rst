@@ -190,13 +190,19 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
 Autoscaling custom consumers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Kubernetes scales each consumer using a `Horizonal Pod Autoscaler "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/>`_ (HPA).
+Each HPA is configured in |/conf/patches/hpa.yaml|.
+The HPA reads a consumer-specific custom metric, defined in |/conf/helmfile.d/0600.prometheus-operator.yaml|.
+Each custom metric maximizes the work being done by balancing the amount of work left in the consumer's Redis queue (made available by the ``prometheus-redis-exporter``) and the current GPU utilization.
+
+Every job may have its own scaling requirements, and custom metrics can be tweaked to meet those requirements.
+For example, the ``segmentation_consumer_key_ratio`` in |/conf/helmfile.d/0600.prometheus-operator.yaml| demonstrates a more complex metric that tries to balance the ratio of TensorFlow Servers and consumers to throttle the requests-per-second.
+
 To effectively scale your new consumer, some small edits will be needed in the following files:
 
 * |/conf/patches/redis-exporter-script.yaml|
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
 * |/conf/patches/hpa.yaml|
-
-Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the ``prometheus-redis-exporter``, the custom rule is defined in ``prometheus-operator``, and the Horizontal Pod Autoscaler is created and configured to use the new rule in the ``hpa.yaml`` file.
 
 1. |/conf/patches/redis-exporter-script.yaml|
 
@@ -270,10 +276,6 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
               name: tracking_consumer_key_ratio
             targetValue: 1
 
-.. todo::
-
-    Do we have guidelines or recommendations for how to set the actual parameters for scaling?
-
 .. |/conf/patches/hpa.yaml| raw:: html
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/hpa.yaml">/conf/patches/hpa.yaml</a></tt>
@@ -286,25 +288,51 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
 
-Connecting custom consumers with the frontend
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. |/conf/helmfile.d/0230.redis-consumer.yaml| raw:: html
 
-Finally, in order to use the frontend interface to interact with your new consumer, you will need to add the new queue to the |kiosk-frontend|.
+    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0230.segmentation-consumer.yaml">/conf/helmfile.d/0230.segmentation-consumer.yaml</a></tt>
 
-In the |kiosk-frontend| helmfile (|frontend.yaml|), add or modify the ``env`` variable ``JOB_TYPES`` and replace with :data:`consumer_type`.
+Connecting custom consumers with the Kiosk
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: yaml
+A number of Kiosk components will need the new queue name in order to fully integrate the new job.
 
-    env:
-        JOB_TYPES: "segmentation,tracking,<new job name>"
+1. |frontend.yaml|
+
+   In the |kiosk-frontend| helmfile (|frontend.yaml|), add or modify the ``env`` variable ``JOB_TYPES`` and replace with :data:`consumer_type`.
+
+   .. code-block:: yaml
+
+       env:
+           JOB_TYPES: "segmentation,tracking,<new job name>"
+
+2. |redis-janitor.yaml|
+
+   The |kiosk-redis-janitor| monitors queues in an ``env`` variable ``QUEUES`` for stalled jobs, and restarts them. :data:`consumer_type` must be added here as well.
+
+   .. code-block:: yaml
+
+       env:
+           QUEUES: "segmentation,tracking,<new job name>"
+
+3. |autoscaler.yaml|
+
+   The |kiosk-autoscaler| also has an ``env`` variable ``QUEUES`` which it uses to determine whether a GPU must be activated. Add :data:`consumer_type` to this variable too.
+
+   .. code-block:: yaml
+
+      env:
+          QUEUES: "segmentation,tracking,<new job name>"
 
 You will need to sync your helmfile in order to update your frontend website to reflect the change to the helmfile. Please run the following:
 
 .. code-block:: bash
 
     helm delete --purge frontend; helmfile -l name=frontend sync
+    helm delete --purge redis-janitor; helmfile -l name=redis-janitor sync
+    helm delete --purge autoscaler; helmfile -l name=autoscaler sync
 
-After a few minutes, your frontend website should be updated with your new job option in the drop-down menu.
+In a few minutes the Kiosk will be ready to process the new job type.
 
 .. |kiosk-frontend| raw:: html
 
@@ -313,3 +341,19 @@ After a few minutes, your frontend website should be updated with your new job o
 .. |frontend.yaml| raw:: html
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0300.frontend.yaml">/conf/helmfile.d/0300.frontend.yaml</a></tt>
+
+.. |kiosk-redis-janitor| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk-redis-janitor">kiosk-redis-janitor</a></tt>
+
+.. |redis-janitor.yaml| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0220.redis-janitor.yaml">/conf/helmfile.d/0220.redis-janitor.yaml</a></tt>
+
+.. |kiosk-autoscaler| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk-autoscaler">kiosk-autoscaler</a></tt>
+
+.. |autoscaler.yaml| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0210.autoscaler.yaml">/conf/helmfile.d/0210.autoscaler.yaml</a></tt>
