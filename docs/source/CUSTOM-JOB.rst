@@ -190,13 +190,19 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
 Autoscaling custom consumers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Kubernetes scales each consumer using a `Horizonal Pod Autoscaler "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/>`_ (HPA).
+Each HPA is configured in |/conf/patches/hpa.yaml|.
+The HPA reads a consumer-specific custom metric, defined in |/conf/helmfile.d/0600.prometheus-operator.yaml|.
+Each custom metric maximizes the work being done by balancing the amount of work left in the consumer's Redis queue (made available by the ``prometheus-redis-exporter``) and the current GPU utilization.
+
+Every job may have its own scaling requirements, and custom metrics can be tweaked to meet those requirements.
+For example, the ``segmentation_consumer_key_ratio`` in |/conf/helmfile.d/0600.prometheus-operator.yaml| demonstrates a more complex metric that tries to balance the ratio of TensorFlow Servers and consumers to throttle the requests-per-second.
+
 To effectively scale your new consumer, some small edits will be needed in the following files:
 
 * |/conf/patches/redis-exporter-script.yaml|
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
 * |/conf/patches/hpa.yaml|
-
-Generally, the consumer for each Redis queue is scaled relative to the amount of items in that queue. The work is tallied in the ``prometheus-redis-exporter``, the custom rule is defined in ``prometheus-operator``, and the Horizontal Pod Autoscaler is created and configured to use the new rule in the ``hpa.yaml`` file.
 
 1. |/conf/patches/redis-exporter-script.yaml|
 
@@ -270,10 +276,6 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
               name: tracking_consumer_key_ratio
             targetValue: 1
 
-.. todo::
-
-    Do we have guidelines or recommendations for how to set the actual parameters for scaling?
-
 .. |/conf/patches/hpa.yaml| raw:: html
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/hpa.yaml">/conf/patches/hpa.yaml</a></tt>
@@ -285,6 +287,10 @@ Generally, the consumer for each Redis queue is scaled relative to the amount of
 .. |/conf/patches/redis-exporter-script.yaml| raw:: html
 
     <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
+
+.. |/conf/helmfile.d/0230.redis-consumer.yaml| raw:: html
+
+    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0230.segmentation-consumer.yaml">/conf/helmfile.d/0230.segmentation-consumer.yaml</a></tt>
 
 Connecting custom consumers with the Kiosk
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
