@@ -117,7 +117,10 @@ DeepCell Kiosk Usage
 
 9. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported). The next screen will prompt you to authenticate your account with gcloud or to continue with a previously authenticated account. The next several screens will prompt you to select a gcloud project, name your cluster and finally enter a bucket name for data storage. To complete cluster configuration you have the option to choose between "Default" and "Advanced" configuration. "Default" will set standard values for compute hardware and will be appropriate for most users. "Advanced" allows configure each setting individually.
 
-10. At the completion of configuration, you will return to the home screen where you can select the "Create" option to trigger creation of the cluster based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page.
+10. At the completion of configuration, you will return to the home screen where you can select the "Create" option to trigger creation of the cluster based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page as shown below.
+
+.. image:: ../images/Kiosk-Complete-Blur.png
+    :alt: Kiosk Complete Page
 
 11. Find the cluster's web address by choosing the ``View`` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".)
 
