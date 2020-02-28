@@ -73,12 +73,15 @@ releases:
 
         NUCLEAR_MODEL: "NuclearSegmentation:0"
         NUCLEAR_POSTPROCESS: "deep_watershed"
+        NUCLEAR_RESHAPE_SIZE: 512
 
         PHASE_MODEL: "PhaseCytoSegmentation:0"
         PHASE_POSTPROCESS: "deep_watershed"
+        PHASE_RESHAPE_SIZE: 512
 
         CYTOPLASM_MODEL: "FluoCytoSegmentation:0"
         CYTOPLASM_POSTPROCESS: "deep_watershed"
+        CYTOPLASM_RESHAPE_SIZE: 512
 
         LABEL_DETECT_ENABLED: "true"
         LABEL_DETECT_MODEL: "LabelDetection:0"

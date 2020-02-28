@@ -74,12 +74,15 @@ releases:
 
         NUCLEAR_MODEL: "NuclearSegmentation:0"
         NUCLEAR_POSTPROCESS: "deep_watershed"
+        NUCLEAR_RESHAPE_SIZE: 512
 
         PHASE_MODEL: "PhaseCytoSegmentation:0"
         PHASE_POSTPROCESS: "deep_watershed"
+        PHASE_RESHAPE_SIZE: 512
 
         CYTOPLASM_MODEL: "FluoCytoSegmentation:0"
         CYTOPLASM_POSTPROCESS: "deep_watershed"
+        CYTOPLASM_RESHAPE_SIZE: 512
 
         LABEL_DETECT_ENABLED: "true"
         LABEL_DETECT_MODEL: "LabelDetection:0"
@@ -95,8 +98,8 @@ releases:
         NORMALIZE_TRACKING: "true"
 
         TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-        TRACKING_SEGMENT_MODEL: "panoptic:3"
-        TRACKING_POSTPROCESS_FUNCTION: "retinanet"
+        TRACKING_SEGMENT_MODEL: "NuclearSegmentation:0"
+        TRACKING_POSTPROCESS_FUNCTION: "deep_watershed"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'

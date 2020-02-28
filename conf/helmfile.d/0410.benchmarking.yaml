@@ -49,9 +49,9 @@ releases:
         API_HOST: '{{ env "CLUSTER_ADDRESS" | default "frontend" }}'
         FILE: zip100.zip
         COUNT: 100
-        MODEL: watershednuclearnofgbg41f16:0
+        MODEL: NuclearSegmentation:0
         UPLOAD_PREFIX: uploads
-        POSTPROCESS: watershed
+        POSTPROCESS: deep_watershed
         PREPROCESS: ""
         START_DELAY: 0.5
         UPDATE_INTERVAL: 15
