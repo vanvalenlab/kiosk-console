@@ -31,11 +31,11 @@ Tracked Image
 
 <tr>
 <td align="center" valign="center">
-<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/raw.gif" alt="Raw Image" />
+<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk/master/docs/images/raw.gif" alt="Raw Image" />
 </td>
 
 <td align="center" valign="center">
-<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/tracked.gif" alt="Tracked Image" />
+<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk/master/docs/images/tracked.gif" alt="Tracked Image" />
 </td>
 </tr>
 
@@ -55,7 +55,7 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 ## Software Architecture
 
-![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk/mrgn-docs/docs/images/Kiosk_Architecture.png)
+![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk/master/docs/images/Kiosk_Architecture.png)
 
 - [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
 
