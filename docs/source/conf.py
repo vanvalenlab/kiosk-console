@@ -15,13 +15,19 @@
 import os
 import sys
 import shlex
+from datetime import datetime
+
 sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'DeepCell Kiosk'
-copyright = '2016-2018, Van Valen Lab at the California Institute of Technology (Caltech)'
+copyright = '2016-{currentyear}, Van Valen Lab at the California Institute of Technology (Caltech)'.format(
+    currentyear=datetime.now().year
+)
 author = 'Van Valen Lab at Caltech'
 
 # The short X.Y version
@@ -29,6 +35,15 @@ version = ''
 # The full version, including alpha/beta/rc tags
 release = '1.0.0'
 
+# -- RTD configuration ------------------------------------------------
+
+# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
+on_rtd = os.environ.get("READTHEDOCS", None) == "True"
+
+# This is used for linking and such so we link to the thing we're building
+rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
+if rtd_version not in ["master", "latest", "stable"]:
+    rtd_version = "master"
 
 # -- General configuration ---------------------------------------------------
 
@@ -46,7 +61,10 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
+    'sphinx.ext.todo',
     'm2r',
+    'sphinx.ext.autosectionlabel',
+    'hidden_code_block'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -182,13 +200,29 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
-autodoc_mock_imports=["tensorflow", "sklearn", "skimage", "nbformat", "cv2", "keras_retinanet", "keras_maskrcnn"]
+autodoc_mock_imports = ["tensorflow", "sklearn", "skimage",
+                        "nbformat", "cv2", "keras_retinanet", "keras_maskrcnn"]
 
 # -- Options for intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {
-    'deepcell': ('https://deepcell.readthedocs.io/en/documentation/', None),
+    'deepcell': ('https://deepcell.readthedocs.io/en/{}/'.format(rtd_version), None),
+    'redis_consumer': ('https://deepcell-kiosk.readthedocs.io/projects/kiosk-redis-consumer/en/{}/'.format(rtd_version), None)
 }
 
 intersphinx_cache_limit = 0
 
+# -- Options for todo extension ----------------------------------------------
+
+# If true, `todo` and `todoList` produce output, else they produce nothing.
+todo_include_todos = True
+
+# -- Options for autosectionlabel extension ---------------------------------
+
+autosectionlabel_prefix_document = True
+
+# -- Custom Document processing ----------------------------------------------
+
+import gensidebar
+
+gensidebar.generate_sidebar(globals(), "deepcell-kiosk", True)

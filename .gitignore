@@ -15,3 +15,6 @@ build-harness/
 
 # Documentation
 docs/build/
+docs/source/_sidebar.rst.inc
+
+.vscode/*
