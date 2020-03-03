@@ -6,7 +6,6 @@ git:
 
 language: bash
 
-
 jobs:
   allow_failures:
     - script: make test/gke/deploy/elk
