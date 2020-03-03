@@ -13,7 +13,7 @@ jobs:
   include:
     - stage: test
       name: "Integration test - no ELK"
-      if: (branch = master) OR (commit_message =~ /[build-integration-tests]/)
+      if: (commit_message =~ /[build-integration-tests]/)
       env:
         - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
         - CLOUD_PROVIDER=gke 
