@@ -37,6 +37,7 @@ run:
 ## Target for testing cluster deployment
 test/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$RANDOM')
 test/gke/deploy:
+	printenv
 	#mkdir -p $(CONF_PATH_PREFIX)/.config/gcloud
 	#sudo chmod 777 $(CONF_PATH_PREFIX)/.config
 	#sudo chmod 777 $(CONF_PATH_PREFIX)/.config/gcloud
