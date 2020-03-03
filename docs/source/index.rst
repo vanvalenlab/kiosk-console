@@ -1,16 +1,11 @@
-.. DeepCell Kiosk documentation master file
+.. _index:
 
-Deploying DeepCell - The Kiosk
-==================================================
+.. mdinclude:: ../../README.md
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+.. include:: _sidebar.rst.inc
 
-   readme_link
-   TROUBLESHOOTING
-
-:doc:`DeepCell documentation <deepcell:index>`
+Indices and tables
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`
