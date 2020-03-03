@@ -13,7 +13,7 @@ jobs:
   include:
     - stage: test
       name: "Integration test - no ELK"
-      if: (type = pull_request AND branch = master) OR (commit_message =~ /[build-integration-tests]/)
+      if: (branch = master) OR (commit_message =~ /[build-integration-tests]/)
       env:
         - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
         - CLOUD_PROVIDER=gke 
@@ -53,10 +53,10 @@ jobs:
         - NODE_MAX_SIZE=60
         - REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
       before_install:
-        - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .secrets/gcloud_key_base64.enc -out gcloud_key_base64 -d
+        - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
         - export PATH=/home/travis/build/vanvalenlab/kiosk:$PATH
-      install: ./.secrets/install_script.sh
+      install: ./.travis/install_script.sh
       script: make test/gke/deploy
     - stage: test
       name: "Integration test - with ELK"
@@ -100,10 +100,10 @@ jobs:
         - NODE_MAX_SIZE=60
         - REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
       before_install:
-        - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .secrets/gcloud_key_base64.enc -out gcloud_key_base64 -d
+        - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
         - export PATH=/home/travis/build/vanvalenlab/kiosk:/home/travis/build/vanvalenlab/kiosk/linux-amd64:$PATH
-      install: ./.secrets/install_script.sh
+      install: ./.travis/install_script.sh
       script: make test/gke/deploy/elk
     - stage: deploy
       if: tag IS present
