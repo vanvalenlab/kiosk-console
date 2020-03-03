@@ -1,44 +1,5 @@
 #/bin/bash
 
-# define env vars
-export CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
-export CLOUD_PROVIDER=gke 
-export CLOUDSDK_BUCKET=deepcell-output-benchmarking
-export CLOUDSDK_COMPUTE_REGION=us-west1
-export CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk/.config/gcloud/
-export CLOUDSDK_CORE_PROJECT=deepcell-209717
-export CLOUDSDK_CORE_VERBOSITY=debug
-export CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk
-export CONSUMER_MACHINE_TYPE=n1-highmem-2
-export GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
-export GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
-export GKE_MACHINE_TYPE=n1-standard-1
-export GCP_SERVICE_ACCOUNT=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-export GPU_MACHINE_TYPE=n1-highmem-2
-export GPU_MAX_DIVIDED_BY_FOUR=1
-export GPU_MAX_DIVIDED_BY_THREE=1
-export GPU_MAX_DIVIDED_BY_TWO=2
-export GPU_MAX_TIMES_FIFTY=200 
-export GPU_MAX_TIMES_FIVE=20
-export GPU_MAX_TIMES_FOUR=16
-export GPU_MAX_TIMES_FOURTY=160 
-export GPU_MAX_TIMES_ONE_HUNDRED=400 
-export GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=600 
-export GPU_MAX_TIMES_SEVENTY_FIVE=300 
-export GPU_MAX_TIMES_TEN=40
-export GPU_MAX_TIMES_THIRTY=120 
-export GPU_MAX_TIMES_THREE=12
-export GPU_MAX_TIMES_TWENTY=80
-export GPU_MAX_TIMES_TWO=8
-export GPU_MAX_TIMES_TWO_HUNDRED=800 
-export GPU_NODE_MIN_SIZE=0
-export GPU_NODE_MAX_SIZE=4
-export GPU_PER_NODE=1
-export KUBERNETES_VERSION=latest
-export NODE_MIN_SIZE=1
-export NODE_MAX_SIZE=60
-export REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
-
 # Install helmfile
 wget https://github.com/roboll/helmfile/releases/download/v0.82.0/helmfile_linux_amd64
 chmod 764 $CONF_PATH_PREFIX/helmfile_linux_amd64
