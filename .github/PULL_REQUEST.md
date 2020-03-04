@@ -6,4 +6,4 @@
 
 ## Integration Tests
 * Run integration testing by including `[build-integration-tests]` in the commit message. (_Not required for PRs to `master`_).
-* Integration-tested commit hash: `#######`
+* Integration tested commit hash: `#######`
