@@ -66,7 +66,6 @@ releases:
         TF_HOST: "tf-serving"
         TF_PORT: 8500
         TF_TENSOR_NAME: "image"
-        TF_TENSOR_DTYPE: "DT_FLOAT"
 
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
@@ -74,24 +73,19 @@ releases:
 
         NUCLEAR_MODEL: "NuclearSegmentation:0"
         NUCLEAR_POSTPROCESS: "deep_watershed"
-        NUCLEAR_RESHAPE_SIZE: 512
 
         PHASE_MODEL: "PhaseCytoSegmentation:0"
         PHASE_POSTPROCESS: "deep_watershed"
-        PHASE_RESHAPE_SIZE: 512
 
         CYTOPLASM_MODEL: "FluoCytoSegmentation:0"
         CYTOPLASM_POSTPROCESS: "deep_watershed"
-        CYTOPLASM_RESHAPE_SIZE: 512
 
         LABEL_DETECT_ENABLED: "true"
-        LABEL_DETECT_MODEL: "LabelDetection:0"
-        LABEL_RESHAPE_SIZE: 216
+        LABEL_DETECT_MODEL: "LabelDetection:1"
         LABEL_DETECT_SAMPLE: 10
 
         SCALE_DETECT_ENABLED: "true"
-        SCALE_DETECT_MODEL: "ScaleDetection:0"
-        SCALE_RESHAPE_SIZE: 216
+        SCALE_DETECT_MODEL: "ScaleDetection:1"
         SCALE_DETECT_SAMPLE: 10
 
         DRIFT_CORRECT_ENABLED: "false"
