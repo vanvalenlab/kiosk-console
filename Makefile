@@ -33,3 +33,28 @@ install:
 ## Start the geodesic shell by calling wrapper script
 run:
 	$(CLUSTER)
+
+## Target for testing cluster deployment
+test/integration/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$RANDOM')
+test/integration/gke/deploy:
+	# check environment variables
+	printenv
+	# check that necessary binaries are installed
+	helmfile --version
+	gomplate --version
+	kubectl version --client
+	helm version -c
+	gcloud version
+	# execute make targets 
+	# make init
+	cd ./conf && make test/create
+	cd ./conf && make test/destroy
+	# celebrate
+	echo "TESTED"
+
+test/integration/gke/deploy/elk: export ELK_DEPLOYMENT_TOGGLE = ON
+test/integration/gke/deploy/elk: \
+	test/integration/gke/deploy
+
+test/unit:
+	echo "No unit tests at this time."
