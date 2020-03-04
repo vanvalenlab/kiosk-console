@@ -35,8 +35,8 @@ run:
 	$(CLUSTER)
 
 ## Target for testing cluster deployment
-test/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$RANDOM')
-test/gke/deploy:
+test/integration/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$RANDOM')
+test/integration/gke/deploy:
 	# check environment variables
 	printenv
 	# check that necessary binaries are installed
@@ -52,6 +52,9 @@ test/gke/deploy:
 	# celebrate
 	echo "TESTED"
 
-test/gke/deploy/elk: export ELK_DEPLOYMENT_TOGGLE = ON
-test/gke/deploy/elk: \
-	test/gke/deploy
+test/integration/gke/deploy/elk: export ELK_DEPLOYMENT_TOGGLE = ON
+test/integration/gke/deploy/elk: \
+	test/integration/gke/deploy
+
+test/unit:
+	echo "No unit tests at this time."
