@@ -111,7 +111,11 @@ jobs:
       install: ./.travis/install_script.sh
       script: make test/integration/gke/deploy/elk
     - stage: unit_tests
+      name: "Unit Tests"
+      if: type = push
+      script: make test/unit
     - stage: deploy
+      name: "Docker Deployment"
       if: tag IS present
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
