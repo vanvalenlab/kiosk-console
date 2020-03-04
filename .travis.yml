@@ -4,14 +4,118 @@ dist: xenial
 git:
   depth: false
 
-language: bash
+language: shell
+
+stages:
+  - unit_tests
+  - integration_tests
+  - deploy
 
 jobs:
+  allow_failures:
+    - script: make test/integration/gke/deploy/elk
+  fast_finish: true
   include:
-    - stage: test
-      script:
-      - echo "No tests to run!"
+    - stage: integration_tests
+      name: "Integration test - no ELK"
+      if: ( (type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/) )
+      env:
+        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
+        - CLOUD_PROVIDER=gke 
+        - CLOUDSDK_BUCKET=deepcell-output-benchmarking
+        - CLOUDSDK_COMPUTE_REGION=us-west1
+        - CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk/.config/gcloud/
+        - CLOUDSDK_CORE_PROJECT=deepcell-209717
+        - CLOUDSDK_CORE_VERBOSITY=debug
+        - CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk
+        - CONSUMER_MACHINE_TYPE=n1-highmem-2
+        - GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
+        - GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
+        - GKE_MACHINE_TYPE=n1-standard-1
+        - GCP_SERVICE_ACCOUNT=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
+        - GPU_MACHINE_TYPE=n1-highmem-2
+        - GPU_MAX_DIVIDED_BY_FOUR=1
+        - GPU_MAX_DIVIDED_BY_THREE=1
+        - GPU_MAX_DIVIDED_BY_TWO=2
+        - GPU_MAX_TIMES_FIFTY=200 
+        - GPU_MAX_TIMES_FIVE=20
+        - GPU_MAX_TIMES_FOUR=16
+        - GPU_MAX_TIMES_FOURTY=160 
+        - GPU_MAX_TIMES_ONE_HUNDRED=400 
+        - GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=600 
+        - GPU_MAX_TIMES_SEVENTY_FIVE=300 
+        - GPU_MAX_TIMES_TEN=40
+        - GPU_MAX_TIMES_THIRTY=120 
+        - GPU_MAX_TIMES_THREE=12
+        - GPU_MAX_TIMES_TWENTY=80
+        - GPU_MAX_TIMES_TWO=8
+        - GPU_MAX_TIMES_TWO_HUNDRED=800 
+        - GPU_NODE_MIN_SIZE=0
+        - GPU_NODE_MAX_SIZE=4
+        - GPU_PER_NODE=1
+        - KUBERNETES_VERSION=latest
+        - NODE_MIN_SIZE=1
+        - NODE_MAX_SIZE=60
+        - REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+      before_install:
+        - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
+        - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
+        - export PATH=/home/travis/build/vanvalenlab/kiosk:$PATH
+      install: ./.travis/install_script.sh
+      script: make test/integration/gke/deploy
+    - stage: integration_tests
+      name: "Integration test - with ELK"
+      if: ( (type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/) ) AND (commit_message =~ /\[test-elk\]/)
+      env:
+        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
+        - CLOUD_PROVIDER=gke 
+        - CLOUDSDK_BUCKET=deepcell-output-benchmarking
+        - CLOUDSDK_COMPUTE_REGION=us-west1
+        - CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk/.config/gcloud/
+        - CLOUDSDK_CORE_PROJECT=deepcell-209717
+        - CLOUDSDK_CORE_VERBOSITY=debug
+        - CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk
+        - CONSUMER_MACHINE_TYPE=n1-highmem-2
+        - GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
+        - GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
+        - GKE_MACHINE_TYPE=n1-standard-1
+        - GCP_SERVICE_ACCOUNT=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
+        - GPU_MACHINE_TYPE=n1-highmem-2
+        - GPU_MAX_DIVIDED_BY_FOUR=1
+        - GPU_MAX_DIVIDED_BY_THREE=1
+        - GPU_MAX_DIVIDED_BY_TWO=2
+        - GPU_MAX_TIMES_FIFTY=200 
+        - GPU_MAX_TIMES_FIVE=20
+        - GPU_MAX_TIMES_FOUR=16
+        - GPU_MAX_TIMES_FOURTY=160 
+        - GPU_MAX_TIMES_ONE_HUNDRED=400 
+        - GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=600 
+        - GPU_MAX_TIMES_SEVENTY_FIVE=300 
+        - GPU_MAX_TIMES_TEN=40
+        - GPU_MAX_TIMES_THIRTY=120 
+        - GPU_MAX_TIMES_THREE=12
+        - GPU_MAX_TIMES_TWENTY=80
+        - GPU_MAX_TIMES_TWO=8
+        - GPU_MAX_TIMES_TWO_HUNDRED=800 
+        - GPU_NODE_MIN_SIZE=0
+        - GPU_NODE_MAX_SIZE=4
+        - GPU_PER_NODE=1
+        - KUBERNETES_VERSION=latest
+        - NODE_MIN_SIZE=1
+        - NODE_MAX_SIZE=60
+        - REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+      before_install:
+        - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
+        - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
+        - export PATH=/home/travis/build/vanvalenlab/kiosk:/home/travis/build/vanvalenlab/kiosk/linux-amd64:$PATH
+      install: ./.travis/install_script.sh
+      script: make test/integration/gke/deploy/elk
+    - stage: unit_tests
+      name: "Unit Tests"
+      if: type = push
+      script: make test/unit
     - stage: deploy
+      name: "Docker Deployment"
       if: tag IS present
       script:
       - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin

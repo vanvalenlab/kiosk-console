@@ -1,6 +1,6 @@
 # FIXME: GPU AZs and GKE AZ might not be same
 
-export CLOUDSDK_CONFIG=/localhost/.config/gcloud/
+export CLOUDSDK_CONFIG ?= /localhost/.config/gcloud/
 
 # https://cloud.google.com/kubernetes-engine/docs/quickstart
 # https://cloud.google.com/compute/docs/machine-types
@@ -135,8 +135,7 @@ gke/create/node-pools: \
 	@echo " "
 
 gke/create/elk-node-pools:
-	@shopt -s nocasematch
-	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
+	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
 		echo "Creating elasticsearch CPU node pool...";\
 		echo "Using the following command: ";\
 		gcloud container node-pools create elasticsearch-cpu \
@@ -173,7 +172,6 @@ gke/create/elk-node-pools:
 	else\
 		echo "ELK stack is disabled.";\
 	fi
-	@shopt -u nocasematch
 
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus#gpu_pool
 # When you add a GPU node pool to an existing cluster that already runs a non-GPU
@@ -184,7 +182,7 @@ gke/create/elk-node-pools:
 gke/destroy/node-pools:
 	@echo "Destroying node pools."
 	@echo "Depending on cluster state, this process could take a while."
-	/conf/patches/gke-node-pool-destruction.sh
+	$(CONF_PATH_PREFIX)/conf/patches/gke-node-pool-destruction.sh
 	@echo "Node pools destroyed."
 	@echo " "
 	@echo " "
@@ -192,7 +190,7 @@ gke/destroy/node-pools:
 ## Destroy Orphaned GKE persistent disks
 gke/destroy/pds:
 	@echo "Destroying orphaned persistent disks."
-	/conf/patches/gke-pd-destruction.sh
+	$(CONF_PATH_PREFIX)/conf/patches/gke-pd-destruction.sh
 	@echo "Orphaned persistent disks destroyed."
 	@echo " "
 	@echo " "
@@ -234,7 +232,7 @@ gke/destroy/bucket:
 ## Deploy helm tiller with service account
 gke/deploy/helm:
 	@echo "Deploying kubernetes resources..."
-	@kubectl create serviceaccount --namespace kube-system tiller 2> /dev/null || echo "Kubernetes already appears to be deployed."
+	@kubectl create serviceaccount --namespace kube-system tiller
 	@-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 	@-helm init --service-account tiller --upgrade --wait
 	@echo "Kubernetes resource deployment finished."
@@ -249,21 +247,24 @@ gke/destroy/helm:
 ## Deploy GKE Nvidia drivers
 gke/deploy/nvidia:
 	@echo "Deploying NVIDIA drivers for GPU instances..."
-	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/cos/daemonset-preloaded.yaml || \
-		echo "These drivers are not being installed. They may already be installed."
+	@kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/cos/daemonset-preloaded.yaml
 	@echo "NVIDIA GPU driver deployment finished."
 	@echo " "
 	@echo " "
 
-## Create Cluster
-gke/create/all: \
-	gke/create/service-account \
+## Create cluster resources, after authentication
+gke/create/resources: \
 	gke/create/cluster \
 	gke/create/node-pools \
 	gke/create/elk-node-pools \
 	gke/create/bucket \
 	gke/deploy/helm \
 	gke/deploy/nvidia
+
+## Create Cluster
+gke/create/all: \
+	gke/create/service-account \
+	gke/create/resources
 	@echo "GKE cluster created"
 	@exit 0
 
@@ -272,6 +273,34 @@ gke/destroy/all: \
 	gke/destroy/node-pools \
 	gke/destroy/cluster \
 	gke/destroy/service-account \
+	gke/destroy/pds
+	@echo "GKE cluster destroyed"
+	@exit 0
+
+
+
+# https://cloud.google.com/storage/docs/access-control/iam-roles
+# Currently, using Editor and Kubernetes Engine Admin roles for the testing-ci service account.
+# It might be possible to replace Editor with someting more specific, but more research would be needed.
+## Create Service Account used by deepcell
+gke/test/create/service-account:
+	@echo "Creating GKE service account..."
+	@gcloud auth activate-service-account $(GCP_SERVICE_ACCOUNT) --key-file=$(CONF_PATH_PREFIX)/gcloud_key.json
+	@echo "GKE service account creation complete."
+	@echo " "
+	@echo " "
+
+## Create Cluster
+gke/test/create/all: \
+	gke/test/create/service-account \
+	gke/create/resources
+	@echo "GKE cluster created"
+	@exit 0
+
+## Destroy Cluster
+gke/test/destroy/all: \
+	gke/destroy/node-pools \
+	gke/destroy/cluster \
 	gke/destroy/pds
 	@echo "GKE cluster destroyed"
 	@exit 0
