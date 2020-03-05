@@ -29,7 +29,6 @@ releases:
       image:
         repository: "vanvalenlab/kiosk-autoscaler"
         tag: "0.4.0"
-        pullPolicy: "Always"
 
       serviceAccount:
         # Specifies whether a ServiceAccount should be created

@@ -29,7 +29,6 @@ releases:
       image:
         repository: "vanvalenlab/kiosk-redis-janitor"
         tag: "0.3.0"
-        pullPolicy: "Always"
 
       serviceAccount:
         # Specifies whether a ServiceAccount should be created

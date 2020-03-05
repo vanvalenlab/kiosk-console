@@ -29,7 +29,6 @@ releases:
       image:
         repository: vanvalenlab/kiosk-benchmarking
         tag: 0.2.4
-        pullPolicy: Always
 
       resources:
         requests:

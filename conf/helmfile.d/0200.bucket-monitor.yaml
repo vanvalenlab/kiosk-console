@@ -29,7 +29,6 @@ releases:
       image:
         repository: "vanvalenlab/kiosk-bucket-monitor"
         tag: "0.3.0"
-        pullPolicy: "Always"
 
       resources:
         requests:
