@@ -72,7 +72,6 @@ releases:
 
         NUCLEAR_MODEL: "NuclearSegmentation:0"
         NUCLEAR_POSTPROCESS: "deep_watershed"
-        NUCLEAR_RESHAPE_SIZE: 512
 
         PHASE_MODEL: "PhaseCytoSegmentation:0"
         PHASE_POSTPROCESS: "deep_watershed"
