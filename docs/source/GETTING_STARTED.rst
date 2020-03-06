@@ -14,7 +14,7 @@ Google Cloud Setup
 
 .. warning:: Google Cloud Platform must approve several requests which may take up to 1 day to complete.
 
-1. If necessary, create an account at `Google Cloud <https://cloud.google.com>`_ and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Write down the project ID (you will need this in step 9).
+1. If necessary, create an account at `Google Cloud <https://cloud.google.com>`_ and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Take note of the project ID (you will need this later during Kiosk configuration).
 
 2. Make sure the `Kubernetes Engine API <https://console.cloud.google.com/apis/api/container.googleapis.com/overview>`_ is enabled.
 
@@ -26,7 +26,7 @@ Google Cloud Setup
 
 .. note:: Google offers a number of GPU types. The DeepCell Kiosk uses `nvidia-tesla-t4` GPUs for inference by default.
 
-5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_. This will be used to store data and models. Record the bucket name (you will need this in step 9). Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
+5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_. This will be used to store data and models. Record the bucket name (as with project ID, you will need this during Kiosk configuration). Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
 
    .. code-block:: bash
 
@@ -53,7 +53,7 @@ One of the enabling technologies the DeepCell Kiosk utilizes is `Docker <https:/
 If you plan on maintaining the DeepCell kiosk as a persistent tool, we recommend using the jumpbox workflow, which allows you to manage the kiosk from a Google Cloud VM. This prevents computer shutdowns from interfering with your ability to manage the kiosk.
 
 .. _DOCKER_INSTALLATION:
-6. Select the docker installation that is best for you:
+Select the docker installation that is best for you:
 
    * `Local Docker Installation - Windows`_
    * `Local Docker Installation - MacOS and Linux`_
@@ -95,15 +95,15 @@ Starting the Kiosk
 
 You are now ready to start the kiosk! Those interested in Kiosk development should follow a different path to start the kiosk which is described in :ref:`DEVELOPER`.
 
-7. Start a terminal shell and install the DeepCell Kiosk wrapper script:
+* Start a terminal shell and install the DeepCell Kiosk wrapper script:
 
 .. code-block:: bash
 
-    docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
+    docker run -e DOCKER_TAG=1.1.0 vanvalenlab/kiosk:1.1.0 | sudo bash
 
 .. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings.
 
-8. To start the kiosk, just run ``kiosk`` from the terminal shell
+* To start the kiosk, just run ``kiosk`` from the terminal shell
 
 .. list-table::
 
@@ -115,14 +115,14 @@ You are now ready to start the kiosk! Those interested in Kiosk development shou
 DeepCell Kiosk Usage
 --------------------
 
-9. Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported). The next screen will prompt you to authenticate your account with gcloud or to continue with a previously authenticated account. The next several screens will prompt you to select a gcloud project, name your cluster and finally enter a bucket name for data storage. To complete cluster configuration you have the option to choose between "Default" and "Advanced" configuration. "Default" will set standard values for compute hardware and will be appropriate for most users. "Advanced" allows configure each setting individually.
+* Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported). The next screen will prompt you to authenticate your account with gcloud or to continue with a previously authenticated account. The next several screens will prompt you to select a gcloud project, name your cluster and finally enter a bucket name for data storage. To complete cluster configuration you have the option to choose between "Default" and "Advanced" configuration. "Default" will set standard values for compute hardware and will be appropriate for most users. "Advanced" allows configure each setting individually.
 
-10. At the completion of configuration, you will return to the home screen where you can select the "Create" option to trigger creation of the cluster based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page.
+* At the completion of configuration, you will return to the home screen where you can select the "Create" option to trigger creation of the cluster based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page.
 
-11. Find the cluster's web address by choosing the ``View`` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".)
+* Find the cluster's web address by choosing the ``View`` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., "123.456.789.012", or a URL, e.g., "deepcellkiosk.cloudprovider.com".)
 
-12. Go to the cluster address in your web browser to find the DeepCell Kiosk frontpage. To run a job (load raw data and download the results) use the ``PREDICT`` tab.
+* Go to the cluster address in your web browser to find the DeepCell Kiosk frontpage. To run a job (load raw data and download the results) use the ``PREDICT`` tab.
 
-13. The ``Predict`` page on DeepCell.org allows for different job types (ie: nuclear segmentation and or nuclear tracking). Each job type requires a specific model. For example models and data, refer to `DeepCell.org <https://deepcell.org/data>`_.
+* The ``Predict`` page on DeepCell.org allows for different job types (ie: nuclear segmentation and or nuclear tracking). Each job type requires a specific model. For example models and data, refer to `DeepCell.org <https://deepcell.org/data>`_.
 
 .. note:: The first prediction may take some time as the model server comes online.
