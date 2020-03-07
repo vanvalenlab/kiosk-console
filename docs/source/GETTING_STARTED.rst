@@ -37,7 +37,7 @@ Google Cloud Setup
        |-- uploads
        |-- output
 
-   |Please note that the Kiosk comes "preloaded" with a few commonly used models. These models are hosted in our public ``deepcell-models`` bucket on Google Cloud. However, if you wish to use custom models, you can do so by altering the ``GCLOUD_STORAGE_BUCKET`` environmental variable in the ``tf-serving`` helmfile. The contents of ``/uploads`` and ``/output`` are managed by the |kiosk-bucket-monitor|.
+   Please note that the Kiosk comes "preloaded" with a few commonly used models. These models are hosted in our public ``deepcell-models`` bucket on Google Cloud. However, if you wish to use custom models, you can do so by altering the ``GCLOUD_STORAGE_BUCKET`` environmental variable in the ``tf-serving`` helmfile. The contents of ``/uploads`` and ``/output`` are managed by the |kiosk-bucket-monitor|.
 
 .. |kiosk-bucket-monitor| raw:: html
 
