@@ -110,7 +110,7 @@ You are now ready to start the Kiosk!
     * - .. image:: ../images/Kiosk-Welcome.png
       - .. image:: ../images/Kiosk-Main-Menu.png
 
-   |Please note that those interested in Kiosk development should follow a different path to start the Kiosk which is described in :ref:`DEVELOPER`.|
+   Please note that those interested in Kiosk development should follow a different path to start the Kiosk which is described in :ref:`DEVELOPER`.
 
 DeepCell Kiosk Usage
 --------------------
