@@ -89,7 +89,7 @@ releases:
               labels:
                 namespace: deepcell
                 service: tf-serving-scaling-service
-            - record: tf_serving_running_pods
+            - record: tf_serving_up
               expr: |-
                 clamp_max(
                   clamp_min(
@@ -175,7 +175,7 @@ releases:
                   )
                 )
                 * on()
-                tf_serving_running_pods
+                tf_serving_up
               labels:
                 namespace: deepcell
                 service: segmentation-scaling-service
