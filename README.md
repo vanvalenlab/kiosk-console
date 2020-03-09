@@ -46,7 +46,7 @@ Tracked Image
 Start a terminal shell and install the DeepCell Kiosk wrapper script:
 
 ```bash
-docker run -e DOCKER_TAG=1.0.0 vanvalenlab/kiosk:1.0.0 | sudo bash
+docker run -e DOCKER_TAG=1.1.0 vanvalenlab/kiosk:1.1.0 | sudo bash
 ```
 
 To start the kiosk, just run `kiosk` from the terminal shell.
@@ -84,7 +84,7 @@ A [FAQ](http://www.deepcell.org.faq) page is also available.
 
 ## License
 
-This software is license under a modified [APACHE2](https://opensource.org/licenses/Apache-2.0). See [LICENSE](https://github.com/vanvalenlab/kiosk/blob/master/LICENSE) for full  details.
+This software is license under a modified [APACHE2](https://opensource.org/licenses/Apache-2.0). See [LICENSE](https://github.com/vanvalenlab/kiosk/blob/master/LICENSE) for full details.
 
 ## Trademarks
 
