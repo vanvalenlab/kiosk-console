@@ -103,7 +103,7 @@ You are now ready to start the Kiosk!
 
 * To start the Kiosk, just run ``kiosk`` from the terminal shell
 
-list-table::
+.. list-table::
 
   * - Welcome Page
     - Main Menu
