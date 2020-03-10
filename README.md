@@ -1,8 +1,8 @@
 # ![DeepCell Kiosk Banner](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/DeepCell_Kiosk_Banner.png)
 
-[![Build Status](https://travis-ci.com/vanvalenlab/kiosk-console.svg?branch=master)](https://travis-ci.com/vanvalenlab/kiosk-console)
-[![Read the Docs](https://img.shields.io/readthedocs/kiosk-console?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
-[![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/vanvalenlab/kiosk-console/blob/master/LICENSE)
+[![Build Status](https://travis-ci.com/vanvalenlab/kiosk.svg?branch=master)](https://travis-ci.com/vanvalenlab/kiosk)
+[![Read the Docs](https://img.shields.io/readthedocs/kiosk?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
+[![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/vanvalenlab/kiosk/blob/master/LICENSE)
 
 The `kiosk-console` is the entry point for users to spin up a DeepCell Kiosk, a cloud-native implementation of the DeepCell ecosystem.
 
@@ -49,7 +49,7 @@ Tracked Image
 Start a terminal shell and install the DeepCell Kiosk wrapper script:
 
 ```bash
-docker run -e DOCKER_TAG=1.2.0 vanvalenlab/kiosk-console:1.2.0 | sudo bash
+docker run -e DOCKER_TAG=1.1.0 vanvalenlab/kiosk:1.1.0 | sudo bash
 ```
 
 To start the kiosk, just run `kiosk-console` from the terminal shell.
@@ -87,7 +87,7 @@ A [FAQ](http://www.deepcell.org/faq) page is also available.
 
 ## License
 
-This software is license under a modified Apache-2.0 license. See [LICENSE](https://github.com/vanvalenlab/kiosk-console/blob/master/LICENSE) for full details.
+This software is license under a modified [APACHE2](https://opensource.org/licenses/Apache-2.0). See [LICENSE](https://github.com/vanvalenlab/kiosk/blob/master/LICENSE) for full details.
 
 ## Trademarks
 
