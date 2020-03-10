@@ -29,7 +29,6 @@ releases:
       image:
         repository: "vanvalenlab/kiosk-tensorboard"
         tag: "0.1"
-        pullPolicy: "Always"
 
       service:
         type: "ClusterIP"
