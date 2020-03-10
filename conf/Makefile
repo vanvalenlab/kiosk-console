@@ -1,4 +1,5 @@
 export CLOUD_PROVIDER ?= gke
+export TRANSLATE_COLON_NOTATION=false
 
 # The if statement is meant to keep this line from executing during testing.
 ifeq ($(CONF_PATH_PREFIX), )
