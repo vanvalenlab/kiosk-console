@@ -64,6 +64,8 @@ releases:
         TF_HOST: "tf-serving"
         TF_PORT: 8500
         TF_TENSOR_NAME: "image"
+        TF_MAX_BATCH_SIZE: 64
+        TF_MIN_MODEL_SIZE: 128
 
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
@@ -80,11 +82,9 @@ releases:
 
         LABEL_DETECT_ENABLED: "true"
         LABEL_DETECT_MODEL: "LabelDetection:1"
-        LABEL_DETECT_SAMPLE: 10
 
         SCALE_DETECT_ENABLED: "true"
         SCALE_DETECT_MODEL: "ScaleDetection:1"
-        SCALE_DETECT_SAMPLE: 10
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'

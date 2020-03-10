@@ -45,6 +45,8 @@ env:
   TF_HOST: "overwrite_this"
   TF_PORT: "sepcify_me"
   TF_TENSOR_NAME: "image"
+  TF_MAX_BATCH_SIZE: 64
+  TF_MIN_MODEL_SIZE: 128
 
   CLOUD_PROVIDER: "aws"
   AWS_REGION: "us-east-1"
@@ -61,11 +63,9 @@ env:
 
   LABEL_DETECT_ENABLED: "false"
   LABEL_DETECT_MODEL: "LabelDetection:1"
-  LABEL_DETECT_SAMPLE: 3
 
   SCALE_DETECT_ENABLED: "false"
   SCALE_DETECT_MODEL: "ScaleDetection:1"
-  SCALE_DETECT_SAMPLE: 3
 
   DRIFT_CORRECT_ENABLED: "false"
   NORMALIZE_TRACKING: "false"
