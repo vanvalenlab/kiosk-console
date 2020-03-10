@@ -105,12 +105,10 @@ You are now ready to start the Kiosk!
 
 .. list-table::
 
-  * - Welcome Page
-    - Main Menu
-  * - .. image:: ../images/Kiosk-Welcome.png
-        :width: 400
-    - .. image:: ../images/Kiosk-Main-Menu.png
-        :width: 400
+    * - Welcome Page
+      - Main Menu
+    * - .. image:: ../images/Kiosk-Welcome.png
+      - .. image:: ../images/Kiosk-Main-Menu.png
 
 .. note:: Those interested in Kiosk development should follow a different path to start the Kiosk which is described in :ref:`DEVELOPER`.
 
