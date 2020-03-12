@@ -278,19 +278,19 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
 .. |/conf/patches/hpa.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/hpa.yaml">/conf/patches/hpa.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/patches/hpa.yaml">/conf/patches/hpa.yaml</a></tt>
 
 .. |/conf/helmfile.d/0600.prometheus-operator.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0600.prometheus-operator.yaml">/conf/helmfile.d/0600.prometheus-operator.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0600.prometheus-operator.yaml">/conf/helmfile.d/0600.prometheus-operator.yaml</a></tt>
 
 .. |/conf/patches/redis-exporter-script.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
 
 .. |/conf/helmfile.d/0230.redis-consumer.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0230.segmentation-consumer.yaml">/conf/helmfile.d/0230.segmentation-consumer.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0230.segmentation-consumer.yaml">/conf/helmfile.d/0230.segmentation-consumer.yaml</a></tt>
 
 Connecting custom consumers with the Kiosk
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -340,7 +340,7 @@ In a few minutes the Kiosk will be ready to process the new job type.
 
 .. |frontend.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0300.frontend.yaml">/conf/helmfile.d/0300.frontend.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0300.frontend.yaml">/conf/helmfile.d/0300.frontend.yaml</a></tt>
 
 .. |kiosk-redis-janitor| raw:: html
 
@@ -348,7 +348,7 @@ In a few minutes the Kiosk will be ready to process the new job type.
 
 .. |redis-janitor.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0220.redis-janitor.yaml">/conf/helmfile.d/0220.redis-janitor.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0220.redis-janitor.yaml">/conf/helmfile.d/0220.redis-janitor.yaml</a></tt>
 
 .. |kiosk-autoscaler| raw:: html
 
@@ -356,4 +356,4 @@ In a few minutes the Kiosk will be ready to process the new job type.
 
 .. |autoscaler.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0210.autoscaler.yaml">/conf/helmfile.d/0210.autoscaler.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0210.autoscaler.yaml">/conf/helmfile.d/0210.autoscaler.yaml</a></tt>

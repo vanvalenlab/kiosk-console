@@ -61,7 +61,7 @@ Once inside the docker-in-docker container, you now have the ability to create f
 
     apt-get update && \
     apt-get install -y make git vim && \
-    git clone https://www.github.com/vanvalenlab/kiosk && \
+    git clone https://www.github.com/vanvalenlab/kiosk-console && \
     cd kiosk && \
     make init && \
     git checkout master && \
