@@ -1,3 +1,4 @@
+{{ $max_gpus := conv.ToInt (getenv "GPU_NODE_MAX_SIZE" | default 1) }}
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
@@ -10,7 +11,7 @@ spec:
     kind: Deployment
     name: tf-serving
   minReplicas: 1
-  maxReplicas: $GPU_NODE_MAX_SIZE
+  maxReplicas: {{ $max_gpus }}
   metrics:
   - type: Object
     object:
@@ -32,7 +33,7 @@ spec:
 #     kind: Deployment
 #     name: data-processing
 #   minReplicas: 1
-#   maxReplicas: $GPU_MAX_TIMES_TWENTY
+#   maxReplicas: {{ mul $max_gpus 20 }}
 #   metrics:
 #   - type: Resource
 #     resource:
@@ -50,7 +51,7 @@ spec:
     kind: Deployment
     name: frontend
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_TEN
+  maxReplicas: {{ mul $max_gpus 10 }}
   metrics:
   - type: Resource
     resource:
@@ -68,7 +69,7 @@ spec:
     kind: Deployment
     name: segmentation-consumer
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_ONE_HUNDRED_FIFTY
+  maxReplicas: {{ mul $max_gpus 150 }}
   metrics:
   - type: Object
     object:
@@ -90,7 +91,7 @@ spec:
     kind: Deployment
     name: zip-consumer
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_ONE_HUNDRED
+  maxReplicas: {{ mul $max_gpus 100 }}
   metrics:
   - type: Object
     object:
@@ -112,7 +113,7 @@ spec:
     kind: Deployment
     name: tracking-consumer
   minReplicas: 1
-  maxReplicas: $GPU_MAX_TIMES_FIFTY
+  maxReplicas: {{ mul $max_gpus 50 }}
   metrics:
   - type: Object
     object:
