@@ -49,7 +49,7 @@ Start a terminal shell and install the DeepCell Kiosk wrapper script:
 docker run -e DOCKER_TAG=1.1.0 vanvalenlab/kiosk-console:1.1.0 | sudo bash
 ```
 
-To start the kiosk, just run `kiosk` from the terminal shell.
+To start the kiosk, just run `kiosk-console` from the terminal shell.
 
 Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STARTED.html) for more information on how to start your own kiosk.
 
