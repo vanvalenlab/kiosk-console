@@ -527,7 +527,7 @@ function configure_gke() {
   export GPU_PER_NODE=${GPU_PER_NODE:-1}
 
   # The type of node for the consumer node pools
-  export CONSUMER_MACHINE_TYPE=${CONSUMER_MACHINE_TYPE:-n1-standard-2}
+  export CONSUMER_MACHINE_TYPE=${CONSUMER_MACHINE_TYPE:-n1-highmem-2}
 
   printenv | grep -e CLOUD_PROVIDER \
     -e CLOUDSDK \
