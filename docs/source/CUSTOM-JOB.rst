@@ -265,7 +265,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
           kind: Deployment
           name: tracking-consumer
         minReplicas: 1
-        maxReplicas: $GPU_MAX_TIMES_FIFTY
+        maxReplicas: {{ mul $max_gpus 50 }}
         metrics:
         - type: Object
           object:
