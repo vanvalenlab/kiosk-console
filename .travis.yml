@@ -21,7 +21,7 @@ jobs:
       if: ( (type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/) )
       env:
         - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
-        - CLOUD_PROVIDER=gke 
+        - CLOUD_PROVIDER=gke
         - CLOUDSDK_BUCKET=deepcell-output-benchmarking
         - CLOUDSDK_COMPUTE_REGION=us-west1
         - CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk/.config/gcloud/
@@ -34,22 +34,6 @@ jobs:
         - GKE_MACHINE_TYPE=n1-standard-1
         - GCP_SERVICE_ACCOUNT=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
         - GPU_MACHINE_TYPE=n1-highmem-2
-        - GPU_MAX_DIVIDED_BY_FOUR=1
-        - GPU_MAX_DIVIDED_BY_THREE=1
-        - GPU_MAX_DIVIDED_BY_TWO=2
-        - GPU_MAX_TIMES_FIFTY=200 
-        - GPU_MAX_TIMES_FIVE=20
-        - GPU_MAX_TIMES_FOUR=16
-        - GPU_MAX_TIMES_FOURTY=160 
-        - GPU_MAX_TIMES_ONE_HUNDRED=400 
-        - GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=600 
-        - GPU_MAX_TIMES_SEVENTY_FIVE=300 
-        - GPU_MAX_TIMES_TEN=40
-        - GPU_MAX_TIMES_THIRTY=120 
-        - GPU_MAX_TIMES_THREE=12
-        - GPU_MAX_TIMES_TWENTY=80
-        - GPU_MAX_TIMES_TWO=8
-        - GPU_MAX_TIMES_TWO_HUNDRED=800 
         - GPU_NODE_MIN_SIZE=0
         - GPU_NODE_MAX_SIZE=4
         - GPU_PER_NODE=1
@@ -68,7 +52,7 @@ jobs:
       if: ( (type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/) ) AND (commit_message =~ /\[test-elk\]/)
       env:
         - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk/conf/charts
-        - CLOUD_PROVIDER=gke 
+        - CLOUD_PROVIDER=gke
         - CLOUDSDK_BUCKET=deepcell-output-benchmarking
         - CLOUDSDK_COMPUTE_REGION=us-west1
         - CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk/.config/gcloud/
@@ -81,22 +65,6 @@ jobs:
         - GKE_MACHINE_TYPE=n1-standard-1
         - GCP_SERVICE_ACCOUNT=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
         - GPU_MACHINE_TYPE=n1-highmem-2
-        - GPU_MAX_DIVIDED_BY_FOUR=1
-        - GPU_MAX_DIVIDED_BY_THREE=1
-        - GPU_MAX_DIVIDED_BY_TWO=2
-        - GPU_MAX_TIMES_FIFTY=200 
-        - GPU_MAX_TIMES_FIVE=20
-        - GPU_MAX_TIMES_FOUR=16
-        - GPU_MAX_TIMES_FOURTY=160 
-        - GPU_MAX_TIMES_ONE_HUNDRED=400 
-        - GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=600 
-        - GPU_MAX_TIMES_SEVENTY_FIVE=300 
-        - GPU_MAX_TIMES_TEN=40
-        - GPU_MAX_TIMES_THIRTY=120 
-        - GPU_MAX_TIMES_THREE=12
-        - GPU_MAX_TIMES_TWENTY=80
-        - GPU_MAX_TIMES_TWO=8
-        - GPU_MAX_TIMES_TWO_HUNDRED=800 
         - GPU_NODE_MIN_SIZE=0
         - GPU_NODE_MAX_SIZE=4
         - GPU_PER_NODE=1
