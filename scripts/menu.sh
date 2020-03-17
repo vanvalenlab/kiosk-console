@@ -136,28 +136,6 @@ function tailcmd() {
          --tailbox "${tmpfile}" $((LINES-5)) $((COLUMNS-3))
 }
 
-function export_gpu_constants() {
-  # create some derivative GPU-related variables for use in autoscaling
-  if [ ! -z "${GPU_NODE_MAX_SIZE}" ]; then
-    export GPU_MAX_TIMES_TWO=$(($GPU_NODE_MAX_SIZE*2))
-    export GPU_MAX_TIMES_THREE=$(($GPU_NODE_MAX_SIZE*3))
-    export GPU_MAX_TIMES_FOUR=$(($GPU_NODE_MAX_SIZE*4))
-    export GPU_MAX_TIMES_FIVE=$(($GPU_NODE_MAX_SIZE*5))
-    export GPU_MAX_TIMES_TEN=$(($GPU_NODE_MAX_SIZE*10))
-    export GPU_MAX_TIMES_TWENTY=$(($GPU_NODE_MAX_SIZE*20))
-    export GPU_MAX_TIMES_THIRTY=$(($GPU_NODE_MAX_SIZE*30))
-    export GPU_MAX_TIMES_FOURTY=$(($GPU_NODE_MAX_SIZE*40))
-    export GPU_MAX_TIMES_FIFTY=$(($GPU_NODE_MAX_SIZE*50))
-    export GPU_MAX_TIMES_SEVENTY_FIVE=$(($GPU_NODE_MAX_SIZE*75))
-    export GPU_MAX_TIMES_ONE_HUNDRED=$(($GPU_NODE_MAX_SIZE*100))
-    export GPU_MAX_TIMES_ONE_HUNDRED_FIFTY=$(($GPU_NODE_MAX_SIZE*150))
-    export GPU_MAX_TIMES_TWO_HUNDRED=$(($GPU_NODE_MAX_SIZE*200))
-    export GPU_MAX_DIVIDED_BY_TWO=$(($GPU_NODE_MAX_SIZE/2))
-    export GPU_MAX_DIVIDED_BY_THREE=$(($GPU_NODE_MAX_SIZE/3))
-    export GPU_MAX_DIVIDED_BY_FOUR=$(($GPU_NODE_MAX_SIZE/4))
-  fi
-}
-
 function menu() {
   # Show different functions in the main menu depending on whether the
   # cluster has been created yet.
@@ -264,8 +242,7 @@ function configure_aws() {
     -e AWS_S3_BUCKET \
     -e NAMESPACE \
     -e GPU_NODE_MIN_SIZE \
-    -e GPU_NODE_MAX_SIZE \
-    -e GPU_MAX > ${GEODESIC_CONFIG_HOME}/preferences
+    -e GPU_NODE_MAX_SIZE > ${GEODESIC_CONFIG_HOME}/preferences
 }
 
 function configure_gke() {
@@ -509,8 +486,6 @@ function configure_gke() {
   # The type of node for the consumer node pools
   export CONSUMER_MACHINE_TYPE=${CONSUMER_MACHINE_TYPE:-n1-highmem-2}
 
-  export_gpu_constants
-
   printenv | grep -e CLOUD_PROVIDER \
     -e CLOUDSDK \
     -e NODE_MIN_SIZE \
@@ -523,8 +498,7 @@ function configure_gke() {
     -e GCP_TRAINING_GPU_TYPE \
     -e GPU_PER_NODE \
     -e GPU_NODE_MIN_SIZE \
-    -e GPU_NODE_MAX_SIZE \
-    -e GPU_MAX > ${GEODESIC_CONFIG_HOME}/preferences
+    -e GPU_NODE_MAX_SIZE > ${GEODESIC_CONFIG_HOME}/preferences
 }
 
 function shell() {
