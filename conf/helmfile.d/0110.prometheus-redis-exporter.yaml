@@ -19,6 +19,7 @@ releases:
     chart: "stable/prometheus-redis-exporter"
     version: "3.2.1"
     namespace: "monitoring"
+    component: "monitoring"
     values:
       - resources:
           requests:
