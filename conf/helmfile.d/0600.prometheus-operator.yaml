@@ -15,17 +15,17 @@ releases:
 #   - https://github.com/coreos/prometheus-operator/tree/master/helm/prometheus-operator
 #   - https://github.com/coreos/prometheus-operator
 #
-- name: "prometheus-operator"
-  namespace: "monitoring"
+- name: prometheus-operator
+  namespace: monitoring
   labels:
-    chart: "prometheus-operator"
-    repo: "stable"
-    component: "monitoring"
-    namespace: "monitoring"
-    vendor: "coreos"
-    default: "true"
-  chart: "stable/prometheus-operator"
-  version: "5.19.0"
+    chart: prometheus-operator
+    repo: stable
+    component: monitoring
+    namespace: monitoring
+    vendor: coreos
+    default: true
+  chart: stable/prometheus-operator
+  version: 5.19.0
   wait: true
   values:
     # Default values for prometheus-operator.
@@ -74,7 +74,7 @@ releases:
 
       ## Provide custom recording or alerting rules to be deployed into the cluster.
       ##
-      additionalPrometheusRules:
+      additionalPrometheusRulesMap:
       - name: custom-prometheus-rules
         groups:
           - name: custom-redis-metrics
@@ -458,7 +458,7 @@ releases:
         adminPassword: prom-operator
 
         dashboards:
-          vendor:
+          default:
             prometheus-stats:
               # Ref: https://grafana.com/dashboards/2
               gnetId: 2
@@ -1355,9 +1355,9 @@ releases:
 
           ## Resource limits & requests
           ##
-          resources: {}
-          # requests:
-          #   memory: 400Mi
+          resources:
+            requests:
+              memory: 1Gi
 
           ## Prometheus StorageSpec for persistent data
           ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
