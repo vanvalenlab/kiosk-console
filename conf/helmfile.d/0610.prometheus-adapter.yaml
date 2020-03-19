@@ -15,17 +15,17 @@ releases:
 #   - https://github.com/helm/charts/tree/master/stable/prometheus-adapter
 #   - https://github.com/DirectXMan12/k8s-prometheus-adapter
 #
-- name: "prometheus-adapter"
-  namespace: "monitoring"
+- name: prometheus-adapter
+  namespace: monitoring
   labels:
-    chart: "prometheus-adapter"
-    repo: "stable"
-    component: "monitoring"
-    namespace: "monitoring"
-    vendor: "coreos"
-    default: "true"
-  chart: "stable/prometheus-adapter"
-  version: "1.2.0"
+    chart: prometheus-adapter
+    repo: stable
+    component: monitoring
+    namespace: monitoring
+    vendor: coreos
+    default: true
+  chart: stable/prometheus-adapter
+  version: 2.1.3
   wait: true
   values:
     - affinity: {}
@@ -65,19 +65,6 @@ releases:
       rules:
         default: true
         custom: []
-          # - seriesQuery: '{__name__="redis_consumer_key_ratio"}'
-          #   resources:
-          #     overrides:
-          #       microservice: {group: "apps", resource: "deployment"}
-          #   name: {as: "redis_consumer_scale_target"}
-          #   metricsQuery: avg_over_time(<<.Series>>[1m])
-          # - seriesQuery: '{__name__=":tensorflow:core:direct_session_runs"}'
-          #   resources:
-          #     template: <<.Resource>>
-          #   name:
-          #     matches: ""
-          #     as: "tensorflow_serving_runs"
-          #   metricsQuery: sum(rate(<<.Series>>{<<.LabelMatchers>>,container_name!="POD"}[1m])) by (<<.GroupBy>>)
           # - seriesQuery: '{__name__=~"^container_.*",container_name!="POD",namespace!="",pod_name!=""}'
           #   seriesFilters: []
           #   resources:
@@ -195,4 +182,34 @@ releases:
         certificate: |-
           # Public key of the APIService
 
+      # Any extra volumes
+      extraVolumes: []
+        # - name: example-name
+        #   hostPath:
+        #     path: /path/on/host
+        #     type: DirectoryOrCreate
+        # - name: ssl-certs
+        #   hostPath:
+        #     path: /etc/ssl/certs/ca-bundle.crt
+        #     type: File
+
+      # Any extra volume mounts
+      extraVolumeMounts: []
+        #   - name: example-name
+        #     mountPath: /path/in/container
+        #   - name: ssl-certs
+        #     mountPath: /etc/ssl/certs/ca-certificates.crt
+        #     readOnly: true
+
       tolerations: []
+
+      # Annotations added to the pod
+      podAnnotations: {}
+
+      hostNetwork:
+        # Specifies if prometheus-adapter should be started in hostNetwork mode.
+        #
+        # You would require this enabled if you use alternate overlay networking for pods and
+        # API server unable to communicate with metrics-server. As an example, this is required
+        # if you use Weave network on EKS
+        enabled: false
