@@ -1394,10 +1394,6 @@ releases:
             static_configs:
               - targets: ['tf-serving.deepcell:8501']
 
-          - job_name: data-processing
-            static_configs:
-              - targets: ['data-processing.deepcell:8000']
-
           # - job_name: kube-etcd
           #   kubernetes_sd_configs:
           #     - role: node
