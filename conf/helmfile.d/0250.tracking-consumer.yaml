@@ -17,7 +17,7 @@ releases:
   namespace: "deepcell"
   labels:
     chart: "redis-consumer"
-    component: "deepcell"
+    component: "consumers"
     namespace: "deepcell"
     vendor: "vanvalenlab"
     default: "true"
