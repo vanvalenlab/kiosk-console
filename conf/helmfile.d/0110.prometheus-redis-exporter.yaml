@@ -16,10 +16,11 @@ releases:
   - name: "prometheus-redis-exporter"
     labels:
       chart: "prometheus-redis-exporter"
+      component: "monitoring"
+      namespace: "monitoring"
     chart: "stable/prometheus-redis-exporter"
-    version: "3.2.1"
+    version: "3.3.3"
     namespace: "monitoring"
-    component: "monitoring"
     values:
       - resources:
           requests:
