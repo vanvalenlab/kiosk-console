@@ -24,7 +24,7 @@ releases:
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/bucket-monitor'
   version: "0.1.0"
   values:
-    - replicas: 1
+    - replicas: 0
 
       image:
         repository: "vanvalenlab/kiosk-bucket-monitor"
