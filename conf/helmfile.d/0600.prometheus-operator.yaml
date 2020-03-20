@@ -1357,9 +1357,9 @@ releases:
           ##
           resources:
             requests:
-              memory: 8Gi
+              memory: 10Gi
             limits:
-              memory: 8Gi
+              memory: 10Gi
 
           ## Prometheus StorageSpec for persistent data
           ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
