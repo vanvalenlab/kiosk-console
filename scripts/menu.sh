@@ -419,9 +419,9 @@ function configure_gke() {
   local all_quotas=$(gcloud compute project-info describe \
                      --flatten "quotas[]" \
                      --format "value(quotas.metric, quotas.limit)")
-  # Check if firewalls is 200, which is standard for an upgraded project
+  # Check if firewalls is 100, which is standard for an upgraded project
   local firewalls=$(echo "${all_quotas}" | grep FIREWALLS | awk '{print int($2)}')
-  if [ $firewalls -lt 200 ]; then
+  if [ $firewalls -lt 100 ]; then
     error_text=("\nYour project must be upgraded in Google Cloud console"
                 "before you can deploy a cluster.")
     msgbox "Warning!" "${error_text[*]}"
