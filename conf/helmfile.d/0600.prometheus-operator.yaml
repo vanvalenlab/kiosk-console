@@ -25,7 +25,7 @@ releases:
     vendor: coreos
     default: true
   chart: stable/prometheus-operator
-  version: 5.19.0
+  version: 8.12.3
   wait: true
   values:
     # Default values for prometheus-operator.
@@ -1357,7 +1357,9 @@ releases:
           ##
           resources:
             requests:
-              memory: 1Gi
+              memory: 8Gi
+            limits:
+              memory: 8Gi
 
           ## Prometheus StorageSpec for persistent data
           ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
