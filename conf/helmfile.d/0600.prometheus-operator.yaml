@@ -85,7 +85,7 @@ releases:
                 namespace: deepcell
                 service: gpu-average-service
             - record: tf_serving_scale_metric
-              expr: avg_over_time(avg_gpu_usage[15s])
+              expr: avg_over_time(avg_gpu_usage[30s])
               labels:
                 namespace: deepcell
                 service: tf-serving-scaling-service
@@ -117,10 +117,10 @@ releases:
                     < on()
                     clamp_max(
                       (
-                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[15s])
+                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[30s])
                         / on()
                         (
-                          avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
+                          avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[30s])
                           *
                           100
                         )
@@ -129,10 +129,10 @@ releases:
                     or
                     clamp_max(
                       (
-                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[15s])
+                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[30s])
                         / on()
                         (
-                          avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
+                          avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[30s])
                           *
                           100
                         )
@@ -143,11 +143,11 @@ releases:
                   (
                     clamp_max(
                       clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[30s])
                       , 0)
                       / on()
                       clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[15s])
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[30s])
                       , 1)
                       <= on()
                       150
@@ -159,11 +159,11 @@ releases:
                   (
                     clamp_max(
                       clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[30s])
                       , 0)
                       / on()
                       clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[15s])
+                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[30s])
                       , 0)
                       > on()
                       150
@@ -181,10 +181,10 @@ releases:
                 service: segmentation-scaling-service
             - record: zip_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_values{key="segmentation_zip_keys"}[15s])
+                avg_over_time(redis_script_values{key="segmentation_zip_keys"}[30s])
                 / on()
                 (
-                  avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[15s])
+                  avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[30s])
                   +
                   1
                 )
@@ -193,10 +193,10 @@ releases:
                 service: zip-scaling-service
             - record: tracking_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_values{key="tracking_image_keys"}[15s])
+                avg_over_time(redis_script_values{key="tracking_image_keys"}[30s])
                 / on()
                 (
-                  avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
+                  avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[30s])
                   +
                   1
                 )
@@ -1182,11 +1182,11 @@ releases:
 
           ## Interval between consecutive scrapes.
           ##
-          scrapeInterval: 15s
+          scrapeInterval: 30s
 
           ## Interval between consecutive evaluations.
           ##
-          evaluationInterval: 15s
+          evaluationInterval: 30s
 
           ## ListenLocal makes the Prometheus server listen on loopback, so that it does not bind against the Pod IP.
           ##
