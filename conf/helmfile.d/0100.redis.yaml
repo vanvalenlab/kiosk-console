@@ -9,8 +9,9 @@ helmDefaults:
 
 repositories:
   # Stable repo of official helm charts
-  - name: bitnami
-    url: https://charts.bitnami.com
+  - name: "stable"
+    url: "https://charts.bitnami.com"
+
 releases:
   # Redis
   - name: redis
