@@ -5,6 +5,7 @@
 helmfile/create/all:
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
+	@helm repo add bitnami https://charts.bitnami.com/bitnami
 	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
 		cp ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/* ${CONF_PATH_PREFIX}/conf/helmfile.d;\
 	fi

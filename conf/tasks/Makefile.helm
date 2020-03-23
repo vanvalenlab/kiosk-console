@@ -1,8 +1,6 @@
 helm/create/tiller:
 	@echo "Deplying Kubernetes resources using Helm..."
 	helm init --upgrade --wait
-	helm repo add bitnami https://charts.bitnami.com/bitnami
-
 
 helm/create/all: \
   helm/create/tiller
