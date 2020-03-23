@@ -8,7 +8,13 @@ helmfile/create/all:
 	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
 		cp ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/* ${CONF_PATH_PREFIX}/conf/helmfile.d;\
 	fi
-	${CONF_PATH_PREFIX}/conf/patches/gke-helmfile-deployment.sh
+	@for filename in ${CONF_PATH_PREFIX}/conf/helmfile.d/*.yaml; do
+		deployment_names=$(yq r $filename releases[*].name | awk '{print $2}')
+		for name in $deployment_names; do
+			retry -limit=3 -backoff=lin:10s  -- /bin/sh -c \
+				'helmfile --selector name=${name} sync ||
+				 helm delete $name --purge; exit 1'
+		done
 	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "

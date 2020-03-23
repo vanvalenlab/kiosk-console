@@ -1,7 +1,8 @@
 #!/bin/bash
 
 for filename in ${CONF_PATH_PREFIX}/conf/helmfile.d/*.yaml; do
-    deployment_name=$(grep "\- name: " ${filename} | grep -m1 -v "\- name: \"stable\"" | awk '{print $3}' | sed 's/^\"\(.\+\)\"$/\1/')
+    deployment_name=$(yq r $filename releases[*].name | awk '{print $2}')
+    # deployment_name=$(grep "\- name: " ${filename} | grep -m1 -v "\- name: \"stable\"" | awk '{print $3}' | sed 's/^\"\(.\+\)\"$/\1/')
     retries=3
     for ((i=0; i<retries; i++)); do
         helmfile --selector name=${deployment_name} sync
