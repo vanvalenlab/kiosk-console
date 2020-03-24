@@ -4,7 +4,7 @@ FROM cloudposse/geodesic:0.123.1
 
 RUN apk add --update dialog libqrencode
 
-ENV DOCKER_IMAGE="vanvalenlab/kiosk"
+ENV DOCKER_IMAGE="vanvalenlab/kiosk-console"
 ENV DOCKER_TAG="latest"
 
 # Geodesic banner

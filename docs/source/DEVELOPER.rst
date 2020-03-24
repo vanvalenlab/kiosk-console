@@ -32,7 +32,7 @@ Starting the kiosk for development
 .. code-block:: bash
 
     # Clone this repo:
-    git clone git@github.com:vanvalenlab/kiosk.git
+    git clone git@github.com:vanvalenlab/kiosk-console.git
     # Initialize the "build-harness":
     make init
     # Build the container:
@@ -61,14 +61,14 @@ Once inside the docker-in-docker container, you now have the ability to create f
 
     apt-get update && \
     apt-get install -y make git vim && \
-    git clone https://www.github.com/vanvalenlab/kiosk && \
-    cd kiosk && \
+    git clone https://www.github.com/vanvalenlab/kiosk-console && \
+    cd kiosk-console && \
     make init && \
     git checkout master && \
     sed -i 's/sudo -E //' ./Makefile && \
     make docker/build && \
     make install && \
-    kiosk
+    kiosk-console
 
 From here, you can configure the kiosk as usual.
 
