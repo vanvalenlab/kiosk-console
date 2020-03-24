@@ -266,7 +266,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
 .. |/conf/addons/hpa.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/addons/hpa.yaml">/conf/addons/hpa.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/patches/hpa.yaml">/conf/patches/hpa.yaml</a></tt>
 
 .. |/conf/helmfile.d/0600.prometheus-operator.yaml| raw:: html
 
@@ -274,7 +274,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
 .. |/conf/addons/redis-exporter-script.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/addons/redis-exporter-script.yaml">/conf/addons/redis-exporter-script.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
 
 .. |/conf/helmfile.d/0230.redis-consumer.yaml| raw:: html
 
