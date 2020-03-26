@@ -45,7 +45,7 @@ test/integration/gke/deploy:
 	kubectl version --client
 	helm version -c
 	gcloud version
-	# execute make targets 
+	# execute make targets
 	# make init
 	cd ./conf && make test/create
 	cd ./conf && make test/destroy
