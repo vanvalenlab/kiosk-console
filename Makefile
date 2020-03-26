@@ -1,9 +1,9 @@
-export CLUSTER ?= kiosk
+export CLUSTER ?= kiosk-console
 export DOCKER_ORG ?= vanvalenlab
 export DOCKER_IMAGE ?= $(DOCKER_ORG)/$(CLUSTER)
 export DOCKER_TAG ?= latest
 export DOCKER_IMAGE_NAME ?= $(DOCKER_IMAGE):$(DOCKER_TAG)
-export DOCKER_BUILD_FLAGS = 
+export DOCKER_BUILD_FLAGS =
 export README_DEPS ?= docs/targets.md
 export INSTALL_PATH ?= /usr/local/bin
 
@@ -45,7 +45,7 @@ test/integration/gke/deploy:
 	kubectl version --client
 	helm version -c
 	gcloud version
-	# execute make targets 
+	# execute make targets
 	# make init
 	cd ./conf && make test/create
 	cd ./conf && make test/destroy
