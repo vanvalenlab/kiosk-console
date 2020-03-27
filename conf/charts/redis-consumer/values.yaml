@@ -37,6 +37,7 @@ env:
   EXPIRE_TIME: 3600
   GRPC_TIMEOUT: 30
   GRPC_BACKOFF: 3
+  MAX_RETRY: 0
 
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
