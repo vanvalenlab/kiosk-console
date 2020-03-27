@@ -153,11 +153,11 @@ releases:
 
             ## Interval between consecutive scrapes.
             ##
-            scrapeInterval: 15
+            scrapeInterval: 15s
 
             ## Interval between consecutive evaluations.
             ##
-            evaluationInterval: 15
+            evaluationInterval: 15s
 
             ## Resource limits & requests
             ##
