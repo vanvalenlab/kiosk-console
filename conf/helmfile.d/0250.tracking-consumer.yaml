@@ -13,24 +13,24 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "tracking-consumer"
-  namespace: "deepcell"
+- name: tracking-consumer
+  namespace: deepcell
   labels:
-    chart: "redis-consumer"
-    component: "deepcell"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
-    default: "true"
+    chart: redis-consumer
+    component: deepcell
+    namespace: deepcell
+    vendor: vanvalenlab
+    default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-  version: "0.1.0"
+  version: 0.1.0
   values:
     - replicas: 1
 
       image:
-        repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.5.1"
+        repository: vanvalenlab/kiosk-redis-consumer
+        tag: 0.5.1
 
-      nameOverride: "tracking-consumer"
+      nameOverride: tracking-consumer
 
       resources:
         requests:
