@@ -15,11 +15,11 @@ spec:
   metrics:
   - type: Object
     object:
-      metricName: tf_serving_scale_metric
+      metricName: tf_serving_gpu_usage
       target:
         apiVersion: v1
         kind: Namespace
-        name: tf_serving_scale_metric
+        name: tf_serving_gpu_usage
       targetValue: 70
 ---
 # apiVersion: autoscaling/v2beta1
@@ -83,23 +83,23 @@ spec:
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: zip-consumer
+  name: segmentation-zip-consumer
   namespace: deepcell
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: zip-consumer
+    name: segmentation-zip-consumer
   minReplicas: 1
   maxReplicas: {{ mul $max_gpus 100 }}
   metrics:
   - type: Object
     object:
-      metricName: zip_consumer_key_ratio
+      metricName: segmentation_zip_consumer_key_ratio
       target:
         apiVersion: v1
         kind: Namespace
-        name: zip_consumer_key_ratio
+        name: segmentation_zip_consumer_key_ratio
       targetValue: 1
 ---
 apiVersion: autoscaling/v2beta1
