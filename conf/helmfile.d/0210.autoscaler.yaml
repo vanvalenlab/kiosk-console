@@ -32,7 +32,7 @@ releases:
 
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
         # limits:
         #   cpu: 100m
