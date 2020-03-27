@@ -80,7 +80,7 @@ releases:
               # (
               #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
               #   +
-              #   .9 * target * is_too_many_consumers)
+              #   .75 * target * is_too_many_consumers)
               # ) * is_tf_up
               expr: |-
                 (
@@ -97,7 +97,7 @@ releases:
                     scalar(consumers_per_gpu{deployment="segmentation-consumer"} <= bool 150)
                   ) + (
                     scalar(consumers_per_gpu{deployment="segmentation-consumer"} > bool 150)
-                  ) * .9 * .15
+                  ) * .75 * .15
                 ) * scalar(tf_serving_up > bool 0)
               labels:
                 deployment: segmentation-consumer
