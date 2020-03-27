@@ -33,30 +33,46 @@ releases:
     - additionalPrometheusRulesMap:
       - name: custom-prometheus-rules
         groups:
-          - name: custom-redis-metrics
+          - name: tf-serving-metrics
             rules:
-            - record: avg_gpu_usage
-              expr: avg(container_accelerator_duty_cycle)
-              labels:
-                namespace: deepcell
-                service: gpu-average-service
-            - record: tf_serving_scale_metric
-              expr: avg_over_time(avg_gpu_usage[15s])
-              labels:
-                namespace: deepcell
-                service: tf-serving-scaling-service
-            - record: tf_serving_running_pods
+            - record: tf_serving_gpu_usage
               expr: |-
-                clamp_max(
-                  clamp_min(
-                    kube_deployment_status_replicas_available{deployment="tf-serving"}
-                  , 0)
-                , 1)
-                or on()
-                up{service="kubernetes"} * on() 0
+                avg(
+                  container_accelerator_duty_cycle{container_name="tf-serving"}
+                ) or vector(0)
+              labels:
+                deployment: tf-serving
+                namespace: deepcell
+            - record: tf_serving_up
+              expr: |-
+                max(
+                  clamp_max(
+                    kube_deployment_status_replicas_available{deployment="tf-serving"},
+                    1
+                  ) or vector(0)
+                )
+              labels:
+                deployment: tf-serving
+                namespace: deepcell
+          - name: consumer-metrics
+            rules:
+            - record: consumers_per_gpu
+              expr: |-
+                kube_deployment_status_replicas_available{deployment=~".*-consumer"}
+                / on() group_left
+                max(
+                  kube_deployment_status_replicas_available{deployment="tf-serving"}
+                  or vector(1)
+                )
               labels:
                 namespace: deepcell
-                service: tf-serving-running-service
+            - record: consumer_key_ratio
+              expr: |-
+                redis_script_values
+                / on(deployment)
+                kube_deployment_spec_replicas
+              labels:
+                namespace: deepcell
             - record: segmentation_consumer_key_ratio
               # COMPLICATED scaling metric that prevents too many consumers
               # per GPU.  If too many consumers, scale down slightly.
@@ -69,179 +85,125 @@ releases:
               expr: |-
                 (
                   (
-                    (100 - tf_serving_scale_metric) / 100
-                    < on()
-                    clamp_max(
-                      (
-                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[15s])
-                        / on()
-                        (
-                          avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
-                          *
-                          100
-                        )
-                      )
-                    , 1)
-                    or
-                    clamp_max(
-                      (
-                        avg_over_time(redis_script_values{key="segmentation_image_keys"}[15s])
-                        / on()
-                        (
-                          avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
-                          *
-                          100
-                        )
-                      )
-                    , 1)
-                  )
-                  * on()
-                  (
-                    clamp_max(
-                      clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
-                      , 0)
-                      / on()
-                      clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[15s])
+                    min(
+                      1 - tf_serving_gpu_usage / 100
+                      < on(namespace)
+                      consumer_key_ratio{deployment="segmentation-consumer"} / 100
+                      or
+                      clamp_max(
+                        consumer_key_ratio{deployment="segmentation-consumer"} / 100
                       , 1)
-                      <= on()
-                      150
-                      or on()
-                      up{service="kubernetes"} * on() 0
-                    , 1)
-                  )
-                  + on()
-                  (
-                    clamp_max(
-                      clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="segmentation-consumer"}[15s])
-                      , 0)
-                      / on()
-                      clamp_min(
-                        avg_over_time(kube_deployment_status_replicas_available{deployment="tf-serving"}[15s])
-                      , 0)
-                      > on()
-                      150
-                      or on()
-                      up{service="kubernetes"} * on() 0
-                    , 1)
-                    * on()
-                    .9 * .15
-                  )
-                )
-                * on()
-                tf_serving_running_pods
+                    ) *
+                    scalar(consumers_per_gpu{deployment="segmentation-consumer"} <= bool 150)
+                  ) + (
+                    scalar(consumers_per_gpu{deployment="segmentation-consumer"} > bool 150)
+                  ) * .9 * .15
+                ) * scalar(tf_serving_up > bool 0)
               labels:
+                deployment: segmentation-consumer
                 namespace: deepcell
-                service: segmentation-scaling-service
-            - record: zip_consumer_key_ratio
+            - record: segmentation_zip_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_values{key="segmentation_zip_keys"}[15s])
-                / on()
-                (
-                  avg_over_time(kube_deployment_spec_replicas{deployment="zip-consumer"}[15s])
-                  +
-                  1
-                )
+                consumer_key_ratio{deployment="segmentation-zip-consumer"}
               labels:
+                deployment: zip-consumer
                 namespace: deepcell
-                service: zip-scaling-service
             - record: tracking_consumer_key_ratio
               expr: |-
-                avg_over_time(redis_script_values{key="tracking_image_keys"}[15s])
-                / on()
-                (
-                  avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
-                  +
-                  1
-                )
+                consumer_key_ratio{deployment="tracking-consumer"}
+                * on() tf_serving_up
               labels:
+                deployment: tracking-consumer
                 namespace: deepcell
-                service: tracking-scaling-service
 
-      ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
-      ##
-      grafana:
 
-        enabled: true
-
-        ## Deploy default dashboards.
+        ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
         ##
-        defaultDashboardsEnabled: true
+        grafana:
 
-        adminPassword: prom-operator
+          enabled: true
 
-        dashboards:
-          default:
-            prometheus-stats:
-              # Ref: https://grafana.com/dashboards/2
-              gnetId: 2
-              revision: 2
-              datasource: Prometheus
-            prometheus-redis:
-              # Ref: https://grafana.com/dashboards/763
-              gnetId: 763
-              revision: 2
-              datasource: Prometheus
+          ## Deploy default dashboards.
+          ##
+          defaultDashboardsEnabled: true
 
-      ## Deploy a Prometheus instance
-      ##
-      prometheus:
+          adminPassword: prom-operator
 
-        ## Settings affecting prometheusSpec
-        ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
+          dashboards:
+            default:
+              prometheus-stats:
+                # Ref: https://grafana.com/dashboards/2
+                gnetId: 2
+                revision: 2
+                datasource: Prometheus
+              prometheus-redis:
+                # Ref: https://grafana.com/dashboards/763
+                gnetId: 763
+                revision: 2
+                datasource: Prometheus
+
+        ## Deploy a Prometheus instance
         ##
-        prometheusSpec:
+        prometheus:
 
-          ## Interval between consecutive scrapes.
+          ## Settings affecting prometheusSpec
+          ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#prometheusspec
           ##
-          scrapeInterval: 15s
+          prometheusSpec:
 
-          ## Interval between consecutive evaluations.
-          ##
-          evaluationInterval: 15s
+            ## Interval between consecutive scrapes.
+            ##
+            scrapeInterval: 15
 
-          ## Resource limits & requests
-          ##
-          # resources:
-          #   requests:
-          #     memory: 1Gi
-          #   limits:
-          #     memory: 1Gi
+            ## Interval between consecutive evaluations.
+            ##
+            evaluationInterval: 15
 
-          ## Enable compression of the write-ahead log using Snappy.
-          ##
-          walCompression: true
+            ## Resource limits & requests
+            ##
+            # resources:
+            #   requests:
+            #     memory: 1Gi
+            #   limits:
+            #     memory: 1Gi
 
-          ## Prometheus StorageSpec for persistent data
-          ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
-          ##
-          storageSpec: {}
-          #  volumeClaimTemplate:
-          #    spec:
-          #      storageClassName: gluster
-          #      accessModes: ["ReadWriteOnce"]
-          #      resources:
-          #        requests:
-          #          storage: 50Gi
-          #    selector: {}
+            ## Enable compression of the write-ahead log using Snappy.
+            ##
+            walCompression: true
 
-          ## AdditionalScrapeConfigs allows specifying additional Prometheus scrape configurations. Scrape configurations
-          ## are appended to the configurations generated by the Prometheus Operator. Job configurations must have the form
-          ## as specified in the official Prometheus documentation:
-          ## https://prometheus.io/docs/prometheus/latest/configuration/configuration/#<scrape_config>. As scrape configs are
-          ## appended, the user is responsible to make sure it is valid. Note that using this feature may expose the possibility
-          ## to break upgrades of Prometheus. It is advised to review Prometheus release notes to ensure that no incompatible
-          ## scrape configs are going to break Prometheus after the upgrade.
-          ##
-          additionalScrapeConfigs:
-          - job_name: redis_exporter
-            static_configs:
-            - targets: ['prometheus-redis-exporter:9121']
+            ## Prometheus StorageSpec for persistent data
+            ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/user-guides/storage.md
+            ##
+            storageSpec: {}
+            #  volumeClaimTemplate:
+            #    spec:
+            #      storageClassName: gluster
+            #      accessModes: ["ReadWriteOnce"]
+            #      resources:
+            #        requests:
+            #          storage: 50Gi
+            #    selector: {}
 
-          - job_name: tensorflow
-            scrape_interval: 5s
-            metrics_path: /monitoring/prometheus/metrics
-            static_configs:
-              - targets: ['tf-serving.deepcell:8501']
+            ## AdditionalScrapeConfigs allows specifying additional Prometheus scrape configurations. Scrape configurations
+            ## are appended to the configurations generated by the Prometheus Operator. Job configurations must have the form
+            ## as specified in the official Prometheus documentation:
+            ## https://prometheus.io/docs/prometheus/latest/configuration/configuration/#<scrape_config>. As scrape configs are
+            ## appended, the user is responsible to make sure it is valid. Note that using this feature may expose the possibility
+            ## to break upgrades of Prometheus. It is advised to review Prometheus release notes to ensure that no incompatible
+            ## scrape configs are going to break Prometheus after the upgrade.
+            ##
+            additionalScrapeConfigs:
+            - job_name: redis_exporter
+              static_configs:
+              - targets: ['prometheus-redis-exporter:9121']
+              # create new label "deployment" matching with the queue's conumser
+              metric_relabel_configs:
+              - source_labels: ['key']
+                regex: '(^.*$)'
+                replacement: '${1}-consumer'
+                target_label: deployment
+
+            - job_name: tensorflow
+              metrics_path: /monitoring/prometheus/metrics
+              static_configs:
+                - targets: ['tf-serving.deepcell:8501']
