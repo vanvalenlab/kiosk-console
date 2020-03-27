@@ -204,6 +204,7 @@ releases:
                 target_label: deployment
 
             - job_name: tensorflow
+              scrape_interval: 5s
               metrics_path: /monitoring/prometheus/metrics
               static_configs:
                 - targets: ['tf-serving.deepcell:8501']
