@@ -22,24 +22,6 @@ spec:
         name: tf_serving_gpu_usage
       targetValue: 70
 ---
-# apiVersion: autoscaling/v2beta1
-# kind: HorizontalPodAutoscaler
-# metadata:
-#   name: data-processing
-#   namespace: deepcell
-# spec:
-#   scaleTargetRef:
-#     apiVersion: apps/v1
-#     kind: Deployment
-#     name: data-processing
-#   minReplicas: 1
-#   maxReplicas: {{ mul $max_gpus 20 }}
-#   metrics:
-#   - type: Resource
-#     resource:
-#       name: cpu
-#       targetAverageUtilization: 80
-# ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
