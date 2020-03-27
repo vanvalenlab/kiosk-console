@@ -30,13 +30,6 @@ releases:
         repository: "vanvalenlab/kiosk-autoscaler"
         tag: "0.4.0"
 
-      serviceAccount:
-        # Specifies whether a ServiceAccount should be created
-        create: true
-        # The name of the ServiceAccount to use.
-        # If not set and create is true, a name is generated using the fullname template
-        name:
-
       resources:
         requests:
           cpu: 100m
