@@ -13,33 +13,26 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "autoscaler"
-  namespace: "deepcell"
+- name: autoscaler
+  namespace: deepcell
   labels:
-    chart: "autoscaler"
-    component: "autoscaler"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
-    default: "true"
+    chart: autoscaler
+    component: autoscaler
+    namespace: deepcell
+    vendor: vanvalenlab
+    default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/autoscaler'
-  version: "0.1.0"
+  version: 0.1.0
   values:
     - replicas: 1
 
       image:
-        repository: "vanvalenlab/kiosk-autoscaler"
-        tag: "0.4.0"
-
-      serviceAccount:
-        # Specifies whether a ServiceAccount should be created
-        create: true
-        # The name of the ServiceAccount to use.
-        # If not set and create is true, a name is generated using the fullname template
-        name:
+        repository: vanvalenlab/kiosk-autoscaler
+        tag: 0.4.1
 
       resources:
         requests:
-          cpu: 100m
+          cpu: 50m
           memory: 64Mi
         # limits:
         #   cpu: 100m
