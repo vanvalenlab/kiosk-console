@@ -9,8 +9,9 @@ helmDefaults:
 
 repositories:
   # Stable repo of official helm charts
-  - name: "stable"
-    url: "https://kubernetes-charts.storage.googleapis.com"
+  - name: stable
+    url: https://kubernetes-charts.storage.googleapis.com
+
 releases:
   # Redis
   - name: redis
@@ -18,7 +19,7 @@ releases:
       chart: redis
       component: database
     chart: stable/redis
-    version: 8.1.5
+    version: 10.5.7
     namespace: deepcell
     values:
       - resources:
