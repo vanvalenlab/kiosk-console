@@ -11,7 +11,7 @@ releases:
 
 #
 # References:
-#   - [web address of Helm chart's YAML file]
+#   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
 #
 - name: "zip-consumer"
   namespace: "deepcell"
