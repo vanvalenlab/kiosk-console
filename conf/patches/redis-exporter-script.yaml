@@ -54,10 +54,10 @@ data:
       local queue_count = get_queue_count(queue)
       local zip_queue_count = get_queue_count(zip_queue)
 
-      table.insert(results, queue .. "_image_keys")
+      table.insert(results, queue)
       table.insert(results, tostring(queue_count))
 
-      table.insert(results, queue .. "_zip_keys")
+      table.insert(results, zip_queue)
       table.insert(results, tostring(zip_queue_count))
 
     end
