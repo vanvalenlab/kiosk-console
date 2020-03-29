@@ -30,7 +30,70 @@ releases:
   values:
     # A list of all possible values can be found:
     # https://github.com/helm/charts/blob/master/stable/prometheus-operator/values.yaml
-    - additionalPrometheusRulesMap:
+    - alertmanager:
+        enabled: {{ env "ALERT_MANAGER_ENABLED" | default "true"}}
+        config:
+          global:
+            resolve_timeout: 5m
+          route:
+            group_by: ['alertname', 'job']
+            group_wait: 30s
+            group_interval: 5m
+            repeat_interval: 3h
+            {{ if empty (env "ALERT_MANAGER_SLACK_API_URL" | default "") }}
+            receiver: 'null'
+            {{ else}}
+            receiver: slack-receiver
+            {{ end }}
+            routes:
+            - match_re:
+                severity: error|warning|critical
+              {{ if empty (env "ALERT_MANAGER_SLACK_API_URL" | default "") }}
+              receiver: 'null'
+              {{ else}}
+              receiver: slack-receiver
+              {{ end }}
+              continue: true
+
+          receivers:
+          - name: 'null'
+          {{ if (env "ALERT_MANAGER_SLACK_API_URL") }}
+          - name: slack-receiver
+            slack_configs:
+            - api_url: '{{ env "ALERT_MANAGER_SLACK_API_URL" | default "" }}'
+              channel: '{{ env "ALERT_MANAGER_SLACK_CHANNEL" | default "alerts" }}'
+              send_resolved: true
+              username: '{{`{{ template "slack.default.username" . }}`}}'
+              color: '{{`{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}`}}'
+              # title: '{{`{{ template "slack.custom.title" . }}`}}'
+              title_link: '{{`{{ template "slack.default.titlelink" . }}`}}'
+              pretext: '{{`{{ .CommonAnnotations.summary }}`}}'
+              fallback: '{{`{{ template "slack.default.fallback" . }}`}}'
+              icon_emoji: '{{`{{ template "slack.default.iconemoji" . }}`}}'
+              icon_url: https://avatars3.githubusercontent.com/u/3380462
+              # text: '{{`{{ template "slack.custom.text" . }}`}}'
+              title: |-
+                {{`[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }} for {{ .CommonLabels.job }}
+                {{- if gt (len .CommonLabels) (len .GroupLabels) -}}
+                  {{" "}}(
+                  {{- with .CommonLabels.Remove .GroupLabels.Names }}
+                    {{- range $index, $label := .SortedPairs -}}
+                      {{ if $index }}, {{ end }}
+                      {{- $label.Name }}="{{ $label.Value -}}"
+                    {{- end }}
+                  {{- end -}}
+                  )
+                {{- end }}`}}
+              text: |-
+                {{`{{ with index .Alerts 0 -}}
+                  :chart_with_upwards_trend: *<{{ .GeneratorURL }}|Graph>*{{- if .Annotations.runbook_url }}   :notebook: *<{{ .Annotations.runbook_url }}|Runbook>*{{ end }}{{- if .Labels.severity }}   `}}`{{`{{ .Labels.severity }}`}}`{{`{{ end }}
+                {{ end }}
+                {{ range .Alerts -}}
+                  {{- if .Annotations.message }}{{ .Annotations.message }}{{ end }}{{ if .Annotations.summary }}{{ .Annotations.summary }}
+                  {{ end }}
+                {{ end }}`}}
+          {{ end }}
+      additionalPrometheusRulesMap:
       - name: custom-prometheus-rules
         groups:
           - name: tf-serving-metrics
