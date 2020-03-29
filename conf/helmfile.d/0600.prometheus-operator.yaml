@@ -116,7 +116,6 @@ releases:
                 deployment: tracking-consumer
                 namespace: deepcell
 
-
         ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
         ##
         grafana:
