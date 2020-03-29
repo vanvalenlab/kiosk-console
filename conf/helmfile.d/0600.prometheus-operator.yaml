@@ -203,7 +203,6 @@ releases:
               target_label: deployment
 
           - job_name: tensorflow
-            scrape_interval: 5s
             metrics_path: /monitoring/prometheus/metrics
             static_configs:
               - targets: ['tf-serving.deepcell:8501']
@@ -222,7 +221,29 @@ releases:
               action: drop
             - sourceLabels: [__name__]
               separator: ;
-              regex: container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s|memory_failures_total)
+              regex: container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s|memory_failures_total|fs_reads_total|fs_writes_total)
+              replacement: $1
+              action: drop
+
+          metricRelabelings:
+            - sourceLabels: [__name__, image]
+              separator: ;
+              regex: container_([a-z_]+);
+              replacement: $1
+              action: drop
+            - sourceLabels: [__name__]
+              separator: ;
+              regex: container_(network_tcp_usage_total|network_udp_usage_total|tasks_state|cpu_load_average_10s|memory_failures_total|fs_reads_total|fs_writes_total)
+              replacement: $1
+              action: drop
+            - sourceLabels: [__name__]
+              separator: ;
+              regex: kubelet_(runtime_operations_duration_seconds_bucket|docker_operations_duration_seconds_bucket)
+              replacement: $1
+              action: drop
+            - sourceLabels: [__name__]
+              separator: ;
+              regex: storage_operation_duration_seconds_bucket
               replacement: $1
               action: drop
 
