@@ -96,88 +96,168 @@ releases:
       additionalPrometheusRulesMap:
       - name: custom-prometheus-rules
         groups:
-          - name: tf-serving-metrics
-            rules:
-            - record: tf_serving_gpu_usage
-              expr: |-
-                avg(
-                  container_accelerator_duty_cycle{container_name="tf-serving"}
+        # alerts
+        - name: prometheus-alerts
+          rules:
+          - alert: PrometheusTooManyRestarts
+            expr: changes(process_start_time_seconds{job=~"prometheus|pushgateway|alertmanager"}[15m]) > 2
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Prometheus too many restarts (instance {{ $labels.instance }})`}}
+              description: |-
+                {{`Prometheus has restarted more than twice in the last 15 minutes. It might be crashlooping.
+                VALUE = {{ $value }}
+                LABELS: {{ $labels }}`}}
+          - alert: PrometheusRuleEvaluationSlow
+            expr: prometheus_rule_group_last_duration_seconds > prometheus_rule_group_interval_seconds
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Prometheus rule evaluation slow (instance {{ $labels.instance }})`}}
+              description: |-
+                {{`Prometheus rule evaluation took more time than the scheduled interval. I indicates a slower storage backend access or too complex query.
+                VALUE = {{ $value }}
+                LABELS: {{ $labels }}`}}
+        - name: redis-alerts
+          rules:
+          - alert: RedisDown
+            expr: redis_up == 0
+            for: 5m
+            labels:
+              severity: error
+            annotations:
+              summary: |-
+                {{`Redis down (instance {{ $labels.instance }})`}}
+              description: |-
+                {{`Redis instance is down.
+                VALUE = {{ $value }}
+                LABELS: {{ $labels }}`}}
+          - alert: RedisMissingMaster
+            expr: count(redis_instance_info{role="master"}) == 0
+            for: 5m
+            labels:
+              severity: error
+            annotations:
+              summary: |-
+                {{`Redis missing master (instance {{ $labels.instance }})`}}
+              description: |-
+                {{`Redis cluster has no node marked as master.
+                VALUE = {{ $value }}
+                LABELS: {{ $labels }}`}}
+          - alert: RedisOutOfMemory
+            expr: redis_memory_used_bytes / redis_total_system_memory_bytes * 100 > 90
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Redis out of memory (instance {{ $labels.instance }})`}}
+              description: |-
+                {{`Redis is running out of memory (> 90%)
+                VALUE = {{ $value }}
+                LABELS: {{ $labels }}`}}
+        - name: kubernetes-alerts
+          rules:
+          - alert: KubernetesPodCrashLooping
+            expr: rate(kube_pod_container_status_restarts_total[15m]) * 60 * 5 > 5
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Kubernetes pod crash looping (instance {{ $labels.instance }})`}}
+              description: |-
+                {{`Pod {{ $labels.pod }} is crash looping
+                VALUE = {{ $value }}
+                LABELS: {{ $labels }}`}}
+        # recording rules
+        - name: tf-serving-metrics
+          rules:
+          - record: tf_serving_gpu_usage
+            expr: |-
+              avg(
+                container_accelerator_duty_cycle{container_name="tf-serving"}
+              ) or vector(0)
+            labels:
+              deployment: tf-serving
+              namespace: deepcell
+          - record: tf_serving_up
+            expr: |-
+              max(
+                clamp_max(
+                  kube_deployment_status_replicas_available{deployment="tf-serving"},
+                  1
                 ) or vector(0)
-              labels:
-                deployment: tf-serving
-                namespace: deepcell
-            - record: tf_serving_up
-              expr: |-
-                max(
-                  clamp_max(
-                    kube_deployment_status_replicas_available{deployment="tf-serving"},
-                    1
-                  ) or vector(0)
-                )
-              labels:
-                deployment: tf-serving
-                namespace: deepcell
-          - name: consumer-metrics
-            rules:
-            - record: consumers_per_gpu
-              expr: |-
-                kube_deployment_status_replicas_available{deployment=~".*-consumer"}
-                / on() group_left
-                max(
-                  kube_deployment_status_replicas_available{deployment="tf-serving"}
-                  or vector(1)
-                )
-              labels:
-                namespace: deepcell
-            - record: consumer_key_ratio
-              expr: |-
-                redis_script_values
-                / on(deployment)
-                kube_deployment_spec_replicas
-              labels:
-                namespace: deepcell
-            - record: segmentation_consumer_key_ratio
-              # COMPLICATED scaling metric that prevents too many consumers
-              # per GPU.  If too many consumers, scale down slightly.
-              # Structural outline follows:
-              # (
-              #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
-              #   +
-              #   .75 * target * is_too_many_consumers)
-              # ) * is_tf_up
-              expr: |-
+              )
+            labels:
+              deployment: tf-serving
+              namespace: deepcell
+        - name: consumer-metrics
+          rules:
+          - record: consumers_per_gpu
+            expr: |-
+              kube_deployment_status_replicas_available{deployment=~".*-consumer"}
+              / on() group_left
+              max(
+                kube_deployment_status_replicas_available{deployment="tf-serving"}
+                or vector(1)
+              )
+            labels:
+              namespace: deepcell
+          - record: consumer_key_ratio
+            expr: |-
+              redis_script_values
+              / on(deployment)
+              kube_deployment_spec_replicas
+            labels:
+              namespace: deepcell
+          - record: segmentation_consumer_key_ratio
+            # COMPLICATED scaling metric that prevents too many consumers
+            # per GPU.  If too many consumers, scale down slightly.
+            # Structural outline follows:
+            # (
+            #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
+            #   +
+            #   .9 * target * is_too_many_consumers)
+            # ) * is_tf_up
+            expr: |-
+              (
                 (
-                  (
-                    min(
-                      1 - tf_serving_gpu_usage / 100
-                      < on(namespace)
+                  min(
+                    1 - tf_serving_gpu_usage / 100
+                    < on(namespace)
+                    consumer_key_ratio{deployment="segmentation-consumer"} / 100
+                    or
+                    clamp_max(
                       consumer_key_ratio{deployment="segmentation-consumer"} / 100
-                      or
-                      clamp_max(
-                        consumer_key_ratio{deployment="segmentation-consumer"} / 100
-                      , 1)
-                    ) *
-                    scalar(consumers_per_gpu{deployment="segmentation-consumer"} <= bool 150)
-                  ) + (
-                    scalar(consumers_per_gpu{deployment="segmentation-consumer"} > bool 150)
-                  ) * .75 * .15
-                ) * scalar(tf_serving_up > bool 0)
-              labels:
-                deployment: segmentation-consumer
-                namespace: deepcell
-            - record: segmentation_zip_consumer_key_ratio
-              expr: |-
-                consumer_key_ratio{deployment="segmentation-zip-consumer"}
-              labels:
-                deployment: zip-consumer
-                namespace: deepcell
-            - record: tracking_consumer_key_ratio
-              expr: |-
-                consumer_key_ratio{deployment="tracking-consumer"}
-                * on() tf_serving_up
-              labels:
-                deployment: tracking-consumer
-                namespace: deepcell
+                    , 1)
+                  ) *
+                  scalar(consumers_per_gpu{deployment="segmentation-consumer"} <= bool 150)
+                ) + (
+                  scalar(consumers_per_gpu{deployment="segmentation-consumer"} > bool 150)
+                ) * .9 * .15
+              ) * scalar(tf_serving_up > bool 0)
+            labels:
+              deployment: segmentation-consumer
+              namespace: deepcell
+          - record: segmentation_zip_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="segmentation-zip-consumer"}
+            labels:
+              deployment: zip-consumer
+              namespace: deepcell
+          - record: tracking_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="tracking-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: tracking-consumer
+              namespace: deepcell
 
 
         ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
