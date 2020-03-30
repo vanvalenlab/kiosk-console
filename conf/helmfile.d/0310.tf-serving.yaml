@@ -27,8 +27,8 @@ releases:
     - replicas: 0
 
       image:
-        repository: "vanvalenlab/kiosk-tf-serving"
-        tag: "0.2.1"
+        repository: vanvalenlab/kiosk-tf-serving
+        tag: 0.2.1
 
       resources:
         requests:
