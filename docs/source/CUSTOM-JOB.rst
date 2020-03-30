@@ -66,41 +66,33 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
       :label: + Show/Hide example helmfile
 
       helmDefaults:
-        args:
-          - "--wait"
-          - "--timeout=600"
-          - "--force"
-          - "--reset-values"
+        wait: true
+        timeout: 600
+        force: true
 
       releases:
-
-      ################################################################################
-      ## Custom-Consumer ################################################################
-      ################################################################################
-
       #
       # References:
-      #   - [web address of Helm chart's YAML file]
+      #   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
       #
-      - name: "tracking-consumer"
-        namespace: "deepcell"
+      - name: tracking-consumer
+        namespace: deepcell
         labels:
-          chart: "redis-consumer"
-          component: "deepcell"
-          namespace: "deepcell"
-          vendor: "vanvalenlab"
-          default: "true"
+          chart: redis-consumer
+          component: deepcell
+          namespace: deepcell
+          vendor: vanvalenlab
+          default: true
         chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-        version: "0.1.0"
+        version: 0.1.0
         values:
           - replicas: 1
 
             image:
-              repository: "vanvalenlab/kiosk-redis-consumer"
-              tag: "0.4.1"
-              pullPolicy: "Always"
+              repository: vanvalenlab/kiosk-redis-consumer
+              tag: 0.5.1
 
-            nameOverride: "tracking-consumer"
+            nameOverride: tracking-consumer
 
             resources:
               requests:
@@ -140,31 +132,27 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
               CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
               GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-              NUCLEAR_MODEL: "panoptic:3"
-              NUCLEAR_POSTPROCESS: "retinanet-semantic"
+              NUCLEAR_MODEL: "NuclearSegmentation:0"
+              NUCLEAR_POSTPROCESS: "deep_watershed"
 
-              PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
-              PHASE_POSTPROCESS: "retinanet"
+              PHASE_MODEL: "PhaseCytoSegmentation:0"
+              PHASE_POSTPROCESS: "deep_watershed"
 
-              CYTOPLASM_MODEL:   "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
-              CYTOPLASM_POSTPROCESS: "retinanet"
+              CYTOPLASM_MODEL:   "FluoCytoSegmentation:0"
+              CYTOPLASM_POSTPROCESS: "deep_watershed"
 
               LABEL_DETECT_ENABLED: "true"
               LABEL_DETECT_MODEL: "LabelDetection:0"
-              LABEL_RESHAPE_SIZE: 216
-              LABEL_DETECT_SAMPLE: 10
 
               SCALE_DETECT_ENABLED: "true"
               SCALE_DETECT_MODEL: "ScaleDetection:0"
-              SCALE_RESHAPE_SIZE: 216
-              SCALE_DETECT_SAMPLE: 10
 
               DRIFT_CORRECT_ENABLED: "false"
               NORMALIZE_TRACKING: "true"
 
               TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-              TRACKING_SEGMENT_MODEL: "panoptic:3"
-              TRACKING_POSTPROCESS_FUNCTION: "retinanet"
+              TRACKING_SEGMENT_MODEL: "NuclearSegmentation:0"
+              TRACKING_POSTPROCESS_FUNCTION: "deep_watershed"
 
             secrets:
               AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'

@@ -11,24 +11,24 @@ releases:
 
 #
 # References:
-#   - [web address of Helm chart's YAML file]
+#   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
 #
-- name: "segmentation-zip-consumer"
-  namespace: "deepcell"
+- name: segmentation-zip-consumer
+  namespace: deepcell
   labels:
-    chart: "redis-consumer"
-    component: "deepcell"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
-    default: "true"
+    chart: redis-consumer
+    component: deepcell
+    namespace: deepcell
+    vendor: vanvalenlab
+    default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-  version: "0.1.0"
+  version: 0.1.0
   values:
     - replicas: 1
 
       image:
-        repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.4.4"
+        repository: vanvalenlab/kiosk-redis-consumer
+        tag: 0.5.1
 
       nameOverride: segmentation-zip-consumer
 
