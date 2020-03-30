@@ -87,7 +87,7 @@ releases:
         MODEL_CONFIG_FILE: /kiosk/tf-serving/models.conf
         BATCHING_CONFIG_FILE: /kiosk/tf-serving/batching_config.txt
         ENABLE_BATCHING: "true"
-        MAX_BATCH_SIZE: 1
+        MAX_BATCH_SIZE: 128
         BATCH_TIMEOUT_MICROS: 0
         MAX_ENQUEUED_BATCHES: 512
         GRPC_CHANNEL_ARGS: ""
