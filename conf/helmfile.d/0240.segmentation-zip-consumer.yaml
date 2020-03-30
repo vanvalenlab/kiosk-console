@@ -13,8 +13,8 @@ releases:
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
 #
-- name: "segmentation-zip-consumer"
-  namespace: "deepcell"
+- name: segmentation-zip-consumer
+  namespace: deepcell
   labels:
     chart: redis-consumer
     component: deepcell
@@ -27,8 +27,8 @@ releases:
     - replicas: 1
 
       image:
-        repository: "vanvalenlab/kiosk-redis-consumer"
-        tag: "0.4.4"
+        repository: vanvalenlab/kiosk-redis-consumer
+        tag: 0.5.1
 
       nameOverride: segmentation-zip-consumer
 
