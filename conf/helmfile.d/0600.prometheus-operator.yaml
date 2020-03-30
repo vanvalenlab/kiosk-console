@@ -246,6 +246,10 @@ releases:
               regex: storage_operation_duration_seconds_bucket
               replacement: $1
               action: drop
+            - sourceLabels: [__name__]
+              regex: rest_client_request_(latency_seconds_bucket|duration_seconds_bucket)
+              replacement: $1
+              action: drop
 
       ## Component scraping the kube api server
       ##
@@ -264,5 +268,13 @@ releases:
               action: drop
             - sourceLabels: [__name__]
               regex: apiserver_request_duration_seconds_(.*)
+              replacement: $1
+              action: drop
+            - sourceLabels: [__name__]
+              regex: apiserver_request_latencies_(.*)
+              replacement: $1
+              action: drop
+            - sourceLabels: [__name__]
+              regex: apiserver_response_size_buckets
               replacement: $1
               action: drop
