@@ -41,6 +41,10 @@ releases:
           appendonly yes
           # Disable RDB persistence, AOF persistence already enabled.
           save ""
+          # Prevent fsync() from being called in the main process while a
+          # BGSAVE or BGREWRITEAOF is in progress.
+          # If you have latency problems turn this to "yes". Otherwise leave it as
+          # "no" that is the safest pick from the point of view of durability.
           no-appendfsync-on-rewrite yes
 
         sysctlImage:
