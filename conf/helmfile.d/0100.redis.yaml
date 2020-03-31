@@ -31,7 +31,7 @@ releases:
 
         cluster:
           enabled: true
-          slaveCount: 2
+          slaveCount: 3
 
         sentinel:
           enabled: true
