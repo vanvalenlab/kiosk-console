@@ -36,6 +36,13 @@ releases:
         sentinel:
           enabled: true
 
+        configmap: |-
+          # Enable AOF https://redis.io/topics/persistence#append-only-file
+          appendonly yes
+          # Disable RDB persistence, AOF persistence already enabled.
+          save ""
+          no-appendfsync-on-rewrite yes
+
         sysctlImage:
           enabled: true
           mountHostSys: true
