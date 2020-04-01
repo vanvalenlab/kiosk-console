@@ -57,4 +57,9 @@ test/integration/gke/deploy/elk: \
 	test/integration/gke/deploy
 
 test/unit:
-	echo "No unit tests at this time."
+	@echo "Linting helm charts"
+	@ls -1 -d ${CONF_PATH_PREFIX}/conf/charts/* | xargs helm lint
+	@echo " "
+	@echo "Linting helmfiles"
+	@helmfile lint
+	@echo "All tests passed!"
