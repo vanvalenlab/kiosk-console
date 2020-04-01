@@ -28,10 +28,10 @@ echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.clou
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 sudo apt-get update && sudo apt-get install google-cloud-sdk
 # Install yq
+sudo apt-get install jq -y
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
-sudo add-apt-repository ppa:rmescandon/yq
-sudo apt update
-sudo apt install yq -y
+sudo add-apt-repository ppa:rmescandon/yq -y
+sudo apt-get update && sudo apt-get install yq -y
 ## prep directory structure for gcloud
 mkdir -p $CONF_PATH_PREFIX/.config/gcloud
 sudo chmod 777 $CONF_PATH_PREFIX/.config
