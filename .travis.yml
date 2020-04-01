@@ -81,9 +81,10 @@ jobs:
     - stage: unit_tests
       name: "Unit Tests"
       if: type = push
-      - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk-console/conf/charts
-      - CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk-console
-      - CLOUD_PROVIDER=gke
+      env:
+        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk-console/conf/charts
+        - CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk-console
+        - CLOUD_PROVIDER=gke
       before_install:
         - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
