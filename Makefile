@@ -35,7 +35,7 @@ run:
 	$(CLUSTER)
 
 ## Target for testing cluster deployment
-test/integration/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$(($$RANDOM % 1000))')
+test/integration/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$((1 + $$RANDOM % 1000))')
 test/integration/gke/deploy:
 	# check environment variables
 	printenv
