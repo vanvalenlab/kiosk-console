@@ -14,3 +14,4 @@ for filename in ${CONF_PATH_PREFIX}/conf/helmfile.d/*.yaml; do
       sleep 30
     done
   done
+done
