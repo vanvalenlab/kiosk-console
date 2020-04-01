@@ -62,4 +62,7 @@ test/unit:
 	@echo " "
 	@echo "Linting helmfiles"
 	@helmfile lint
+	@echo " "
+	@ls -1 -d ${CONF_PATH_PREFIX}/conf/addons/*.yaml | xargs -I % gomplate -f % | \
+		kubectl apply -f - --dry-run=true --validate=true
 	@echo "All tests passed!"
