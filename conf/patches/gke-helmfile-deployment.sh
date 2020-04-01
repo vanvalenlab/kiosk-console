@@ -1,9 +1,8 @@
 #!/bin/bash
 
 for filename in ${CONF_PATH_PREFIX}/conf/helmfile.d/*.yaml; do
-  echo $filename
-  deployment_names=$(helmfile -f $filename build | yq r - -- releases[*].name)
-  echo $deployment_names
+  deployment_names=$(helmfile -f $filename build | \
+                     yq r - -- releases[*].name | awk '{print $NF}')
   for name in $deployment_names; do
     # TODO: use retry command instead of for loop.
     echo $name
