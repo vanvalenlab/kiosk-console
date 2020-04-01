@@ -179,7 +179,7 @@ Autoscaling custom consumers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Kubernetes scales each consumer using a `Horizonal Pod Autoscaler "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/>`_ (HPA).
-Each HPA is configured in |/conf/patches/hpa.yaml|.
+Each HPA is configured in |/conf/addons/hpa.yaml|.
 The HPA reads a consumer-specific custom metric, defined in |/conf/helmfile.d/0600.prometheus-operator.yaml|.
 Each custom metric maximizes the work being done by balancing the amount of work left in the consumer's Redis queue (made available by the ``prometheus-redis-exporter``) and the current GPU utilization.
 
@@ -188,11 +188,11 @@ For example, the ``segmentation_consumer_key_ratio`` in |/conf/helmfile.d/0600.p
 
 To effectively scale your new consumer, some small edits will be needed in the following files:
 
-* |/conf/patches/redis-exporter-script.yaml|
+* |/conf/addons/redis-exporter-script.yaml|
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
-* |/conf/patches/hpa.yaml|
+* |/conf/addons/hpa.yaml|
 
-1. |/conf/patches/redis-exporter-script.yaml|
+1. |/conf/addons/redis-exporter-script.yaml|
 
    Within  ``data.script`` modify the section ``All Queues to Monitor`` to include the new queue (:data:`queue_name`).
 
@@ -232,7 +232,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
           namespace: deepcell
           service: tracking-scaling-service
 
-3. |/conf/patches/hpa.yaml|
+3. |/conf/addons/hpa.yaml|
 
    Add a new section based on the example below to the bottom of ``hpa.yaml`` following a ``---``.
 
@@ -264,17 +264,17 @@ To effectively scale your new consumer, some small edits will be needed in the f
               name: tracking_consumer_key_ratio
             targetValue: 1
 
-.. |/conf/patches/hpa.yaml| raw:: html
+.. |/conf/addons/hpa.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/patches/hpa.yaml">/conf/patches/hpa.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/addons/hpa.yaml">/conf/addons/hpa.yaml</a></tt>
 
 .. |/conf/helmfile.d/0600.prometheus-operator.yaml| raw:: html
 
     <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0600.prometheus-operator.yaml">/conf/helmfile.d/0600.prometheus-operator.yaml</a></tt>
 
-.. |/conf/patches/redis-exporter-script.yaml| raw:: html
+.. |/conf/addons/redis-exporter-script.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/addons/redis-exporter-script.yaml">/conf/addons/redis-exporter-script.yaml</a></tt>
 
 .. |/conf/helmfile.d/0230.redis-consumer.yaml| raw:: html
 
