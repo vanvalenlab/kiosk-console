@@ -29,7 +29,7 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyr
 sudo apt-get update && sudo apt-get install google-cloud-sdk
 # Install yq
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
-sudo add-apt-repository ppa:rmescandon/yq
+sudo add-apt-repository ppa:rmescandon/yq -y
 sudo apt update
 sudo apt install yq -y
 ## prep directory structure for gcloud
