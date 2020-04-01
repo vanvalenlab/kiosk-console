@@ -5,7 +5,6 @@ for filename in ${CONF_PATH_PREFIX}/conf/helmfile.d/*.yaml; do
                      yq r - -- releases[*].name | awk '{print $NF}')
   for name in $deployment_names; do
     # TODO: use retry command instead of for loop.
-    echo $name
     retries=3
     for ((i=0; i<retries; i++)); do
       helmfile --selector name=${name} sync
