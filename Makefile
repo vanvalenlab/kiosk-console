@@ -61,7 +61,7 @@ test/unit:
 	@ls -1 -d ${CONF_PATH_PREFIX}/conf/charts/* | xargs helm lint
 	@echo " "
 	@echo "Linting helmfiles"
-	@helmfile -q lint
+	@helmfile -f ${CONF_PATH_PREFIX}/conf/helmfile.d/ -q lint
 	@echo " "
 	@ls -1 -d ${CONF_PATH_PREFIX}/conf/addons/*.yaml | xargs -I % gomplate -f % | \
 		kubectl apply -f - --dry-run=true --validate=true
