@@ -58,7 +58,7 @@ test/integration/gke/deploy/elk: \
 
 test/unit:
 	@echo "Linting helm charts"
-	@helm init --client-only
+	@helm init
 	@ls -1 -d ${CONF_PATH_PREFIX}/conf/charts/* | xargs helm lint
 	@echo " "
 	@echo "Linting helmfiles"
