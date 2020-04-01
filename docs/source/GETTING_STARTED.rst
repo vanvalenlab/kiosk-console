@@ -99,7 +99,7 @@ You are now ready to start the Kiosk!
 
     docker run -e DOCKER_TAG=1.1.0 vanvalenlab/kiosk:1.1.0 | sudo bash
 
-.. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings.
+.. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings. This will require you to enter your password.
 
 * To start the Kiosk, just run ``kiosk`` from the terminal shell
 
