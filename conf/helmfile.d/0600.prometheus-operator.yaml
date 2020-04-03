@@ -126,7 +126,7 @@ releases:
         ##
         defaultDashboardsEnabled: true
 
-        adminPassword: prom-operator
+        adminPassword: '{{ env "GRAFANA_PASSWORD" | default "prom-operator" }}'
 
         dashboards:
           default:
