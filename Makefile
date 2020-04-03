@@ -65,5 +65,5 @@ test/unit:
 	@helmfile -f ${CONF_PATH_PREFIX}/conf/helmfile.d/ -q build
 	@echo " "
 	@ls -1 -d ${CONF_PATH_PREFIX}/conf/addons/*.yaml | xargs -I % gomplate -f % | \
-		kubectl apply -f - --dry-run=true --validate=true
+		kubectl apply -f - --dry-run=client --validate=true
 	@echo "All tests passed!"
