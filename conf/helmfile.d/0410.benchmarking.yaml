@@ -28,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-benchmarking
-        tag: 0.2.3
+        tag: 0.2.4
 
       resources:
         requests:
@@ -43,12 +43,14 @@ releases:
         GRAFANA_PASSWORD: prom-operator
         GRAFANA_HOST: prometheus-operator-grafana.monitoring.svc.cluster.local
         LOG_LEVEL: INFO
+        SCALE: 1
+        LABEL: ""
         API_HOST: '{{ env "CLUSTER_ADDRESS" | default "frontend" }}'
         FILE: zip100.zip
         COUNT: 100
-        MODEL: watershednuclearnofgbg41f16:0
+        MODEL: NuclearSegmentation:0
         UPLOAD_PREFIX: uploads
-        POSTPROCESS: watershed
+        POSTPROCESS: deep_watershed
         PREPROCESS: ""
         START_DELAY: 0.5
         UPDATE_INTERVAL: 15
