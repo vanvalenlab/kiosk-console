@@ -288,7 +288,7 @@ function configure_gke() {
     export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$((1 + RANDOM % 1000))"
   fi
 
-  export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
+  export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Name Your Cluster" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
   export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   # If clusters are longer than 18 characters, Persistent Disks can get stranded.
   while [ "${CLOUDSDK_CONTAINER_CLUSTER}" = "" -o ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]
@@ -298,7 +298,7 @@ function configure_gke() {
     elif [ ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]; then
       msgbox "Warning!" "Please make sure your cluster name is no more than 18 characters."
     fi
-    export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
+    export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Name Your Cluster" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
     export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   done
 
