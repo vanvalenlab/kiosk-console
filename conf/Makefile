@@ -23,6 +23,18 @@ destroy: \
   $(CLOUD_PROVIDER)/destroy/all
 	@echo "Cluster destroyed"
 
+# Unit tests
+test/unit:
+	@echo "Linting helm charts"
+	@helm init --client-only
+	@ls -1 -d ${CONF_PATH_PREFIX}/conf/charts/* | xargs helm lint
+	@echo " "
+	@echo "Linting helmfiles"
+	@helmfile -f ${CONF_PATH_PREFIX}/conf/helmfile.d/ -q build
+	# @echo " "
+	@ls -1 -d ${CONF_PATH_PREFIX}/conf/addons/*.yaml | xargs -I % gomplate -f %
+	@echo "All tests passed!"
+
 ## Create test cluster
 test/create: \
   $(CLOUD_PROVIDER)/test/create/all \

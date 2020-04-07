@@ -55,14 +55,3 @@ test/integration/gke/deploy:
 test/integration/gke/deploy/elk: export ELK_DEPLOYMENT_TOGGLE = ON
 test/integration/gke/deploy/elk: \
 	test/integration/gke/deploy
-
-test/unit:
-	@echo "Linting helm charts"
-	@helm init --client-only
-	@ls -1 -d ${CONF_PATH_PREFIX}/conf/charts/* | xargs helm lint
-	@echo " "
-	@echo "Linting helmfiles"
-	@helmfile -f ${CONF_PATH_PREFIX}/conf/helmfile.d/ -q build
-	# @echo " "
-	@ls -1 -d ${CONF_PATH_PREFIX}/conf/addons/*.yaml | xargs -I % gomplate -f %
-	@echo "All tests passed!"
