@@ -29,8 +29,8 @@ test/unit:
 	@helm init --client-only
 	@ls -1 -d ${CONF_PATH_PREFIX}/conf/charts/* | xargs helm lint
 	@echo "Linting helmfiles"
-	@mv ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/* ${CONF_PATH_PREFIX}/conf/helmfile.d/
-	@helmfile -f ${CONF_PATH_PREFIX}/conf/helmfile.d/ -q build
+	@helmfile -f ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/ -q build 1>/dev/null
+	@helmfile -f ${CONF_PATH_PREFIX}/conf/helmfile.d/ -q build 1>/dev/null
 	@echo "Gomplating addons"
 	@ls -1 -d ${CONF_PATH_PREFIX}/conf/addons/*.yaml | xargs -I % gomplate -f %
 	@echo "All tests passed!"
