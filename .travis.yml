@@ -6,6 +6,9 @@ git:
 
 language: shell
 
+services:
+  - docker
+
 stages:
   - unit_tests
   - integration_tests
@@ -16,6 +19,14 @@ jobs:
     - script: make test/integration/gke/deploy/elk
   fast_finish: true
   include:
+    - stage: unit_tests
+      name: "Unit Tests"
+      install:
+        - docker build -t kiosk .
+        - docker run -d -it --env CLOUD_PROVIDER=gke --entrypoint=/bin/bash --name kiosk kiosk
+      script:
+        - docker exec kiosk make test/unit
+        - docker kill kiosk && docker rm kiosk
     - stage: integration_tests
       name: "Integration test - no ELK"
       if: ( (type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/) )
@@ -78,19 +89,6 @@ jobs:
         - export PATH=/home/travis/build/vanvalenlab/kiosk-console:/home/travis/build/vanvalenlab/kiosk-console/linux-amd64:$PATH
       install: ./.travis/install_script.sh
       script: make test/integration/gke/deploy/elk
-    - stage: unit_tests
-      name: "Unit Tests"
-      if: type = push
-      env:
-        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk-console/conf/charts
-        - CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk-console
-        - CLOUD_PROVIDER=gke
-      before_install:
-        - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
-        - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
-        - export PATH=/home/travis/build/vanvalenlab/kiosk-console:/home/travis/build/vanvalenlab/kiosk-console/linux-amd64:$PATH
-      install: ./.travis/install_script.sh
-      script: make test/unit
     - stage: deploy
       name: "Docker Deployment"
       if: tag IS present
