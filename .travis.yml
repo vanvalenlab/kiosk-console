@@ -45,7 +45,7 @@ jobs:
             --env CLOUDSDK_COMPUTE_REGION=us-west1
             --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
             --env GOOGLE_APPLICATION_CREDENTIALS=/gcloud_key.json
-            --entrypoint=/bin/bash 
+            --entrypoint=/bin/bash
             --volume gcloud_key.json:/gcloud_key.json
             --name kiosk kiosk
       script:
