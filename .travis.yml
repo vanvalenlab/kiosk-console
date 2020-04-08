@@ -36,16 +36,17 @@ jobs:
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
       install:
         - docker build -t kiosk .
-        - docker run -d -it \
-            --env CLOUD_PROVIDER=gke \
-            --env GCP_SERVICE_ACCOUNT=$GCP_SERVICE_ACCOUNT \
-            --env CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT \
-            --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET \
-            --env CLOUDSDK_COMPUTE_REGION=us-west1 \
-            --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b \
-            --env GOOGLE_APPLICATION_CREDENTIALS=/gcloud_key.json \
-            --entrypoint=/bin/bash \
-            --volume gcloud_key.json:/gcloud_key.json \
+        - |-
+          docker run -d -it
+            --env CLOUD_PROVIDER=gke
+            --env GCP_SERVICE_ACCOUNT=$GCP_SERVICE_ACCOUNT
+            --env CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT
+            --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET
+            --env CLOUDSDK_COMPUTE_REGION=us-west1
+            --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+            --env GOOGLE_APPLICATION_CREDENTIALS=/gcloud_key.json
+            --entrypoint=/bin/bash
+            --volume gcloud_key.json:/gcloud_key.json
             --name kiosk kiosk
       script:
         - docker exec kiosk make test/integration/gke/deploy
@@ -59,16 +60,17 @@ jobs:
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
       install:
         - docker build -t kiosk .
-        - docker run -d -it \
-            --env CLOUD_PROVIDER=gke \
-            --env GCP_SERVICE_ACCOUNT=$GCP_SERVICE_ACCOUNT \
-            --env CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT \
-            --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET \
-            --env CLOUDSDK_COMPUTE_REGION=us-west1 \
-            --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b \
-            --env GOOGLE_APPLICATION_CREDENTIALS=/gcloud_key.json \
-            --entrypoint=/bin/bash \
-            --volume gcloud_key.json:/gcloud_key.json \
+        - |-
+          docker run -d -it
+            --env CLOUD_PROVIDER=gke
+            --env GCP_SERVICE_ACCOUNT=$GCP_SERVICE_ACCOUNT
+            --env CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT
+            --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET
+            --env CLOUDSDK_COMPUTE_REGION=us-west1
+            --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+            --env GOOGLE_APPLICATION_CREDENTIALS=/gcloud_key.json
+            --entrypoint=/bin/bash
+            --volume gcloud_key.json:/gcloud_key.json
             --name kiosk kiosk
       script:
         - docker exec kiosk make test/integration/gke/deploy/elk
