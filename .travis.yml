@@ -27,6 +27,7 @@ jobs:
       script:
         - docker exec kiosk make test/unit
         - docker kill kiosk && docker rm kiosk
+
     - stage: integration_tests
       name: "Integration Tests - ELK Disabled"
       if: ((type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/))
@@ -49,6 +50,7 @@ jobs:
       script:
         - docker exec kiosk make test/integration/gke/deploy
         - docker kill kiosk && docker rm kiosk
+
     - stage: integration_tests
       name: "Integration test - ELK Enabled"
       if: ((type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/)) AND (commit_message =~ /\[test-elk\]/)
@@ -71,6 +73,7 @@ jobs:
       script:
         - docker exec kiosk make test/integration/gke/deploy/elk
         - docker kill kiosk && docker rm kiosk
+
     - stage: deploy
       name: "Docker Deployment"
       if: tag IS present
