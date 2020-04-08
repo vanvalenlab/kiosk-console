@@ -53,8 +53,6 @@ test/destroy: \
 ## Target for testing cluster deployment
 test/integration/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$((1 + $$RANDOM % 1000))')
 test/integration/gke/deploy:
-	# execute make targets
-	# make init
 	make test/create
 	make test/destroy
 	@echo "TESTED"
