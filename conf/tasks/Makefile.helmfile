@@ -8,7 +8,7 @@ helmfile/create/all:
 	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
 		cp ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/* ${CONF_PATH_PREFIX}/conf/helmfile.d;\
 	fi
-	${CONF_PATH_PREFIX}/conf/patches/gke-helmfile-deployment.sh
+	@gke-helmfile-deployment.sh
 	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "
