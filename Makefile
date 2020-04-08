@@ -55,6 +55,3 @@ test/integration/gke/deploy:
 test/integration/gke/deploy/elk: export ELK_DEPLOYMENT_TOGGLE = ON
 test/integration/gke/deploy/elk: \
 	test/integration/gke/deploy
-
-test/unit:
-	echo "No unit tests at this time."
