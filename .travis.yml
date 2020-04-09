@@ -16,7 +16,7 @@ stages:
 
 jobs:
   allow_failures:
-    - script: make test/integration/gke/deploy/elk
+    - name: "Integration test - ELK Enabled"
   fast_finish: true
   include:
     - stage: unit_tests
@@ -27,68 +27,55 @@ jobs:
       script:
         - docker exec kiosk make test/unit
         - docker kill kiosk && docker rm kiosk
+
     - stage: integration_tests
-      name: "Integration test - no ELK"
-      if: ( (type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/) )
-      env:
-        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk-console/conf/charts
-        - CLOUD_PROVIDER=gke
-        - CLOUDSDK_BUCKET=deepcell-output-benchmarking
-        - CLOUDSDK_COMPUTE_REGION=us-west1
-        - CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk-console/.config/gcloud/
-        - CLOUDSDK_CORE_PROJECT=deepcell-209717
-        - CLOUDSDK_CORE_VERBOSITY=debug
-        - CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk-console
-        - CONSUMER_MACHINE_TYPE=n1-highmem-2
-        - GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
-        - GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
-        - GKE_MACHINE_TYPE=n1-standard-1
-        - GCP_SERVICE_ACCOUNT=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-        - GPU_MACHINE_TYPE=n1-highmem-2
-        - GPU_NODE_MIN_SIZE=0
-        - GPU_NODE_MAX_SIZE=4
-        - GPU_PER_NODE=1
-        - KUBERNETES_VERSION=latest
-        - NODE_MIN_SIZE=1
-        - NODE_MAX_SIZE=60
-        - REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+      name: "Integration Tests - ELK Disabled"
+      if: ((type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/))
       before_install:
         - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
-        - export PATH=/home/travis/build/vanvalenlab/kiosk-console:$PATH
-      install: ./.travis/install_script.sh
-      script: make test/integration/gke/deploy
+      install:
+        - docker build -t kiosk .
+        - >
+          docker run -d -it
+          --volume $(readlink -f gcloud_key.json):/tmp/keys/gcloud_key.json:ro
+          --env CLOUD_PROVIDER=gke
+          --env GCP_SERVICE_ACCOUNT=$GCP_SERVICE_ACCOUNT
+          --env CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT
+          --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET
+          --env CLOUDSDK_COMPUTE_REGION=us-west1
+          --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+          --env GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/gcloud_key.json
+          --entrypoint=/bin/bash
+          --name kiosk kiosk
+      script:
+        - docker exec kiosk make test/integration/gke/deploy
+        - docker kill kiosk && docker rm kiosk
+
     - stage: integration_tests
-      name: "Integration test - with ELK"
-      if: ( (type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/) ) AND (commit_message =~ /\[test-elk\]/)
-      env:
-        - CHARTS_PATH=/home/travis/build/vanvalenlab/kiosk-console/conf/charts
-        - CLOUD_PROVIDER=gke
-        - CLOUDSDK_BUCKET=deepcell-output-benchmarking
-        - CLOUDSDK_COMPUTE_REGION=us-west1
-        - CLOUDSDK_CONFIG=/home/travis/build/vanvalenlab/kiosk-console/.config/gcloud/
-        - CLOUDSDK_CORE_PROJECT=deepcell-209717
-        - CLOUDSDK_CORE_VERBOSITY=debug
-        - CONF_PATH_PREFIX=/home/travis/build/vanvalenlab/kiosk-console
-        - CONSUMER_MACHINE_TYPE=n1-highmem-2
-        - GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
-        - GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
-        - GKE_MACHINE_TYPE=n1-standard-1
-        - GCP_SERVICE_ACCOUNT=continuous-integration-test@deepcell-209717.iam.gserviceaccount.com
-        - GPU_MACHINE_TYPE=n1-highmem-2
-        - GPU_NODE_MIN_SIZE=0
-        - GPU_NODE_MAX_SIZE=4
-        - GPU_PER_NODE=1
-        - KUBERNETES_VERSION=latest
-        - NODE_MIN_SIZE=1
-        - NODE_MAX_SIZE=60
-        - REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+      name: "Integration test - ELK Enabled"
+      if: ((type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/)) AND (commit_message =~ /\[test-elk\]/)
       before_install:
         - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
-        - export PATH=/home/travis/build/vanvalenlab/kiosk-console:/home/travis/build/vanvalenlab/kiosk-console/linux-amd64:$PATH
-      install: ./.travis/install_script.sh
-      script: make test/integration/gke/deploy/elk
+      install:
+        - docker build -t kiosk .
+        - >
+          docker run -d -it
+          --volume $(readlink -f gcloud_key.json):/tmp/keys/gcloud_key.json:ro
+          --env CLOUD_PROVIDER=gke
+          --env GCP_SERVICE_ACCOUNT=$GCP_SERVICE_ACCOUNT
+          --env CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT
+          --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET
+          --env CLOUDSDK_COMPUTE_REGION=us-west1
+          --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
+          --env GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/gcloud_key.json
+          --entrypoint=/bin/bash
+          --name kiosk kiosk
+      script:
+        - docker exec kiosk make test/integration/gke/deploy/elk
+        - docker kill kiosk && docker rm kiosk
+
     - stage: deploy
       name: "Docker Deployment"
       if: tag IS present
