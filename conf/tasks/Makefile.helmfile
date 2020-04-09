@@ -6,7 +6,7 @@ helmfile/create/all:
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
 	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
-		cp ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/* ${CONF_PATH_PREFIX}/conf/helmfile.d;\
+		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
 	fi
 	@gke-helmfile-deployment.sh
 	@echo "Helmfile deployment finished."
@@ -15,7 +15,7 @@ helmfile/create/all:
 
 helmfile/create/elk:
 	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
-		cp ${CONF_PATH_PREFIX}/conf/ELK_helmfiles/* ${CONF_PATH_PREFIX}/conf/helmfile.d;\
+		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
 		helmfile --selector namespace=elk sync;\
 	fi
 

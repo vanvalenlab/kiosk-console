@@ -55,9 +55,6 @@ ENV CONSUMER_MACHINE_TYPE="n1-standard-2"
 ENV CLOUD_PROVIDER=""
 ENV ELK_DEPLOYMENT_TOGGLE=""
 
-# Kiosk filesystem config
-ENV CONF_PATH_PREFIX=""
-
 # Filesystem entry for tfstate
 RUN s3 fstab '${KOPS_STATE_STORE}' '/' '/s3'
 
