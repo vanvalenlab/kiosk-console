@@ -51,6 +51,7 @@ test/destroy: \
 test/integration/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$((1 + $$RANDOM % 1000))')
 test/integration/gke/deploy:
 	make test/create
+	# TODO: add more testing workflows
 	make test/destroy
 	@echo "TESTED"
 
