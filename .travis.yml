@@ -16,7 +16,7 @@ stages:
 
 jobs:
   allow_failures:
-    - script: docker exec kiosk make test/integration/gke/deploy/elk
+    - name: "Integration test - ELK Enabled"
   fast_finish: true
   include:
     - stage: unit_tests
