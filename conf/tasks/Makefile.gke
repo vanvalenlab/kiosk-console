@@ -284,7 +284,7 @@ gke/destroy/all: \
 ## Create Service Account used by deepcell
 gke/test/create/service-account:
 	@echo "Creating GKE service account..."
-	@gcloud auth activate-service-account $(GCP_SERVICE_ACCOUNT) --key-file=$(CONF_PATH_PREFIX)/gcloud_key.json
+	@gcloud auth activate-service-account $(GCP_SERVICE_ACCOUNT) --key-file=$(GOOGLE_APPLICATION_CREDENTIALS)
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "
