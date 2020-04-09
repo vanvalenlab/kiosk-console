@@ -33,12 +33,13 @@ jobs:
       if: ((type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/))
       before_install:
         - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
+        - touch /tmp/keys/gcloud_key.json
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
       install:
         - docker build -t kiosk .
         - >
           docker run -d -it
-          --volume gcloud_key.json:/tmp/keys/gcloud_key.json:ro
+          --volume /tmp/keys/gcloud_key.json:/tmp/keys/gcloud_key.json:ro
           --env CLOUD_PROVIDER=gke
           --env GCP_SERVICE_ACCOUNT=$GCP_SERVICE_ACCOUNT
           --env CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT
