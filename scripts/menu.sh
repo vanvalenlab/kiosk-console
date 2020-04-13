@@ -555,12 +555,15 @@ function confirm_cluster_launch() {
     dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 9 65
   else
+    local h=18
+    local w=60
     local bucket_region=$(gsutil ls -L -b "gs://${CLOUDSDK_BUCKET}" | grep "Location constraint" | awk '{print tolower($NF)}')
     if [ "$CLOUDSDK_COMPUTE_REGION" = "$bucket_region"]; then
       local bucket_warning=("")
     else
       local bucket_warning=("\n\nThe selected region and the bucket's region do not match."
-                            "\nThis may cause unintended network interzone egress charges.")
+                            "This may cause unintended network interzone egress charges.")
+      h=$((h+4))
     fi
     local notice_text=("\nYou are about to launch a cluster using the following:"
                        "\n\n    Cloud Account - ${current_account}"
@@ -572,7 +575,7 @@ function confirm_cluster_launch() {
                        "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
                        "\n\nWould you like to continue?")
 
-    dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" 18 60
+    dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" h w
     response=$?
     case $response in
       0) return 0;;
