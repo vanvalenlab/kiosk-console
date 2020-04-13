@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for filename in ${CONF_PATH_PREFIX}/conf/helmfile.d/*.yaml; do
+for filename in /conf/helmfile.d/*.yaml; do
   deployment_names=$(helmfile -f $filename build | \
                      yq r - -- releases[*].name | awk '{print $NF}')
   for name in $deployment_names; do
