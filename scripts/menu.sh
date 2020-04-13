@@ -563,7 +563,7 @@ function confirm_cluster_launch() {
     else
       local bucket_warning=("\n\nThe selected region and the bucket's region do not match."
                             "This may cause unintended network interzone egress charges.")
-      h=$((h+4))
+      local h=22
     fi
     local notice_text=("\nYou are about to launch a cluster using the following:"
                        "\n\n    Cloud Account - ${current_account}"
