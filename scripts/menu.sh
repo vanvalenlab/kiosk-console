@@ -312,14 +312,6 @@ function configure_gke() {
     return 0
   fi
 
-  local bucket_region=$(gsutil ls -L -b gs://kiosk-benchmarks | grep "Location constraint" | awk '{print tolower($NF)}')
-  if [ "$CLOUDSDK_COMPUTE_REGION" -ne "$bucket_region"]; then
-    local bucket_warning=("Region mismatch"
-                          "\n\nThe selected region and the bucket's region do not match."
-                          "\nThis may cause unintended network interzone egress charges.")
-    local confirm=$(msgbox "Warning!" "${bucket_warning[*]}")
-  fi
-
   # Get information about the project from gcloud
   infobox "Loading..."
   local default_region=$(gcloud compute project-info describe \
@@ -563,11 +555,19 @@ function confirm_cluster_launch() {
     dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 9 65
   else
+    local bucket_region=$(gsutil ls -L -b "gs://${CLOUDSDK_BUCKET}" | grep "Location constraint" | awk '{print tolower($NF)}')
+    if [ "$CLOUDSDK_COMPUTE_REGION" -ne "$bucket_region"]; then
+      local bucket_warning=("\n\nThe selected region and the bucket's region do not match."
+                            "\nThis may cause unintended network interzone egress charges.")
+    else
+      local bucket_warning=("")
+    fi
     local notice_text=("\nYou are about to launch a cluster using the following:"
                        "\n\n    Cloud Account - ${current_account}"
                        "\n    Project       - ${CLOUDSDK_CORE_PROJECT}"
                        "\n    Cluster Name  - ${CLOUDSDK_CONTAINER_CLUSTER}"
                        "\n    Bucket Name   - ${CLOUDSDK_BUCKET}"
+                       "${bucket_warning[*]}"
                        "\n\nPlease note that this process will take several minutes."
                        "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
                        "\n\nWould you like to continue?")
