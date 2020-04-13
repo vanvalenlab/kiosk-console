@@ -556,11 +556,11 @@ function confirm_cluster_launch() {
          "${error_text[*]}" 9 65
   else
     local bucket_region=$(gsutil ls -L -b "gs://${CLOUDSDK_BUCKET}" | grep "Location constraint" | awk '{print tolower($NF)}')
-    if [ "$CLOUDSDK_COMPUTE_REGION" -ne "$bucket_region"]; then
+    if [ "$CLOUDSDK_COMPUTE_REGION" = "$bucket_region"]; then
+      local bucket_warning=("")
+    else
       local bucket_warning=("\n\nThe selected region and the bucket's region do not match."
                             "\nThis may cause unintended network interzone egress charges.")
-    else
-      local bucket_warning=("")
     fi
     local notice_text=("\nYou are about to launch a cluster using the following:"
                        "\n\n    Cloud Account - ${current_account}"
