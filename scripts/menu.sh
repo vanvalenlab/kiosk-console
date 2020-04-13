@@ -313,7 +313,7 @@ function configure_gke() {
   fi
 
   local bucket_region=$(gsutil ls -L -b gs://kiosk-benchmarks | grep "Location constraint" | awk '{print tolower($NF)}')
-  if [ "$CLOUDSDK_COMPUTE_REGION" -ne "$bucket_region"]
+  if [ "$CLOUDSDK_COMPUTE_REGION" -ne "$bucket_region"]; then
     local bucket_warning=("Region mismatch"
                           "\n\nThe selected region and the bucket's region do not match."
                           "\nThis may cause unintended network interzone egress charges.")
