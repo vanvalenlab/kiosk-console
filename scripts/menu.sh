@@ -312,6 +312,14 @@ function configure_gke() {
     return 0
   fi
 
+  local bucket_region=$(gsutil ls -L -b gs://kiosk-benchmarks | grep "Location constraint" | awk '{print tolower($NF)}')
+  if [ "$CLOUDSDK_COMPUTE_REGION" -ne "$bucket_region"]
+    local bucket_warning=("Region mismatch"
+                          "\n\nThe selected region and the bucket's region do not match."
+                          "\nThis may cause unintended network interzone egress charges.")
+    local confirm=$(msgbox "Warning!" "${bucket_warning[*]}")
+  fi
+
   # Get information about the project from gcloud
   infobox "Loading..."
   local default_region=$(gcloud compute project-info describe \
