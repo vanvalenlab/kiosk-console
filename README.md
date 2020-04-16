@@ -1,4 +1,4 @@
-# ![DeepCell Kiosk Banner](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/add_banner/docs/images/DeepCell_Kiosk_Banner.png)
+# ![DeepCell Kiosk Banner](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/DeepCell_Kiosk_Banner.png)
 
 [![Build Status](https://travis-ci.com/vanvalenlab/kiosk-console.svg?branch=master)](https://travis-ci.com/vanvalenlab/kiosk-console)
 [![Read the Docs](https://img.shields.io/readthedocs/kiosk-console?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
@@ -18,7 +18,8 @@ An example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org)
 - Scalable platform that minimizes cost and inference time
 - Drag and drop interface for running predictions
 
-### Example
+### Examples
+
 <table width="700" border="1" cellpadding="5">
 
 <tr>
@@ -33,11 +34,11 @@ Tracked Image
 
 <tr>
 <td align="center" valign="center">
-<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/raw.gif" alt="Raw Image" />
+<img src="https://raw.githubusercontent.com/vanvalenlab/deepcell-tf/master/docs/images/raw.gif" alt="Raw Image" />
 </td>
 
 <td align="center" valign="center">
-<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/tracked.gif" alt="Tracked Image" />
+<img src="https://raw.githubusercontent.com/vanvalenlab/deepcell-tf/master/docs/images/tracked.gif" alt="Tracked Image" />
 </td>
 </tr>
 
@@ -100,5 +101,5 @@ This kiosk was developed with [Cloud Posse, LLC](https://cloudposse.com). They c
 
 ## Copyright
 
-Copyright © 2018-2020 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
+Copyright © 2018-2020 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from Shurl and Kay Curci Foundation, the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
 All rights reserved.
