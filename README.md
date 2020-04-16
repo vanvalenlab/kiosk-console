@@ -10,7 +10,7 @@ The DeepCell Kiosk is designed to allow researchers to easily deploy and scale a
 
 The scalability of the DeepCell Kiosk software is enabled by [Kubernetes](https://kubernetes.io/). At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/).
 
-A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org).
+An example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org).
 
 ## Features
 
