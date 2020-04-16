@@ -288,7 +288,7 @@ function configure_gke() {
     export CLOUDSDK_CONTAINER_CLUSTER="deepcell-$((1 + RANDOM % 1000))"
   fi
 
-  export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
+  export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Name Your Cluster" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
   export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   # If clusters are longer than 18 characters, Persistent Disks can get stranded.
   while [ "${CLOUDSDK_CONTAINER_CLUSTER}" = "" -o ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]
@@ -298,7 +298,7 @@ function configure_gke() {
     elif [ ${#CLOUDSDK_CONTAINER_CLUSTER} -gt 18 ]; then
       msgbox "Warning!" "Please make sure your cluster name is no more than 18 characters."
     fi
-    export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Cluster Name" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
+    export CLOUDSDK_CONTAINER_CLUSTER=$(inputbox "Deepcell" "Name Your Cluster" "${CLOUDSDK_CONTAINER_CLUSTER:-deepcell-cluster}")
     export CLOUDSDK_CONTAINER_CLUSTER=$(echo ${CLOUDSDK_CONTAINER_CLUSTER} | awk '{print tolower($0)}' | sed -E 's/[^a-z0-9]+/-/g' | sed -E 's/(^-+|-+$)//')
   done
 
@@ -484,7 +484,7 @@ function configure_gke() {
   export GPU_PER_NODE=${GPU_PER_NODE:-1}
 
   # The type of node for the consumer node pools
-  export CONSUMER_MACHINE_TYPE=${CONSUMER_MACHINE_TYPE:-n1-highmem-2}
+  export CONSUMER_MACHINE_TYPE=${CONSUMER_MACHINE_TYPE:-n1-standard-2}
 
   printenv | grep -e CLOUD_PROVIDER \
     -e CLOUDSDK \
@@ -555,16 +555,27 @@ function confirm_cluster_launch() {
     dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 9 65
   else
+    local h=18
+    local w=60
+    local bucket_region=$(gsutil ls -L -b "gs://${CLOUDSDK_BUCKET}" | grep "Location constraint" | awk '{print tolower($NF)}')
+    if [ "$CLOUDSDK_COMPUTE_REGION" = "$bucket_region" ]; then
+      local bucket_warning=("")
+    else
+      local bucket_warning=("\n\nThe selected region and the bucket's region do not match."
+                            "This may cause unintended network interzone egress charges.")
+      h=$((h+4))
+    fi
     local notice_text=("\nYou are about to launch a cluster using the following:"
                        "\n\n    Cloud Account - ${current_account}"
                        "\n    Project       - ${CLOUDSDK_CORE_PROJECT}"
                        "\n    Cluster Name  - ${CLOUDSDK_CONTAINER_CLUSTER}"
                        "\n    Bucket Name   - ${CLOUDSDK_BUCKET}"
+                       "${bucket_warning[*]}"
                        "\n\nPlease note that this process will take several minutes."
                        "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
                        "\n\nWould you like to continue?")
 
-    dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" 18 60
+    dialog --backtitle "${BRAND}" --title "Please Confirm" --yesno "${notice_text[*]}" $h $w
     response=$?
     case $response in
       0) return 0;;

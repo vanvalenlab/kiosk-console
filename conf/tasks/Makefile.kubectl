@@ -11,7 +11,7 @@ kubectl/create/rbac:
 ## Deploy ConfigMap with prometheus-redis-exporter script.
 kubectl/create/prometheus-redis-exporter-script:
 	-@kubectl create namespace monitoring 2>/dev/null || true
-	gomplate -f patches/redis-exporter-script.yaml | kubectl apply -f -
+	gomplate -f addons/redis-exporter-script.yaml | kubectl apply -f -
 
 ## Provision cluster autoscaler
 kubectl/create/autoscaler:
@@ -51,5 +51,5 @@ kubectl/destroy/prometheus/operator:
 
 ## Create horizontal pod autoscalers for all relevant deployments
 kubectl/implement/autoscaling:
-	gomplate -f patches/hpa.yaml | kubectl apply -f -
+	gomplate -f addons/hpa.yaml | kubectl apply -f -
 	@kubens deepcell

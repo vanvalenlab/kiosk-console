@@ -49,14 +49,11 @@ ENV GCP_PREDICTION_GPU_TYPE="nvidia-tesla-t4"
 ENV GCP_TRAINING_GPU_TYPE="nvidia-tesla-v100"
 ENV GKE_MACHINE_TYPE="n1-standard-1"
 ENV GPU_MACHINE_TYPE="n1-highmem-2"
-ENV CONSUMER_MACHINE_TYPE="n1-highmem-2"
+ENV CONSUMER_MACHINE_TYPE="n1-standard-2"
 
 # Deployment config
 ENV CLOUD_PROVIDER=""
 ENV ELK_DEPLOYMENT_TOGGLE=""
-
-# Kiosk filesystem config
-ENV CONF_PATH_PREFIX=""
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${KOPS_STATE_STORE}' '/' '/s3'
