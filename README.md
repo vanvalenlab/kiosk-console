@@ -1,14 +1,16 @@
-# DeepCell Kiosk: A Scalable and User-Friendly Environment for Biological Image Analysis
+# ![DeepCell Kiosk Banner](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/DeepCell_Kiosk_Banner.png)
 
 [![Build Status](https://travis-ci.com/vanvalenlab/kiosk-console.svg?branch=master)](https://travis-ci.com/vanvalenlab/kiosk-console)
 [![Read the Docs](https://img.shields.io/readthedocs/kiosk-console?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/vanvalenlab/kiosk-console/blob/master/LICENSE)
 
-The `kiosk-console` is the entry point for users to spin up the DeepCell Kiosk, an end-to-end DeepCell environment. It is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models. To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
+The `kiosk-console` is the entry point for users to spin up a DeepCell Kiosk, a cloud-native implementation of the DeepCell ecosystem.
+
+The DeepCell Kiosk is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models. To train custom models, please refer to [`deepcell-tf`](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and is capable of exporting these models for use with the DeepCell Kiosk.
 
 The scalability of the DeepCell Kiosk software is enabled by [Kubernetes](https://kubernetes.io/). At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/).
 
-A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org).
+An example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org).
 
 ## Features
 
@@ -16,7 +18,8 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 - Scalable platform that minimizes cost and inference time
 - Drag and drop interface for running predictions
 
-### Example
+### Examples
+
 <table width="700" border="1" cellpadding="5">
 
 <tr>
@@ -31,11 +34,11 @@ Tracked Image
 
 <tr>
 <td align="center" valign="center">
-<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/raw.gif" alt="Raw Image" />
+<img src="https://raw.githubusercontent.com/vanvalenlab/deepcell-tf/master/docs/images/raw.gif" alt="Raw Image" />
 </td>
 
 <td align="center" valign="center">
-<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/tracked.gif" alt="Tracked Image" />
+<img src="https://raw.githubusercontent.com/vanvalenlab/deepcell-tf/master/docs/images/tracked.gif" alt="Tracked Image" />
 </td>
 </tr>
 
@@ -98,5 +101,5 @@ This kiosk was developed with [Cloud Posse, LLC](https://cloudposse.com). They c
 
 ## Copyright
 
-Copyright © 2018-2020 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
+Copyright © 2018-2020 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Shurl and Kay Curci Foundation, the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
 All rights reserved.
