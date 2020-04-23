@@ -45,7 +45,6 @@ env:
 
   TF_HOST: "overwrite_this"
   TF_PORT: "sepcify_me"
-  TF_TENSOR_NAME: "image"
   TF_MAX_BATCH_SIZE: 1
   TF_MIN_MODEL_SIZE: 128
 
