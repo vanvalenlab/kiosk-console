@@ -320,18 +320,20 @@ function configure_gke() {
                          | grep google-compute-default-region | awk '{ print $2 }')
 
   # use default settings or use the advanced menu
-  local setup_opt_value=$(dialog --clear --backtitle "${BRAND}" \
-              --title "  Configuration Options  " \
-              --menu "${header_text[*]}" 10 70 2 \
-                  "Default"     "Use default options to setup cluster" \
-                  "Advanced"    "Specify custom cluster creation options" \
-              --output-fd 1 \
-            )
+  local setup_opt_value=$(
+    dialog --clear --backtitle "${BRAND}" \
+    --title "  Configuration Options  " \
+    --menu "${header_text[*]}" 10 70 3 \
+        "Default 1 GPU"  "Use default options to setup a small cluster" \
+        "Default 4 GPU"  "Use default options to setup a large cluster" \
+        "Advanced"       "Specify custom cluster creation options" \
+    --output-fd 1 \
+  )
 
   if [ -z "$setup_opt_value" ]; then
     return 0
 
-  elif [ "$setup_opt_value" = "Default" ]; then
+  elif [ "$setup_opt_value" = "Default 1 GPU" ]; then
     # Default settings
     infobox "Loading default values..." 5 55
     export CLOUDSDK_COMPUTE_REGION=${default_region:-us-west1}
@@ -342,6 +344,18 @@ function configure_gke() {
     export GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
     export GPU_NODE_MIN_SIZE=0
     export GPU_NODE_MAX_SIZE=1
+
+  elif [ "$setup_opt_value" = "Default 4 GPU" ]; then
+    # Default settings
+    infobox "Loading default values..." 5 55
+    export CLOUDSDK_COMPUTE_REGION=${default_region:-us-west1}
+    export GKE_MACHINE_TYPE=n1-standard-4
+    export NODE_MIN_SIZE=1
+    export NODE_MAX_SIZE=60
+    export GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
+    export GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
+    export GPU_NODE_MIN_SIZE=0
+    export GPU_NODE_MAX_SIZE=4
 
   else
     # Advanced menu
