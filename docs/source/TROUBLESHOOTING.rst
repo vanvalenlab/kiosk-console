@@ -55,15 +55,15 @@ You probably just added yourself to the ``docker`` user group but haven't logged
 
 My pods are not autoscaling because the custom metrics are not updating!
 ----------------------------
-Prometheus has a large memory footprint, and is liable to be OOMKilled when there are many other pods running.
+Prometheus has a large memory footprint and is liable to be OOMKilled when there are many other pods running.
 
-This can be confirmed by executing the following and inspecting the output for a Reason.
+This can be confirmed by executing the following and inspecting the output.
 
 .. code-block:: bash
 
     kubectl describe node $(kubectl describe pod -n monitoring  prometheus-prometheus-operator-prometheus-0 | grep Node: | awk '{print $2}' | cut -d '/' -f1)
 
-The easiest way to resolve this issue is to upgrade the node types to something with more memory (``n1-standard-4`` seems work well for large clusters).
+The easiest way to resolve this issue is to upgrade the node types to something with more memory (``n1-standard-4`` seems to work well for large clusters).
 
 My prediction never finishes
 ----------------------------
