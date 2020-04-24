@@ -320,18 +320,20 @@ function configure_gke() {
                          | grep google-compute-default-region | awk '{ print $2 }')
 
   # use default settings or use the advanced menu
-  local setup_opt_value=$(dialog --clear --backtitle "${BRAND}" \
-              --title "  Configuration Options  " \
-              --menu "${header_text[*]}" 10 70 2 \
-                  "Default"     "Use default options to setup cluster" \
-                  "Advanced"    "Specify custom cluster creation options" \
-              --output-fd 1 \
-            )
+  local setup_opt_value=$(
+    dialog --clear --backtitle "${BRAND}" \
+    --title "  Configuration Options  " \
+    --menu "${header_text[*]}" 10 70 3 \
+        "Default 1 GPU"  "The smallest cluster size possible" \
+        "Default 4 GPU"  "A robust cluster suited for larger jobs" \
+        "Advanced"       "Specify custom cluster creation options" \
+    --output-fd 1 \
+  )
 
   if [ -z "$setup_opt_value" ]; then
     return 0
 
-  elif [ "$setup_opt_value" = "Default" ]; then
+  elif [ "$setup_opt_value" = "Default 1 GPU" ]; then
     # Default settings
     infobox "Loading default values..." 5 55
     export CLOUDSDK_COMPUTE_REGION=${default_region:-us-west1}
@@ -342,6 +344,18 @@ function configure_gke() {
     export GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
     export GPU_NODE_MIN_SIZE=0
     export GPU_NODE_MAX_SIZE=1
+
+  elif [ "$setup_opt_value" = "Default 4 GPU" ]; then
+    # Default settings
+    infobox "Loading default values..." 5 55
+    export CLOUDSDK_COMPUTE_REGION=${default_region:-us-west1}
+    export GKE_MACHINE_TYPE=n1-standard-4
+    export NODE_MIN_SIZE=1
+    export NODE_MAX_SIZE=60
+    export GCP_PREDICTION_GPU_TYPE=nvidia-tesla-t4
+    export GCP_TRAINING_GPU_TYPE=nvidia-tesla-v100
+    export GPU_NODE_MIN_SIZE=0
+    export GPU_NODE_MAX_SIZE=4
 
   else
     # Advanced menu
@@ -555,7 +569,7 @@ function confirm_cluster_launch() {
     dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 9 65
   else
-    local h=18
+    local h=20
     local w=60
     local bucket_region=$(gsutil ls -L -b "gs://${CLOUDSDK_BUCKET}" | grep "Location constraint" | awk '{print tolower($NF)}')
     if [ "$CLOUDSDK_COMPUTE_REGION" = "$bucket_region" ]; then
@@ -570,6 +584,8 @@ function confirm_cluster_launch() {
                        "\n    Project       - ${CLOUDSDK_CORE_PROJECT}"
                        "\n    Cluster Name  - ${CLOUDSDK_CONTAINER_CLUSTER}"
                        "\n    Bucket Name   - ${CLOUDSDK_BUCKET}"
+                       "\n    Cluster Nodes - ${GKE_MACHINE_TYPE} (${NODE_MIN_SIZE} to ${NODE_MAX_SIZE} nodes)"
+                       "\n    GPU Nodes     - ${GCP_PREDICTION_GPU_TYPE} (${GPU_NODE_MIN_SIZE} to ${GPU_NODE_MAX_SIZE} nodes)"
                        "${bucket_warning[*]}"
                        "\n\nPlease note that this process will take several minutes."
                        "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
