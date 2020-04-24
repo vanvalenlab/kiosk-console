@@ -569,7 +569,7 @@ function confirm_cluster_launch() {
     dialog --backtitle "$BRAND" --title "GKE Login Failed" --clear --msgbox \
          "${error_text[*]}" 9 65
   else
-    local h=18
+    local h=20
     local w=60
     local bucket_region=$(gsutil ls -L -b "gs://${CLOUDSDK_BUCKET}" | grep "Location constraint" | awk '{print tolower($NF)}')
     if [ "$CLOUDSDK_COMPUTE_REGION" = "$bucket_region" ]; then
@@ -584,6 +584,8 @@ function confirm_cluster_launch() {
                        "\n    Project       - ${CLOUDSDK_CORE_PROJECT}"
                        "\n    Cluster Name  - ${CLOUDSDK_CONTAINER_CLUSTER}"
                        "\n    Bucket Name   - ${CLOUDSDK_BUCKET}"
+                       "\n    Cluster Nodes - ${GKE_MACHINE_TYPE} (${NODE_MIN_SIZE} to ${NODE_MAX_SIZE} nodes)"
+                       "\n    GPU Nodes     - ${GCP_PREDICTION_GPU_TYPE} (${GPU_NODE_MIN_SIZE} to ${GPU_NODE_MAX_SIZE} nodes)"
                        "${bucket_warning[*]}"
                        "\n\nPlease note that this process will take several minutes."
                        "If the cluster does not create successfully, it may be necessary to delete resources from the cloud console."
