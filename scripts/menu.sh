@@ -324,8 +324,8 @@ function configure_gke() {
     dialog --clear --backtitle "${BRAND}" \
     --title "  Configuration Options  " \
     --menu "${header_text[*]}" 10 70 3 \
-        "Default 1 GPU"  "Use default options to setup a small cluster" \
-        "Default 4 GPU"  "Use default options to setup a large cluster" \
+        "Default 1 GPU"  "The smallest cluster size possible" \
+        "Default 4 GPU"  "A robust cluster suited for larger jobs" \
         "Advanced"       "Specify custom cluster creation options" \
     --output-fd 1 \
   )
