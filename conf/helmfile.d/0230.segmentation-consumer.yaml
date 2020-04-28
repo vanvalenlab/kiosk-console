@@ -28,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.5.1
+        tag: 0.5.2
 
       nameOverride: segmentation-consumer
 
@@ -64,7 +64,6 @@ releases:
 
         TF_HOST: "tf-serving"
         TF_PORT: 8500
-        TF_TENSOR_NAME: "image"
         TF_MAX_BATCH_SIZE: 64
         TF_MIN_MODEL_SIZE: 128
 
