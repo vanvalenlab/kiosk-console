@@ -53,6 +53,18 @@ If that command returns an error, you may not be on Linux. If you are on Linux, 
 
 You probably just added yourself to the ``docker`` user group but haven't logged and logged back in yet.
 
+My pods are not autoscaling because the custom metrics are not updating!
+----------------------------
+Prometheus has a large memory footprint and is liable to be OOMKilled when there are many other pods running.
+
+This can be confirmed by executing the following and inspecting the output.
+
+.. code-block:: bash
+
+    kubectl describe node $(kubectl describe pod -n monitoring  prometheus-prometheus-operator-prometheus-0 | grep Node: | awk '{print $2}' | cut -d '/' -f1)
+
+The easiest way to resolve this issue is to upgrade the node types to something with more memory (``n1-standard-4`` seems to work well for large clusters).
+
 My prediction never finishes
 ----------------------------
 A consumer should always either successfully consume a job or fail and provide an error. If a submitted prediction job never completes and the "in progress" animation is running, it is likely that the consumer pod is out of memory/CPU resources. In this case, Kubernetes responds by killing the consumer before it can complete the job. To confirm that the consumer is being ``Evicted``, drop to shell and use ``kubectl get pods``. There are a few ways to resolve a consumer being evicted due to resource constraints:
