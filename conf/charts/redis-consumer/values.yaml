@@ -37,7 +37,9 @@ env:
   EXPIRE_TIME: 3600
   GRPC_TIMEOUT: 30
   GRPC_BACKOFF: 3
-  MAX_RETRY: 0
+  MAX_RETRY: 5
+  DO_NOTHING_TIMEOUT: 0.5
+  STORAGE_MAX_BACKOFF: 60
 
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
@@ -45,7 +47,6 @@ env:
 
   TF_HOST: "overwrite_this"
   TF_PORT: "sepcify_me"
-  TF_TENSOR_NAME: "image"
   TF_MAX_BATCH_SIZE: 1
   TF_MIN_MODEL_SIZE: 128
 
