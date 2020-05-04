@@ -48,7 +48,7 @@ releases:
         API_HOST: '{{ env "CLUSTER_ADDRESS" | default "frontend" }}'
         FILE: zip100.zip
         COUNT: 100
-        MODEL: NuclearSegmentation:1
+        MODEL: NuclearSegmentation:2
         UPLOAD_PREFIX: uploads
         POSTPROCESS: deep_watershed
         PREPROCESS: ""
