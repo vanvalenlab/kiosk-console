@@ -492,10 +492,9 @@ function configure_gke() {
   if [ $default_zone == *","* ]; then
     default_zone="Multizone"
   fi
-  msgbox "debug zone" "\n${default}\n${REGION_ZONES_WITH_GPUS}\n${valid_zones[*]}" 10 55
-  export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  $default_zone "${message}" "${valid_zones[@]}")
 
+  export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
+                                  $default_zone "${message}" $(for i in ${valid_zones[@]}; do echo $i; done))
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
     return 0
@@ -503,9 +502,6 @@ function configure_gke() {
     export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
     unset valid_zones[${#valid_zones[@]}-1] # remove "Multizone" from list
   fi
-
-  # TODO: del this msgbox
-  msgbox "REGION_ZONES_WITH_GPUS" "${REGION_ZONES_WITH_GPUS}\n${valid_zones[*]}." 7 55
 
   msgbox "Configuration Complete!" "\nThe cluster is now available for creation." 7 55
 
