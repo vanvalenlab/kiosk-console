@@ -503,7 +503,7 @@ function configure_gke() {
   fi
 
   # TODO: del this msgbox
-  msgbox "REGION_ZONES_WITH_GPUS: ${REGION_ZONES_WITH_GPUS}." 7 55
+  msgbox "REGION_ZONES_WITH_GPUS" "${REGION_ZONES_WITH_GPUS}." 7 55
 
   msgbox "Configuration Complete!" "\nThe cluster is now available for creation." 7 55
 
