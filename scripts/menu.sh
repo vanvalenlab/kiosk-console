@@ -494,7 +494,7 @@ function configure_gke() {
   fi
   msgbox "debug zone" "\n${default}\n${REGION_ZONES_WITH_GPUS}\n${valid_zones[*]}" 10 55
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  $default_zone "${message}" ${valid_zones})
+                                  $default_zone "${message}" $(echo "${valid_zones[*]}" | sort -u))
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
     return 0
