@@ -492,6 +492,8 @@ function configure_gke() {
   if [[ $string == *","* ]]; then
     default="Multizone"
   fi
+  #TODO del msgbox
+  msgbox "debug zone" "\n${default}\n${REGION_ZONES_WITH_GPUS}\n${valid_zones[*]}}" 7 55
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
                                   "${default}" "${message[*]}" "${valid_zones}")
 
