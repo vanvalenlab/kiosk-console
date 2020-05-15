@@ -493,7 +493,6 @@ function configure_gke() {
     default_zone="Multizone"
   fi
   local zone_choices=$(for i in ${valid_zones[@]}; do echo $i; done)
-  zone_choices=$(echo "${zone_choices[*]}" | sort -u)
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
                                   $default_zone "${message}" "${zone_choices}")
 
