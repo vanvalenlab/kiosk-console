@@ -486,15 +486,15 @@ function configure_gke() {
     return 0
   fi
 
-  valid_zones+=('Multizone')  # add an "All of the above option"
+  # valid_zones+=('Multizone')  # add an "All of the above option"
   local message="Deploy a single- or multi-zone cluster."
   local default_zone="${REGION_ZONES_WITH_GPUS:-Multizone}"
-  if [[ $default_zone == *","* ]]; then
+  if [ $default_zone == *","* ]; then
     default_zone="Multizone"
   fi
   msgbox "debug zone" "\n${default}\n${REGION_ZONES_WITH_GPUS}\n${valid_zones[*]}" 10 55
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  "$default_zone" "${message}" "${valid_zones}")
+                                  $default_zone "${message}" "${valid_zones}")
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
     return 0
