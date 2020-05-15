@@ -494,13 +494,14 @@ function configure_gke() {
   fi
   msgbox "debug zone" "\n${default}\n${REGION_ZONES_WITH_GPUS}\n${valid_zones[*]}" 10 55
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  $default_zone "${message}" "${valid_zones}")
+                                  $default_zone "${message}" "${valid_zones[*]}")
+
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
     return 0
   elif [ "$REGION_ZONES_WITH_GPUS" = "Multizone" ]; then
     export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
-    unset valid_zones[${#valid_zones[@]}-1] # remove "Multizone" from list
+    # unset valid_zones[${#valid_zones[@]}-1] # remove "Multizone" from list
   fi
 
   # TODO: del this msgbox
