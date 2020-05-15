@@ -456,7 +456,7 @@ function configure_gke() {
   # If GPUs are not available in at least 2 zones, the user must restart.
   local available_zones=$(gcloud compute zones list \
                           --filter "status = UP AND region = ${CLOUDSDK_COMPUTE_REGION}" \
-                          --format "value(name)")
+                          --format "value(name)" | sort -u)
 
   # locate the zones for all GPU node pools
   local prediction_gpu_zones=$(gcloud compute accelerator-types list \
