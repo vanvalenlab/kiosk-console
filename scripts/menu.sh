@@ -487,7 +487,7 @@ function configure_gke() {
   fi
 
   valid_zones+=("Multizone")  # add an "All of the above option"
-  local message=("Select a single zone to deploy in, or deploy a multizone cluster.")
+  local message=("Deploy the a single- or multi-zone cluster.")
   local default="${REGION_ZONES_WITH_GPUS:-Multizone}"
   if [[ $string == *","* ]]; then
     default="Multizone"
