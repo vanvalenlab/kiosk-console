@@ -392,10 +392,10 @@ function configure_gke() {
     fi
 
     infobox "Loading..."
-      local gpus_in_region=$(gcloud compute accelerator-types list \
-                             --format "value(name)" \
-                             --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" \
-                             | sort -u)
+    local gpus_in_region=$(gcloud compute accelerator-types list \
+                           --format "value(name)" \
+                           --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" \
+                           | sort -u)
     local default_prediction_gpu=${GCP_PREDICTION_GPU_TYPE:-nvidia-tesla-t4}
     # local message="Choose a GPU for prediction (not training) from the GPU types available in your region:"
     local message="Choose a GPU from the types available in your region:"
