@@ -477,6 +477,7 @@ function configure_gke() {
     fi
   done
 
+  # Allow the user to select one or all the zones to deploy
   if [ ${#valid_zones[@]} -lt 1 ]; then
     local message=("There are no zones in your region with the specified GPU type(s)."
                    "\n\n"
@@ -487,8 +488,12 @@ function configure_gke() {
 
   valid_zones+=("Multizone")  # add an "All of the above option"
   local message=("Select a single zone to deploy in, or deploy a multizone cluster.")
+  local default="${REGION_ZONES_WITH_GPUS:-Multizone}"
+  if [[ $string == *","* ]]; then
+    default="Multizone"
+  fi
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  "Multizone" "${message}" "${valid_zones}")
+                                  "${default}" "${message}" "${valid_zones}")
   unset valid_zones[${#valid_zones[@]}-1] # remove "Multizone" from list
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
