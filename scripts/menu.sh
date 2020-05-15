@@ -477,15 +477,26 @@ function configure_gke() {
     fi
   done
 
-  export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
-
-  if [ ${#valid_zones[@]} -lt 2 ]; then
-    local message=("The following are zones in your region with the specified GPU type(s):"
-                   "\n\n    $REGION_ZONES_WITH_GPUS"
-                   "\n\nKubernetes needs at least 2 available zones."
+  if [ ${#valid_zones[@]} -lt 1 ]; then
+    local message=("There are no zones in your region with the specified GPU type(s)."
+                   "\n\n"
                    "Please re-configure with a different region/GPU type combination.")
     msgbox "Error!" "${message[*]}"
     return 0
+  fi
+
+  valid_zones+=("Multizone")  # add an "All of the above option"
+  local default_zone=$REGION_ZONES_WITH_GPUS
+  if
+  local message=("Select a single zone to deploy in, or deploy a multizone cluster.")
+  export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
+                                  "Multizone" "${message}" "${valid_zones}")
+  unset valid_zones[${#valid_zones[@]}-1] # remove "Multizone" from list
+
+  if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
+    return 0
+  elif [ "$REGION_ZONES_WITH_GPUS" = "Multizone" ]; then
+    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
   fi
 
   msgbox "Configuration Complete!" "\nThe cluster is now available for creation." 7 55
