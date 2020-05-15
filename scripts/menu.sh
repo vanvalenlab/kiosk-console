@@ -492,9 +492,9 @@ function configure_gke() {
   if [ $default_zone == *","* ]; then
     default_zone="Multizone"
   fi
-
+  local zone_choices=$(for i in ${valid_zones[@]}; do echo $i; done)
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  $default_zone "${message}" $(for i in ${valid_zones[@]}; do echo $i; done))
+                                  $default_zone "${message}" "${zone_choices}")
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
     return 0
