@@ -493,7 +493,7 @@ function configure_gke() {
     default="Multizone"
   fi
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  "${default}" "${message}" "${valid_zones}")
+                                  "${default}" "${message[*]}" "${valid_zones}")
   unset valid_zones[${#valid_zones[@]}-1] # remove "Multizone" from list
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
