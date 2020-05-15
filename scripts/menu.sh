@@ -486,7 +486,6 @@ function configure_gke() {
   fi
 
   valid_zones+=("Multizone")  # add an "All of the above option"
-  if
   local message=("Select a single zone to deploy in, or deploy a multizone cluster.")
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
                                   "Multizone" "${message}" "${valid_zones}")
