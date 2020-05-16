@@ -26,16 +26,11 @@ comma := ,
 sub := Q
 subbed := $(subst $(comma),$(sub),$(REGION_ZONES_WITH_GPUS))
 gke/create/cluster:
-ifeq ($(sub), $(findstring $(comma),$(sub),$(REGION_ZONES_WITH_GPUS)))
-	gke/create/multizone/cluster
-else
-	gke/create/singlezone/cluster
-endif
-
-gke/create/multizone/cluster:
 	@echo "Creating GKE cluster..."
 	@echo "Using the following command: "
-
+ifeq ($(sub), $(findstring $(sub),$(subbed))))
+	@echo "Creating GKE cluster..."
+	@echo "Using the following command: "
 	gcloud container clusters create $(CLOUDSDK_CONTAINER_CLUSTER) \
 	  --zone=$(REGION_ZONES_WITH_GPUS) \
 		--service-account=$(GCP_SERVICE_ACCOUNT) \
@@ -47,16 +42,9 @@ gke/create/multizone/cluster:
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
 		--no-enable-autoupgrade
-	@echo "GKE cluster creation complete."
-	@echo " "
-	@echo " "
-
-gke/create/singlezone/cluster:
-	@echo "Creating GKE cluster..."
-	@echo "Using the following command: "
-
+else
 	gcloud container clusters create $(CLOUDSDK_CONTAINER_CLUSTER) \
-	  --zone=$(REGION_ZONES_WITH_GPUS) \
+		--zone=$(REGION_ZONES_WITH_GPUS) \
 		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region=$(CLOUDSDK_COMPUTE_REGION) \
 		--max-nodes=$(NODE_MAX_SIZE) \
@@ -65,6 +53,7 @@ gke/create/singlezone/cluster:
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
 		--no-enable-autoupgrade
+endif
 	@echo "GKE cluster creation complete."
 	@echo " "
 	@echo " "
