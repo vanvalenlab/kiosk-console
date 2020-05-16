@@ -28,7 +28,6 @@ ifeq ($(comma), $(found))
 	multizone := 1
 endif
 gke/create/cluster:
-	@echo "Multizone = ${multizone}"
 	@echo "Creating GKE cluster in zones: ${REGION_ZONES_WITH_GPUS}..."
 	@if [ -n "${multizone}" ]; then \
 		gcloud container clusters create $(CLOUDSDK_CONTAINER_CLUSTER) \
