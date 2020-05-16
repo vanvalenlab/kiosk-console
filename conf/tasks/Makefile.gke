@@ -22,12 +22,15 @@ gke/destroy/project:
 	@gcloud projects delete $(CLOUDSDK_CORE_PROJECT)
 
 ## Create a new GKE cluster
+comma := ,
+sub := Q
+subbed := $(subst $(comma),$(sub),$(REGION_ZONES_WITH_GPUS))
 gke/create/cluster:
-	ifneq (,$(findstring ,,$(REGION_ZONES_WITH_GPUS)))
-		gke/create/multizone/cluster
-	else
-		gke/create/singlezone/cluster
-	endif
+ifeq ($(sub), $(findstring $(comma),$(sub),$(REGION_ZONES_WITH_GPUS)))
+	gke/create/multizone/cluster
+else
+	gke/create/singlezone/cluster
+endif
 
 gke/create/multizone/cluster:
 	@echo "Creating GKE cluster..."
