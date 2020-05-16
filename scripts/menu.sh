@@ -499,8 +499,8 @@ function configure_gke() {
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
     return 0
   elif [ "$REGION_ZONES_WITH_GPUS" = "Multizone" ]; then
-    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
     unset valid_zones[${#valid_zones[@]}-1] # remove "Multizone" from list
+    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
   fi
 
   msgbox "Configuration Complete!" "\nThe cluster is now available for creation." 7 55
