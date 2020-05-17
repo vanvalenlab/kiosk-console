@@ -490,6 +490,7 @@ function configure_gke() {
 
   local message="Deploy a single- or multi-zone cluster."
   local default_zone="${REGION_ZONES_WITH_GPUS:-$valid_zones[${#valid_zones[@]}-1]}"
+  if [[ $default_zone == *","* ]]; then
     default_zone="Multizone"
   fi
   local zone_choices=$(for i in ${valid_zones[@]}; do echo $i; done)
