@@ -484,12 +484,12 @@ function configure_gke() {
                    "Please re-configure with a different region/GPU type combination.")
     msgbox "Error!" "${message[*]}"
     return 0
+  elif [ ${#valid_zones[@]} -gt 1 ]; then
+    valid_zones+=('Multizone')  # add an "All of the above option"
   fi
 
-  valid_zones+=('Multizone')  # add an "All of the above option"
   local message="Deploy a single- or multi-zone cluster."
-  local default_zone="${REGION_ZONES_WITH_GPUS:-Multizone}"
-  if [ $default_zone == *","* ]; then
+  local default_zone="${REGION_ZONES_WITH_GPUS:-$valid_zones[${#valid_zones[@]}-1]}"
     default_zone="Multizone"
   fi
   local zone_choices=$(for i in ${valid_zones[@]}; do echo $i; done)
