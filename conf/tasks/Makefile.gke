@@ -23,8 +23,7 @@ gke/destroy/project:
 
 ## Create a new GKE cluster
 gke/create/cluster:
-	@echo "Creating GKE cluster..."
-	@echo "Using the following command: "
+	@echo "Creating GKE cluster in zones: ${REGION_ZONES_WITH_GPUS}..."
 	gcloud container clusters create $(CLOUDSDK_CONTAINER_CLUSTER) \
 		--service-account=$(GCP_SERVICE_ACCOUNT) \
 		--region=$(CLOUDSDK_COMPUTE_REGION) \

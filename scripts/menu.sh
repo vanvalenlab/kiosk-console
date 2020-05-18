@@ -392,10 +392,10 @@ function configure_gke() {
     fi
 
     infobox "Loading..."
-      local gpus_in_region=$(gcloud compute accelerator-types list \
-                             --format "value(name)" \
-                             --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" \
-                             | sort -u)
+    local gpus_in_region=$(gcloud compute accelerator-types list \
+                           --format "value(name)" \
+                           --filter "ZONE : ${CLOUDSDK_COMPUTE_REGION}" \
+                           | sort -u)
     local default_prediction_gpu=${GCP_PREDICTION_GPU_TYPE:-nvidia-tesla-t4}
     # local message="Choose a GPU for prediction (not training) from the GPU types available in your region:"
     local message="Choose a GPU from the types available in your region:"
@@ -456,7 +456,7 @@ function configure_gke() {
   # If GPUs are not available in at least 2 zones, the user must restart.
   local available_zones=$(gcloud compute zones list \
                           --filter "status = UP AND region = ${CLOUDSDK_COMPUTE_REGION}" \
-                          --format "value(name)")
+                          --format "value(name)" | sort -u)
 
   # locate the zones for all GPU node pools
   local prediction_gpu_zones=$(gcloud compute accelerator-types list \
@@ -477,15 +477,31 @@ function configure_gke() {
     fi
   done
 
-  export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
-
-  if [ ${#valid_zones[@]} -lt 2 ]; then
-    local message=("The following are zones in your region with the specified GPU type(s):"
-                   "\n\n    $REGION_ZONES_WITH_GPUS"
-                   "\n\nKubernetes needs at least 2 available zones."
+  # Allow the user to select one or all the zones to deploy
+  if [ ${#valid_zones[@]} -lt 1 ]; then
+    local message=("There are no zones in your region with the specified GPU type(s)."
+                   "\n\n"
                    "Please re-configure with a different region/GPU type combination.")
     msgbox "Error!" "${message[*]}"
     return 0
+  elif [ ${#valid_zones[@]} -gt 1 ]; then
+    valid_zones+=('Multizone')  # add an "All of the above option"
+  fi
+
+  local message="Deploy a single- or multi-zone cluster."
+  local default_zone="${REGION_ZONES_WITH_GPUS:-$valid_zones[${#valid_zones[@]}-1]}"
+  if [[ $default_zone == *","* ]]; then
+    default_zone="Multizone"
+  fi
+  local zone_choices=$(for i in ${valid_zones[@]}; do echo $i; done)
+  export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
+                                  $default_zone "${message}" "${zone_choices}")
+
+  if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
+    return 0
+  elif [ "$REGION_ZONES_WITH_GPUS" = "Multizone" ]; then
+    unset valid_zones[${#valid_zones[@]}-1] # remove "Multizone" from list
+    export REGION_ZONES_WITH_GPUS=$(IFS=','; echo "${valid_zones[*]}"; IFS=$' \t\n')
   fi
 
   msgbox "Configuration Complete!" "\nThe cluster is now available for creation." 7 55
