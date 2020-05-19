@@ -5,7 +5,7 @@ FROM cloudposse/geodesic:0.123.1
 RUN apk add --update dialog libqrencode
 
 ENV DOCKER_IMAGE="vanvalenlab/kiosk-console"
-ENV DOCKER_TAG="1.14"
+ENV DOCKER_TAG="latest"
 
 # Geodesic banner
 ENV BANNER="deepcell"
@@ -39,7 +39,7 @@ ENV GPU_NODE_MIN_SIZE="0"
 ENV GPU_PER_NODE="1"
 
 # gcloud config
-ENV KUBERNETES_VERSION="latest"
+ENV KUBERNETES_VERSION="1.14"
 ENV CLOUDSDK_CORE_PROJECT=""
 ENV CLOUDSDK_CONTAINER_CLUSTER=""
 ENV CLOUDSDK_BUCKET=""
