@@ -31,9 +31,6 @@ jobs:
     - stage: integration_tests
       name: "Integration Tests - ELK Disabled"
       if: ((type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/))
-      env:
-        - KUBERNETES_VERSION=1.14
-        - KUBERNETES_VERSION=1.15
       before_install:
         - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
@@ -48,7 +45,6 @@ jobs:
           --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET
           --env CLOUDSDK_COMPUTE_REGION=us-west1
           --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
-          --env KUBERNETES_VERSION=$KUBERNETES_VERSION
           --env GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/gcloud_key.json
           --entrypoint=/bin/bash
           --name kiosk kiosk
@@ -59,9 +55,6 @@ jobs:
     - stage: integration_tests
       name: "Integration test - ELK Enabled"
       if: ((type = pull_request AND branch = master) OR (commit_message =~ /\[build-integration-tests\]/)) AND (commit_message =~ /\[test-elk\]/)
-      env:
-        - KUBERNETES_VERSION=1.14
-        - KUBERNETES_VERSION=1.15
       before_install:
         - openssl aes-256-cbc -K $encrypted_84460f9bb44c_key -iv $encrypted_84460f9bb44c_iv -in .travis/gcloud_key_base64.enc -out gcloud_key_base64 -d
         - cat gcloud_key_base64 | base64 --decode > gcloud_key.json
@@ -76,7 +69,6 @@ jobs:
           --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET
           --env CLOUDSDK_COMPUTE_REGION=us-west1
           --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
-          --env KUBERNETES_VERSION=$KUBERNETES_VERSION
           --env GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/gcloud_key.json
           --entrypoint=/bin/bash
           --name kiosk kiosk
@@ -88,9 +80,9 @@ jobs:
       name: "Docker Deployment"
       if: tag IS present
       script:
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        - docker build -t "$TRAVIS_REPO_SLUG" .
-        - docker images
-        - docker tag "$TRAVIS_REPO_SLUG" "$TRAVIS_REPO_SLUG":latest
-        - docker tag "$TRAVIS_REPO_SLUG" "$TRAVIS_REPO_SLUG":"${TRAVIS_TAG}"
-        - docker push "$TRAVIS_REPO_SLUG"
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - docker build -t "$TRAVIS_REPO_SLUG" .
+      - docker images
+      - docker tag "$TRAVIS_REPO_SLUG" "$TRAVIS_REPO_SLUG":latest
+      - docker tag "$TRAVIS_REPO_SLUG" "$TRAVIS_REPO_SLUG":"${TRAVIS_TAG}"
+      - docker push "$TRAVIS_REPO_SLUG"
