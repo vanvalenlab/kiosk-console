@@ -71,7 +71,7 @@ jobs:
           --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
           --env GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/gcloud_key.json
           --entrypoint=/bin/bash
-          --name kiosk kiosk 
+          --name kiosk kiosk
       script:
         - travis_wait docker exec kiosk make test/integration/gke/deploy/elk
         - docker kill kiosk && docker rm kiosk
