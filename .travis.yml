@@ -45,7 +45,7 @@ jobs:
           --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET
           --env CLOUDSDK_COMPUTE_REGION=us-west1
           --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
-          --env KUBERNETES_VERSION=1.15
+          --env KUBERNETES_VERSION=1.14
           --env GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/gcloud_key.json
           --entrypoint=/bin/bash
           --name kiosk kiosk
@@ -70,7 +70,7 @@ jobs:
           --env CLOUDSDK_BUCKET=$CLOUDSDK_BUCKET
           --env CLOUDSDK_COMPUTE_REGION=us-west1
           --env REGION_ZONES_WITH_GPUS=us-west1-a,us-west1-b
-          --env KUBERNETES_VERSION=1.15
+          --env KUBERNETES_VERSION=1.14
           --env GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/gcloud_key.json
           --entrypoint=/bin/bash
           --name kiosk kiosk
