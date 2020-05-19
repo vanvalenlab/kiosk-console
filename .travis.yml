@@ -49,7 +49,7 @@ jobs:
           --entrypoint=/bin/bash
           --name kiosk kiosk
       script:
-        - docker exec kiosk make test/integration/gke/deploy
+        - travis_wait docker exec kiosk make test/integration/gke/deploy
         - docker kill kiosk && docker rm kiosk
 
     - stage: integration_tests
@@ -73,7 +73,7 @@ jobs:
           --entrypoint=/bin/bash
           --name kiosk kiosk
       script:
-        - docker exec kiosk make test/integration/gke/deploy/elk
+        - travis_wait docker exec kiosk make test/integration/gke/deploy/elk
         - docker kill kiosk && docker rm kiosk
 
     - stage: deploy
