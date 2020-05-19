@@ -489,7 +489,7 @@ function configure_gke() {
   fi
 
   local message="Deploy a single- or multi-zone cluster."
-  local default_zone="${REGION_ZONES_WITH_GPUS:-$valid_zones[${#valid_zones[@]}-1]}"
+  local default_zone="${REGION_ZONES_WITH_GPUS:-${valid_zones[${#valid_zones[@]}-1]}}"
   if [[ $default_zone == *","* ]]; then
     default_zone="Multizone"
   fi
