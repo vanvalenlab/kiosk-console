@@ -88,9 +88,9 @@ jobs:
       name: "Docker Deployment"
       if: tag IS present
       script:
-      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - docker build -t "$TRAVIS_REPO_SLUG" .
-      - docker images
-      - docker tag "$TRAVIS_REPO_SLUG" "$TRAVIS_REPO_SLUG":latest
-      - docker tag "$TRAVIS_REPO_SLUG" "$TRAVIS_REPO_SLUG":"${TRAVIS_TAG}"
-      - docker push "$TRAVIS_REPO_SLUG"
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker build -t "$TRAVIS_REPO_SLUG" .
+        - docker images
+        - docker tag "$TRAVIS_REPO_SLUG" "$TRAVIS_REPO_SLUG":latest
+        - docker tag "$TRAVIS_REPO_SLUG" "$TRAVIS_REPO_SLUG":"${TRAVIS_TAG}"
+        - docker push "$TRAVIS_REPO_SLUG"
