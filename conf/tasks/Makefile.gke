@@ -233,7 +233,7 @@ gke/deploy/helm:
 	@echo "Deploying kubernetes resources..."
 	@kubectl create serviceaccount --namespace kube-system tiller
 	@-kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-	@-helm init --service-account tiller --upgrade --wait
+	helm init --service-account tiller --upgrade --wait
 	@echo "Kubernetes resource deployment finished."
 	@echo " "
 	@echo " "
