@@ -15,8 +15,9 @@ stages:
   - deploy
 
 env:
-  - KUBERNETES_VERSION=1.14
-  - KUBERNETES_VERSION=1.15
+  jobs:
+    - KUBERNETES_VERSION=1.14
+    - KUBERNETES_VERSION=1.15
 
 jobs:
   allow_failures:
