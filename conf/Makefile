@@ -12,13 +12,13 @@ create: \
   helmfile/create/all \
   kubectl/display/ip \
   kubectl/implement/autoscaling
-	@echo "Cluster created"
+	@echo "DeepCell Kiosk has been created successfully."
 
 ## Destroy cluster
 destroy: \
   helmfile/destroy/all \
   $(CLOUD_PROVIDER)/destroy/all
-	@echo "Cluster destroyed"
+	@echo "DeepCell Kiosk has been destroyed successfully."
 
 # Unit tests
 test/unit:
