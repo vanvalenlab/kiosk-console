@@ -13,13 +13,13 @@ releases:
 # References:
 #   - https://github.com/helm/charts/stable/openvpn
 #
-- name: "openvpn"
-  namespace: "kube-system"
+- name: openvpn
+  namespace: kube-system
   labels:
-    chart: "openvpn"
-    component: "openvpn"
-    namespace: "kube-system"
-    vendor: "openvpn"
-    default: "true"
-  chart: 'stable/openvpn'
-  version: "1.1.0"
+    chart: openvpn
+    component: openvpn
+    namespace: kube-system
+    vendor: openvpn
+    default: true
+  chart: stable/openvpn
+  version: 4.2.1

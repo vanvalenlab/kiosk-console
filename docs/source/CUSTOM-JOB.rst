@@ -66,41 +66,33 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
       :label: + Show/Hide example helmfile
 
       helmDefaults:
-        args:
-          - "--wait"
-          - "--timeout=600"
-          - "--force"
-          - "--reset-values"
+        wait: true
+        timeout: 600
+        force: true
 
       releases:
-
-      ################################################################################
-      ## Custom-Consumer ################################################################
-      ################################################################################
-
       #
       # References:
-      #   - [web address of Helm chart's YAML file]
+      #   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
       #
-      - name: "tracking-consumer"
-        namespace: "deepcell"
+      - name: tracking-consumer
+        namespace: deepcell
         labels:
-          chart: "redis-consumer"
-          component: "deepcell"
-          namespace: "deepcell"
-          vendor: "vanvalenlab"
-          default: "true"
+          chart: redis-consumer
+          component: deepcell
+          namespace: deepcell
+          vendor: vanvalenlab
+          default: true
         chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-        version: "0.1.0"
+        version: 0.1.0
         values:
           - replicas: 1
 
             image:
-              repository: "vanvalenlab/kiosk-redis-consumer"
-              tag: "0.4.1"
-              pullPolicy: "Always"
+              repository: vanvalenlab/kiosk-redis-consumer
+              tag: 0.5.1
 
-            nameOverride: "tracking-consumer"
+            nameOverride: tracking-consumer
 
             resources:
               requests:
@@ -140,31 +132,27 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
               CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
               GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-              NUCLEAR_MODEL: "panoptic:3"
-              NUCLEAR_POSTPROCESS: "retinanet-semantic"
+              NUCLEAR_MODEL: "NuclearSegmentation:0"
+              NUCLEAR_POSTPROCESS: "deep_watershed"
 
-              PHASE_MODEL: "resnet50_retinanet_20190813_all_phase_512:0"
-              PHASE_POSTPROCESS: "retinanet"
+              PHASE_MODEL: "PhaseCytoSegmentation:0"
+              PHASE_POSTPROCESS: "deep_watershed"
 
-              CYTOPLASM_MODEL:   "resnet50_retinanet_20190903_all_fluorescent_cyto_512:0"
-              CYTOPLASM_POSTPROCESS: "retinanet"
+              CYTOPLASM_MODEL:   "FluoCytoSegmentation:0"
+              CYTOPLASM_POSTPROCESS: "deep_watershed"
 
               LABEL_DETECT_ENABLED: "true"
               LABEL_DETECT_MODEL: "LabelDetection:0"
-              LABEL_RESHAPE_SIZE: 216
-              LABEL_DETECT_SAMPLE: 10
 
               SCALE_DETECT_ENABLED: "true"
               SCALE_DETECT_MODEL: "ScaleDetection:0"
-              SCALE_RESHAPE_SIZE: 216
-              SCALE_DETECT_SAMPLE: 10
 
               DRIFT_CORRECT_ENABLED: "false"
               NORMALIZE_TRACKING: "true"
 
               TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-              TRACKING_SEGMENT_MODEL: "panoptic:3"
-              TRACKING_POSTPROCESS_FUNCTION: "retinanet"
+              TRACKING_SEGMENT_MODEL: "NuclearSegmentation:0"
+              TRACKING_POSTPROCESS_FUNCTION: "deep_watershed"
 
             secrets:
               AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
@@ -191,7 +179,7 @@ Autoscaling custom consumers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Kubernetes scales each consumer using a `Horizonal Pod Autoscaler "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/>`_ (HPA).
-Each HPA is configured in |/conf/patches/hpa.yaml|.
+Each HPA is configured in |/conf/addons/hpa.yaml|.
 The HPA reads a consumer-specific custom metric, defined in |/conf/helmfile.d/0600.prometheus-operator.yaml|.
 Each custom metric maximizes the work being done by balancing the amount of work left in the consumer's Redis queue (made available by the ``prometheus-redis-exporter``) and the current GPU utilization.
 
@@ -200,11 +188,11 @@ For example, the ``segmentation_consumer_key_ratio`` in |/conf/helmfile.d/0600.p
 
 To effectively scale your new consumer, some small edits will be needed in the following files:
 
-* |/conf/patches/redis-exporter-script.yaml|
+* |/conf/addons/redis-exporter-script.yaml|
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
-* |/conf/patches/hpa.yaml|
+* |/conf/addons/hpa.yaml|
 
-1. |/conf/patches/redis-exporter-script.yaml|
+1. |/conf/addons/redis-exporter-script.yaml|
 
    Within  ``data.script`` modify the section ``All Queues to Monitor`` to include the new queue (:data:`queue_name`).
 
@@ -244,7 +232,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
           namespace: deepcell
           service: tracking-scaling-service
 
-3. |/conf/patches/hpa.yaml|
+3. |/conf/addons/hpa.yaml|
 
    Add a new section based on the example below to the bottom of ``hpa.yaml`` following a ``---``.
 
@@ -265,7 +253,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
           kind: Deployment
           name: tracking-consumer
         minReplicas: 1
-        maxReplicas: $GPU_MAX_TIMES_FIFTY
+        maxReplicas: {{ mul $max_gpus 50 }}
         metrics:
         - type: Object
           object:
@@ -276,21 +264,21 @@ To effectively scale your new consumer, some small edits will be needed in the f
               name: tracking_consumer_key_ratio
             targetValue: 1
 
-.. |/conf/patches/hpa.yaml| raw:: html
+.. |/conf/addons/hpa.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/hpa.yaml">/conf/patches/hpa.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/addons/hpa.yaml">/conf/addons/hpa.yaml</a></tt>
 
 .. |/conf/helmfile.d/0600.prometheus-operator.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0600.prometheus-operator.yaml">/conf/helmfile.d/0600.prometheus-operator.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0600.prometheus-operator.yaml">/conf/helmfile.d/0600.prometheus-operator.yaml</a></tt>
 
-.. |/conf/patches/redis-exporter-script.yaml| raw:: html
+.. |/conf/addons/redis-exporter-script.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/patches/redis-exporter-script.yaml">/conf/patches/redis-exporter-script.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/addons/redis-exporter-script.yaml">/conf/addons/redis-exporter-script.yaml</a></tt>
 
 .. |/conf/helmfile.d/0230.redis-consumer.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0230.segmentation-consumer.yaml">/conf/helmfile.d/0230.segmentation-consumer.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0230.segmentation-consumer.yaml">/conf/helmfile.d/0230.segmentation-consumer.yaml</a></tt>
 
 Connecting custom consumers with the Kiosk
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -340,7 +328,7 @@ In a few minutes the Kiosk will be ready to process the new job type.
 
 .. |frontend.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0300.frontend.yaml">/conf/helmfile.d/0300.frontend.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0300.frontend.yaml">/conf/helmfile.d/0300.frontend.yaml</a></tt>
 
 .. |kiosk-redis-janitor| raw:: html
 
@@ -348,7 +336,7 @@ In a few minutes the Kiosk will be ready to process the new job type.
 
 .. |redis-janitor.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0220.redis-janitor.yaml">/conf/helmfile.d/0220.redis-janitor.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0220.redis-janitor.yaml">/conf/helmfile.d/0220.redis-janitor.yaml</a></tt>
 
 .. |kiosk-autoscaler| raw:: html
 
@@ -356,4 +344,4 @@ In a few minutes the Kiosk will be ready to process the new job type.
 
 .. |autoscaler.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk/blob/master/conf/helmfile.d/0210.autoscaler.yaml">/conf/helmfile.d/0210.autoscaler.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0210.autoscaler.yaml">/conf/helmfile.d/0210.autoscaler.yaml</a></tt>

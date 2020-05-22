@@ -22,11 +22,11 @@ Google Cloud Setup
 
 .. note:: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google does not include these GPU nodes by default as part of its free tier thus necessitating the upgrade. For more information, please refer to `Google's blog post on the subject <https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available>`_
 
-4. You will also need to `apply <https://cloud.google.com/compute/quotas>`_ for a quota of at least 1 GPU using the ``GPUs (all regions)`` option. Please also request at least 16 *In-use IP addresses* for the *Compute Engine API* of your region (by default ``us-west1``). This may take some time, as Google will need to approve each these requests.
+4. Apply for a `quota of at least 1 GPU <https://cloud.google.com/compute/quotas#gpus>`_ and at least `16 *In-use IP addresses* <https://cloud.google.com/compute/quotas#ip_addresses>`_ for the *Compute Engine API* of your region (by default ``us-west1``). This may take some time, as Google will need to approve each of these requests.
 
-.. note:: Google offers a number of GPU types. The DeepCell Kiosk uses `nvidia-tesla-t4` GPUs for inference by default.
+.. note:: Google offers a number of GPU types. The DeepCell Kiosk uses `NVIDIA T4` GPUs for inference by default.
 
-5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_. This will be used to store data and models. Record the bucket name (as with project ID, you will need this during Kiosk configuration). Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
+5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_ in the default region of your project (this should be a "Standard class" bucket, which you can select using fine-grained access control). This will be used to store data and models. Record the bucket name (as with project ID, you will need this during Kiosk configuration). Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
 
    .. code-block:: bash
 
@@ -70,7 +70,7 @@ Local Docker Installation - MacOS and Linux
 
 Cloud-Based Jumpbox Workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* Navigate to the `VM instances <https://console.cloud.google.com/compute/instances>`_ page via ``Compute Engine > VM instances``
+* Navigate to the `VM instances <https://console.cloud.google.com/compute/instances>`_ in the Google Cloud Console.
 * Check that your boot disk is configured for ``Debian/Ubuntu 9`` operating system
 
 .. warning:: Container optimized images do not support Kiosk installation.
@@ -97,9 +97,9 @@ You are now ready to start the Kiosk!
 
 .. code-block:: bash
 
-    docker run -e DOCKER_TAG=1.1.0 vanvalenlab/kiosk:1.1.0 | sudo bash
+    docker run -e DOCKER_TAG=1.2.0 vanvalenlab/kiosk:1.2.0 | sudo bash
 
-.. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings.
+.. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings. This will require you to enter your password.
 
 * To start the Kiosk, just run ``kiosk`` from the terminal shell
 
@@ -115,9 +115,9 @@ You are now ready to start the Kiosk!
 DeepCell Kiosk Usage
 --------------------
 
-* Once the Kiosk has started, select the configuration option for your chosen cloud provider (currently, only Google Cloud is supported). The next screen will prompt you to authenticate your account with gcloud or to continue with a previously authenticated account. The next several screens will prompt you to select a gcloud project, name your cluster, and enter a bucket name for data storage. If you followed the Google Cloud Setup instructions from above, you should use that project and bucket name.
+* Once the Kiosk Console has started, select the ``Configure`` option for your chosen cloud provider (currently, only Google Kubernetes Engine is supported). The next screen will prompt you to authenticate your account with gcloud or to continue with a previously authenticated account. The next several screens will prompt you to select a gcloud project, name your cluster, and enter a bucket name for data storage. If you followed the Google Cloud Setup instructions from above, you should use that project and bucket name.
 
-* To complete cluster configuration, you have the option to choose between "Default" and "Advanced" configuration. The "Default" configuration option sets standard values for compute hardware and is appropriate for most users. The "Advanced" option allows users to configure each setting individually.
+* To complete cluster configuration, you have the option to choose between "Default 1 GPU", "Default 4 GPU", and "Advanced" configurations. The "Default 1 GPU" configuration option sets up a small cluster suitable for users looking to explore a sandbox. The "Default 4 GPU" option configures a cluster with 4 GPUs and nodes with more memory to handle larger inference jobs. The "Advanced" option allows users to configure each setting individually.
 
 * Once cluster configuration is complete, you will return to the home screen. There you can select the "Create" option to trigger cluster creation based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page.
 

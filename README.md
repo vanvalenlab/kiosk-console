@@ -1,14 +1,16 @@
-# DeepCell Kiosk: A Scalable and User-Friendly Environment for Biological Image Analysis
+# ![DeepCell Kiosk Banner](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/DeepCell_Kiosk_Banner.png)
 
-[![Build Status](https://travis-ci.com/vanvalenlab/kiosk.svg?branch=master)](https://travis-ci.com/vanvalenlab/kiosk)
-[![Read the Docs](https://img.shields.io/readthedocs/kiosk?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
-[![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/vanvalenlab/kiosk/blob/master/LICENSE)
+[![Build Status](https://travis-ci.com/vanvalenlab/kiosk-console.svg?branch=master)](https://travis-ci.com/vanvalenlab/kiosk-console)
+[![Read the Docs](https://img.shields.io/readthedocs/kiosk-console?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
+[![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/vanvalenlab/kiosk-console/blob/master/LICENSE)
 
-The DeepCell Kiosk is the entry point for users to spin up an end-to-end DeepCell environment in the cloud using [Kubernetes](https://kubernetes.io/). It is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models. To train custom models, please refer to [DeepCell-TF](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and export these models for use with the DeepCell Kiosk.
+The `kiosk-console` is the entry point for users to spin up a DeepCell Kiosk, a cloud-native implementation of the DeepCell ecosystem.
 
-The scalability of the DeepCell Kiosk software is enabled by [cloud computing](https://en.wikipedia.org/wiki/Cloud_computing). At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/).
+The DeepCell Kiosk is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models. To train custom models, please refer to [`deepcell-tf`](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and is capable of exporting these models for use with the DeepCell Kiosk.
 
-A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org).
+The scalability of the DeepCell Kiosk software is enabled by [Kubernetes](https://kubernetes.io/). At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/).
+
+An example of the DeepCell Kiosk is live at [DeepCell.org](https://deepcell.org).
 
 ## Features
 
@@ -16,7 +18,8 @@ A running example of the DeepCell Kiosk is live at [DeepCell.org](https://deepce
 - Scalable platform that minimizes cost and inference time
 - Drag and drop interface for running predictions
 
-### Example
+### Examples
+
 <table width="700" border="1" cellpadding="5">
 
 <tr>
@@ -31,11 +34,11 @@ Tracked Image
 
 <tr>
 <td align="center" valign="center">
-<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk/master/docs/images/raw.gif" alt="Raw Image" />
+<img src="https://raw.githubusercontent.com/vanvalenlab/deepcell-tf/master/docs/images/raw.gif" alt="Raw Image" />
 </td>
 
 <td align="center" valign="center">
-<img src="https://raw.githubusercontent.com/vanvalenlab/kiosk/master/docs/images/tracked.gif" alt="Tracked Image" />
+<img src="https://raw.githubusercontent.com/vanvalenlab/deepcell-tf/master/docs/images/tracked.gif" alt="Tracked Image" />
 </td>
 </tr>
 
@@ -46,16 +49,16 @@ Tracked Image
 Start a terminal shell and install the DeepCell Kiosk wrapper script:
 
 ```bash
-docker run -e DOCKER_TAG=1.1.0 vanvalenlab/kiosk:1.1.0 | sudo bash
+docker run -e DOCKER_TAG=1.2.0 vanvalenlab/kiosk-console:1.2.0 | sudo bash
 ```
 
-To start the kiosk, just run `kiosk` from the terminal shell.
+To start the kiosk, just run `kiosk-console` from the terminal shell.
 
 Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STARTED.html) for more information on how to start your own kiosk.
 
 ## Software Architecture
 
-![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk/master/docs/images/Kiosk_Architecture.png)
+![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/Kiosk_Architecture.png)
 
 - [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
 
@@ -74,17 +77,17 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 ## Contribute
 
-We welcome contributions to the kiosk. If you are interested, please refer to our [Developer Documentation](https://deepcell-kiosk.readthedocs.io/en/master/DEVELOPER.html), [Code of Conduct](https://github.com/vanvalenlab/kiosk/blob/master/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/vanvalenlab/kiosk/blob/master/CONTRIBUTING.md).
+We welcome contributions to the kiosk. If you are interested, please refer to our [Developer Documentation](https://deepcell-kiosk.readthedocs.io/en/master/DEVELOPER.html), [Code of Conduct](https://github.com/vanvalenlab/kiosk-console/blob/master/CODE_OF_CONDUCT.md) and [Contributing Guidelines](https://github.com/vanvalenlab/kiosk-console/blob/master/CONTRIBUTING.md).
 
 ## Support
 
-Issues are managed through [Github](https://github.com/vanvalenlab/kiosk/issues).
+Issues are managed through [Github](https://github.com/vanvalenlab/kiosk-console/issues).
 Documentation is hosted on [Read the Docs](https://deepcell-kiosk.readthedocs.io/en/master).
-A [FAQ](http://www.deepcell.org.faq) page is also available.
+A [FAQ](http://www.deepcell.org/faq) page is also available.
 
 ## License
 
-This software is license under a modified [APACHE2](https://opensource.org/licenses/Apache-2.0). See [LICENSE](https://github.com/vanvalenlab/kiosk/blob/master/LICENSE) for full details.
+This software is license under a modified Apache-2.0 license. See [LICENSE](https://github.com/vanvalenlab/kiosk-console/blob/master/LICENSE) for full details.
 
 ## Trademarks
 
@@ -98,5 +101,5 @@ This kiosk was developed with [Cloud Posse, LLC](https://cloudposse.com). They c
 
 ## Copyright
 
-Copyright © 2018-2020 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
+Copyright © 2018-2020 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Shurl and Kay Curci Foundation, the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
 All rights reserved.

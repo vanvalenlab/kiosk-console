@@ -28,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.4.0
+        tag: 0.4.2
 
       resources:
         requests:
