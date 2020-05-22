@@ -497,8 +497,9 @@ function configure_gke() {
   # unavailable in GKE in the future.
   if [[ $KUBERNETES_VERSION == "1.14" ]] and [[ date ]]; then
     message=("${message[*]}"
-             "\n\nSingle-zone clusters using Kubernetes 1.14.X" \
-             "may become unavailable as of September 2020.")
+             "\n\nThis version of the DeepCell Kiosk uses Kubernetes version"
+             "1.14.X, which may be incompatible with single-zone clusters as"
+             "of September 2020.")
   fi
   local default_zone="${REGION_ZONES_WITH_GPUS:-${valid_zones[${#valid_zones[@]}-1]}}"
   if [[ $default_zone == *","* ]]; then
