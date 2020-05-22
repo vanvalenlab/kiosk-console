@@ -495,7 +495,8 @@ function configure_gke() {
   local message=("Deploy a single- or multi-zone cluster.")
   # The default version of 1.14 is the oldest supported version, and may become
   # unavailable in GKE in the future.
-  if [[ $KUBERNETES_VERSION == "1.14" ]] and [[ date ]]; then
+  if [[ $KUBERNETES_VERSION == "1.14" ]] && \
+     [[ $(date +%s) -ge $(date -d 2020-09-01 +%s) ]]; then
     message=("${message[*]}"
              "\n\nThis version of the DeepCell Kiosk uses Kubernetes version"
              "1.14.X, which may be incompatible with single-zone clusters as"
