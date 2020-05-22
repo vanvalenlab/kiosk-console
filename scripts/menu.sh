@@ -488,14 +488,21 @@ function configure_gke() {
     valid_zones+=('Multizone')  # add an "All of the above option"
   fi
 
-  local message="Deploy a single- or multi-zone cluster."
+  local message=("Deploy a single- or multi-zone cluster.")
+  # The default version of 1.14 is the oldest supported version, and may become
+  # unavailable in GKE in the future.
+  if [[ $KUBERNETES_VERSION == "1.14" ]]; then
+    message=("${message[*]}"
+             "\n\nSingle zone clusters using Kubernetes 1.14.X" \
+             "may become unavailable as of September 2020.")
+  fi
   local default_zone="${REGION_ZONES_WITH_GPUS:-${valid_zones[${#valid_zones[@]}-1]}}"
   if [[ $default_zone == *","* ]]; then
     default_zone="Multizone"
   fi
   local zone_choices=$(for i in ${valid_zones[@]}; do echo $i; done)
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  $default_zone "${message}" "${zone_choices}")
+                                  $default_zone "${message[*]}" "${zone_choices}")
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
     return 0
