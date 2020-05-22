@@ -67,27 +67,31 @@ function radiobox_from_array() {
   local default_value=$2
   local message=$3
   local arr=$4
+  local w=60
 
-  local base_box_height=9
+  local fullmessage="\n${message}\n\nPress the spacebar to select and Enter to continue.\n"
+  local base_box_height=4
+
+  local message_lines=$(echo -e "${fullmessage}" | awk '{ print length }' |
+                        awk -v w=$w '{ total += int($1 / w) } END { print total + NR }')
+
   local selector_box_lines=$(echo "${arr}" | tr -cd '\n' | wc -c)
-  local selector_box_lines=$(($selector_box_lines+1))
-  local total_lines=$(($base_box_height + $selector_box_lines))
+  selector_box_lines=$(($selector_box_lines+1))
+  local total_lines=$(($base_box_height + $selector_box_lines + $message_lines))
 
   # make sure the box stays within the screen
   local screen_height=$(tput lines)
   local padding=6
   if [ $screen_height -lt $(($total_lines+$padding)) ]; then
-    local selector_box_lines=$(($screen_height-($base_box_height+$padding)))
-    local total_lines=$(($base_box_height + $selector_box_lines))
+    selector_box_lines=$(($screen_height - $base_box_height - $padding - $message_lines))
+    total_lines=$(($base_box_height + $selector_box_lines + $message_lines))
   fi
 
   local formatted_arr=$(echo "${arr}" | awk '{print NR " " $1 " OFF"}')
   local arr_with_default=${formatted_arr/$default_value OFF/$default_value ON}
 
-  local fullmessage="\n${message}\n\nPress the spacebar to select and Enter to continue.\n"
-
   local selected_value=$(radiobox "${title}" "${fullmessage}" $total_lines \
-                         60 $selector_box_lines "${arr_with_default}")
+                         $w $selector_box_lines "${arr_with_default}")
 
   # echo the value with the selected row number
   local result=$(echo "${arr}" | awk -v i=$selected_value 'NR==i {print $1}')
@@ -488,14 +492,23 @@ function configure_gke() {
     valid_zones+=('Multizone')  # add an "All of the above option"
   fi
 
-  local message="Deploy a single- or multi-zone cluster."
+  local message=("Deploy a single- or multi-zone cluster.")
+  # The default version of 1.14 is the oldest supported version, and may become
+  # unavailable in GKE in the future.
+  if [[ $KUBERNETES_VERSION == "1.14" ]] && \
+     [[ $(date +%s) -ge $(date -d 2020-09-01 +%s) ]]; then
+    message=("${message[*]}"
+             "\n\nThis version of the DeepCell Kiosk uses Kubernetes version"
+             "1.14.X, which may be incompatible with single-zone clusters as"
+             "of September 2020.")
+  fi
   local default_zone="${REGION_ZONES_WITH_GPUS:-${valid_zones[${#valid_zones[@]}-1]}}"
   if [[ $default_zone == *","* ]]; then
     default_zone="Multizone"
   fi
   local zone_choices=$(for i in ${valid_zones[@]}; do echo $i; done)
   export REGION_ZONES_WITH_GPUS=$(radiobox_from_array "Google Cloud" \
-                                  $default_zone "${message}" "${zone_choices}")
+                                  $default_zone "${message[*]}" "${zone_choices}")
 
   if [ "$REGION_ZONES_WITH_GPUS" = "" ]; then
     return 0
