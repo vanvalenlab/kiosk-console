@@ -82,7 +82,7 @@ spec:
         apiVersion: v1
         kind: Namespace
         name: segmentation_zip_consumer_key_ratio
-      targetValue: 1
+      targetValue: 2
 ---
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler

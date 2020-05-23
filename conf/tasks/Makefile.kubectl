@@ -51,5 +51,5 @@ kubectl/destroy/prometheus/operator:
 
 ## Create horizontal pod autoscalers for all relevant deployments
 kubectl/implement/autoscaling:
-	gomplate -f patches/hpa.yaml | kubectl apply -f -
+	gomplate -f addons/hpa.yaml | kubectl apply -f -
 	@kubens deepcell
