@@ -14,7 +14,7 @@ releases:
 #   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
 #
 - name: segmentation-zip-consumer
-  namespace: "deepcell"
+  namespace: deepcell
   labels:
     chart: redis-consumer
     component: deepcell
