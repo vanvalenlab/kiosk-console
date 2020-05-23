@@ -97,7 +97,7 @@ You are now ready to start the Kiosk!
 
 .. code-block:: bash
 
-    docker run -e DOCKER_TAG=1.1.0 vanvalenlab/kiosk:1.1.0 | sudo bash
+    docker run -e DOCKER_TAG=1.2.0 vanvalenlab/kiosk:1.2.0 | sudo bash
 
 .. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings. This will require you to enter your password.
 
@@ -117,7 +117,7 @@ DeepCell Kiosk Usage
 
 * Once the Kiosk Console has started, select the ``Configure`` option for your chosen cloud provider (currently, only Google Kubernetes Engine is supported). The next screen will prompt you to authenticate your account with gcloud or to continue with a previously authenticated account. The next several screens will prompt you to select a gcloud project, name your cluster, and enter a bucket name for data storage. If you followed the Google Cloud Setup instructions from above, you should use that project and bucket name.
 
-* To complete cluster configuration, you have the option to choose between "Default" and "Advanced" configuration. The "Default" configuration option sets standard values for compute hardware and is appropriate for most users. The "Advanced" option allows users to configure each setting individually.
+* To complete cluster configuration, you have the option to choose between "Default 1 GPU", "Default 4 GPU", and "Advanced" configurations. The "Default 1 GPU" configuration option sets up a small cluster suitable for users looking to explore a sandbox. The "Default 4 GPU" option configures a cluster with 4 GPUs and nodes with more memory to handle larger inference jobs. The "Advanced" option allows users to configure each setting individually.
 
 * Once cluster configuration is complete, you will return to the home screen. There you can select the "Create" option to trigger cluster creation based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page.
 
