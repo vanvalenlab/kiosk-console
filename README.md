@@ -1,7 +1,7 @@
 # ![DeepCell Kiosk Banner](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/DeepCell_Kiosk_Banner.png)
 
 [![Build Status](https://travis-ci.com/vanvalenlab/kiosk-console.svg?branch=master)](https://travis-ci.com/vanvalenlab/kiosk-console)
-[![Read the Docs](https://img.shields.io/readthedocs/kiosk-console?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
+[![Read the Docs](https://readthedocs.org/projects/deepcell-kiosk/badge/?version=master)](https://deepcell-kiosk.readthedocs.io/en/master/?badge=master)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/vanvalenlab/kiosk-console/blob/master/LICENSE)
 
 The `kiosk-console` is the entry point for users to spin up a DeepCell Kiosk, a cloud-native implementation of the DeepCell ecosystem.
