@@ -454,7 +454,15 @@ function configure_gke() {
     msgbox "Warning!" "${error_text[*]}"
     return 0
   fi
-  # TODO: Should have a quota of at leat 1 GPU of the requested type.
+  # Should have a quota of at least 1 for global GPUs.
+  local min_gpus=1
+  local gpus_all_regions=$(echo "${all_quotas}" | grep GPUS_ALL_REGIONS | awk '{print int($2)}')
+  if [ $gpus_all_regions -lt $min_gpus ]; then
+    error_text=("\nThe cluster requires at least ${min_gpus} GPU (all regions)."
+                "\n\nPlease request a quota increase from the Google Cloud console.")
+    msgbox "Warning!" "${error_text[*]}"
+    return 0
+  fi
 
   # Find at least 2 zones to deploy the cluster.
   # If GPUs are not available in at least 2 zones, the user must restart.
