@@ -13,27 +13,28 @@ metadata:
   annotations:
 {{- range $name, $value := .Values.ingress.annotations }}
 {{- if not ( empty $value) }}
-        {{ $name }}: {{ $value | quote }}
+    {{ $name }}: {{ $value | quote }}
 {{- end }}
 {{- end }}
 spec:
   rules:
-    - host: deepcell.org
+  {{- range .Values.ingress.hosts }}
+    - host: {{ . }}
       http:
         paths:
           - path: {{ $ingressPath }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
-    - host: www.deepcell.org
-      http:
-        paths:
-          - path: {{ $ingressPath }}
-            backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
-{{- if .Values.ingress.tls }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
-{{- end -}}
+    {{- range .Values.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . }}
+      {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end -}}
 {{- end }}
