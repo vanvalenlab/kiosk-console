@@ -449,7 +449,7 @@ function configure_gke() {
   local min_addresses=16
   local in_use_addresses=$(echo "${all_quotas}" | grep IN_USE_ADDRESSES | awk '{print int($2)}')
   if [ $in_use_addresses -lt $min_addresses ]; then
-    error_text=("\nThe cluster requires at least ${min_addresses} In-use IP Addresses."
+    error_text=("\nThe cluster requires at least ${min_addresses} In-use IP addresses global."
                 "\n\nPlease request a quota increase from the Google Cloud console.")
     msgbox "Warning!" "${error_text[*]}"
     return 0

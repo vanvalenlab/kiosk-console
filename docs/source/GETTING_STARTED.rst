@@ -22,7 +22,7 @@ Google Cloud Setup
 
 .. note:: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google does not include these GPU nodes by default as part of its free tier thus necessitating the upgrade. For more information, please refer to `Google's blog post on the subject <https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available>`_
 
-4. Apply for a `quota of at least 1 GPU <https://cloud.google.com/compute/quotas#gpus>`_ and at least `16 *In-use IP addresses* <https://cloud.google.com/compute/quotas#ip_addresses>`_ for the *Compute Engine API* of your region (by default ``us-west1``). This may take some time, as Google will need to approve each of these requests.
+4. Apply for a `quota of at least 1 GPU <https://cloud.google.com/compute/quotas#gpus>`_ and at least `16 In-use IP addresses global <https://cloud.google.com/compute/quotas#ip_addresses>`_ for the *Compute Engine API* of your region (by default ``us-west1``). This may take some time, as Google will need to approve each of these requests.
 
 .. note:: Google offers a number of GPU types. The DeepCell Kiosk uses `NVIDIA T4` GPUs for inference by default.
 
