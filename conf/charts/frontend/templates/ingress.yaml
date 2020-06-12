@@ -18,10 +18,22 @@ metadata:
 {{- end }}
 spec:
   rules:
-    - http:
+    - host: deepcell.org
+      http:
         paths:
           - path: {{ $ingressPath }}
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
+    - host: www.deepcell.org
+      http:
+        paths:
+          - path: {{ $ingressPath }}
+            backend:
+              serviceName: {{ $fullName }}
+              servicePort: http
+{{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+{{- end -}}
 {{- end }}
