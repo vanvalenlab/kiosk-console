@@ -323,6 +323,9 @@ function configure_gke() {
                          --format "value(commonInstanceMetadata.items.key, commonInstanceMetadata.items.value)" \
                          | grep google-compute-default-region | awk '{ print $2 }')
 
+  # No default region for the project, just use hard-coded default
+  if [ -z "$default_region" ]; then default_region=us-west1; fi
+
   # use default settings or use the advanced menu
   local setup_opt_value=$(
     dialog --clear --backtitle "${BRAND}" \
