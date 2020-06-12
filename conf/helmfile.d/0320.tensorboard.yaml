@@ -33,7 +33,7 @@ releases:
       service:
         type: "ClusterIP"
 
-        httpIngressEnabled: true
+        httpIngressEnabled: "false"
         internalHttpPort: 6006
         httpTargetPort: 6006
         externalHttpPort: 6006
@@ -41,7 +41,7 @@ releases:
         httpsIngressEnabled: false
 
       ingress:
-        enabled: true
+        enabled: "false"
         path: /tensorboard
         annotations:
           nginx.ingress.kubernetes.io/rewrite-target: /
