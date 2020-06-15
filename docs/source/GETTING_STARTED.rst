@@ -14,7 +14,7 @@ Google Cloud Setup
 
 .. warning:: Google Cloud Platform must approve several requests that may take up to 1 day to complete.
 
-1. If necessary, create an account at `Google Cloud <https://cloud.google.com>`_ and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Take note of the project ID (you will need this later during Kiosk configuration).
+1. If necessary, create an account at `Google Cloud <https://cloud.google.com>`_ and create a Google Cloud project, making sure you have at least one account with the `Owner` role.
 
 2. Make sure the `Kubernetes Engine API <https://console.cloud.google.com/apis/api/container.googleapis.com/overview>`_ is enabled.
 
