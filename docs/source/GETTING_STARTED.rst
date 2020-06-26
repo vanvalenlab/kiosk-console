@@ -71,7 +71,7 @@ Local Docker Installation - MacOS and Linux
 Cloud-Based Jumpbox Workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Navigate to the `VM instances <https://console.cloud.google.com/compute/instances>`_ in the Google Cloud Console.
-* Check that your boot disk is configured for ``Debian/Ubuntu 9`` operating system
+* Check that your boot disk is configured for ``Debian/Ubuntu`` operating system
 
 .. warning:: Container optimized images do not support Kiosk installation.
 
