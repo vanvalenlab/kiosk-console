@@ -505,7 +505,7 @@ function configure_gke() {
 
   local message=("Deploy a single- or multi-zone cluster."
                  "\n\n"
-                 "Multiple zones provide more redundancy, but may incur"
+                 "Multiple zones provide more redundancy, but will incur"
                  "additional egress fees.")
   # The default version of 1.14 is the oldest supported version, and may become
   # unavailable in GKE in the future.
