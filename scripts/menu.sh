@@ -506,7 +506,9 @@ function configure_gke() {
   local message=("Deploy a single- or multi-zone cluster."
                  "\n\n"
                  "Multiple zones provide more redundancy, but will incur"
-                 "additional egress fees.")
+                 "additional egress fees. For more details, see:"
+                 "\n\n"
+                 "https://cloud.google.com/vpc/network-pricing")
   # The default version of 1.14 is the oldest supported version, and may become
   # unavailable in GKE in the future.
   if [[ $KUBERNETES_VERSION == "1.14" ]] && \
