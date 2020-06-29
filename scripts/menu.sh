@@ -503,10 +503,8 @@ function configure_gke() {
     valid_zones+=('Multizone')  # add an "All of the above option"
   fi
 
-  local message=("Deploy a single- or multi-zone cluster."
-                 "\n\n"
-                 "Multiple zones provide more redundancy, but will incur"
-                 "additional egress fees. For more details, see:"
+  local message=("Deploy a single- or multi-zone cluster.\n"
+                 "\nMultiple zones provide more redundancy, but will incur additional egress fees. For more details, see:"
                  "\n\n"
                  "https://cloud.google.com/vpc/network-pricing")
   # The default version of 1.14 is the oldest supported version, and may become
