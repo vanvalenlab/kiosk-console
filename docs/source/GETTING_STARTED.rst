@@ -24,7 +24,7 @@ Google Cloud Setup
 
 4. Apply for a `quota of at least 1 "GPU (all regions)" <https://cloud.google.com/compute/quotas#gpus>`_ and at least `16 "In-use IP addresses global" <https://cloud.google.com/compute/quotas#ip_addresses>`_. This may take some time, as Google will need to approve each of these requests.
 
-.. note:: Google offers a number of GPU types. The DeepCell Kiosk uses preemptible `NVIDIA T4` GPUs for inference by default.
+.. note:: Google offers a number of GPU types. The DeepCell Kiosk uses preemptible `NVIDIA T4` GPUs for inference by default.  To request more than one GPU, you must make a quota request for that resource in your chosen region. Only preemptible GPUs are supported currently.
 
 5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_ in the default region of your project (this should be a "Standard class" bucket, which you can select using fine-grained access control). This will be used to store data and models. Record the bucket name, which will be needed during Kiosk configuration. Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
 
