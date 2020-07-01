@@ -90,6 +90,15 @@ Cloud-Based Jumpbox Workflow
     sudo apt-get update && \
     sudo apt-get install -y containerd.io docker-ce docker-ce-cli git make vim
 
+* To manage docker as a non-root user on Linux, it is required to create the ``docker`` group and add your user to it using the commands below, then disconnect and reconnect to the server.
+
+.. code-block:: bash
+
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+
+
+
 Starting the Kiosk
 ^^^^^^^^^^^^^^^^^^
 
