@@ -97,6 +97,11 @@ Cloud-Based Jumpbox Workflow
     sudo groupadd docker
     sudo usermod -aG docker $USER
 
+* Verify docker is installed correctly:
+
+.. code-block:: bash
+
+    docker run hello-world
 
 
 Starting the Kiosk
