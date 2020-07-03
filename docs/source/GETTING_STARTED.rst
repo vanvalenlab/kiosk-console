@@ -18,9 +18,9 @@ Google Cloud Setup
 
 2. Make sure the `Kubernetes Engine API <https://console.cloud.google.com/apis/api/container.googleapis.com/overview>`_ is enabled.
 
-3. In order to add accelerated hardware to the clusters you will launch, you will need to `upgrade <https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade>`_ your Google Cloud account. Please note, this may take some time, as Google will need to approve the upgrade. You may also need to log in and out of your account for the upgrade to take effect. One way to verify that you have been upgraded is to take note of the number of rows available within your total quotas. Upgraded accounts contain significantly more available quotas than the free tier.
+3. The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. In order to add accelerated hardware to the clusters you will launch, you will need to `upgrade <https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade>`_ your Google Cloud account as they are unavailable with a free-tier account.
 
-.. note:: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google does not include these GPU nodes by default as part of its free tier thus necessitating the upgrade. For more information, please refer to `Google's blog post on the subject <https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available>`_
+.. note:: The account upgrade may take some time, as Google will need to approve the upgrade. You may also need to log in and out of your account for the upgrade to take effect. Once your account is upgraded you should be able to see GPU options in `the quota panel <https://console.cloud.google.com/iam-admin/quotas>`_.
 
 4. Apply for a `quota of at least 1 "GPU (all regions)" <https://cloud.google.com/compute/quotas#gpus>`_ and at least `16 "In-use IP addresses global" <https://cloud.google.com/compute/quotas#ip_addresses>`_. This may take some time, as Google will need to approve each of these requests.
 
