@@ -1,7 +1,7 @@
 repositories:
 # Stable repo of official helm charts
-- name: "stable"
-  url: "https://kubernetes-charts.storage.googleapis.com"
+- name: stable
+  url: https://kubernetes-charts.storage.googleapis.com
 
 releases:
 
@@ -13,17 +13,17 @@ releases:
 # References:
 #   - https://github.com/cloudposse/charts/blob/master/incubator/nginx-ingress/values.yaml
 #
-- name: "ingress"
-  namespace: "kube-system"
+- name: ingress
+  namespace: kube-system
   labels:
-    chart: "nginx-ingress"
-    repo: "stable"
-    component: "ingress"
-    namespace: "kube-system"
-    vendor: "kubernetes"
+    chart: nginx-ingress
+    repo: stable
+    component: ingress
+    namespace: kube-system
+    vendor: kubernetes
     default: "false"
-  chart: "stable/nginx-ingress"
-  version: "0.24.0"
+  chart: stable/nginx-ingress
+  version: 1.40.2
   wait: true
   values:
     - controller:
@@ -31,11 +31,11 @@ releases:
         replicaCount: {{ env "NGINX_INGRESS_CONTROLLER_REPLICA_COUNT" | default "4" }}
         resources:
           limits:
-            cpu: "200m"
-            memory: "3Gi"
+            cpu: 200m
+            memory: 3Gi
           requests:
-            cpu: "50m"
-            memory: "128Mi"
+            cpu: 50m
+            memory: 128Mi
         stats:
           ### Optional: NGINX_INGRESS_CONTROLLER_STATS_ENABLED;
           enabled: {{ env "NGINX_INGRESS_CONTROLLER_STATS_ENABLED" | default "true" }}
@@ -53,11 +53,11 @@ releases:
         replicaCount: {{ env "NGINX_INGRESS_DEFAULT_BACKEND_REPLICA_COUNT" | default "2" }}
         resources:
           limits:
-            cpu: "200m"
-            memory: "256Mi"
+            cpu: 200m
+            memory: 256Mi
           requests:
-            cpu: "50m"
-            memory: "128Mi"
+            cpu: 50m
+            memory: 128Mi
         service:
           annotations:
             ### Required: NGINX_INGRESS_HOSTNAME; e.g. ingress.us-west-2.cloudposse.co
