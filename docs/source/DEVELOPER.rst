@@ -152,16 +152,16 @@ The DeepCell Kiosk comes with a utility for benchmarking the scalability and per
 
 1. If you don't already have a cloud storage bucket devoted exclusively to DeepCell Kiosk benchmarking runs, you should create one now. It's fine to reuse this bucket for multiple benchmarking runs, but don't use it as a storage bucket for normal DeepCell Kiosk cluster operations.
 
-2. Checkout the ``benchmarks`` branch of the ``kiosk-console`` repository. This branch is almost identical to the version 1.2.0 release of the ``kiosk-console`` repo, except for minor configuration differences. There are three variable settings worth noting in the benchmarking pod's YAML file, ``conf/helmfile.d/0410.benchmarking.yaml``, each with a corresponding setup action for the user to perform before benchmarking:
+2. Checkout the ``benchmarks`` branch of the ``kiosk-console`` repository. This branch is almost identical to the version 1.2.0 release of the ``kiosk-console`` repo, except for minor configuration differences. There are three variables in the benchmarking pod's YAML file, ``conf/helmfile.d/0410.benchmarking.yaml``, that may need to be customized before benchmarking:
 
-    - In the benchmarking pod's YAML file, ``conf/helmfile.d/0410.benchmarking.yaml``, the ``MODEL`` environmental variable has been set to the exact model name and version we used in our benchmarking, ``NuclearSegmentation:2``. The benchmarking cluster, when you create it, will look for the model files corresponding to this name and version in the ``models/`` folder of your benchmarking bucket. **To recreate the DeepCell Kiosk paper's benchmarking data, please copy the ``models/NuclearSegmentation`` folder in the Van Valen Lab's `kiosk-benchmarking bucket <https://console.cloud.google.com/storage/browser/kiosk-benchmarking>`_ to the same location in your bucket. Otherwise, place you own model files in the appropriate location in your benchmarking bucket and modify the ``MODEL`` variable as appropriate.**
-    - Also in the benchmarking pod's YAML file is an environmental variable, ``FILE``, which is set to ``zip100.zip``. The benchmarking pod will look for a file by this name in the bucket you specified above at the location ``uploads/[file_name]``. The Van Valen Lab hosts a file named ``zip100.zip`` located `in our kiosk-bencharking bucket <https://console.cloud.google.com/storage/browser/_details/kiosk-benchmarking/sample-data/zip100.zip>`_. This file consists of 100 microscopy images, which we used as the basis for all the benchmarking runs in the DeepCell Kiosk paper. **To recreate the DeepCell Kiosk paper's benchmarking data, please copy ``sample_data/zip100.zip`` from the Van Valen Lab's `kiosk-benchmarking bucket <https://console.cloud.google.com/storage/browser/kiosk-benchmarking>`_ to ``uploads/zip100.zip`` in your benchmarking bucket. Otherwise, place your image file, zip or otherwise, in ``uploads/[FILENAME]`` in your benchmarking bucket.**
-    - A final variable in the benchmarking pod's YAML file is ``COUNT``, which determines how many times the ``zip100.zip`` file will be submitted to the cluster for processing. This controls the total number of images the cluster will process over the course of the benchmarking run. For example, if you want to do a 10,000-image benchmarking run, you would set ``COUNT`` TO 100, since 100*100 = 10,000. **Benchmarking data was presented in the DeepCell Kiosk paper for 10,000-image, 100,000-image, and 1,000,000-image runs, so, to recreate the DeepCell Kiosk paper's benchmarking data, ``COUNT`` should be set to either 100, 1,000, or 10,000. Otherwise, ``COUNT`` can be set to any positive value the user desires.**
+    - ``MODEL`` is the model name and version we used in benchmarking. The model you choose should be present in the ``models/`` folder of your benchmarking bucket. See the `Van Valen Lab's benchmarking bucket <https://console.cloud.google.com/storage/browser/kiosk-benchmarking>`_ for an example.
+    - ``FILE``, is the name of the file that will be used for benchmarking. A file by this name should be in your benchmarking bucket in the ``uploads/`` folder.    
+    - ``COUNT`` specifies how many times the ``FILE`` will be submitted to the cluster for processing.
 
 3. Deploy a DeepCell Kiosk as you normally would. While navigating the cluster configuration menu, pay special attention to two configuration settings:
 
-    - The bucket name you provide should be that of the benchmarking bucket from step 1. **To ensure the benchmarking process works properly, this bucket should not be attached to any other cluster you might have running.**
-    - The Maximum Number of GPUs is relevant to the benchmarking process. **In the DeepCell Kiosk paper, benchmarking data was presented for clusters with maxima of 1, 4, and 8 GPUs. Choose the appropriate maximum for the benchmarking dataset you would like to recreate.**
+    - The bucket name you provide should be that of the benchmarking bucket from step 1. To ensure the benchmarking process works properly, this bucket should not be attached to any other cluster you might have running.
+    - The Maximum Number of GPUs has a strong effect on benchmarking time, by effectively limiting how large the cluster can scale.
 
 4. Once the cluster has finished deploying, drop to the ``Shell`` via the DeepCell Kiosk main menu and execute the following command, ``kubectl scale deployment benchmarking --replicas=1``, to create the benchmarking pod and begin the benchmarking process.
 
@@ -192,3 +192,14 @@ To generate a full battery of benchmarking run data (i.e., varying image numbers
     - 1 run with 8 GPUs and 1,000,000 images
 
 Then, follow the instructions in the ``publication-figures`` project's ``README.md`` to recreate the DeepCell Kiosk paper's benchmarking figures.
+
+Benchmarking Figure Recreation Settings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When recreating the figures from the DeepCell Kiosk paper, please observe the following configuration guidelines:
+
+    - In the DeepCell Kiosk paper, benchmarking data was presented for clusters with maxima of 1, 4, and 8 GPUs. Choose the appropriate maximum during DeepCell Kiosk configuration for the benchmarking dataset you would like to recreate.
+    - Keep the default values for ``MODEL`` and ``FILE`` in the benchmarking YAML file.
+    - Copy the ``models/NuclearSegmentation`` folder in the Van Valen Lab's `kiosk-benchmarking bucket <https://console.cloud.google.com/storage/browser/kiosk-benchmarking>`_ to the same location in your benchmarking bucket.
+    - Copy the Van Valen Lab's `zip100.zip <https://console.cloud.google.com/storage/browser/_details/kiosk-benchmarking/sample-data/zip100.zip>`_ into the ``uploads`` folder of your bencharking bucket. This file consists of 100 microscopy images, which we used as the basis for all the benchmarking runs in the DeepCell Kiosk paper.
+    - Benchmarking data was presented in the DeepCell Kiosk paper for 10,000-image, 100,000-image, and 1,000,000-image runs. Since ``zip100.zip`` contains 100 images, set the ``COUNT`` variable in the benchmarking YAML file to either 100, 1,000, or 10,000.
