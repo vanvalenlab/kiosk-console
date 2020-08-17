@@ -152,7 +152,7 @@ The DeepCell Kiosk comes with a utility for benchmarking the scalability and per
 
 1. If you don't already have a cloud storage bucket devoted exclusively to DeepCell Kiosk benchmarking runs, you should create one now. It's fine to reuse this bucket for multiple benchmarking runs, but don't use it as a storage bucket for normal DeepCell Kiosk cluster operations.
 
-2. Checkout the ``benchmarks`` branch of the ``kiosk-console`` repository. This branch is almost identical to the version 1.2.0 release of the ``kiosk-console`` repo, except for minor configuration differences. There are three variables in the benchmarking pod's YAML file, ``conf/helmfile.d/0410.benchmarking.yaml``, that may need to be customized before benchmarking:
+2. There are three variables in the benchmarking pod's YAML file, ``conf/helmfile.d/0410.benchmarking.yaml``, that may need to be customized before benchmarking:
 
     - ``MODEL`` is the model name and version that will be used in benchmarking. The model you choose should be present in the ``models/`` folder of your benchmarking bucket. See the `Van Valen Lab's benchmarking bucket <https://console.cloud.google.com/storage/browser/kiosk-benchmarking>`_ for an example.
     - ``FILE`` is the name of the file that will be used for benchmarking. A file by this name should be in your benchmarking bucket in the ``uploads/`` folder.    
