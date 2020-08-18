@@ -167,7 +167,9 @@ The DeepCell Kiosk comes with a utility for benchmarking the scalability and per
 
 5. Benchmarking jobs can take a day or more, depending on the conditions (# of images and max # of GPUs) chosen. To monitor the status of your benchmarking job, drop to the ``Shell`` within the DeepCell Kiosk main menu and execute the command ``stern benchmarking -s 10m``. This will show you the most recent log output from the `benchmarking` pod. When benchmarking has finished, the final line in the log should be ``Uploaded [FILEPATH] to [BUCKET] in [SECONDS] seconds.``, where ``[FILEPATH]`` is the location in ``[BUCKET]`` where the benchmarking data has been saved.
 
-6. Now that data has been generated for your benchmarking run and saved in your bucket, you can download and analyze it. Two top-level fields in this large JSON file that are probably of interest are:
+6. Now that the benchmarking process has finished, clean up the benchmarking resources by executing ``kubectl scale deployment benchmarking --replicas 0`` at the DeepCell Kiosk's ``Shell``. This prevents the benchmarking process from executing multiple times in long-lived clusters.
 
-    - The exact running time of the benchmarking procedure is given in seconds as the value of the ``time_elapsed`` field.
-    - A slight underestimate of the total costs of the benchmarking run can be found as the value to the ``total_node_and_networking_costs`` field. (Note that the total_node_and_networking_costs does not include Storage, Operation, or Storage Egress Fees. These extra fees `can be calculated <https://github.com/vanvalenlab/publication-figures/blob/383a90149eb86d4a0a697395edffb32d383bb1ca/figure_generation/data_extractor.py#L318>`_ after the fact by using the `Google Cloud guidelines <https://cloud.google.com/vpc/network-pricing#general>`_.)
+7. Finally, you can download and analyze your benchmarking data. Two top-level fields in this large JSON file that are of interest are:
+
+    - ``time_elapsed``: the exact running time of the benchmarking procedure (seconds)
+    - ``total_node_and_networking_costs``: a slight underestimate of the total costs of the benchmarking run. (This total does not include Storage, Operation, or Storage Egress Fees. These extra fees `can be calculated <https://github.com/vanvalenlab/publication-figures/blob/383a90149eb86d4a0a697395edffb32d383bb1ca/figure_generation/data_extractor.py#L318>`_ after the fact by using the `Google Cloud guidelines <https://cloud.google.com/vpc/network-pricing#general>`_.)
