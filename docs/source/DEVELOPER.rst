@@ -150,7 +150,7 @@ Benchmarking the DeepCell Kiosk
 
 The DeepCell Kiosk comes with a utility for benchmarking the scalability and performance of a deep learning workflow. To reproduce the cost and timing benchmarks reported in the DeepCell Kiosk paper, please refer to our `figure creation repository <https://github.com/vanvalenlab/kiosk-console/pull/github.com/vanvalenlab/publication-figures>`_. To run your own benchmarking, please read below.
 
-1. If you don't already have a cloud storage bucket devoted exclusively to DeepCell Kiosk benchmarking runs, you should create one now. It's fine to reuse this bucket for multiple benchmarking runs, but don't use it as a storage bucket for normal DeepCell Kiosk cluster operations.
+1. If you don't already have a cloud storage bucke for use with the DeepCell Kiosk, you should create one now. It's fine to reuse this bucket across multiple DeepCell Kiosk clusters.
 
 2. There are three variables in the benchmarking pod's YAML file, ``conf/helmfile.d/0410.benchmarking.yaml``, that may need to be customized before benchmarking:
 
@@ -160,7 +160,7 @@ The DeepCell Kiosk comes with a utility for benchmarking the scalability and per
 
 3. Deploy a DeepCell Kiosk as you normally would. While navigating the cluster configuration menu, pay special attention to two configuration settings:
 
-    - The bucket name you provide should be that of the benchmarking bucket from step 1. To ensure the benchmarking process works properly, this bucket should not be attached to any other cluster you might have running.
+    - The bucket name you provide should be that of the benchmarking bucket from step 1.
     - The Maximum Number of GPUs has a strong effect on benchmarking time, by effectively limiting how large the cluster can scale.
 
 4. Once the cluster has finished deploying, drop to the ``Shell`` via the DeepCell Kiosk main menu and create the benchmarking pod to begin the benchmarking process by executing the following command: ``kubectl scale deployment benchmarking --replicas=1``.
@@ -170,4 +170,4 @@ The DeepCell Kiosk comes with a utility for benchmarking the scalability and per
 6. Now that data has been generated for your benchmarking run and saved in your bucket, you can download and analyze it. Two top-level fields in this large JSON file that are probably of interest are:
 
     - The exact running time of the benchmarking procedure is given in seconds as the value of the ``time_elapsed`` field.
-    - A slight underestimate of the total costs of the benchmarking run can be found as the value to the `total_node_and_networking_costs` field. (Note that the total_node_and_networking_costs does not include Storage Fees, Operation Fees, or Storage Egress Fees. These `were calculated <https://github.com/vanvalenlab/publication-figures/blob/383a90149eb86d4a0a697395edffb32d383bb1ca/figure_generation/data_extractor.py#L318>`_ after the fact by using the `Google Cloud guidelines <https://cloud.google.com/vpc/network-pricing#general>`_.)
+    - A slight underestimate of the total costs of the benchmarking run can be found as the value to the `total_node_and_networking_costs` field. (Note that the total_node_and_networking_costs does not include Storage, Operation, or Storage Egress Fees. These extra fees `can be calculated <https://github.com/vanvalenlab/publication-figures/blob/383a90149eb86d4a0a697395edffb32d383bb1ca/figure_generation/data_extractor.py#L318>`_ after the fact by using the `Google Cloud guidelines <https://cloud.google.com/vpc/network-pricing#general>`_.)
