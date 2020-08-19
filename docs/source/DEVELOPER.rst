@@ -154,7 +154,7 @@ The DeepCell Kiosk comes with a utility for benchmarking the scalability and per
 
 2. There are three variables in the benchmarking pod's YAML file, ``conf/helmfile.d/0410.benchmarking.yaml``, that may need to be customized before benchmarking:
 
-    - ``MODEL`` is the model name and version that will be used in benchmarking. The model you choose should be present in the ``models/`` folder of your benchmarking bucket. See the `Van Valen Lab's benchmarking bucket <https://console.cloud.google.com/storage/browser/kiosk-benchmarking>`_ for an example.
+    - ``MODEL`` is the model name and version that will be used in benchmarking. The model you choose should be present in the ``models/`` folder of your benchmarking bucket. See the `Van Valen Lab's benchmarking bucket <https://storage.googleapis.com/kiosk-benchmarking>`_ for an example.
     - ``FILE`` is the name of the file that will be used for benchmarking. A file by this name should be in your benchmarking bucket in the ``uploads/`` folder.    
     - ``COUNT`` specifies how many times the ``FILE`` will be submitted to the cluster for processing.
 
