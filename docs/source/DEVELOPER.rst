@@ -161,7 +161,7 @@ The DeepCell Kiosk comes with a utility for benchmarking the scalability and per
 3. Deploy a DeepCell Kiosk as you normally would. While navigating the cluster configuration menu, pay special attention to two configuration settings:
 
     - The bucket name you provide should be that of the benchmarking bucket from step 1.
-    - The Maximum Number of GPUs has a strong effect on benchmarking time, by effectively limiting how large the cluster can scale.
+    - The Maximum Number of GPUs has a strong effect on benchmarking time by effectively limiting how large the cluster can scale.
 
 4. Once the cluster has deployed successfully, drop to the ``Shell`` via the DeepCell Kiosk main menu and begin the benchmarking process by executing the following command: ``kubectl scale deployment benchmarking --replicas=1``.
 
