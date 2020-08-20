@@ -148,7 +148,7 @@ While we hope this list is comprehensive, there could be some lingering resource
 Benchmarking the DeepCell Kiosk
 ---------------------------------------------------------
 
-The DeepCell Kiosk comes with a utility for benchmarking the scalability and performance of a deep learning workflow. To reproduce the cost and timing benchmarks reported in the DeepCell Kiosk paper, please refer to the ``2020-Bannon_et_al-Kiosk`` folder of our `figure creation repository <https://github.com/vanvalenlab/publication-figures>`_. To run your own benchmarking, please read below.
+The DeepCell Kiosk comes with a utility for benchmarking the scalability and performance of a deep learning workflow. To reproduce the cost and timing benchmarks reported in the DeepCell Kiosk paper, please refer to `the 2020-Bannon_et_al-Kiosk folder of our figure creation repository <https://github.com/vanvalenlab/publication-figures/2020-Bannon_et_al-Kiosk>`_. To run your own benchmarking, please read below.
 
 1. If you don't already have a cloud storage bucket for use with the DeepCell Kiosk, you should create one now. It's fine to reuse this bucket across multiple DeepCell Kiosk clusters.
 
