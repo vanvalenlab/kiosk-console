@@ -165,7 +165,7 @@ The DeepCell Kiosk comes with a utility for benchmarking the scalability and per
 
 4. Once the cluster has deployed successfully, drop to the ``Shell`` via the DeepCell Kiosk main menu and begin the benchmarking process by executing the following command: ``kubectl scale deployment benchmarking --replicas=1``
 
-5. Benchmarking jobs can take a day or more, depending on the conditions (# of images and max # of GPUs) chosen. To monitor the status of your benchmarking job, drop to the ``Shell`` within the DeepCell Kiosk main menu and execute the command ``stern benchmarking -s 10m``. This will show you the most recent log output from the `benchmarking` pod. When benchmarking has finished, the final line in the log should be ``Uploaded [FILEPATH] to [BUCKET] in [SECONDS] seconds.``, where ``[FILEPATH]`` is the location in ``[BUCKET]`` where the benchmarking data has been saved.
+5. Benchmarking jobs can take a day or more, depending on the conditions (number of images and max number of GPUs) chosen. To monitor the status of your benchmarking job, drop to the ``Shell`` within the DeepCell Kiosk main menu and execute the command ``stern benchmarking -s 10m``. This will show you the most recent log output from the `benchmarking` pod. When benchmarking has finished, the final line in the log should be ``Uploaded [FILEPATH] to [BUCKET] in [SECONDS] seconds.``, where ``[FILEPATH]`` is the location in ``[BUCKET]`` where the benchmarking data has been saved.
 
 6. Now that the benchmarking process has finished, clean up the benchmarking resources by executing ``kubectl scale deployment benchmarking --replicas 0`` at the DeepCell Kiosk's ``Shell``. This prevents the benchmarking process from executing multiple times in long-lived clusters.
 
