@@ -13,7 +13,7 @@ ENV BANNER_FONT="Larry 3D 2.flf"
 
 # Disable cloudposse motd
 ENV MOTD_URL=""
- 
+
 # Silence make
 ENV MAKE="make -s"
 
