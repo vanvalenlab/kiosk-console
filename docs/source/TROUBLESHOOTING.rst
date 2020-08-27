@@ -44,7 +44,7 @@ If that command returns an error, you may not be on Linux. If you are on Linux, 
 
 .. code-block:: bash
 
-    Building vanvalenlab/kiosk:latest from ./Dockerfile with [] build args...
+    Building vanvalenlab/kiosk-console:latest from ./Dockerfile with [] build args...
     ERRO[0000] failed to dial gRPC: cannot connect to the Docker daemon. Is 'docker daemon' running on this host?: d
     ial unix /var/run/docker.sock: connect: permission denied
     context canceled

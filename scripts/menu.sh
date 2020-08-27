@@ -323,6 +323,9 @@ function configure_gke() {
                          --format "value(commonInstanceMetadata.items.key, commonInstanceMetadata.items.value)" \
                          | grep google-compute-default-region | awk '{ print $2 }')
 
+  # No default region for the project, just use hard-coded default
+  if [ -z "$default_region" ]; then default_region=us-west1; fi
+
   # use default settings or use the advanced menu
   local setup_opt_value=$(
     dialog --clear --backtitle "${BRAND}" \
@@ -449,12 +452,20 @@ function configure_gke() {
   local min_addresses=16
   local in_use_addresses=$(echo "${all_quotas}" | grep IN_USE_ADDRESSES | awk '{print int($2)}')
   if [ $in_use_addresses -lt $min_addresses ]; then
-    error_text=("\nThe cluster requires at least ${min_addresses} In-use IP Addresses."
+    error_text=("\nThe cluster requires at least ${min_addresses} In-use IP addresses global."
                 "\n\nPlease request a quota increase from the Google Cloud console.")
     msgbox "Warning!" "${error_text[*]}"
     return 0
   fi
-  # TODO: Should have a quota of at leat 1 GPU of the requested type.
+  # Should have a quota of at least 1 for global GPUs.
+  local min_gpus=1
+  local gpus_all_regions=$(echo "${all_quotas}" | grep GPUS_ALL_REGIONS | awk '{print int($2)}')
+  if [ ${gpus_all_regions:-$min_gpus} -lt $min_gpus ]; then
+    error_text=("\nThe cluster requires at least ${min_gpus} GPU (all regions)."
+                "\n\nPlease request a quota increase from the Google Cloud console.")
+    msgbox "Warning!" "${error_text[*]}"
+    return 0
+  fi
 
   # Find at least 2 zones to deploy the cluster.
   # If GPUs are not available in at least 2 zones, the user must restart.
@@ -492,7 +503,10 @@ function configure_gke() {
     valid_zones+=('Multizone')  # add an "All of the above option"
   fi
 
-  local message=("Deploy a single- or multi-zone cluster.")
+  local message=("Deploy a single- or multi-zone cluster.\n"
+                 "\nMultiple zones provide more redundancy, but will incur additional egress fees. For more details, see:"
+                 "\n\n"
+                 "https://cloud.google.com/vpc/network-pricing")
   # The default version of 1.14 is the oldest supported version, and may become
   # unavailable in GKE in the future.
   if [[ $KUBERNETES_VERSION == "1.14" ]] && \
