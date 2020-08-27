@@ -217,47 +217,47 @@ releases:
             labels:
               namespace: deepcell
           - record: segmentation_consumer_key_ratio
-              # COMPLICATED scaling metric that prevents too many consumers
-              # per GPU.  If too many consumers, scale down slightly.
-              # Structural outline follows:
-              # (
-              #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
-              #   +
-              #   .75 * target * is_too_many_consumers)
-              # ) * is_tf_up
-              expr: |-
+            # COMPLICATED scaling metric that prevents too many consumers
+            # per GPU.  If too many consumers, scale down slightly.
+            # Structural outline follows:
+            # (
+            #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
+            #   +
+            #   .75 * target * is_too_many_consumers)
+            # ) * is_tf_up
+            expr: |-
+              (
                 (
-                  (
-                    min(
-                      1 - tf_serving_gpu_usage / 100
-                      < on(namespace)
+                  min(
+                    1 - tf_serving_gpu_usage / 100
+                    < on(namespace)
+                    consumer_key_ratio{deployment="segmentation-consumer"} / 100
+                    or
+                    clamp_max(
                       consumer_key_ratio{deployment="segmentation-consumer"} / 100
-                      or
-                      clamp_max(
-                        consumer_key_ratio{deployment="segmentation-consumer"} / 100
-                      , 1)
-                    ) *
-                    scalar(consumers_per_gpu{deployment="segmentation-consumer"} <= bool 150)
-                  ) + (
-                    scalar(consumers_per_gpu{deployment="segmentation-consumer"} > bool 150)
-                  ) * .75 * .15
-                ) * scalar(tf_serving_up > bool 0)
-              labels:
-                deployment: segmentation-consumer
-                namespace: deepcell
-            - record: segmentation_zip_consumer_key_ratio
-              expr: |-
-                consumer_key_ratio{deployment="segmentation-zip-consumer"}
-              labels:
-                deployment: zip-consumer
-                namespace: deepcell
-            - record: tracking_consumer_key_ratio
-              expr: |-
-                consumer_key_ratio{deployment="tracking-consumer"}
-                * on() tf_serving_up
-              labels:
-                deployment: tracking-consumer
-                namespace: deepcell
+                    , 1)
+                  ) *
+                  scalar(consumers_per_gpu{deployment="segmentation-consumer"} <= bool 150)
+                ) + (
+                  scalar(consumers_per_gpu{deployment="segmentation-consumer"} > bool 150)
+                ) * .75 * .15
+              ) * scalar(tf_serving_up > bool 0)
+            labels:
+              deployment: segmentation-consumer
+              namespace: deepcell
+          - record: segmentation_zip_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="segmentation-zip-consumer"}
+            labels:
+              deployment: zip-consumer
+              namespace: deepcell
+          - record: tracking_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="tracking-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: tracking-consumer
+              namespace: deepcell
 
       ## Manages Prometheus and Alertmanager components
       ##
