@@ -1,12 +1,12 @@
 # ![DeepCell Kiosk Banner](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/DeepCell_Kiosk_Banner.png)
 
 [![Build Status](https://travis-ci.com/vanvalenlab/kiosk-console.svg?branch=master)](https://travis-ci.com/vanvalenlab/kiosk-console)
-[![Read the Docs](https://img.shields.io/readthedocs/kiosk-console?logo=Read%20the%20Docs)](https://deepcell-kiosk.readthedocs.io/en/master)
+[![Read the Docs](https://readthedocs.org/projects/deepcell-kiosk/badge/?version=master)](https://deepcell-kiosk.readthedocs.io/en/master/?badge=master)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/vanvalenlab/kiosk-console/blob/master/LICENSE)
 
 The `kiosk-console` is the entry point for users to spin up a DeepCell Kiosk, a cloud-native implementation of the DeepCell ecosystem.
 
-The DeepCell Kiosk is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models. To train custom models, please refer to [`deepcell-tf`](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and is capable of exporting these models for use with the DeepCell Kiosk.
+The DeepCell Kiosk is designed to allow researchers to easily deploy and scale a deep learning platform for biological image analysis. Once launched, users can drag-and-drop images to be processed in parallel using publicly available, or custom-built, TensorFlow models. To train custom models, please refer to [deepcell-tf](https://github.com/vanvalenlab/deepcell-tf), which was designed to facilitate model development and is capable of exporting these models for use with the DeepCell Kiosk.
 
 The scalability of the DeepCell Kiosk software is enabled by [Kubernetes](https://kubernetes.io/). At present, the Kiosk is only compatible with [Google Cloud](https://cloud.google.com/).
 
@@ -49,7 +49,7 @@ Tracked Image
 Start a terminal shell and install the DeepCell Kiosk wrapper script:
 
 ```bash
-docker run -e DOCKER_TAG=1.2.0 vanvalenlab/kiosk-console:1.2.0 | sudo bash
+docker run -e DOCKER_TAG=1.2.1 vanvalenlab/kiosk-console:1.2.1 | sudo bash
 ```
 
 To start the kiosk, just run `kiosk-console` from the terminal shell.
