@@ -14,19 +14,21 @@ Google Cloud Setup
 
 .. warning:: Google Cloud Platform must approve several requests that may take up to 1 day to complete.
 
-1. If necessary, create an account at `Google Cloud <https://cloud.google.com>`_ and create a Google Cloud project, making sure you have at least one account with the `Owner` role. Take note of the project ID (you will need this later during Kiosk configuration).
+1. If necessary, create an account at `Google Cloud <https://cloud.google.com>`_ and create a Google Cloud Project, making sure you have at least one account with the `Owner` role.
 
 2. Make sure the `Kubernetes Engine API <https://console.cloud.google.com/apis/api/container.googleapis.com/overview>`_ is enabled.
 
-3. In order to add accelerated hardware to the clusters you will launch, you will need to `upgrade <https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade>`_ your Google Cloud account. Please note, this may take some time, as Google will need to approve the upgrade. You may also need to log in and out of your account for the upgrade to take effect. One way to verify that you have been upgraded is to take note of the number of rows available within your total quotas. Upgraded accounts contain significantly more available quotas than the free tier.
+3. The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. In order to add accelerated hardware to the clusters you will launch, you will need to `upgrade <https://cloud.google.com/free/docs/gcp-free-tier#how-to-upgrade>`_ your Google Cloud account as they are unavailable with a free-tier account.
 
-.. note:: The recent success of deep learning has been critically dependent on accelerated hardware like GPUs. Similarly, the strength of the DeepCell Kiosk is its ability to recruit and scale GPU nodes based on demand. Google does not include these GPU nodes by default as part of its free tier thus necessitating the upgrade. For more information, please refer to `Google's blog post on the subject <https://cloud.google.com/blog/products/gcp/gpus-service-kubernetes-engine-are-now-generally-available>`_
+.. note:: The account upgrade may take some time, as Google will need to approve the upgrade. You may also need to log in and out of your account for the upgrade to take effect. Once your account is upgraded you should be able to see GPU options in `the quota panel <https://console.cloud.google.com/iam-admin/quotas>`_.
 
 4. Apply for a `quota of at least 1 "GPU (all regions)" <https://cloud.google.com/compute/quotas#gpus>`_ and at least `16 "In-use IP addresses global" <https://cloud.google.com/compute/quotas#ip_addresses>`_. This may take some time, as Google will need to approve each of these requests.
 
-.. note:: Google offers a number of GPU types. The DeepCell Kiosk uses `NVIDIA T4` GPUs for inference by default.
+.. note:: Google offers a number of GPU types. The DeepCell Kiosk uses pre-emptible `NVIDIA T4` GPUs for inference by default.  To request more than one GPU, you must make a quota request for that resource in your chosen region.
 
-5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_ in the default region of your project (this should be a "Standard class" bucket, which you can select using fine-grained access control). This will be used to store data and models. Record the bucket name (as with project ID, you will need this during Kiosk configuration). Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
+.. warning:: Currently only pre-emptible GPUs are supported by the DeepCell Kiosk.
+
+5. Create a `cloud storage bucket <https://cloud.google.com/storage/docs/creating-buckets>`_ in the default region of your project (this should be a "Standard class" bucket, which you can select using fine-grained access control). This will be used to store data and models. Record the bucket name, which will be needed during Kiosk configuration. Please do not use underscores (`_`) in your bucket name. Your bucket should follow the organizational structure that follows:
 
    .. code-block:: bash
 
@@ -71,7 +73,7 @@ Local Docker Installation - MacOS and Linux
 Cloud-Based Jumpbox Workflow
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Navigate to the `VM instances <https://console.cloud.google.com/compute/instances>`_ in the Google Cloud Console.
-* Check that your boot disk is configured for ``Debian/Ubuntu 9`` operating system
+* Check that your boot disk is configured for ``Debian/Ubuntu`` operating system
 
 .. warning:: Container optimized images do not support Kiosk installation.
 
@@ -88,6 +90,20 @@ Cloud-Based Jumpbox Workflow
     sudo apt-get update && \
     sudo apt-get install -y containerd.io docker-ce docker-ce-cli git make vim
 
+* To manage docker as a non-root user on Linux, it is required to create the ``docker`` group and add your user to it using the commands below, then disconnect and reconnect to the server.
+
+.. code-block:: bash
+
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+
+* Verify docker is installed correctly:
+
+.. code-block:: bash
+
+    docker run hello-world
+
+
 Starting the Kiosk
 ^^^^^^^^^^^^^^^^^^
 
@@ -97,11 +113,11 @@ You are now ready to start the Kiosk!
 
 .. code-block:: bash
 
-    docker run -e DOCKER_TAG=1.2.0 vanvalenlab/kiosk:1.2.0 | sudo bash
+    docker run -e DOCKER_TAG=1.2.1 vanvalenlab/kiosk-console:1.2.1 | sudo bash
 
 .. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings. This will require you to enter your password.
 
-* To start the Kiosk, just run ``kiosk`` from the terminal shell
+* To start the Kiosk, just run ``kiosk-console`` from the terminal shell
 
 .. list-table::
 

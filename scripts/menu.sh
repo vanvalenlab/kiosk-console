@@ -460,7 +460,7 @@ function configure_gke() {
   # Should have a quota of at least 1 for global GPUs.
   local min_gpus=1
   local gpus_all_regions=$(echo "${all_quotas}" | grep GPUS_ALL_REGIONS | awk '{print int($2)}')
-  if [ $gpus_all_regions -lt $min_gpus ]; then
+  if [ ${gpus_all_regions:-$min_gpus} -lt $min_gpus ]; then
     error_text=("\nThe cluster requires at least ${min_gpus} GPU (all regions)."
                 "\n\nPlease request a quota increase from the Google Cloud console.")
     msgbox "Warning!" "${error_text[*]}"
@@ -503,7 +503,10 @@ function configure_gke() {
     valid_zones+=('Multizone')  # add an "All of the above option"
   fi
 
-  local message=("Deploy a single- or multi-zone cluster.")
+  local message=("Deploy a single- or multi-zone cluster.\n"
+                 "\nMultiple zones provide more redundancy, but will incur additional egress fees. For more details, see:"
+                 "\n\n"
+                 "https://cloud.google.com/vpc/network-pricing")
   # The default version of 1.14 is the oldest supported version, and may become
   # unavailable in GKE in the future.
   if [[ $KUBERNETES_VERSION == "1.14" ]] && \
