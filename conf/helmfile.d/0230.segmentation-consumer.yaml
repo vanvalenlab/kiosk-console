@@ -28,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.6.0
+        tag: 0.6.1
 
       nameOverride: segmentation-consumer
 
