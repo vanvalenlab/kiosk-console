@@ -116,6 +116,11 @@ releases:
                 deployment: tracking-consumer
                 namespace: deepcell
 
+      ## Manages Prometheus and Alertmanager components
+      ##
+      prometheusOperator:
+        cleanupCustomResource: true
+
       ## Using default values from https://github.com/helm/charts/blob/master/stable/grafana/values.yaml
       ##
       grafana:
