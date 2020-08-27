@@ -1,4 +1,4 @@
-FROM cloudposse/build-harness:0.43.0 as build-harness
+FROM cloudposse/build-harness:0.39.0 as build-harness
 
 FROM cloudposse/geodesic:0.135.0
 
