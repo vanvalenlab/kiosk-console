@@ -10,7 +10,7 @@ create: \
   $(CLOUD_PROVIDER)/create/all \
   kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
-	kubectl/create/certificates \
+  kubectl/create/certificates \
   kubectl/display/ip \
   kubectl/implement/autoscaling
 	@echo "DeepCell Kiosk has been created successfully."
@@ -37,7 +37,7 @@ test/create: \
   $(CLOUD_PROVIDER)/test/create/all \
   kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
-	kubectl/create/certificates \
+  kubectl/create/certificates \
   kubectl/display/ip \
   kubectl/implement/autoscaling
 	@echo "Cluster created"
