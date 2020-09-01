@@ -24,7 +24,6 @@ destroy: \
 # Unit tests
 test/unit:
 	@echo "Linting helm charts"
-	@helm init --client-only
 	@ls -1 -d /conf/charts/* | xargs helm lint
 	@echo "Linting helmfiles"
 	@helmfile -f /conf/ELK_helmfiles/ -q build 1>/dev/null

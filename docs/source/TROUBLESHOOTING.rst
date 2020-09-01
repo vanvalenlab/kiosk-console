@@ -73,7 +73,7 @@ A consumer should always either successfully consume a job or fail and provide a
 
 * Redeploy the cluster with the more powerful nodes than the default ``n1-standard-1``.
 
-* Increase the memory/cpu resource request in the helmfile of the consumer. (Remember to follow this by issuing the following command ``helm delete consumer-name --purge; helmfile -l name=consumer-name sync``)
+* Increase the memory/cpu resource request in the helmfile of the consumer. (Remember to follow this by issuing the following command ``helm delete consumer-name; helmfile -l name=consumer-name sync``)
 
 A prediction job may also never finish if the ``tf-serving`` pod never comes up. If you see that the ``tf-serving`` pod is not in status ``Running`` or has been restarting, there is likely a memory/resource issue with the model server itself. If this is the case, please read below.
 

@@ -273,7 +273,6 @@ gke/create/resources: \
 	gke/create/node-pools \
 	gke/create/elk-node-pools \
 	gke/create/bucket \
-	gke/deploy/helm \
 	gke/deploy/nvidia
 
 ## Create Cluster
