@@ -60,15 +60,15 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 ![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/Kiosk_Architecture.png)
 
-- [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
-
 - [Consumer](https://github.com/vanvalenlab/kiosk-redis-consumer): Retrieves items from the Job Queue and handles the processing pipeline for that item. Each consumer only works on one item at a time.
 
 - [Model Server](https://github.com/vanvalenlab/kiosk-tf-serving): Serves models over a gRPC API, allowing consumers to send data and get back predictions.
 
 - [GPU Autoscaler](https://github.com/vanvalenlab/kiosk-autoscaler): Automatically and efficiently scales Kubernetes GPU resources.
 
-- _Kiosk Interfaces_:
+- [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
+
+- _Additional Data Entry Tools_:
 
   - [ImageJ Plugin](https://github.com/vanvalenlab/kiosk-imageJ-plugin): An ImageJ 1.x plugin for processing images with an existing cluster.
 
