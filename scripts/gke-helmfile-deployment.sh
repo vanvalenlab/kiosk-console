@@ -10,7 +10,7 @@ for filename in /conf/helmfile.d/*.yaml; do
       helmfile --selector name=${name} sync
       [[ $? -eq 0 ]] && break
       echo "Something went wrong while deploying ${name}. Retrying in 30 seconds."
-      helm delete ${name} --purge
+      helm delete ${name}
       sleep 30
     done
   done

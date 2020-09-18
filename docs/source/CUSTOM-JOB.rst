@@ -316,9 +316,9 @@ You will need to sync your helmfile in order to update your frontend website to 
 
 .. code-block:: bash
 
-    helm delete --purge frontend; helmfile -l name=frontend sync
-    helm delete --purge redis-janitor; helmfile -l name=redis-janitor sync
-    helm delete --purge autoscaler; helmfile -l name=autoscaler sync
+    helm delete frontend; helmfile -l name=frontend sync
+    helm delete redis-janitor; helmfile -l name=redis-janitor sync
+    helm delete autoscaler; helmfile -l name=autoscaler sync
 
 In a few minutes the Kiosk will be ready to process the new job type.
 
