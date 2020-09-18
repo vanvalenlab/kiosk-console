@@ -68,12 +68,15 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 - [GPU Autoscaler](https://github.com/vanvalenlab/kiosk-autoscaler): Automatically and efficiently scales Kubernetes GPU resources.
 
+- [ImageJ Plugin](https://github.com/vanvalenlab/kiosk-imageJ-plugin): An ImageJ 1.x plugin for processing images with an existing DeepCell Kiosk cluster.
+
+- [Command-line Interface](https://github.com/vanvalenlab/kiosk-client): A python-based CLI for submitting and managing DeepCell Kiosk jobs.
+
 - _Not pictured above_:
 
-  * [Bucket Monitor](https://github.com/vanvalenlab/kiosk-bucket-monitor): Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
+  - [Bucket Monitor](https://github.com/vanvalenlab/kiosk-bucket-monitor): Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
 
-  * [Janitor](https://github.com/vanvalenlab/kiosk-redis-janitor): Monitors in-progress items and makes sure no jobs get left un-finished.
-
+  - [Janitor](https://github.com/vanvalenlab/kiosk-redis-janitor): Monitors in-progress items and makes sure no jobs get left un-finished.
 
 ## Contribute
 
