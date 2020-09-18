@@ -62,7 +62,7 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 - [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
 
-  - [ImageJ Plugin](https://github.com/vanvalenlab/kiosk-imageJ-plugin): An ImageJ 1.x plugin for processing images with an existing DeepCell Kiosk cluster.
+  - [ImageJ Plugin](https://github.com/vanvalenlab/kiosk-imageJ-plugin): An ImageJ 1.x plugin for processing images with an existing cluster.
 
   - [Command-line Interface](https://github.com/vanvalenlab/kiosk-client): A python-based CLI for submitting and managing DeepCell Kiosk jobs.
 
