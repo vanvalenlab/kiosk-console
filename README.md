@@ -49,7 +49,7 @@ Tracked Image
 Start a terminal shell and install the DeepCell Kiosk wrapper script:
 
 ```bash
-docker run -e DOCKER_TAG=1.2.1 vanvalenlab/kiosk-console:1.2.1 | sudo bash
+docker run -e DOCKER_TAG=1.3.0 vanvalenlab/kiosk-console:1.3.0 | sudo bash
 ```
 
 To start the kiosk, just run `kiosk-console` from the terminal shell.
@@ -60,20 +60,25 @@ Check out our [docs](https://deepcell-kiosk.readthedocs.io/en/master/GETTING_STA
 
 ![Kiosk Architecture](https://raw.githubusercontent.com/vanvalenlab/kiosk-console/master/docs/images/Kiosk_Architecture.png)
 
-- [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
-
 - [Consumer](https://github.com/vanvalenlab/kiosk-redis-consumer): Retrieves items from the Job Queue and handles the processing pipeline for that item. Each consumer only works on one item at a time.
 
 - [Model Server](https://github.com/vanvalenlab/kiosk-tf-serving): Serves models over a gRPC API, allowing consumers to send data and get back predictions.
 
 - [GPU Autoscaler](https://github.com/vanvalenlab/kiosk-autoscaler): Automatically and efficiently scales Kubernetes GPU resources.
 
+- [Frontend](https://github.com/vanvalenlab/kiosk-frontend): API for creating and managing jobs, and a React-based web interface for the DeepCell Kiosk.
+
+- _Additional Data Entry Tools_:
+
+  - [ImageJ Plugin](https://github.com/vanvalenlab/kiosk-imageJ-plugin): An ImageJ 1.x plugin for processing images with an existing cluster.
+
+  - [Command-line Interface](https://github.com/vanvalenlab/kiosk-client): A python-based CLI for submitting and managing DeepCell Kiosk jobs.
+
 - _Not pictured above_:
 
-  * [Bucket Monitor](https://github.com/vanvalenlab/kiosk-bucket-monitor): Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
+  - [Bucket Monitor](https://github.com/vanvalenlab/kiosk-bucket-monitor): Purges the bucket of uploaded and processed files that are older than `AGE_THRESHOLD`, 3 days by default.
 
-  * [Janitor](https://github.com/vanvalenlab/kiosk-redis-janitor): Monitors in-progress items and makes sure no jobs get left un-finished.
-
+  - [Janitor](https://github.com/vanvalenlab/kiosk-redis-janitor): Monitors in-progress items and makes sure no jobs get left un-finished.
 
 ## Contribute
 
