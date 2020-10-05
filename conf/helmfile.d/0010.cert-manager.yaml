@@ -1,0 +1,33 @@
+helmDefaults:
+  wait: true
+  timeout: 600
+  force: true
+
+################################################################################
+## Certificate Manager #########################################################
+################################################################################
+
+repositories:
+  # Stable repo of official helm charts
+  - name: jetstack
+    url: https://charts.jetstack.io
+
+releases:
+
+#
+# References:
+#   - https://github.com/cloudposse/charts/blob/master/incubator/nginx-ingress/values.yaml
+#
+- name: cert-manager
+  namespace: cert-manager
+  labels:
+    chart: cert-manager
+    repo: stable
+    component: cert-manager
+    namespace: cert-manager
+    vendor: kubernetes
+  chart: jetstack/cert-manager
+  version: 0.15.1
+  wait: true
+  values:
+    - installCRDs: true
