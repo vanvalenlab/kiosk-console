@@ -46,7 +46,7 @@ releases:
         httpTargetPort: 8080
         externalHttpPort: 8080
 
-        httpsIngressEnabled: false
+        httpsIngressEnabled: true
         internalHttpsPort: 8443
         httpsTargetPort: 8443
         externalHttpsPort: 8443
@@ -56,9 +56,19 @@ releases:
         path: /
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          nginx.ingress.kubernetes.io/rewrite-target: /
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
+          nginx.ingress.kubernetes.io/auth-tls-secret: "deepcell/tls-cert"
+          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+        hosts:
+          - deepcell.example.com
+          # - deepcell.org
+          # - www.deepcell.org
+        tls: []
+          # - hosts:
+          #   - deepcell.org
+          #   - www.deepcell.org
+          #   secretName: tls-cert
 
       env:
         PORT: 8080

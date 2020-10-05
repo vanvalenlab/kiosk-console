@@ -214,6 +214,22 @@ gke/destroy/service-account:
 	@echo " "
 	@echo " "
 
+## Create Certificate Manager service account.
+gke/create/certificate-manager-sa:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud iam service-accounts create "dns01-solver" --display-name "dns01-solver" || \
+		echo "cert-manager service account already exists"
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) \
+		--member serviceAccount:dns01-solver@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com \
+		--role roles/dns.admin
+	@gcloud iam service-accounts keys create key.json \
+		--iam-account dns01-solver@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
+	-@kubectl create namespace cert-manager
+	@kubectl -n default create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
+else
+	@echo "Certificate Manager is Disabled"
+endif
+
 ## Create bucket used by deepcell
 gke/create/bucket:
 	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
@@ -262,6 +278,7 @@ gke/create/resources: \
 ## Create Cluster
 gke/create/all: \
 	gke/create/service-account \
+	gke/create/certificate-manager-sa \
 	gke/create/resources
 	@echo "GKE cluster created"
 	@exit 0

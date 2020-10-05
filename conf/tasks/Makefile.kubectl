@@ -49,6 +49,11 @@ kubectl/destroy/prometheus/operator:
 	-@kubectl delete crd podmonitors.monitoring.coreos.com
 	-@kubectl delete crd thanosrulers.monitoring.coreos.com
 
+kubectl/create/certificates:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+  -@gomplate -f addons/certificate-issuers.yaml | kubectl apply -f -
+endif
+
 ## Create horizontal pod autoscalers for all relevant deployments
 kubectl/implement/autoscaling:
 	gomplate -f addons/hpa.yaml | kubectl apply -f -
