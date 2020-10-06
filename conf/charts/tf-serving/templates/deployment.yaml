@@ -42,6 +42,7 @@ spec:
       initContainers:
       - name: install
         image: "{{ .Values.configWriter.image.repository }}:{{ .Values.configWriter.image.tag }}"
+        imagePullPolicy: {{ .Values.configWriter.image.pullPolicy }}
         volumeMounts:
         - name: {{ .Values.configWriter.mountedVolume.name }}
           mountPath: {{ .Values.configWriter.mountedVolume.path }}
