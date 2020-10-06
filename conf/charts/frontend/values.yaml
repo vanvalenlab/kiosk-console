@@ -17,11 +17,11 @@ ingress:
     #nginx.ingress.kubernetes.io/rewrite-target: /
     #nginx.ingress.kubernetes.io/ssl-redirect: "false"
     #nginx.ingress.kubernetes.io/proxy-body-size: "25m"
-  hosts:
-    - deepcell.example.com
+  hosts: []
+  # - example.com
   tls: []
   #  - hosts:
-  #      - deepcell.example.com
+  #      - example.com
   #    secretName: tls-cert
 
 service:
