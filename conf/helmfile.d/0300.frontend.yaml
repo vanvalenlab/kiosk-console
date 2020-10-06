@@ -65,14 +65,16 @@ releases:
           {{ end }}
 
         # Use $DNS_DOMAIN_NAME in production
-        hosts: []
-          # - deepcell.org
-          # - www.deepcell.org
-        tls: []
-          # - hosts:
-          #   - deepcell.org
-          #   - www.deepcell.org
-          #   secretName: tls-cert
+        {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
+        hosts:
+          - {{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
+          - www.{{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
+        tls:
+          - hosts:
+            - {{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
+            - www.{{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
+            secretName: tls-cert
+        {{ end }}
 
       env:
         PORT: 8080
