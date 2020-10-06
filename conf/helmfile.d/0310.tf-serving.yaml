@@ -28,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-tf-serving
-        tag: separated
+        tag: 0.3.0
       
       configWriter:
         mountedVolume:
@@ -37,7 +37,7 @@ releases:
 
         image:
           repository: vanvalenlab/kiosk-tf-serving-config-writer
-          tag: dev
+          tag: 0.3.0
           pullPolicy: IfNotPresent
 
       resources:
