@@ -52,6 +52,16 @@ spec:
           value: {{ $value | quote }}
 {{- end }}
 {{- end }}
+{{ $dot := . }}
+{{- range $name, $value := .Values.secrets }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "secretName" $dot }}
+              key: {{ $name }}
+{{- end }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
