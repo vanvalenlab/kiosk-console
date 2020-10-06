@@ -60,8 +60,7 @@ releases:
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
           nginx.ingress.kubernetes.io/auth-tls-secret: "deepcell/tls-cert"
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
-        hosts:
-          - deepcell.example.com
+        hosts: []
           # - deepcell.org
           # - www.deepcell.org
         tls: []
