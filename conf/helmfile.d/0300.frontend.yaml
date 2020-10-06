@@ -58,11 +58,11 @@ releases:
           kubernetes.io/ingress.class: "nginx"
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
-{{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
+          {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
           nginx.ingress.kubernetes.io/auth-tls-secret: "deepcell/tls-cert"
           # Update to "letsencrypt-prod" for production.
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
-{{ end }}
+          {{ end }}
 
         # Use $DNS_DOMAIN_NAME in production
         hosts: []
