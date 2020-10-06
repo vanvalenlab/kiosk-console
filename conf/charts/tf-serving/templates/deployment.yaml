@@ -34,10 +34,31 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
+      dnsPolicy: Default
+      volumes:
+      - name: configdir
+        emptyDir: {}
+      # These containers are run during pod initialization
+      initContainers:
+      - name: install
+        image: "{{ .Values.configWriter.image.repository }}:{{ .Values.configWriter.image.tag }}"
+        volumeMounts:
+        - name: configdir
+          mountPath: "/config"
+        env:
+{{- range $name, $value := .Values.env }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+          - name: configdir
+            mountPath: "/config"
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         ports:

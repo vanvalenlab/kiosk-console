@@ -9,6 +9,12 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
+configWriter:
+  image:
+    repository: vanvalenlab/kiosk-tf-serving-config-writer
+    tag: latest
+    pullPolicy: IfNotPresent
+
 service:
   type: ClusterIP
 
