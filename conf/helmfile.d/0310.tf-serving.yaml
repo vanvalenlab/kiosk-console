@@ -22,13 +22,23 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
-  version: 0.1.0
+  version: 0.2.0
   values:
     - replicas: 0
 
       image:
         repository: vanvalenlab/kiosk-tf-serving
-        tag: 0.2.1
+        tag: 0.3.0
+      
+      configWriter:
+        mountedVolume:
+          name: configdir
+          path: /config
+
+        image:
+          repository: vanvalenlab/kiosk-tf-serving-config-writer
+          tag: 0.3.0
+          pullPolicy: IfNotPresent
 
       resources:
         requests:
@@ -84,8 +94,8 @@ releases:
         PORT: 8500
         REST_API_PORT: 8501
         REST_API_TIMEOUT: 30000
-        MODEL_CONFIG_FILE: /kiosk/tf-serving/models.conf
-        BATCHING_CONFIG_FILE: /kiosk/tf-serving/batching_config.txt
+        MODEL_CONFIG_FILE: /config/models.conf
+        BATCHING_CONFIG_FILE: /config/batching_config.txt
         ENABLE_BATCHING: "true"
         MAX_BATCH_SIZE: 128
         BATCH_TIMEOUT_MICROS: 0
@@ -95,7 +105,7 @@ releases:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         TF_CPP_MIN_LOG_LEVEL: 0
         TF_SESSION_PARALLELISM: 0
-        MONITORING_CONFIG_FILE: /kiosk/tf-serving/monitoring_config.txt
+        MONITORING_CONFIG_FILE: /config/monitoring_config.txt
         PROMETHEUS_MONITORING_ENABLED: "true"
         PROMETHEUS_MONITORING_PATH: /monitoring/prometheus/metrics
 

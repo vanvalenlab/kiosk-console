@@ -58,17 +58,23 @@ releases:
           kubernetes.io/ingress.class: "nginx"
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
+          {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
           nginx.ingress.kubernetes.io/auth-tls-secret: "deepcell/tls-cert"
+          # Update to "letsencrypt-prod" for production.
           cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          {{ end }}
+
+        # Use $DNS_DOMAIN_NAME in production
+        {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
         hosts:
-          - deepcell.example.com
-          # - deepcell.org
-          # - www.deepcell.org
-        tls: []
-          # - hosts:
-          #   - deepcell.org
-          #   - www.deepcell.org
-          #   secretName: tls-cert
+          - {{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
+          - www.{{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
+        tls:
+          - hosts:
+            - {{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
+            - www.{{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
+            secretName: tls-cert
+        {{ end }}
 
       env:
         PORT: 8080
