@@ -50,6 +50,7 @@ test/destroy: \
 
 ## Target for testing cluster deployment
 test/integration/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$((1 + $$RANDOM % 1000))')
+test/integration/gke/deploy: export CERTIFICATE_MANAGER_ENABLED = true
 test/integration/gke/deploy:
 	make test/create
 	# TODO: add more testing workflows
