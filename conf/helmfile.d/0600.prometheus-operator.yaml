@@ -430,3 +430,14 @@ releases:
               regex: apiserver_response_size_buckets
               replacement: $1
               action: drop
+
+      ## Component scraping kube scheduler
+      ##
+      kubeScheduler:
+        enabled: false
+
+      ## Component scraping the kube controller manager
+      ##
+      kubeControllerManager:
+        enabled: false
+
