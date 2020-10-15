@@ -19,7 +19,7 @@ releases:
       component: monitoring
       namespace: monitoring
     chart: stable/prometheus-redis-exporter
-    version: 3.5.1
+    version: 3.5.0
     namespace: monitoring
     values:
       - script:
