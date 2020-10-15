@@ -10,6 +10,7 @@ create: \
   $(CLOUD_PROVIDER)/create/all \
   kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
+  kubectl/create/certificates \
   kubectl/display/ip \
   kubectl/implement/autoscaling
 	@echo "DeepCell Kiosk has been created successfully."
@@ -36,6 +37,7 @@ test/create: \
   $(CLOUD_PROVIDER)/test/create/all \
   kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
+  kubectl/create/certificates \
   kubectl/display/ip \
   kubectl/implement/autoscaling
 	@echo "Cluster created"
@@ -48,6 +50,7 @@ test/destroy: \
 
 ## Target for testing cluster deployment
 test/integration/gke/deploy: export CLOUDSDK_CONTAINER_CLUSTER = deepcell-test-$(shell bash -c 'echo $$((1 + $$RANDOM % 1000))')
+test/integration/gke/deploy: export CERTIFICATE_MANAGER_ENABLED = true
 test/integration/gke/deploy:
 	make test/create
 	# TODO: add more testing workflows
