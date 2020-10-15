@@ -441,3 +441,12 @@ releases:
       kubeControllerManager:
         enabled: false
 
+      ## Component scraping coreDns. Use either this or kubeDns
+      ##
+      coreDns:
+        enabled: true
+
+      ## Component scraping kubeDns. Use either this or coreDns
+      ##
+      kubeDns:
+        enabled: false
