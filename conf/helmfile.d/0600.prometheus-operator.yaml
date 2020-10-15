@@ -25,7 +25,7 @@ releases:
     vendor: coreos
     default: true
   chart: stable/prometheus-operator
-  version: 8.12.3
+  version: 9.3.1
   wait: true
   values:
     # A list of all possible values can be found:
