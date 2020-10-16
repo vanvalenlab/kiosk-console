@@ -267,15 +267,22 @@ releases:
             group_wait: 30s
             group_interval: 5m
             repeat_interval: 3h
-            receiver: "general"
+            receiver: 'general'
             routes:
             - match:
                 alertname: Watchdog
               receiver: 'null'
-            - match_re:
-                severity: error|warning|critical
-              receiver: 'general'
-          
+            - match:
+                # AggregatedAPIDown fires constantly for kube < 1.18
+                # https://github.com/helm/charts/issues/22278
+                alertname: AggregatedAPIDown
+              receiver: 'null'
+            - match:
+                # CPUThrottlingHigh is too sensitive, could block all INFO level instead.
+                # https://github.com/kubernetes-monitoring/kubernetes-mixin/issues/108
+                alertname: CPUThrottlingHigh
+              receiver: 'null'
+
           receivers:
           - name: 'null'
           - name: 'general'
