@@ -314,7 +314,7 @@ releases:
                   {{ end }}
                 {{ end }}`}}
             {{ end }}
-      
+
       ## Manages Prometheus and Alertmanager components
       ##
       prometheusOperator:
