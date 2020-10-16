@@ -138,6 +138,7 @@ DeepCell Kiosk Usage
 * Once cluster configuration is complete, you will return to the home screen. There you can select the "Create" option to trigger cluster creation based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page.
 
 .. list-table::
+
     * - Successful Creation
     * - .. image:: ../images/Kiosk-Complete-Blur.png
 
