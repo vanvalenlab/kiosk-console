@@ -7,7 +7,7 @@ Troubleshooting
     :alt: View on Read the Docs
     :target: https://deepcell-kiosk.readthedocs.io/en/master/TROUBLESHOOTING.html
 
-We've done our best to make the DeepCell Kiosk robust to common use cases, however, there may be unforeseen issues. In the following (as well as on our `FAQ <http://www.deepcell.org/faq>`_, we hope to cover some possible sources of frustration. If you run across a new problem not listed in either location, please feel free to open an issue on the `DeepCell Kiosk repository <https://www.github.com/vanvalenlab/kiosk>`_.
+We've done our best to make the DeepCell Kiosk robust to common use cases, however, there may be unforeseen issues. In the following (as well as on our `FAQ <http://www.deepcell.org/faq>`_, we hope to cover some possible sources of frustration. If you run across a new problem not listed in either location, please feel free to open an issue on the `Kiosk-Console repository <https://www.github.com/vanvalenlab/kiosk-console>`_.
 
 .. contents:: :local:
 
@@ -44,7 +44,7 @@ If that command returns an error, you may not be on Linux. If you are on Linux, 
 
 .. code-block:: bash
 
-    Building vanvalenlab/kiosk:latest from ./Dockerfile with [] build args...
+    Building vanvalenlab/kiosk-console:latest from ./Dockerfile with [] build args...
     ERRO[0000] failed to dial gRPC: cannot connect to the Docker daemon. Is 'docker daemon' running on this host?: d
     ial unix /var/run/docker.sock: connect: permission denied
     context canceled
@@ -52,6 +52,18 @@ If that command returns an error, you may not be on Linux. If you are on Linux, 
     make: *** [docker/build] Error 1
 
 You probably just added yourself to the ``docker`` user group but haven't logged and logged back in yet.
+
+My pods are not autoscaling because the custom metrics are not updating!
+----------------------------
+Prometheus has a large memory footprint and is liable to be OOMKilled when there are many other pods running.
+
+This can be confirmed by executing the following and inspecting the output.
+
+.. code-block:: bash
+
+    kubectl describe node $(kubectl describe pod -n monitoring  prometheus-prometheus-operator-prometheus-0 | grep Node: | awk '{print $2}' | cut -d '/' -f1)
+
+The easiest way to resolve this issue is to upgrade the node types to something with more memory (``n1-standard-4`` seems to work well for large clusters).
 
 My prediction never finishes
 ----------------------------
@@ -61,7 +73,7 @@ A consumer should always either successfully consume a job or fail and provide a
 
 * Redeploy the cluster with the more powerful nodes than the default ``n1-standard-1``.
 
-* Increase the memory/cpu resource request in the helmfile of the consumer. (Remember to follow this by issuing the following command ``helm delete consumer-name --purge; helmfile -l name=consumer-name sync``)
+* Increase the memory/cpu resource request in the helmfile of the consumer. (Remember to follow this by issuing the following command ``helm delete consumer-name; helmfile -l name=consumer-name sync``)
 
 A prediction job may also never finish if the ``tf-serving`` pod never comes up. If you see that the ``tf-serving`` pod is not in status ``Running`` or has been restarting, there is likely a memory/resource issue with the model server itself. If this is the case, please read below.
 

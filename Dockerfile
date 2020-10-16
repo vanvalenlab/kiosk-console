@@ -1,10 +1,10 @@
-FROM cloudposse/build-harness:0.31.1 as build-harness
+FROM cloudposse/build-harness:0.39.0 as build-harness
 
-FROM cloudposse/geodesic:0.123.1
+FROM cloudposse/geodesic:0.135.0
 
 RUN apk add --update dialog libqrencode
 
-ENV DOCKER_IMAGE="vanvalenlab/kiosk"
+ENV DOCKER_IMAGE="vanvalenlab/kiosk-console"
 ENV DOCKER_TAG="latest"
 
 # Geodesic banner
@@ -39,7 +39,7 @@ ENV GPU_NODE_MIN_SIZE="0"
 ENV GPU_PER_NODE="1"
 
 # gcloud config
-ENV KUBERNETES_VERSION="latest"
+ENV KUBERNETES_VERSION="1.15"
 ENV CLOUDSDK_CORE_PROJECT=""
 ENV CLOUDSDK_CONTAINER_CLUSTER=""
 ENV CLOUDSDK_BUCKET=""
@@ -49,11 +49,12 @@ ENV GCP_PREDICTION_GPU_TYPE="nvidia-tesla-t4"
 ENV GCP_TRAINING_GPU_TYPE="nvidia-tesla-v100"
 ENV GKE_MACHINE_TYPE="n1-standard-1"
 ENV GPU_MACHINE_TYPE="n1-highmem-2"
-ENV CONSUMER_MACHINE_TYPE="n1-highmem-2"
+ENV CONSUMER_MACHINE_TYPE="n1-standard-2"
 
 # Deployment config
 ENV CLOUD_PROVIDER=""
-ENV ELK_DEPLOYMENT_TOGGLE="OFF"
+ENV ELK_DEPLOYMENT_TOGGLE=""
+ENV CERTIFICATE_MANAGER_ENABLED=""
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${KOPS_STATE_STORE}' '/' '/s3'

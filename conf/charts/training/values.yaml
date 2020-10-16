@@ -5,14 +5,14 @@
 parallelism: 0
 
 image:
-  repository: "vanvalenlab/kiosk-training"
-  tag: "latest"
-  pullPolicy: "Always"
+  repository: vanvalenlab/kiosk-training
+  tag: latest
+  pullPolicy: IfNotPresent
 
 resources: {}
 
 service:
-  type: "ClusterIP"
+  type: ClusterIP
 
   httpIngressEnabled: true
   internalHttpPort: 7241

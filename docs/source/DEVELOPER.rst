@@ -32,7 +32,7 @@ Starting the kiosk for development
 .. code-block:: bash
 
     # Clone this repo:
-    git clone git@github.com:vanvalenlab/kiosk.git
+    git clone git@github.com:vanvalenlab/kiosk-console.git
     # Initialize the "build-harness":
     make init
     # Build the container:
@@ -61,14 +61,14 @@ Once inside the docker-in-docker container, you now have the ability to create f
 
     apt-get update && \
     apt-get install -y make git vim && \
-    git clone https://www.github.com/vanvalenlab/kiosk && \
-    cd kiosk && \
+    git clone https://www.github.com/vanvalenlab/kiosk-console && \
+    cd kiosk-console && \
     make init && \
     git checkout master && \
     sed -i 's/sudo -E //' ./Makefile && \
     make docker/build && \
     make install && \
-    kiosk
+    kiosk-console
 
 From here, you can configure the kiosk as usual.
 
@@ -98,8 +98,8 @@ Setting up OpenVPN
 
    .. code-block:: bash
 
-       POD_NAME=`kubectl get pods --namespace=kube-system -l type=openvpn | awk END'{ print $1 }'` \
-       && kubectl logs --namespace=kube-system $POD_NAME
+       POD_NAME=$(kubectl get pods --namespace "kube-system" -l app=openvpn -o jsonpath='{ .items[0].metadata.name }') && \
+       kubectl --namespace "kube-system" logs $POD_NAME --follow
 
    If the OpenVPN pod has already deployed, you should see something like "Mon Apr 29 21:15:53 2019 Initialization Sequence Completed" somewhere in the output.
 
@@ -107,12 +107,12 @@ Setting up OpenVPN
 
    .. code-block:: bash
 
-       POD_NAME=`kubectl get pods --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
-       && SERVICE_NAME=`kubectl get svc --namespace kube-system -l type=openvpn | awk END'{ print $1 }'` \
-       && SERVICE_IP=$(kubectl get svc --namespace kube-system $SERVICE_NAME -o jsonpath='{.status.loadBalancer.ingress[0].ip}') \
-       && KEY_NAME=kubeVPN \
-       && kubectl --namespace kube-system exec -it $POD_NAME /etc/openvpn/setup/newClientCert.sh $KEY_NAME $SERVICE_IP \
-       && kubectl --namespace kube-system exec -it $POD_NAME cat /etc/openvpn/certs/pki/$KEY_NAME.ovpn > $KEY_NAME.ovpn
+       POD_NAME=$(kubectl get pods --namespace "kube-system" -l "app=openvpn,release=openvpn" -o jsonpath='{ .items[0].metadata.name }')
+       SERVICE_NAME=$(kubectl get svc --namespace "kube-system" -l "app=openvpn,release=openvpn" -o jsonpath='{ .items[0].metadata.name }')
+       SERVICE_IP=$(kubectl get svc --namespace "kube-system" "$SERVICE_NAME" -o go-template='{{ range $k, $v := (index .status.loadBalancer.ingress 0)}}{{ $v }}{{end}}')
+       KEY_NAME=kubeVPN
+       kubectl --namespace "kube-system" exec -it "$POD_NAME" /etc/openvpn/setup/newClientCert.sh "$KEY_NAME" "$SERVICE_IP"
+       kubectl --namespace "kube-system" exec -it "$POD_NAME" cat "/etc/openvpn/certs/pki/$KEY_NAME.ovpn" > "$KEY_NAME.ovpn"
 
 3. Then, copy the newly-generated ``kubeVPN.ovpn`` file onto your local machine. (You can do this either by viewing the file's contents and copy-pasting them manually, or by using a file-copying tool like SCP).
 
@@ -144,3 +144,32 @@ The Deepcell Kiosk uses Google Kubernetes Engine to requisition resources on Goo
 5. any Persistent Disks associated with your cluster
 
 While we hope this list is comprehensive, there could be some lingering resources used by Google Cloud and not deleted automatically that we're not aware of.
+
+Benchmarking the DeepCell Kiosk
+---------------------------------------------------------
+
+The DeepCell Kiosk comes with a utility for benchmarking the scalability and performance of a deep learning workflow. To reproduce the cost and timing benchmarks reported in the DeepCell Kiosk paper, please refer to `the 2020-Bannon_et_al-Kiosk folder of our figure creation repository <https://github.com/vanvalenlab/publication-figures/tree/master/2020-Bannon_et_al-Kiosk>`_. To run your own benchmarking, please read below.
+
+1. If you don't already have a cloud storage bucket for use with the DeepCell Kiosk, you should create one now. It's fine to reuse this bucket across multiple DeepCell Kiosk clusters.
+
+2. There are three variables in the benchmarking pod's YAML file, ``conf/helmfile.d/0410.benchmarking.yaml``, that may need to be customized before benchmarking:
+
+    - ``MODEL`` is the model name and version that will be used in benchmarking. The model you choose should be present in the ``models/`` folder of your benchmarking bucket. See the `Van Valen Lab's benchmarking bucket <https://console.cloud.google.com/storage/browser/kiosk-benchmarking>`_ for an example.
+    - ``FILE`` is the name of the file that will be used for benchmarking. A file by this name should be in your benchmarking bucket in the ``uploads/`` folder.    
+    - ``COUNT`` specifies how many times the ``FILE`` will be submitted to the cluster for processing.
+
+3. Deploy a DeepCell Kiosk as you normally would. While navigating the cluster configuration menu, pay special attention to two configuration settings:
+
+    - The bucket name you provide should be that of the benchmarking bucket from step 1.
+    - The Maximum Number of GPUs has a strong effect on benchmarking time by effectively limiting how large the cluster can scale.
+
+4. Once the cluster has deployed successfully, drop to the ``Shell`` via the DeepCell Kiosk main menu and begin the benchmarking process by executing the following command: ``kubectl scale deployment benchmarking --replicas=1``
+
+5. Benchmarking jobs can take a day or more, depending on the conditions (number of images and max number of GPUs) chosen. To monitor the status of your benchmarking job, drop to the ``Shell`` within the DeepCell Kiosk main menu and execute the command ``stern benchmarking -s 10m``. This will show you the most recent log output from the `benchmarking` pod. When benchmarking has finished, the final line in the log should be ``Uploaded [FILEPATH] to [BUCKET] in [SECONDS] seconds.``, where ``[FILEPATH]`` is the location in ``[BUCKET]`` where the benchmarking data has been saved.
+
+6. Now that the benchmarking process has finished, clean up the benchmarking resources by executing ``kubectl scale deployment benchmarking --replicas 0`` at the DeepCell Kiosk's ``Shell``. This prevents the benchmarking process from executing multiple times in long-lived clusters.
+
+7. Finally, you can download and analyze your benchmarking data. Two top-level fields in this large JSON file that are of interest are:
+
+    - ``time_elapsed``: the exact running time of the benchmarking procedure (seconds)
+    - ``total_node_and_networking_costs``: a slight underestimate of the total costs of the benchmarking run. (This total does not include Storage, Operation, or Storage Egress Fees. These extra fees `can be calculated <https://github.com/vanvalenlab/publication-figures/blob/383a90149eb86d4a0a697395edffb32d383bb1ca/figure_generation/data_extractor.py#L318>`_ after the fact by using the `Google Cloud guidelines <https://cloud.google.com/vpc/network-pricing#general>`_.)

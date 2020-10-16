@@ -13,30 +13,22 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "redis-janitor"
-  namespace: "deepcell"
+- name: redis-janitor
+  namespace: deepcell
   labels:
-    chart: "redis-janitor"
-    component: "redis-janitor"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
-    default: "true"
+    chart: redis-janitor
+    component: redis-janitor
+    namespace: deepcell
+    vendor: vanvalenlab
+    default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-janitor'
-  version: "0.1.0"
+  version: 0.1.0
   values:
     - replicas: 1
 
       image:
-        repository: "vanvalenlab/kiosk-redis-janitor"
-        tag: "0.3.0"
-        pullPolicy: "Always"
-
-      serviceAccount:
-        # Specifies whether a ServiceAccount should be created
-        create: true
-        # The name of the ServiceAccount to use.
-        # If not set and create is true, a name is generated using the fullname template
-        name:
+        repository: vanvalenlab/kiosk-redis-janitor
+        tag: 0.3.2
 
       resources:
         requests:

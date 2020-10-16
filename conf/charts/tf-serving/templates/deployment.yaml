@@ -34,10 +34,42 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
+      dnsPolicy: Default
+      volumes:
+      - name: {{ .Values.configWriter.mountedVolume.name }}
+        emptyDir: {}
+      # These containers are run during pod initialization
+      initContainers:
+      - name: install
+        image: "{{ .Values.configWriter.image.repository }}:{{ .Values.configWriter.image.tag }}"
+        imagePullPolicy: {{ .Values.configWriter.image.pullPolicy }}
+        volumeMounts:
+        - name: {{ .Values.configWriter.mountedVolume.name }}
+          mountPath: {{ .Values.configWriter.mountedVolume.path }}
+        env:
+{{- range $name, $value := .Values.env }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          value: {{ $value | quote }}
+{{- end }}
+{{- end }}
+{{ $dot := . }}
+{{- range $name, $value := .Values.secrets }}
+{{- if not ( empty $value) }}
+        - name: {{ $name }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "secretName" $dot }}
+              key: {{ $name }}
+{{- end }}
+{{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        volumeMounts:
+          - name: {{ .Values.configWriter.mountedVolume.name }}
+            mountPath: {{ .Values.configWriter.mountedVolume.path }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
         ports:

@@ -13,27 +13,35 @@ releases:
 # References:
 #   - [web address of Helm chart's YAML file]
 #
-- name: "tf-serving"
-  namespace: "deepcell"
+- name: tf-serving
+  namespace: deepcell
   labels:
-    chart: "tf-serving"
-    component: "deepcell"
-    namespace: "deepcell"
-    vendor: "vanvalenlab"
-    default: "true"
+    chart: tf-serving
+    component: deepcell
+    namespace: deepcell
+    vendor: vanvalenlab
+    default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
-  version: "0.1.0"
+  version: 0.2.0
   values:
     - replicas: 0
 
       image:
-        repository: "vanvalenlab/kiosk-tf-serving"
-        tag: "0.2.1"
-        pullPolicy: "Always"
+        repository: vanvalenlab/kiosk-tf-serving
+        tag: 0.3.0
+      
+      configWriter:
+        mountedVolume:
+          name: configdir
+          path: /config
+
+        image:
+          repository: vanvalenlab/kiosk-tf-serving-config-writer
+          tag: 0.3.0
+          pullPolicy: IfNotPresent
 
       resources:
         requests:
-          nvidia.com/gpu: 1
           cpu: 1
           memory: 3.5Gi
         limits:
@@ -42,15 +50,15 @@ releases:
           # memory: 8Gi
 
       tolerations:
-      - key: "nvidia.com/gpu"
-        operator: "Exists"
-        effect: "NoSchedule"
-      - key: "prediction_gpu"
-        operator: "Exists"
-        effect: "NoSchedule"
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+      - key: prediction_gpu
+        operator: Exists
+        effect: NoSchedule
 
       service:
-        type: "ClusterIP"
+        type: ClusterIP
 
         httpIngressEnabled: true
         internalHttpPort: 8501
@@ -78,7 +86,7 @@ releases:
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         beta.kubernetes.io/instance-type: '{{ env "AWS_GPU_MACHINE_TYPE" | default "p2.xlarge" }}'
 {{ else }}
-        cloud.google.com/gke-accelerator: '{{ env "GCP_PREDICTION_GPU_TYPE" | default "nvidia-tesla-k80" }}'
+        cloud.google.com/gke-accelerator: '{{ env "GCP_PREDICTION_GPU_TYPE" | default "nvidia-tesla-t4" }}'
         cloud.google.com/gke-preemptible: "true"
 {{ end }}
 
@@ -86,10 +94,10 @@ releases:
         PORT: 8500
         REST_API_PORT: 8501
         REST_API_TIMEOUT: 30000
-        MODEL_CONFIG_FILE: /kiosk/tf-serving/models.conf
-        BATCHING_CONFIG_FILE: /kiosk/tf-serving/batching_config.txt
+        MODEL_CONFIG_FILE: /config/models.conf
+        BATCHING_CONFIG_FILE: /config/batching_config.txt
         ENABLE_BATCHING: "true"
-        MAX_BATCH_SIZE: 1
+        MAX_BATCH_SIZE: 128
         BATCH_TIMEOUT_MICROS: 0
         MAX_ENQUEUED_BATCHES: 512
         GRPC_CHANNEL_ARGS: ""
@@ -97,7 +105,7 @@ releases:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         TF_CPP_MIN_LOG_LEVEL: 0
         TF_SESSION_PARALLELISM: 0
-        MONITORING_CONFIG_FILE: /kiosk/tf-serving/monitoring_config.txt
+        MONITORING_CONFIG_FILE: /config/monitoring_config.txt
         PROMETHEUS_MONITORING_ENABLED: "true"
         PROMETHEUS_MONITORING_PATH: /monitoring/prometheus/metrics
 
@@ -106,4 +114,4 @@ releases:
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
         AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
         # GCLOUD_STORAGE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
-        GCLOUD_STORAGE_BUCKET: "deepcell-models"
+        GCLOUD_STORAGE_BUCKET: deepcell-models

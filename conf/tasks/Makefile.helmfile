@@ -3,30 +3,26 @@
 ## @helmfile sync || echo "Services couldn't be synced."
 ## what follow is a workaround
 helmfile/create/all:
-	@shopt -s nocasematch
 	@echo " "
 	@echo "Syncing all Kubernetes resources using helmfiles..."
-	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
+	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
 		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
 	fi
-	@shopt -u nocasematch
-	/conf/patches/gke-helmfile-deployment.sh
+	@gke-helmfile-deployment.sh
 	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "
 
 helmfile/create/elk:
-	@shopt -s nocasematch
-	@if [ "${ELK_DEPLOYMENT_TOGGLE}" = "ON" ]; then\
+	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
 		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
 		helmfile --selector namespace=elk sync;\
 	fi
-	@shopt -u nocasematch
 
 helmfile/destroy/all:
 	@echo " "
 	@echo "Destroying all Kubernetes resources using helmfiles..."
-	@helm ls --all --short | xargs helm delete --purge
+	@helm ls --all --short | xargs helm delete
 	@echo "Helmfile destruction finished."
 	@echo " "
 	@echo " "

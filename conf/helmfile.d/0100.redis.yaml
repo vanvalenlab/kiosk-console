@@ -9,8 +9,9 @@ helmDefaults:
 
 repositories:
   # Stable repo of official helm charts
-  - name: "stable"
-    url: "https://kubernetes-charts.storage.googleapis.com"
+  - name: stable
+    url: https://kubernetes-charts.storage.googleapis.com
+
 releases:
   # Redis
   - name: redis
@@ -18,7 +19,7 @@ releases:
       chart: redis
       component: database
     chart: stable/redis
-    version: 8.1.5
+    version: 10.5.7
     namespace: deepcell
     values:
       - resources:
@@ -30,10 +31,21 @@ releases:
 
         cluster:
           enabled: true
-          slaveCount: 2
+          slaveCount: 3
 
         sentinel:
           enabled: true
+
+        configmap: |-
+          # Enable AOF https://redis.io/topics/persistence#append-only-file
+          appendonly yes
+          # Disable RDB persistence, AOF persistence already enabled.
+          save ""
+          # Prevent fsync() from being called in the main process while a
+          # BGSAVE or BGREWRITEAOF is in progress.
+          # If you have latency problems turn this to "yes". Otherwise leave it as
+          # "no" that is the safest pick from the point of view of durability.
+          no-appendfsync-on-rewrite yes
 
         sysctlImage:
           enabled: true

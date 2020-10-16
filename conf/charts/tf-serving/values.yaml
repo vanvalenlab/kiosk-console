@@ -5,12 +5,22 @@
 replicas: 0
 
 image:
-  repository: "vanvalenlab/kiosk-tf-serving"
-  tag: "latest"
-  pullPolicy: "Always"
+  repository: vanvalenlab/kiosk-tf-serving
+  tag: latest
+  pullPolicy: IfNotPresent
+
+configWriter:
+  mountedVolume:
+    name: configdir
+    path: /config
+
+  image:
+    repository: vanvalenlab/kiosk-tf-serving-config-writer
+    tag: latest
+    pullPolicy: IfNotPresent
 
 service:
-  type: "ClusterIP"
+  type: ClusterIP
 
   httpIngressEnabled: true
   internalHttpPort: 8501
@@ -49,8 +59,8 @@ env:
   PORT: 8500
   REST_API_PORT: 8501
   REST_API_TIMEOUT: 30000
-  MODEL_CONFIG_FILE: /kiosk/tf-serving/models.conf
-  BATCHING_CONFIG_FILE: /kiosk/tf-serving/batching_config.txt
+  MODEL_CONFIG_FILE: /config/models.conf
+  BATCHING_CONFIG_FILE: /config/batching_config.txt
   ENABLE_BATCHING: "true"
   MAX_BATCH_SIZE: 1
   BATCH_TIMEOUT_MICROS: 0
@@ -60,7 +70,7 @@ env:
   CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
   TF_CPP_MIN_LOG_LEVEL: 0
   TF_SESSION_PARALLELISM: 0
-  MONITORING_CONFIG_FILE: /kiosk/tf-serving/monitoring_config.txt
+  MONITORING_CONFIG_FILE: /config/monitoring_config.txt
   PROMETHEUS_MONITORING_ENABLED: "true"
   PROMETHEUS_MONITORING_PATH: /monitoring/prometheus/metrics
 
