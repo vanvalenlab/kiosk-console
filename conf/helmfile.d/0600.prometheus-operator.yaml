@@ -578,9 +578,9 @@ releases:
       ## Component scraping coreDns. Use either this or kubeDns
       ##
       coreDns:
-        enabled: true
+        enabled: false
 
       ## Component scraping kubeDns. Use either this or coreDns
       ##
       kubeDns:
-        enabled: false
+        enabled: true
