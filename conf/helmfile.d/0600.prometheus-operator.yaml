@@ -267,25 +267,19 @@ releases:
             group_wait: 30s
             group_interval: 5m
             repeat_interval: 3h
-            {{ if empty (env "ALERT_MANAGER_SLACK_API_URL" | default "") }}
-            receiver: 'null'
-            {{ else}}
-            receiver: slack-receiver
-            {{ end }}
+            receiver: "general"
             routes:
+            - match:
+                alertname: Watchdog
+              receiver: 'null'
             - match_re:
                 severity: error|warning|critical
-              {{ if empty (env "ALERT_MANAGER_SLACK_API_URL" | default "") }}
-              receiver: 'null'
-              {{ else}}
-              receiver: slack-receiver
-              {{ end }}
-              continue: true
+              receiver: 'general'
 
           receivers:
           - name: 'null'
-          {{ if (env "ALERT_MANAGER_SLACK_API_URL") }}
-          - name: slack-receiver
+          - name: 'general'
+            {{ if not (env "ALERT_MANAGER_SLACK_API_URL" | empty ) }}
             slack_configs:
             - api_url: '{{ env "ALERT_MANAGER_SLACK_API_URL" | default "" }}'
               channel: '{{ env "ALERT_MANAGER_SLACK_CHANNEL" | default "alerts" }}'
@@ -319,7 +313,7 @@ releases:
                   {{- if .Annotations.message }}{{ .Annotations.message }}{{ end }}{{ if .Annotations.summary }}{{ .Annotations.summary }}
                   {{ end }}
                 {{ end }}`}}
-          {{ end }}
+            {{ end }}
       
       ## Manages Prometheus and Alertmanager components
       ##
