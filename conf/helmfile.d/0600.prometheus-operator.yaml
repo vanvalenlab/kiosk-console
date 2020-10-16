@@ -95,7 +95,7 @@ releases:
               summary: |-
                 {{`Redis has less than 10% memory available (instance {{ $labels.instance }})`}}
           - alert: RedisClusterFlapping
-            expr: changes(redis_connected_slaves[5m]) > 2
+            expr: changes(redis_connected_slaves[5m]) > 3
             for: 5m
             labels:
               severity: critical
