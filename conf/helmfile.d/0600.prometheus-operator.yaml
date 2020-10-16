@@ -253,7 +253,7 @@ releases:
             labels:
               deployment: tracking-consumer
               namespace: deepcell
-      
+
       ## Configuration for alertmanager
       ## ref: https://prometheus.io/docs/alerting/alertmanager/
       ##
@@ -275,7 +275,7 @@ releases:
             - match_re:
                 severity: error|warning|critical
               receiver: 'general'
-
+          
           receivers:
           - name: 'null'
           - name: 'general'
