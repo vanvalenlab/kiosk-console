@@ -139,7 +139,7 @@ DeepCell Kiosk Usage
 
 .. list-table::
 
-    * - Successful Creation
+    * - Cluster Created Successfully
     * - .. image:: ../images/Kiosk-Complete-Blur.png
 
 * Find the cluster's web address by choosing the ``View`` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., ``123.456.789.012``, or a URL, e.g., ``deepcellkiosk.cloudprovider.com``.)
