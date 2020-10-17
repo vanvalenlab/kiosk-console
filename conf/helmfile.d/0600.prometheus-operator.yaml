@@ -76,6 +76,22 @@ releases:
             annotations:
               summary: |-
                 {{`Prometheus cannot connect the alertmanager (instance {{ $labels.instance }})`}}
+          - alert: PrometheusTemplateTextExpansionFailures
+            expr: increase(prometheus_template_text_expansion_failures_total[3m]) > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Prometheus encountered {{ $value }} template text expansion failures (instance {{ $labels.instance }})`}}
+          - alert: PrometheusAlertmanagerNotificationFailing
+            expr: rate(alertmanager_notifications_failed_total[1m]) > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Prometheus Alertmanager is failing sending notifications (instance {{ $labels.instance }})`}}
         - name: redis-alerts
           rules:
           - alert: RedisDown
