@@ -86,6 +86,22 @@ releases:
             annotations:
               summary: |-
                 {{`Redis missing master (instance {{ $labels.instance }})`}}
+          - alert: RedisTooManyMasters
+            expr: count(redis_instance_info{role="master"}) > 1
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Redis has {{ $value }} masters.`}}
+          - alert: RedisDisconnectedSlaves
+            expr: count without (instance, job) (redis_connected_slaves) - sum without (instance, job) (redis_connected_slaves) - 1 > 1
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Redis has {{ $value }} disconnected slaves.`}}
           - alert: RedisOutOfMemory
             expr: redis_memory_used_bytes / redis_total_system_memory_bytes * 100 > 90
             for: 5m
