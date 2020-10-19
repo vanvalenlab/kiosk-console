@@ -134,14 +134,15 @@ releases:
             annotations:
               summary: |-
                 {{`Redis has less than 10% memory available (instance {{ $labels.instance }})`}}
-          - alert: RedisClusterFlapping
-            expr: changes(redis_connected_slaves[5m]) > 3
-            for: 5m
-            labels:
-              severity: critical
-            annotations:
-              summary: |-
-                {{`Redis replica connection flapping. Redis slaves have connected to {{ $value }} times in last 5 minutes (instance {{ $labels.instance }})`}}
+          # TODO: Flapping alert keeps going off, usually with values from 4 - 10.
+          # - alert: RedisClusterFlapping
+          #   expr: changes(redis_connected_slaves[5m]) > 3
+          #   for: 5m
+          #   labels:
+          #     severity: critical
+          #   annotations:
+          #     summary: |-
+          #       {{`Redis replica connection flapping. Redis slaves have connected to {{ $value }} times in last 5 minutes (instance {{ $labels.instance }})`}}
           - alert: RedisTooManyConnections
             expr: redis_connected_clients > 100
             for: 5m
