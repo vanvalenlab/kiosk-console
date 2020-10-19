@@ -167,7 +167,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Kubernetes Pod has been healthy for more than {{ $value }} hour (instance {{ $labels.instance }})`}}
+                {{`Kubernetes Pod has been unhealthy for more than {{ $value }} hour (instance {{ $labels.instance }})`}}
           - alert: KubernetesPodCrashLooping
             expr: rate(kube_pod_container_status_restarts_total[15m]) * 60 * 5 > 5
             for: 5m
