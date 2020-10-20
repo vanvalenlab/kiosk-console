@@ -43,7 +43,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Prometheus all targets missing (instance {{ $labels.instance }})`}}
+                {{`Prometheus all targets missing`}}
           - alert: PrometheusTooManyRestarts
             expr: changes(process_start_time_seconds{job=~"prometheus|pushgateway|alertmanager"}[15m]) > 2
             for: 5m
@@ -51,7 +51,7 @@ releases:
               severity: warning
             annotations:
               summary: |-
-                {{`Prometheus restarted {{ $value }} times (instance {{ $labels.instance }})`}}
+                {{`Prometheus job {{ $labels.job }} restarted {{ $value }} times`}}
           - alert: PrometheusRuleEvaluationSlow
             expr: prometheus_rule_group_last_duration_seconds > prometheus_rule_group_interval_seconds
             for: 5m
@@ -59,7 +59,7 @@ releases:
               severity: warning
             annotations:
               summary: |-
-                {{`Prometheus rule evaluation took more time than the scheduled interval. I indicates a slower storage backend access or too complex query. (instance {{ $labels.instance }})`}}
+                {{`Prometheus rule evaluation took more time than the scheduled interval. I indicates a slower storage backend access or too complex query. (rule_group {{ $labels.rule_group }})`}}
           - alert: PrometheusNotificationsBacklog
             expr: min_over_time(prometheus_notifications_queue_length[10m]) > 0
             for: 5m
@@ -67,7 +67,7 @@ releases:
               severity: warning
             annotations:
               summary: |-
-                {{`The Prometheus notification queue has not been empty for 10 minutes. (instance {{ $labels.instance }})`}}
+                {{`The Prometheus notification queue has not been empty for 10 minutes`}}
           - alert: PrometheusNotConnectedToAlertmanager
             expr: prometheus_notifications_alertmanagers_discovered < 1
             for: 5m
@@ -75,7 +75,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Prometheus cannot connect the alertmanager (instance {{ $labels.instance }})`}}
+                {{`{{ $labels.pod }} cannot connect the alertmanager (pod {{ $labels.pod }})`}}
           - alert: PrometheusTemplateTextExpansionFailures
             expr: increase(prometheus_template_text_expansion_failures_total[3m]) > 0
             for: 5m
@@ -83,7 +83,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Prometheus encountered {{ $value }} template text expansion failures (instance {{ $labels.instance }})`}}
+                {{`{{ $labels.pod }} encountered {{ $value }} template text expansion failures`}}
           - alert: PrometheusAlertmanagerNotificationFailing
             expr: rate(alertmanager_notifications_failed_total[1m]) > 0
             for: 5m
@@ -91,7 +91,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Prometheus Alertmanager is failing sending notifications (instance {{ $labels.instance }})`}}
+                {{`{{ $labels.service}} is failing to send {{ $labels.integration }} notifications`}}
         - name: redis-alerts
           rules:
           - alert: RedisDown
@@ -109,7 +109,7 @@ releases:
               severity: error
             annotations:
               summary: |-
-                {{`Redis missing master (instance {{ $labels.instance }})`}}
+                {{`Redis missing master`}}
           - alert: RedisTooManyMasters
             expr: count(redis_instance_info{role="master"}) > 1
             for: 5m
@@ -142,7 +142,7 @@ releases:
               severity: warning
             annotations:
               summary: |-
-                {{`Redis instance has too many ({{ $value }}) connections (instance {{ $labels.instance }})`}}
+                {{`Redis instance has too many ({{ $value }}) connections`}}
           - alert: RedisRejectedConnections
             expr: increase(redis_rejected_connections_total[1m]) > 0
             for: 5m
@@ -150,7 +150,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Redis rejected {{ $value }} connections (instance {{ $labels.instance }})`}}
+                {{`Redis rejected {{ $value }} connections`}}
         - name: kubernetes-alerts
           rules:
           - alert: KubernetesPodNotHealthy
@@ -160,7 +160,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Kubernetes Pod has been unhealthy for more than {{ $value }} hour (instance {{ $labels.instance }})`}}
+                {{`Kubernetes Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has been unhealthy for more than an hour`}}
           - alert: KubernetesPodCrashLooping
             expr: rate(kube_pod_container_status_restarts_total[15m]) * 60 * 5 > 5
             for: 5m
@@ -168,7 +168,7 @@ releases:
               severity: warning
             annotations:
               summary: |-
-                {{`Kubernetes pod crash looping (instance {{ $labels.instance }})`}}
+                {{`Kubernetes pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is crash looping`}}
           - alert: KubernetesPersistentvolumeError
             expr: kube_persistentvolume_status_phase{phase=~"Failed|Pending",job="kube-state-metrics"} > 0
             for: 5m
@@ -176,7 +176,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Kubernetes PersistentVolume {{ $value }} (instance {{ $labels.instance }})`}}
+                {{`Kubernetes PersistentVolume {{ $labels.persistentvolume }} in state {{ $labels.phase }}`}}
           - alert: KubernetesNodeReady
             expr: kube_node_status_condition{condition="Ready",status="true"} == 0
             for: 5m
@@ -184,7 +184,7 @@ releases:
               severity: critical
             annotations:
               summary: |-
-                {{`Kubernetes Node not ready (instance {{ $labels.instance }})`}}
+                {{`Kubernetes Node {{ $labels.node }} has condition {{ $labels.condition }}`}}
         - name: host-alerts
           rules:
           - alert: HostOutOfMemory
@@ -194,7 +194,7 @@ releases:
               severity: warning
             annotations:
               summary: |-
-                {{`Host out of memory (instance {{ $labels.instance }})`}}
+                {{`Host out of memory for (pod {{ $labels.pod }}, instance {{ $labels.instance }})`}}
           - alert: HostOomKillDetected
             expr: increase(node_vmstat_oom_kill[5m]) > 0
             for: 5m
@@ -202,7 +202,7 @@ releases:
               severity: warning
             annotations:
               summary: |-
-                {{`Host OOM kill detected (instance {{ $labels.instance }})`}}
+                {{`Host OOM kill detected (pod {{ $labels.pod }}, instance {{ $labels.instance }})`}}
         # recording rules
         - name: tf-serving-metrics
           rules:
