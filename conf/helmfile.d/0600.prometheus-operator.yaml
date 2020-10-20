@@ -126,14 +126,6 @@ releases:
             annotations:
               summary: |-
                 {{`Redis has {{ $value }} disconnected slaves.`}}
-          - alert: RedisOutOfMemory
-            expr: redis_memory_used_bytes / redis_total_system_memory_bytes * 100 > 90
-            for: 5m
-            labels:
-              severity: warning
-            annotations:
-              summary: |-
-                {{`Redis has less than 10% memory available (instance {{ $labels.instance }})`}}
           # TODO: Flapping alert keeps going off, usually with values from 4 - 10.
           # - alert: RedisClusterFlapping
           #   expr: changes(redis_connected_slaves[5m]) > 3
