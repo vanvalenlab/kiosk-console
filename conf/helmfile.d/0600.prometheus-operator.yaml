@@ -291,7 +291,7 @@ releases:
       ## ref: https://prometheus.io/docs/alerting/alertmanager/
       ##
       alertmanager:
-        enabled: {{ env "ALERT_MANAGER_ENABLED" | default "true"}}
+        enabled: {{ env "ALERTMANAGER_INSTALLED" | default "true" }}
         config:
           global:
             resolve_timeout: 5m
@@ -319,10 +319,10 @@ releases:
           receivers:
           - name: 'null'
           - name: 'general'
-            {{ if not (env "ALERT_MANAGER_SLACK_API_URL" | empty ) }}
+            {{ if not (env "KUBE_PROMETHEUS_ALERT_MANAGER_SLACK_WEBHOOK_URL" | empty ) }}
             slack_configs:
-            - api_url: '{{ env "ALERT_MANAGER_SLACK_API_URL" | default "" }}'
-              channel: '{{ env "ALERT_MANAGER_SLACK_CHANNEL" | default "alerts" }}'
+            - api_url: '{{ env "KUBE_PROMETHEUS_ALERT_MANAGER_SLACK_WEBHOOK_URL" }}'
+              channel: '{{ env "KUBE_PROMETHEUS_ALERT_MANAGER_SLACK_CHANNEL" | default "alerts" }}'
               send_resolved: true
               username: '{{`{{ template "slack.default.username" . }}`}}'
               color: '{{`{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}`}}'
