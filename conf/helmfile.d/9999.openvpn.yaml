@@ -22,4 +22,4 @@ releases:
     vendor: openvpn
     default: true
   chart: stable/openvpn
-  version: 4.2.1
+  version: 4.2.3

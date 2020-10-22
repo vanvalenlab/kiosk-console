@@ -27,7 +27,7 @@ releases:
     namespace: cert-manager
     vendor: kubernetes
   chart: jetstack/cert-manager
-  version: 0.15.1
+  version: 1.0.3
   wait: true
   values:
     - installCRDs: true

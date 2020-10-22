@@ -51,7 +51,7 @@ kubectl/destroy/prometheus/operator:
 
 kubectl/create/certificates:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-  -@gomplate -f addons/certificate-issuers.yaml | kubectl apply -f -
+	-@gomplate -f addons/certificate-issuers.yaml | kubectl apply -f -
 endif
 
 ## Create horizontal pod autoscalers for all relevant deployments
