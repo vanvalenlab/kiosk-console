@@ -1,5 +1,5 @@
 {{ $domain_name := getenv "DNS_DOMAIN_NAME" | default "deepcell.org" }}
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
@@ -17,7 +17,7 @@ spec:
             name: clouddns-dns01-solver-svc-acct
             key: key.json
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
@@ -36,7 +36,7 @@ spec:
             key: key.json
 
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: tls-cert
