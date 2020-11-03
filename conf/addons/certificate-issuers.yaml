@@ -11,7 +11,7 @@ spec:
     solvers:
     - selector: {}
       dns01:
-        clouddns:
+        cloudDNS:
           project: {{ getenv "CLOUDSDK_CORE_PROJECT" | default "project-not-found" }}
           serviceAccountSecretRef:
             name: clouddns-dns01-solver-svc-acct
@@ -29,7 +29,7 @@ spec:
     solvers:
     - selector: {}
       dns01:
-        clouddns:
+        cloudDNS:
           project: {{ getenv "CLOUDSDK_CORE_PROJECT" | default "project-not-found" }}
           serviceAccountSecretRef:
             name: clouddns-dns01-solver-svc-acct
