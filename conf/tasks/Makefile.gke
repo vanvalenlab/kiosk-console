@@ -224,8 +224,15 @@ ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 		--role roles/dns.admin
 	@gcloud iam service-accounts keys create key.json \
 		--iam-account dns01-solver@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
+else
+	@echo "Certificate Manager is Disabled"
+endif
+
+## Create Certificate Manager Secret
+gke/create/certificate-manager-secret:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	-@kubectl create namespace cert-manager
-	@kubectl -n default create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
+	@kubectl -n cert-manager create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
 else
 	@echo "Certificate Manager is Disabled"
 endif
@@ -270,6 +277,7 @@ gke/deploy/nvidia:
 ## Create cluster resources, after authentication
 gke/create/resources: \
 	gke/create/cluster \
+	gke/create/certificate-manager-secret \
 	gke/create/node-pools \
 	gke/create/elk-node-pools \
 	gke/create/bucket \
