@@ -22,13 +22,13 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
-  version: 0.2.0
+  version: 0.3.0
   values:
     - replicas: 0
 
       image:
         repository: vanvalenlab/kiosk-tf-serving
-        tag: 0.3.0
+        tag: 0.4.0
       
       configWriter:
         mountedVolume:
@@ -37,7 +37,7 @@ releases:
 
         image:
           repository: vanvalenlab/kiosk-tf-serving-config-writer
-          tag: 0.3.0
+          tag: 0.4.0
           pullPolicy: IfNotPresent
 
       resources:
@@ -102,7 +102,6 @@ releases:
         MAX_ENQUEUED_BATCHES: 512
         GRPC_CHANNEL_ARGS: ""
         MODEL_PREFIX: models
-        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         TF_CPP_MIN_LOG_LEVEL: 0
         TF_SESSION_PARALLELISM: 0
         MONITORING_CONFIG_FILE: /config/monitoring_config.txt
@@ -112,6 +111,10 @@ releases:
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-        AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        # GCLOUD_STORAGE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
-        GCLOUD_STORAGE_BUCKET: deepcell-models
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+        # STORAGE_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
+        STORAGE_BUCKET: deepcell-models
+{{ else }}
+        # STORAGE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
+        STORAGE_BUCKET: deepcell-models
+{{ end }}
