@@ -74,6 +74,6 @@ env:
   PROMETHEUS_MONITORING_PATH: /monitoring/prometheus/metrics
 
 secrets:
-  AWS_ACCESS_KEY_ID: "change_me"
-  AWS_SECRET_ACCESS_KEY: "change_me"
-  STORAGE_BUCKET: "change_me"
+  AWS_ACCESS_KEY_ID: ""
+  AWS_SECRET_ACCESS_KEY: ""
+  STORAGE_BUCKET: gs://deepcell-models
