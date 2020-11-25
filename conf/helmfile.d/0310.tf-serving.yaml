@@ -111,10 +111,9 @@ releases:
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+        # Uncomment to override the default models.
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
-        # STORAGE_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        STORAGE_BUCKET: deepcell-models
+        # STORAGE_BUCKET: 's3://{{ env "AWS_S3_BUCKET" | default "NA" }}'
 {{ else }}
-        # STORAGE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
-        STORAGE_BUCKET: deepcell-models
+        # STORAGE_BUCKET: 'gs://{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
 {{ end }}
