@@ -27,7 +27,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Build Image and Run Tests in the Container
+    - name: Build and Run Unit Tests
       env:
         CLOUD_PROVIDER: gke
         IMAGE: ${{ github.repository }}:${{ github.sha }}
