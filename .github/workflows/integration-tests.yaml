@@ -6,9 +6,11 @@ name: integration-tests
 on:
   pull_request:
     branches: master
+  push:
+    if: "contains(github.event.head_commit.message, '[integration-tests]')"
 
 jobs:
-  build:
+  integration:
 
     runs-on: ubuntu-latest
 
