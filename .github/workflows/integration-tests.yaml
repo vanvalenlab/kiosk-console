@@ -48,7 +48,7 @@ jobs:
         GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
         CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
         CLOUDSDK_BUCKET: ${{ secrets.CLOUDSDK_BUCKET }}
-        CLOUDSDK_COMPUTE_REGION: us-west-1
+        CLOUDSDK_COMPUTE_REGION: us-west1
         REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
         IMAGE: ${{ github.repository }}:${{ github.sha }}
         GCP_SA_KEY_PATH: /tmp/keys/gcloud_key.json
