@@ -3,10 +3,9 @@
 
 name: integration-tests
 
-on: [push, pull_request]
-# on:
-#   pull_request:
-#     branches: master
+on:
+  pull_request:
+    branches: master
 
 jobs:
   build:
