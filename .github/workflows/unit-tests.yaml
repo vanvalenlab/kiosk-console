@@ -27,17 +27,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Build the Docker Image
-      id: docker_build
-      uses: docker/build-push-action@v2
-      with:
-        push: false
-        tags: ${{ github.repository }}:${{ github.sha }}
-
-    - name: Run Unit Tests in the Docker Container
+    - name: Build Image and Run Tests in the Container
       env:
         CLOUD_PROVIDER: gke
+        IMAGE: ${{ github.repository }}:${{ github.sha }}
       run: |
-        docker run -d -it --env CLOUD_PROVIDER=$CLOUD_PROVIDER --entrypoint=/bin/bash --name kiosk ${{ github.repository }}:${{ github.sha }}
+        docker buildx build -t ${{ env.IMAGE }} .
+        docker run -d -it --env CLOUD_PROVIDER=$CLOUD_PROVIDER --entrypoint=/bin/bash --name kiosk ${{ env.IMAGE }}
         docker exec kiosk make test/unit
         docker kill kiosk && docker rm kiosk
