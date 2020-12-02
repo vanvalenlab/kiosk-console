@@ -51,16 +51,18 @@ jobs:
         CLOUDSDK_COMPUTE_REGION: us-west-1
         REGION_ZONES_WITH_GPUS: us-west1-a,us-west1-b
         IMAGE: ${{ github.repository }}:${{ github.sha }}
+        GCP_SA_KEY_PATH: /tmp/keys/gcloud_key.json
       run: |
         docker buildx build --load --tag ${{ env.IMAGE }} .
         docker run -d -it \
+          --volume $(readlink -f ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}):${{ env.GCP_SA_KEY_PATH }}:ro \
           --env CLOUD_PROVIDER=${{ matrix.CLOUD_PROVIDER }} \
           --env GCP_SERVICE_ACCOUNT=${{ env.GCP_SERVICE_ACCOUNT }} \
           --env CLOUDSDK_CORE_PROJECT=${{ env.CLOUDSDK_CORE_PROJECT }} \
           --env CLOUDSDK_BUCKET=${{ env.CLOUDSDK_BUCKET }} \
           --env CLOUDSDK_COMPUTE_REGION=${{ env.CLOUDSDK_COMPUTE_REGION }} \
           --env REGION_ZONES_WITH_GPUS=${{ env.REGION_ZONES_WITH_GPUS }} \
-          --env GOOGLE_APPLICATION_CREDENTIALS=${{ env.GOOGLE_APPLICATION_CREDENTIALS }} \
+          --env GOOGLE_APPLICATION_CREDENTIALS=${{ env.GCP_SA_KEY_PATH }} \
           --entrypoint=/bin/bash \
           --name kiosk \
           ${{ env.IMAGE }}
