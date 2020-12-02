@@ -19,8 +19,6 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - uses: nelonoel/branch-name@v1
-
     - name: Cache Docker layers
       uses: actions/cache@v2
       with:
@@ -34,7 +32,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: false
-        tags: ${{ github.repository }}:${BRANCH_NAME}
+        tags: ${{ github.repository }}:latest
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
@@ -42,8 +40,7 @@ jobs:
     - name: Run Unit Tests in the Docker Container
       env:
         CLOUD_PROVIDER: gke
-        IMAGE: ${{ github.repository }}:${BRANCH_NAME}
       run: |
-        docker run -d -it --env CLOUD_PROVIDER=$CLOUD_PROVIDER --entrypoint=/bin/bash --name kiosk $IMAGE
+        docker run -d -it --env CLOUD_PROVIDER=$CLOUD_PROVIDER --entrypoint=/bin/bash --name kiosk ${{ github.repository }}:latest
         docker exec kiosk make test/unit
         docker kill kiosk && docker rm kiosk
