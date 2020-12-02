@@ -32,7 +32,7 @@ jobs:
         CLOUD_PROVIDER: gke
         IMAGE: ${{ github.repository }}:${{ github.sha }}
       run: |
-        docker buildx build -t ${{ env.IMAGE }} .
+        docker buildx build --load --tag ${{ env.IMAGE }} .
         docker run -d -it --env CLOUD_PROVIDER=$CLOUD_PROVIDER --entrypoint=/bin/bash --name kiosk ${{ env.IMAGE }}
         docker exec kiosk make test/unit
         docker kill kiosk && docker rm kiosk
