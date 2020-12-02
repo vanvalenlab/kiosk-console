@@ -64,5 +64,5 @@ jobs:
           --entrypoint=/bin/bash \
           --name kiosk \
           ${{ env.IMAGE }}
-        docker exec kiosk make test/integration/${{ env.CLOUD_PROVIDER }}/deploy
+        docker exec kiosk make test/integration/${{ matrix.CLOUD_PROVIDER }}/deploy
         docker kill kiosk && docker rm kiosk
