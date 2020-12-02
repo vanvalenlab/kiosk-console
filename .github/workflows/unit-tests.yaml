@@ -27,15 +27,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
 
-    - name: Build and push
+    - name: Build the Docker Image
       id: docker_build
       uses: docker/build-push-action@v2
       with:
         push: false
         tags: ${{ github.repository }}:${{ github.sha }}
-
-    - name: Image digest
-      run: echo ${{ steps.docker_build.outputs.digest }}
 
     - name: Run Unit Tests in the Docker Container
       env:
