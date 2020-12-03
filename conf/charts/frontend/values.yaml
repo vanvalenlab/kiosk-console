@@ -37,6 +37,12 @@ service:
   httpsTargetPort: 8443
   externalHttpsPort: 8443
 
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  metrics: {}
+
 resources: {}
 
 env:
