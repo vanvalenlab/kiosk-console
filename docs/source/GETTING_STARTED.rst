@@ -137,6 +137,11 @@ DeepCell Kiosk Usage
 
 * Once cluster configuration is complete, you will return to the home screen. There you can select the "Create" option to trigger cluster creation based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page.
 
+.. list-table::
+
+    * - Cluster Created Successfully
+    * - .. image:: ../images/Kiosk-Complete-Blur.png
+
 * Find the cluster's web address by choosing the ``View`` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., ``123.456.789.012``, or a URL, e.g., ``deepcellkiosk.cloudprovider.com``.)
 
 * Go to the cluster address in your web browser to find the DeepCell Kiosk frontpage. To run a job (load raw data and download the results) use the ``Predict`` tab.
