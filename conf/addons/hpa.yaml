@@ -3,24 +3,6 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: frontend
-  namespace: deepcell
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: frontend
-  minReplicas: 1
-  maxReplicas: {{ mul $max_gpus 10 }}
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
   name: segmentation-consumer
   namespace: deepcell
 spec:

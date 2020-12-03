@@ -22,13 +22,13 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend'
-  version: 0.1.0
+  version: 0.2.0
   values:
     - replicas: 1
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.4.2
+        tag: 0.6.0
 
       resources:
         requests:
@@ -76,6 +76,16 @@ releases:
             secretName: tls-cert
         {{ end }}
 
+      hpa:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: {{ mul (int (env "GPU_NODE_MAX_SIZE" | default 1)) 10 }}
+        metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            targetAverageUtilization: 80
+
       env:
         PORT: 8080
         REDIS_HOST: redis
@@ -83,13 +93,15 @@ releases:
         REDIS_SENTINEL: "true"
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
-        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         UPLOAD_PREFIX: "uploads/"
         JOB_TYPES: "segmentation,tracking"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-        AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GCLOUD_STORAGE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
-        GCLOUD_PROJECT_ID: '{{ env "PROJECT" | default "NA" }}'
+        GCLOUD_PROJECT_ID: '{{ env "CLOUDSDK_CORE_PROJECT" | default "NA" }}'
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+        STORAGE_BUCKET: 's3://{{ env "AWS_S3_BUCKET" | default "NA" }}'
+{{ else }}
+        STORAGE_BUCKET: 'gs://{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
+{{ end }}
