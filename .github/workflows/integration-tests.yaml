@@ -18,6 +18,7 @@ jobs:
       matrix:
         CLOUD_PROVIDER:
           - gke
+          # - aws
 
     steps:
     - uses: actions/checkout@v2
@@ -83,6 +84,7 @@ jobs:
       matrix:
         CLOUD_PROVIDER:
           - gke
+          # - aws
 
     steps:
     - uses: actions/checkout@v2
