@@ -79,7 +79,7 @@ releases:
       hpa:
         enabled: true
         minReplicas: 1
-        maxReplicas: 10
+        maxReplicas: {{ mul (int (env "GPU_NODE_MAX_SIZE" | default 1)) 10 }}
         metrics:
         - type: Resource
           resource:
