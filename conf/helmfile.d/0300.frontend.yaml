@@ -28,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.5.0
+        tag: 0.6.0
 
       resources:
         requests:
@@ -93,13 +93,15 @@ releases:
         REDIS_SENTINEL: "true"
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
-        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         UPLOAD_PREFIX: "uploads/"
         JOB_TYPES: "segmentation,tracking"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-        AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GCLOUD_STORAGE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
         GCLOUD_PROJECT_ID: '{{ env "PROJECT" | default "NA" }}'
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+        STORAGE_BUCKET: 's3://{{ env "AWS_S3_BUCKET" | default "NA" }}'
+{{ else }}
+        STORAGE_BUCKET: 'gs://{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
+{{ end }}
