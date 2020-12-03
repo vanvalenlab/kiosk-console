@@ -6,7 +6,7 @@ replicas: 1
 
 image:
   repository: vanvalenlab/kiosk-frontend
-  tag: latest
+  tag: 0.6.0
   pullPolicy: IfNotPresent
 
 ingress:
