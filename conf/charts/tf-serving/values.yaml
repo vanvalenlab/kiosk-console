@@ -67,7 +67,6 @@ env:
   MAX_ENQUEUED_BATCHES: 512
   GRPC_CHANNEL_ARGS: ""
   MODEL_PREFIX: models
-  CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
   TF_CPP_MIN_LOG_LEVEL: 0
   TF_SESSION_PARALLELISM: 0
   MONITORING_CONFIG_FILE: /config/monitoring_config.txt
@@ -75,7 +74,6 @@ env:
   PROMETHEUS_MONITORING_PATH: /monitoring/prometheus/metrics
 
 secrets:
-  AWS_ACCESS_KEY_ID: "change_me"
-  AWS_SECRET_ACCESS_KEY: "change_me"
-  AWS_S3_BUCKET: "change_me"
-  GCLOUD_STORAGE_BUCKET: "change_me"
+  AWS_ACCESS_KEY_ID: ""
+  AWS_SECRET_ACCESS_KEY: ""
+  STORAGE_BUCKET: gs://deepcell-models
