@@ -53,8 +53,3 @@ kubectl/create/certificates:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	-@gomplate -f addons/certificate-issuers.yaml | kubectl apply -f -
 endif
-
-## Create horizontal pod autoscalers for all relevant deployments
-kubectl/implement/autoscaling:
-	gomplate -f addons/hpa.yaml | kubectl apply -f -
-	@kubens deepcell
