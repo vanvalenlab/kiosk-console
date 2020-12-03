@@ -22,7 +22,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
-  version: 0.3.0
+  version: 0.4.0
   values:
     - replicas: 0
 
@@ -76,6 +76,20 @@ releases:
           prometheus.io/path: /monitoring/prometheus/metrics
           prometheus.io/port: "8501"
           prometheus.io/scrape: "true"
+
+      hpa:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: {{ int (env "GPU_NODE_MAX_SIZE" | default 1) }}
+        metrics:
+        - type: Object
+          object:
+            metricName: tf_serving_gpu_usage
+            target:
+              apiVersion: v1
+              kind: Namespace
+              name: tf_serving_gpu_usage
+            targetValue: 70
 
       annotations:
         prometheus.io/path: /monitoring/prometheus/metrics

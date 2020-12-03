@@ -3,28 +3,6 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: tf-serving
-  namespace: deepcell
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: tf-serving
-  minReplicas: 1
-  maxReplicas: {{ $max_gpus }}
-  metrics:
-  - type: Object
-    object:
-      metricName: tf_serving_gpu_usage
-      target:
-        apiVersion: v1
-        kind: Namespace
-        name: tf_serving_gpu_usage
-      targetValue: 70
----
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
   name: frontend
   namespace: deepcell
 spec:
