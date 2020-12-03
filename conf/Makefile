@@ -11,8 +11,8 @@ create: \
   kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
   kubectl/create/certificates \
-  kubectl/display/ip \
-  kubectl/implement/autoscaling
+  kubectl/display/ip
+	@kubens deepcell
 	@echo "DeepCell Kiosk has been created successfully."
 
 ## Destroy cluster
@@ -38,8 +38,8 @@ test/create: \
   kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
   kubectl/create/certificates \
-  kubectl/display/ip \
-  kubectl/implement/autoscaling
+  kubectl/display/ip
+	@kubens deepcell
 	@echo "Cluster created"
 
 ## Destroy cluster

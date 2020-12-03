@@ -8,9 +8,8 @@ helmDefaults:
 ################################################################################
 
 repositories:
-  # Stable repo of official helm charts
-  - name: stable
-    url: https://kubernetes-charts.storage.googleapis.com
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
 
 releases:
   # Redis
@@ -18,7 +17,7 @@ releases:
     labels:
       chart: redis
       component: database
-    chart: stable/redis
+    chart: bitnami/redis
     version: 10.5.7
     namespace: deepcell
     values:
