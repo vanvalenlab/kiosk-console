@@ -28,7 +28,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.4.2
+        tag: 0.5.0
 
       resources:
         requests:
@@ -75,6 +75,16 @@ releases:
             - www.{{ env "DNS_DOMAIN_NAME" | default "deepcell.org" }}
             secretName: tls-cert
         {{ end }}
+
+      hpa:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 10
+        metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            targetAverageUtilization: 80
 
       env:
         PORT: 8080
