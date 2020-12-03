@@ -6,7 +6,7 @@ replicas: 0
 
 image:
   repository: vanvalenlab/kiosk-tf-serving
-  tag: latest
+  tag: 0.4.0
   pullPolicy: IfNotPresent
 
 configWriter:
@@ -16,7 +16,7 @@ configWriter:
 
   image:
     repository: vanvalenlab/kiosk-tf-serving-config-writer
-    tag: latest
+    tag: 0.4.0
     pullPolicy: IfNotPresent
 
 service:
