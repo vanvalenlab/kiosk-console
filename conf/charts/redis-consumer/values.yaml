@@ -83,7 +83,7 @@ env:
   TRACKING_POSTPROCESS_FUNCTION: "deep_watershed"
 
 secrets:
-  AWS_ACCESS_KEY_ID: "change_me"
-  AWS_SECRET_ACCESS_KEY: "change_me"
-  AWS_S3_BUCKET: "change_me"
-  GKE_BUCKET: "change_me"
+  AWS_ACCESS_KEY_ID: ""
+  AWS_SECRET_ACCESS_KEY: ""
+  AWS_S3_BUCKET: "s3://example-bucket"
+  GKE_BUCKET: "gs://example-bucket"
