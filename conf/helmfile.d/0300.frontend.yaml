@@ -99,7 +99,7 @@ releases:
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-        GCLOUD_PROJECT_ID: '{{ env "PROJECT" | default "NA" }}'
+        GCLOUD_PROJECT_ID: '{{ env "CLOUDSDK_CORE_PROJECT" | default "NA" }}'
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
         STORAGE_BUCKET: 's3://{{ env "AWS_S3_BUCKET" | default "NA" }}'
 {{ else }}
