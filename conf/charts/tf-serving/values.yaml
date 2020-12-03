@@ -55,6 +55,12 @@ tolerations: {}
 
 affinity: {}
 
+hpa:
+  enabled: false
+  minReplicas: 0
+  maxReplicas: 1
+  metrics: {}
+
 env:
   PORT: 8500
   REST_API_PORT: 8501
