@@ -218,13 +218,16 @@ gke/destroy/service-account:
 ## Create Certificate Manager service account.
 gke/create/certificate-manager-sa:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud iam service-accounts create "dns01-solver" --display-name "dns01-solver" || \
+	@gcloud iam service-accounts create $(GCP_DNS_SOLVER_NAME) \
+		--display-name "Service Account to support ACME DNS-01 challenge." || \
 		echo "cert-manager service account already exists"
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) \
+		--role roles/dns.admin \
+		--member serviceAccount:$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
 	@gcloud iam service-accounts add-iam-policy-binding \
 		--role roles/iam.workloadIdentityUser \
 		--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
-		dns01-solver@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com || \
-		echo "Could not link DNS Solver SA with Workload Identity!"
+		$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
 else
 	@echo "Certificate Manager is Disabled"
 endif

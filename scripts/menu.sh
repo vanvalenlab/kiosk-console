@@ -535,6 +535,8 @@ function configure_gke() {
 
   export CLOUD_PROVIDER=gke
   export GCP_SERVICE_ACCOUNT=${CLOUDSDK_CONTAINER_CLUSTER}@${CLOUDSDK_CORE_PROJECT}.iam.gserviceaccount.com
+  export GCP_DNS_SOLVER_NAME=dns01-solver
+  export GCP_CLOUD_DNS_SERVICE_ACCOUNT=${GCP_DNS_SOLVER_NAME}@${CLOUDSDK_CORE_PROJECT}.iam.gserviceaccount.com
 
   # These 2 values are hard-coded for now, menu is commented out above.
   export GPU_MACHINE_TYPE=${GPU_MACHINE_TYPE:-n1-highmem-2}
