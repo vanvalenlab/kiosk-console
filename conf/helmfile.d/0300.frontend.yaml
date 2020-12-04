@@ -59,6 +59,7 @@ releases:
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
           {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
+          kubernetes.io/tls-acme: "true"
           nginx.ingress.kubernetes.io/auth-tls-secret: "deepcell/tls-cert"
           # Use "letsencrypt-prod" for production.
           cert-manager.io/cluster-issuer: {{ env "CERTIFICATE_MANAGER_CLUSTER_ISSUER" | default "letsecrypt-staging" }}
