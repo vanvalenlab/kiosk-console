@@ -42,8 +42,8 @@ releases:
           iam.gke.io/gcp-service-account: dns01-solver@{{ getenv "CLOUDSDK_CORE_PROJECT" | default "project-not-found"}}.iam.gserviceaccount.com
 
       ingressShim:
-        # defaultIssuerName: letsencrypt-prod
-        defaultIssuerName: letsencrypt-staging
+        # Use "letsencrypt-prod" for production.
+        defaultIssuerName: {{ env "CERTIFICATE_MANAGER_CLUSTER_ISSUER" | default "letsecrypt-staging" }}
         defaultIssuerKind: ClusterIssuer
         defaultIssuerGroup: cert-manager.io
 

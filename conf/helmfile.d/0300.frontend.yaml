@@ -60,8 +60,8 @@ releases:
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
           {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
           nginx.ingress.kubernetes.io/auth-tls-secret: "deepcell/tls-cert"
-          # Update to "letsencrypt-prod" for production.
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          # Use "letsencrypt-prod" for production.
+          cert-manager.io/cluster-issuer: {{ env "CERTIFICATE_MANAGER_CLUSTER_ISSUER" | default "letsecrypt-staging" }}
           {{ end }}
 
         # Use $DNS_DOMAIN_NAME in production
