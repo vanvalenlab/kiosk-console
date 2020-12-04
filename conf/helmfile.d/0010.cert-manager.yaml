@@ -39,7 +39,7 @@ releases:
 
       serviceAccount:
         annotations:
-          iam.gke.io/gcp-service-account: dns01-solver@{{ getenv "CLOUDSDK_CORE_PROJECT" | default "project-not-found"}}.iam.gserviceaccount.com
+          iam.gke.io/gcp-service-account: dns01-solver@{{ env "CLOUDSDK_CORE_PROJECT" | default "project-not-found"}}.iam.gserviceaccount.com
 
       ingressShim:
         # Use "letsencrypt-prod" for production.
