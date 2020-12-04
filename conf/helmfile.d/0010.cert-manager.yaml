@@ -71,7 +71,7 @@ releases:
             - selector: {}
               dns01:
                 cloudDNS:
-                  project: {{ getenv "CLOUDSDK_CORE_PROJECT" | default "project-not-found" }}
+                  project: {{ env "CLOUDSDK_CORE_PROJECT" | default "project-not-found" }}
 
       - apiVersion: cert-manager.io/v1
         kind: ClusterIssuer
@@ -86,4 +86,4 @@ releases:
             - selector: {}
               dns01:
                 cloudDNS:
-                  project: {{ getenv "CLOUDSDK_CORE_PROJECT" | default "project-not-found" }}
+                  project: {{ env "CLOUDSDK_CORE_PROJECT" | default "project-not-found" }}
