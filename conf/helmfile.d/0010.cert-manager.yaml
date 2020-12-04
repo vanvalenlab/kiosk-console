@@ -41,9 +41,9 @@ releases:
   values:
     - installCRDs: true
 
-      serviceAccount:
-        annotations:
-          iam.gke.io/gcp-service-account: dns01-solver@{{ env "CLOUDSDK_CORE_PROJECT" | default "project-not-found"}}.iam.gserviceaccount.com
+      # serviceAccount:
+      #   annotations:
+      #     iam.gke.io/gcp-service-account: {{ env "GCP_CLOUD_DNS_SERVICE_ACCOUNT" | default "cloud-dns-sa-not-found"}}
 
       ingressShim:
         # Use "letsencrypt-prod" for production.

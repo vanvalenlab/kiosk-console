@@ -33,7 +33,6 @@ gke/create/cluster:
 		--machine-type=$(GKE_MACHINE_TYPE) \
 		--cluster-version $(KUBERNETES_VERSION) \
 		--enable-autoscaling \
-		--workload-pool=$(CLOUDSDK_CORE_PROJECT)
 		--no-enable-autoupgrade
 	@echo "GKE cluster creation complete."
 	@echo " "
@@ -224,10 +223,21 @@ ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) \
 		--role roles/dns.admin \
 		--member serviceAccount:$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
-	@gcloud iam service-accounts add-iam-policy-binding \
-		--role roles/iam.workloadIdentityUser \
-		--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
-		$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
+	@gcloud iam service-accounts keys create key.json \
+		--iam-account dns01-solver@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
+#	@gcloud iam service-accounts add-iam-policy-binding \
+#		--role roles/iam.workloadIdentityUser \
+#		--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
+#		$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
+else
+	@echo "Certificate Manager is Disabled"
+endif
+
+## Create Certificate Manager Secret
+gke/create/certificate-manager-secret:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	-@kubectl create namespace cert-manager
+	@kubectl -n cert-manager create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
 else
 	@echo "Certificate Manager is Disabled"
 endif
@@ -272,6 +282,7 @@ gke/deploy/nvidia:
 ## Create cluster resources, after authentication
 gke/create/resources: \
 	gke/create/cluster \
+	gke/create/certificate-manager-secret \
 	gke/create/node-pools \
 	gke/create/elk-node-pools \
 	gke/create/bucket \
