@@ -31,6 +31,13 @@ releases:
   wait: true
   atomic: true
   cleanupOnFail: true
+  hooks:
+  - events: ["postsync"]
+    # Give cert-manager time to initialize itself
+    showlogs: true
+    command: /bin/sleep
+    args:
+      - 15
   values:
     - installCRDs: true
 
