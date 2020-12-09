@@ -201,7 +201,9 @@ gke/create/service-account:
 	@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+endif
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "
@@ -210,6 +212,9 @@ gke/create/service-account:
 gke/destroy/service-account:
 	@echo "Destroying GKE service-account..."
 	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+endif
 	@-gcloud iam service-accounts delete $(GCP_SERVICE_ACCOUNT) --quiet
 	@echo "GKE service-account destruction finished."
 	@echo " "
@@ -218,7 +223,6 @@ gke/destroy/service-account:
 ## Create Certificate Manager Secret
 gke/create/certificate-manager-secret:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
 	@gcloud iam service-accounts keys create key.json \
 		--iam-account $(GCP_SERVICE_ACCOUNT)
 	-@kubectl create namespace cert-manager
@@ -231,7 +235,6 @@ endif
 gke/destroy/certifiate-manager-secret: KEY_ID = $(shell sh -c "cat key.json | jq '.private_key_id' -r" )
 gke/destroy/certifiate-manager-secret:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
 	@gcloud iam service-accounts keys delete $(KEY_ID) --quiet \
 		--iam-account $(GCP_SERVICE_ACCOUNT) || \
 		echo "Could not remove key from IAM account."
