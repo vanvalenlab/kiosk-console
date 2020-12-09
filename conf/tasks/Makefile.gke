@@ -224,7 +224,7 @@ ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 		--role roles/dns.admin \
 		--member serviceAccount:$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
 	@gcloud iam service-accounts keys create key.json \
-		--iam-account dns01-solver@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
+		--iam-account $(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
 #	@gcloud iam service-accounts add-iam-policy-binding \
 #		--role roles/iam.workloadIdentityUser \
 #		--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
