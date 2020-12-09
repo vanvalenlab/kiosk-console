@@ -217,24 +217,47 @@ gke/destroy/service-account:
 ## Create Certificate Manager service account.
 gke/create/certificate-manager-sa:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud iam service-accounts create "dns01-solver" --display-name "dns01-solver" || \
+	@gcloud iam service-accounts create $(GCP_DNS_SOLVER_NAME) \
+		--display-name "Service Account to support ACME DNS-01 challenge." || \
 		echo "cert-manager service account already exists"
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) \
-		--member serviceAccount:dns01-solver@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com \
-		--role roles/dns.admin
+		--role roles/dns.admin \
+		--member serviceAccount:$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
+	# @gcloud iam service-accounts add-iam-policy-binding \
+	# 	--role roles/iam.workloadIdentityUser \
+	# 	--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
+	# 	$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
+else
+	@echo "Certificate Manager is Disabled"
+endif
+
+## Create Certificate Manager Secret
+gke/create/certificate-manager-secret:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	@gcloud iam service-accounts keys create key.json \
-		--iam-account dns01-solver@$(CLOUDSDK_CORE_PROJECT).iam.gserviceaccount.com
+		--iam-account $(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
 	-@kubectl create namespace cert-manager
-	@kubectl -n default create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
+	@kubectl -n cert-manager create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
+else
+	@echo "Certificate Manager is Disabled"
+endif
+
+## Remove Certifiate Manager Secret Key
+gke/destroy/certifiate-manager-secret: KEY_ID = $(shell sh -c "cat key.json | jq '.private_key_id' -r" )
+gke/destroy/certifiate-manager-secret:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud iam service-accounts keys delete $(KEY_ID) --quiet \
+		--iam-account $(GCP_CLOUD_DNS_SERVICE_ACCOUNT) || \
+		echo "Could not remove key from IAM account."
 else
 	@echo "Certificate Manager is Disabled"
 endif
 
 ## Create bucket used by deepcell
 gke/create/bucket:
-	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
+	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_BUCKET}..."
 	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) \
-		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
+		|| echo "Bucket ${CLOUDSDK_BUCKET} already exists. No need to create that bucket."
 	@-gsutil acl ch -u $(GCP_SERVICE_ACCOUNT):O gs://$(CLOUDSDK_BUCKET)
 	@echo "Google Cloud Storage Bucket creation finished."
 	@echo " "
@@ -270,6 +293,7 @@ gke/deploy/nvidia:
 ## Create cluster resources, after authentication
 gke/create/resources: \
 	gke/create/cluster \
+	gke/create/certificate-manager-secret \
 	gke/create/node-pools \
 	gke/create/elk-node-pools \
 	gke/create/bucket \
@@ -288,10 +312,10 @@ gke/destroy/all: \
 	gke/destroy/node-pools \
 	gke/destroy/cluster \
 	gke/destroy/service-account \
+	gke/destroy/certifiate-manager-secret \
 	gke/destroy/pds
 	@echo "GKE cluster destroyed"
 	@exit 0
-
 
 
 # https://cloud.google.com/storage/docs/access-control/iam-roles

@@ -22,7 +22,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend'
-  version: 0.2.0
+  version: 0.2.1
   values:
     - replicas: 1
 
@@ -59,9 +59,10 @@ releases:
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
           {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
+          kubernetes.io/tls-acme: "true"
           nginx.ingress.kubernetes.io/auth-tls-secret: "deepcell/tls-cert"
-          # Update to "letsencrypt-prod" for production.
-          cert-manager.io/cluster-issuer: "letsencrypt-staging"
+          # Use "letsencrypt-prod" for production.
+          cert-manager.io/cluster-issuer: {{ env "CERTIFICATE_MANAGER_CLUSTER_ISSUER" | default "letsecrypt-staging" }}
           {{ end }}
 
         # Use $DNS_DOMAIN_NAME in production
