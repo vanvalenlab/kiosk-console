@@ -3,6 +3,11 @@ helmDefaults:
   timeout: 600
   force: true
 
+repositories:
+  # Stable repo of official helm charts
+  - name: stable
+    url: https://charts.helm.sh/stable
+
 releases:
 
 ################################################################################
@@ -22,7 +27,7 @@ releases:
     vendor: elastic.co
     default: true
   chart: stable/kibana
-  version: 3.2.6
+  version: 3.2.8
   values:
     - resources:
         requests:
