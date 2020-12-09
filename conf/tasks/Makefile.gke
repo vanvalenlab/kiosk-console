@@ -223,12 +223,10 @@ ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) \
 		--role roles/dns.admin \
 		--member serviceAccount:$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
-	@gcloud iam service-accounts keys create key.json \
-		--iam-account $(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
-#	@gcloud iam service-accounts add-iam-policy-binding \
-#		--role roles/iam.workloadIdentityUser \
-#		--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
-#		$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
+	# @gcloud iam service-accounts add-iam-policy-binding \
+	# 	--role roles/iam.workloadIdentityUser \
+	# 	--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
+	# 	$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
 else
 	@echo "Certificate Manager is Disabled"
 endif
@@ -236,6 +234,8 @@ endif
 ## Create Certificate Manager Secret
 gke/create/certificate-manager-secret:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud iam service-accounts keys create key.json \
+		--iam-account $(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
 	-@kubectl create namespace cert-manager
 	@kubectl -n cert-manager create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
 else
@@ -245,9 +245,13 @@ endif
 ## Remove Certifiate Manager Secret Key
 gke/destroy/certifiate-manager-secret: KEY_ID = $(shell sh -c "cat key.json | jq '.private_key_id' -r" )
 gke/destroy/certifiate-manager-secret:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	@gcloud iam service-accounts keys delete $(KEY_ID) --quiet \
 		--iam-account $(GCP_CLOUD_DNS_SERVICE_ACCOUNT) || \
 		echo "Could not remove key from IAM account."
+else
+	@echo "Certificate Manager is Disabled"
+endif
 
 ## Create bucket used by deepcell
 gke/create/bucket:
