@@ -22,7 +22,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend'
-  version: 0.2.0
+  version: 0.2.1
   values:
     - replicas: 1
 
