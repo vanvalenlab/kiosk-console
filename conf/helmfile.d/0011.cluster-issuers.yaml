@@ -17,8 +17,6 @@ releases:
 #
 # Certificate Issuers
 - name: cert-manager-issuers
-  needs:
-    - cert-manager/cert-manager
   namespace: cert-manager
   chart: incubator/raw
   atomic: true
