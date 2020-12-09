@@ -3,6 +3,11 @@ helmDefaults:
   timeout: 600
   force: true
 
+repositories:
+  # Stable repo of official helm charts
+  - name: stable
+    url: https://charts.helm.sh/stable
+
 releases:
 
 ################################################################################

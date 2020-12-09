@@ -110,6 +110,20 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
             nodeSelector:
               consumer: "yes"
 
+            hpa:
+              enabled: true
+              minReplicas: 1
+              maxReplicas: 50
+              metrics:
+              - type: Object
+                object:
+                  metricName: tracking_consumer_key_ratio
+                  target:
+                    apiVersion: v1
+                    kind: Namespace
+                    name: tracking_consumer_key_ratio
+                  targetValue: 1
+
             env:
               DEBUG: "true"
               INTERVAL: 1
@@ -190,7 +204,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
 * |/conf/addons/redis-exporter-script.yaml|
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
-* |/conf/addons/hpa.yaml|
+* |/conf/helmfile.d/02##.custom-consumer.yaml|
 
 1. |/conf/addons/redis-exporter-script.yaml|
 
@@ -232,9 +246,9 @@ To effectively scale your new consumer, some small edits will be needed in the f
           namespace: deepcell
           service: tracking-scaling-service
 
-3. |/conf/addons/hpa.yaml|
+3. |/conf/helmfile.d/02##.custom-consumer.yaml|
 
-   Add a new section based on the example below to the bottom of ``hpa.yaml`` following a ``---``.
+   Finally, in the new consumer's helmfile, add the new metric to the ``hpa`` block.
 
    * Change ``metadata.name`` and ``spec.scaleTargetRef.name`` to :data:`consumer_name`
    * Change ``spec.metrics.object.metricName`` and ``spec.metrics.object.target.name`` to :data:`consumer_type`
@@ -242,27 +256,19 @@ To effectively scale your new consumer, some small edits will be needed in the f
    .. code-block:: yaml
       :linenos:
 
-      apiVersion: autoscaling/v2beta1
-      kind: HorizontalPodAutoscaler
-      metadata:
-        name: tracking-consumer
-        namespace: deepcell
-      spec:
-        scaleTargetRef:
-          apiVersion: apps/v1
-          kind: Deployment
-          name: tracking-consumer
-        minReplicas: 1
-        maxReplicas: {{ mul $max_gpus 50 }}
-        metrics:
-        - type: Object
-          object:
-            metricName: tracking_consumer_key_ratio
-            target:
-              apiVersion: v1
-              kind: Namespace
-              name: tracking_consumer_key_ratio
-            targetValue: 1
+      hpa:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 50
+      metrics:
+      - type: Object
+        object:
+          metricName: tracking_consumer_key_ratio
+          target:
+            apiVersion: v1
+            kind: Namespace
+            name: tracking_consumer_key_ratio
+          targetValue: 1
 
 .. |/conf/addons/hpa.yaml| raw:: html
 

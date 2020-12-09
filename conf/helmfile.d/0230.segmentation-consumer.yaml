@@ -22,13 +22,13 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-  version: 0.1.0
+  version: 0.2.0
   values:
     - replicas: 1
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.6.1
+        tag: 0.8.2
 
       nameOverride: segmentation-consumer
 
@@ -47,6 +47,20 @@ releases:
 
       nodeSelector:
         consumer: "yes"
+
+      hpa:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: {{ mul (int (env "GPU_NODE_MAX_SIZE" | default 1)) 150 }}
+        metrics:
+        - type: Object
+          object:
+            metricName: segmentation_consumer_key_ratio
+            target:
+              apiVersion: v1
+              kind: Namespace
+              name: segmentation_consumer_key_ratio
+            targetValue: .15
 
       env:
         DEBUG: "true"
