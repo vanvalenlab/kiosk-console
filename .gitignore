@@ -14,7 +14,10 @@
 build-harness/
 
 # Documentation
+__pycache__/
+build/
 docs/build/
 docs/source/_sidebar.rst.inc
 
-.vscode/*
+# IDE Configuration
+.vscode/
