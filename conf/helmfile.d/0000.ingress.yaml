@@ -25,6 +25,9 @@ releases:
   chart: stable/nginx-ingress
   version: 1.40.2
   wait: true
+  timeout: 300
+  atomic: true
+  cleanupOnFail: true
   values:
     - controller:
         ### Optional: NGINX_INGRESS_CONTROLLER_REPLICA_COUNT; e.g. 2

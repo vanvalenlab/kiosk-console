@@ -1,40 +1,44 @@
-helmDefaults:
-  wait: true
-  timeout: 600
-  force: true
-
-################################################################################
-## Redis Monitoring ############################################################
-################################################################################
-
 repositories:
   # Stable repo of official helm charts
   - name: stable
     url: https://charts.helm.sh/stable
 
 releases:
-  - name: prometheus-redis-exporter
-    labels:
-      chart: prometheus-redis-exporter
-      component: monitoring
-      namespace: monitoring
-    chart: stable/prometheus-redis-exporter
-    version: 3.5.0
+
+################################################################################
+## Redis Monitoring ############################################################
+################################################################################
+
+#
+# References:
+#   - https://github.com/helm/charts/blob/master/stable/prometheus-redis-exporter/values.yaml
+#
+- name: prometheus-redis-exporter
+  chart: stable/prometheus-redis-exporter
+  namespace: monitoring
+  labels:
+    chart: prometheus-redis-exporter
+    component: monitoring
     namespace: monitoring
-    values:
-      - script:
-          configmap: prometheus-redis-exporter-script
-          keyname: script
+  version: 3.5.0
+  wait: true
+  timeout: 120
+  atomic: true
+  cleanupOnFail: true
+  values:
+    - script:
+        configmap: prometheus-redis-exporter-script
+        keyname: script
 
-        service:
-          annotations:
-            prometheus.io/path: "/metrics"
-            prometheus.io/port: "9121"
-            prometheus.io/scrape: "true"
-
+      service:
         annotations:
           prometheus.io/path: "/metrics"
           prometheus.io/port: "9121"
           prometheus.io/scrape: "true"
 
-        redisAddress: redis://redis.deepcell:6379
+      annotations:
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "9121"
+        prometheus.io/scrape: "true"
+
+      redisAddress: redis://redis.deepcell:6379
