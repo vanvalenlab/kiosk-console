@@ -203,6 +203,10 @@ gke/create/service-account:
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+	# @gcloud iam service-accounts add-iam-policy-binding \
+	# 	--role roles/iam.workloadIdentityUser \
+	# 	--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
+	# 	$(GCP_SERVICE_ACCOUNT)
 endif
 	@echo "GKE service account creation complete."
 	@echo " "
