@@ -53,7 +53,7 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
 
 2. From the root of the ``kiosk-redis-consumer`` folder, run ``docker build <image>:<tag>`` and then ``docker push <image>:<tag>``.
 
-3. In the ``/conf/helmfile.d/`` folder in your kiosk environment, add a new helmfile following the convention ``02##.custom-consumer.yaml``. The text for the helmfile can be copied from ``0250.tracking-consumer.yaml`` as shown below. Then make the following changes to customize the helmfile to your consumer.
+3. In the ``/conf/helmfile.d/`` folder in your kiosk environment, add a new helmfile following the convention ``02XX.custom-consumer.yaml``. The text for the helmfile can be copied from ``0250.tracking-consumer.yaml`` as shown below. Then make the following changes to customize the helmfile to your consumer.
 
    * Change ``releases.name`` to :data:`consumer_name`
    * Change ``releases.values.image.repository`` and ``releases.values.image.tag``
@@ -204,7 +204,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
 * |/conf/addons/redis-exporter-script.yaml|
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
-* |/conf/helmfile.d/02##.custom-consumer.yaml|
+* |/conf/helmfile.d/02XX.custom-consumer.yaml|
 
 1. |/conf/addons/redis-exporter-script.yaml|
 
@@ -246,7 +246,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
           namespace: deepcell
           service: tracking-scaling-service
 
-3. |/conf/helmfile.d/02##.custom-consumer.yaml|
+3. |/conf/helmfile.d/02XX.custom-consumer.yaml|
 
    Finally, in the new consumer's helmfile, add the new metric to the ``hpa`` block.
 
