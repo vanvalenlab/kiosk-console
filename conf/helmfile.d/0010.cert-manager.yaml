@@ -3,10 +3,6 @@ helmDefaults:
   timeout: 600
   force: true
 
-################################################################################
-## Certificate Manager #########################################################
-################################################################################
-
 repositories:
   # Add the Jetstack Helm repository
   - name: jetstack
@@ -16,6 +12,10 @@ repositories:
     url: https://charts.helm.sh/incubator
 
 releases:
+
+################################################################################
+## Certificate Manager #########################################################
+################################################################################
 
 #
 # References:
@@ -53,6 +53,10 @@ releases:
         defaultIssuerName: {{ env "CERTIFICATE_MANAGER_CLUSTER_ISSUER" | default "letsecrypt-staging" }}
         defaultIssuerKind: ClusterIssuer
         defaultIssuerGroup: cert-manager.io
+
+################################################################################
+## Certificate Issuers #########################################################
+################################################################################
 
 #
 # Certificate Issuers

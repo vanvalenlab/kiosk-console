@@ -11,7 +11,7 @@ repositories:
 releases:
 
 ################################################################################
-## prometheus-adapter                                                         ##
+## Prometheus Adapter                                                         ##
 ## exports data for the cutom metrics API                                     ##
 ################################################################################
 

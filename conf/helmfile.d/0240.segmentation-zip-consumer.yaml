@@ -6,12 +6,12 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Zip-Consumer ################################################################
+## Segmentation Zip Consumer ###################################################
 ################################################################################
 
 #
 # References:
-#   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
+#   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
 - name: segmentation-zip-consumer
   namespace: deepcell

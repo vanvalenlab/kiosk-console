@@ -11,7 +11,7 @@ releases:
 
 #
 # References:
-#   - [web address of Helm chart's YAML file]
+#   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/bucket-monitor/values.yaml
 #
 - name: "bucket-monitor"
   namespace: "deepcell"

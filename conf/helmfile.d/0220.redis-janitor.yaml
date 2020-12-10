@@ -6,12 +6,12 @@ helmDefaults:
 releases:
 
 ################################################################################
-## Redis-Janitor ###############################################################
+## Redis Janitor ###############################################################
 ################################################################################
 
 #
 # References:
-#   - [web address of Helm chart's YAML file]
+#   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-janitor/values.yaml
 #
 - name: redis-janitor
   namespace: deepcell
