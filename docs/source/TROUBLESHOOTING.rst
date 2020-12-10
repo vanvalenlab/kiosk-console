@@ -54,7 +54,7 @@ If that command returns an error, you may not be on Linux. If you are on Linux, 
 You probably just added yourself to the ``docker`` user group but haven't logged and logged back in yet.
 
 My pods are not autoscaling because the custom metrics are not updating!
-----------------------------
+------------------------------------------------------------------------
 Prometheus has a large memory footprint and is liable to be OOMKilled when there are many other pods running.
 
 This can be confirmed by executing the following and inspecting the output.

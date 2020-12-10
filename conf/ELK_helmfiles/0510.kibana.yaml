@@ -1,9 +1,12 @@
 helmDefaults:
-  args:
-    - "--wait"
-    - "--timeout=600"
-    - "--force"
-    - "--reset-values"
+  wait: true
+  timeout: 600
+  force: true
+
+repositories:
+  # Stable repo of official helm charts
+  - name: stable
+    url: https://charts.helm.sh/stable
 
 releases:
 
@@ -13,95 +16,40 @@ releases:
 
 #
 # References:
-#   - [web address of Helm chart's YAML file]
+#   - https://github.com/helm/charts/tree/master/stable/kibana
 #
-- name: "kibana"
-  namespace: "elk"
+- name: kibana
+  namespace: elk
   labels:
-    chart: "kibana"
-    component: "kibana"
-    namespace: "elk"
-    vendor: "elastic.co"
-    default: "true"
-  chart: 'stable/kibana'
-  version: "1.5.0"
+    chart: kibana
+    component: kibana
+    namespace: elk
+    vendor: elastic.co
+    default: true
+  chart: stable/kibana
+  version: 3.2.8
   values:
-    - image:
-        repository: "docker.elastic.co/kibana/kibana-oss"
-        tag: "6.6.0"
-        pullPolicy: "IfNotPresent"
-      commandline:
-        args: []
-      env: {}
+    - resources:
+        requests:
+          memory: 128Mi
+
       files:
         kibana.yml:
           server.name: kibana
-          server.host: "0"
+          server.host: 0
           elasticsearch.url: http://elasticsearch-client:9200
-      deployment:
-        annotations: {}
+
       service:
         type: ClusterIP
         externalPort: 443
         internalPort: 5601
-        annotations: {}
-        labels: {}
+
       ingress:
         enabled: true
         hosts:
-          - "dev.logging.deepcell.org"
+          - dev.logging.deepcell.org
         annotations:
-          kubernetes.io/ingress.class: nginx
-          nginx.ingress.kubernetes.io/proxy-body-size: 1g
+          kubernetes.io/ingress.class: "nginx"
+          nginx.ingress.kubernetes.io/proxy-body-size: "1g"
           nginx.ingress.kubernetes.io/rewrite-target: /
           nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      serviceAccount:
-        create: false
-        name:
-      livenessProbe:
-        enabled: false
-        initialDelaySeconds: 30
-        timeoutSeconds: 10
-      readinessProbe:
-        enabled: false
-        initialDelaySeconds: 30
-        timeoutSeconds: 10
-        periodSeconds: 10
-        successThreshold: 5
-      authProxyEnabled: false
-      extraContainers: |
-      extraVolumeMounts: []
-      extraVolumes: []
-      resources:
-        requests:
-          memory: 128Mi
-      priorityClassName: ""
-      tolerations: []
-      nodeSelector: {}
-      podAnnotations: {}
-      replicaCount: 1
-      revisionHistoryLimit: 3
-      dashboardImport:
-        timeout: 60
-        xpackauth:
-          enabled: false
-          username: myuser
-          password: mypass
-        dashboards: {}
-      plugins:
-        enabled: false
-        reset: false
-        values:
-      persistentVolumeClaim:
-        enabled: false
-        existingClaim: false
-        annotations: {}
-        accessModes:
-          - ReadWriteOnce
-        size: "5Gi"
-      securityContext:
-        enabled: false
-        allowPrivilegeEscalation: false
-        runAsUser: 1000
-        fsGroup: 2000
-      extraConfigMapMounts: []
