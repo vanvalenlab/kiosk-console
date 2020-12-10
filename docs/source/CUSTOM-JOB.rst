@@ -204,6 +204,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
 * |/conf/addons/redis-exporter-script.yaml|
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
+* ``/conf/helmfile.d/02##.custom-consumer.yaml``
 
 1. |/conf/addons/redis-exporter-script.yaml|
 
