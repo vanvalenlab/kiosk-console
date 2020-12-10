@@ -25,7 +25,7 @@ The following variables will be used throughout the setup of the custom consumer
 
 .. py:data:: queue_name
 
-    Specifies the queue name that will be used to identify jobs for the :mod:`redis_consumer`, e.g. ``'track'``
+    Specifies the queue name that will be used to identify jobs for the :doc:`redis_consumer:README`, e.g. ``'track'``
 
 .. py:data:: consumer_name
 
@@ -38,7 +38,7 @@ The following variables will be used throughout the setup of the custom consumer
 Designing a custom consumer
 ---------------------------
 
-For guidance on the changes that need to be made to |kiosk-redis-consumer|, please see :doc:`redis_consumer:CUSTOM_CONSUMER`
+For guidance on the changes that need to be made to |kiosk-redis-consumer|, please see :doc:`redis_consumer:README`
 
 .. |kiosk-redis-consumer| raw:: html
 
@@ -47,7 +47,7 @@ For guidance on the changes that need to be made to |kiosk-redis-consumer|, plea
 Deploying a custom consumer
 ---------------------------
 
-The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. This allows the :mod:`redis_consumer` to be easily extended by setting up a new docker image with your custom consumer.
+The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. This allows the :doc:`redis_consumer:README` to be easily extended by setting up a new docker image with your custom consumer.
 
 1. If you do not already have an account on `Docker Hub <https://hub.docker.com/>`_. Sign in to docker in your local environment using ``docker login``.
 
