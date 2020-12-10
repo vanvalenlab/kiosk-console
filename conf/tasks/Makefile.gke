@@ -201,6 +201,12 @@ gke/create/service-account:
 	@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+	# @gcloud iam service-accounts add-iam-policy-binding $(GCP_SERVICE_ACCOUNT) \
+	# 	--role roles/iam.workloadIdentityUser \
+	# 	--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]"
+endif
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "
@@ -209,33 +215,19 @@ gke/create/service-account:
 gke/destroy/service-account:
 	@echo "Destroying GKE service-account..."
 	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+endif
 	@-gcloud iam service-accounts delete $(GCP_SERVICE_ACCOUNT) --quiet
 	@echo "GKE service-account destruction finished."
 	@echo " "
 	@echo " "
 
-## Create Certificate Manager service account.
-gke/create/certificate-manager-sa:
-ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud iam service-accounts create $(GCP_DNS_SOLVER_NAME) \
-		--display-name "Service Account to support ACME DNS-01 challenge." || \
-		echo "cert-manager service account already exists"
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) \
-		--role roles/dns.admin \
-		--member serviceAccount:$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
-	# @gcloud iam service-accounts add-iam-policy-binding \
-	# 	--role roles/iam.workloadIdentityUser \
-	# 	--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]" \
-	# 	$(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
-else
-	@echo "Certificate Manager is Disabled"
-endif
-
 ## Create Certificate Manager Secret
 gke/create/certificate-manager-secret:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	@gcloud iam service-accounts keys create key.json \
-		--iam-account $(GCP_CLOUD_DNS_SERVICE_ACCOUNT)
+		--iam-account $(GCP_SERVICE_ACCOUNT)
 	-@kubectl create namespace cert-manager
 	@kubectl -n cert-manager create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
 else
@@ -247,7 +239,7 @@ gke/destroy/certifiate-manager-secret: KEY_ID = $(shell sh -c "cat key.json | jq
 gke/destroy/certifiate-manager-secret:
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
 	@gcloud iam service-accounts keys delete $(KEY_ID) --quiet \
-		--iam-account $(GCP_CLOUD_DNS_SERVICE_ACCOUNT) || \
+		--iam-account $(GCP_SERVICE_ACCOUNT) || \
 		echo "Could not remove key from IAM account."
 else
 	@echo "Certificate Manager is Disabled"
@@ -302,7 +294,6 @@ gke/create/resources: \
 ## Create Cluster
 gke/create/all: \
 	gke/create/service-account \
-	gke/create/certificate-manager-sa \
 	gke/create/resources
 	@echo "GKE cluster created"
 	@exit 0
@@ -311,8 +302,8 @@ gke/create/all: \
 gke/destroy/all: \
 	gke/destroy/node-pools \
 	gke/destroy/cluster \
-	gke/destroy/service-account \
 	gke/destroy/certifiate-manager-secret \
+	gke/destroy/service-account \
 	gke/destroy/pds
 	@echo "GKE cluster destroyed"
 	@exit 0
