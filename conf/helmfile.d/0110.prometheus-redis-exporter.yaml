@@ -123,6 +123,12 @@ releases:
         configmap: prometheus-redis-exporter-script
         keyname: script
 
+      service:
+        annotations:
+          prometheus.io/path: "/metrics"
+          prometheus.io/port: "9121"
+          prometheus.io/scrape: "true"
+
       annotations:
         prometheus.io/path: "/metrics"
         prometheus.io/port: "9121"
