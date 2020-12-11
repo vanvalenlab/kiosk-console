@@ -15,7 +15,7 @@ for filename in /conf/helmfile.d/*.yaml; do
 
       # If we still have retries, sleep for a bit and retry
       # Otherwise, add deployment to list of failures
-      if [[ $j+1 -lt $retries ]]; then
+      if [ $(($i+1)) -lt $retries ]; then
         ((time = $base_time * ($i + 1)))
         echo "Something went wrong while deploying ${name}. Retrying in ${time} seconds."
         sleep $time
