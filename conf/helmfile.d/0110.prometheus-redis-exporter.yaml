@@ -123,9 +123,9 @@ releases:
         configmap: prometheus-redis-exporter-script
         keyname: script
 
-        annotations:
-          prometheus.io/path: "/metrics"
-          prometheus.io/port: "9121"
-          prometheus.io/scrape: "true"
+      annotations:
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "9121"
+        prometheus.io/scrape: "true"
 
-        redisAddress: redis://redis.deepcell:6379
+      redisAddress: redis://redis.deepcell:6379
