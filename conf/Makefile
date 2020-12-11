@@ -8,7 +8,6 @@ include tasks/Makefile.*
 ## Create cluster
 create: \
   $(CLOUD_PROVIDER)/create/all \
-  kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
   kubectl/display/ip
 	@kubens deepcell
@@ -34,7 +33,6 @@ test/unit:
 ## Create test cluster
 test/create: \
   $(CLOUD_PROVIDER)/test/create/all \
-  kubectl/create/prometheus-redis-exporter-script \
   helmfile/create/all \
   kubectl/display/ip
 	@kubens deepcell

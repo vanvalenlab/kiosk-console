@@ -11,26 +11,121 @@ repositories:
   # Stable repo of official helm charts
   - name: stable
     url: https://charts.helm.sh/stable
+  # Kubernetes incubator repo of helm charts
+  - name: incubator
+    url: https://charts.helm.sh/incubator
 
 releases:
-  - name: prometheus-redis-exporter
-    labels:
-      chart: prometheus-redis-exporter
-      component: monitoring
-      namespace: monitoring
-    chart: stable/prometheus-redis-exporter
-    version: 3.5.0
-    namespace: monitoring
-    values:
-      - script:
-          configmap: prometheus-redis-exporter-script
-          keyname: script
 
-        service:
-          annotations:
-            prometheus.io/path: "/metrics"
-            prometheus.io/port: "9121"
-            prometheus.io/scrape: "true"
+################################################################################
+## Exporter Script ConfigMap ###################################################
+################################################################################
+
+#
+# ConfigMap for the custom script
+- name: prometheus-redis-exporter-script
+  namespace: monitoring
+  chart: incubator/raw
+  wait: true
+  timeout: 180
+  atomic: true
+  cleanupOnFail: true
+  disableValidation: true
+  values:
+    - resources:
+
+      - apiVersion: v1
+        kind: ConfigMap
+        metadata:
+          name: prometheus-redis-exporter-script
+        data:
+          script: |
+            -- Based on https://github.com/soveran/rediscan.lua by GitHub user Soveran.
+
+            local function get_queue_count(queue)
+              -- Find number of keys in the queue
+              local queue_size = redis.call("LLEN", queue)
+
+              -- Get all processing queues
+              local queue_regex = "processing-" .. queue .. ":*"
+
+              local count = 0
+
+              local cursor = "0"
+              local done = false
+
+              repeat
+
+                local result = redis.call("SCAN", cursor, "MATCH", queue_regex, "COUNT", 1000)
+                cursor = result[1]
+
+                for i, key in ipairs(result[2]) do
+                  -- How many keys are in each queue (should be 1)
+                  local keys_in_queue = redis.call("LLEN", key)
+                  count = count + keys_in_queue
+                end
+
+                if cursor == "0" then
+                  done = true
+                end
+
+              until done
+
+              return count + queue_size
+            end
+
+            -- Final table to output
+            local results = {}
+
+            -- All Queues to Monitor:
+            local queues = {}
+
+            queues[#queues+1] = "segmentation"
+            queues[#queues+1] = "tracking"
+
+            for _,queue in ipairs(queues) do
+              local zip_queue = queue .. "-zip"
+
+              local queue_count = get_queue_count(queue)
+              local zip_queue_count = get_queue_count(zip_queue)
+
+              table.insert(results, queue)
+              table.insert(results, tostring(queue_count))
+
+              table.insert(results, zip_queue)
+              table.insert(results, tostring(zip_queue_count))
+
+            end
+
+            return results
+
+
+################################################################################
+## Prometheus Redis Exporter ###################################################
+################################################################################
+
+#
+# References:
+#   - https://github.com/helm/charts/blob/master/stable/prometheus-redis-exporter/values.yaml
+#
+- name: prometheus-redis-exporter
+  chart: stable/prometheus-redis-exporter
+  namespace: monitoring
+  labels:
+    chart: prometheus-redis-exporter
+    component: monitoring
+    namespace: monitoring
+  needs:
+    - monitoring/prometheus-redis-exporter-script
+  version: 3.5.0
+  wait: true
+  timeout: 120
+  atomic: true
+  cleanupOnFail: true
+  values:
+    - script:
+        configmap: prometheus-redis-exporter-script
+        keyname: script
 
         annotations:
           prometheus.io/path: "/metrics"

@@ -202,13 +202,13 @@ For example, the ``segmentation_consumer_key_ratio`` in |/conf/helmfile.d/0600.p
 
 To effectively scale your new consumer, some small edits will be needed in the following files:
 
-* |/conf/addons/redis-exporter-script.yaml|
+* |/conf/helmfile.d/0110.prometheus-redis-exporter.yaml|
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
 * ``/conf/helmfile.d/02##.custom-consumer.yaml``
 
-1. |/conf/addons/redis-exporter-script.yaml|
+1. |conf/helmfile.d/0110.prometheus-redis-exporter.yaml|
 
-   Within  ``data.script`` modify the section ``All Queues to Monitor`` to include the new queue (:data:`queue_name`).
+   Within the ``data.script`` section of the ``prometheus-redis-exporter-script`` ConfigMap, modify the section ``All Queues to Monitor`` to include the new queue (:data:`queue_name`).
 
    .. code-block:: lua
 
@@ -278,9 +278,9 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
     <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0600.prometheus-operator.yaml">/conf/helmfile.d/0600.prometheus-operator.yaml</a></tt>
 
-.. |/conf/addons/redis-exporter-script.yaml| raw:: html
+.. |/conf/helmfile.d/0110.prometheus-redis-exporter.yaml| raw:: html
 
-    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/addons/redis-exporter-script.yaml">/conf/addons/redis-exporter-script.yaml</a></tt>
+    <tt><a href="https://github.com/vanvalenlab/kiosk-console/blob/master/conf/helmfile.d/0110.prometheus-redis-exporter.yaml">/conf/helmfile.d/0110.prometheus-redis-exporter.yaml</a></tt>
 
 .. |/conf/helmfile.d/0230.redis-consumer.yaml| raw:: html
 
