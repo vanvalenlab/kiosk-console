@@ -18,9 +18,13 @@ for filename in /conf/helmfile.d/*.yaml; do
       if [ $(($i+1)) -lt $retries ]; then
         ((time = $base_time * ($i + 1)))
         echo "Something went wrong while deploying ${name}. Retrying in ${time} seconds."
+        echo " "
         sleep $time
       else
         failures+=($name)
+        echo " "
+        echo "Failed to deploy ${name}!"
+        echo " "
       fi
 
     done
