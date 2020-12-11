@@ -206,7 +206,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
 * |/conf/helmfile.d/0600.prometheus-operator.yaml|
 * ``/conf/helmfile.d/02##.custom-consumer.yaml``
 
-1. |conf/helmfile.d/0110.prometheus-redis-exporter.yaml|
+1. |/conf/helmfile.d/0110.prometheus-redis-exporter.yaml|
 
    Within the ``data.script`` section of the ``prometheus-redis-exporter-script`` ConfigMap, modify the section ``All Queues to Monitor`` to include the new queue (:data:`queue_name`).
 
