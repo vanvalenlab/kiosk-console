@@ -28,7 +28,7 @@ for filename in /conf/helmfile.d/*.yaml; do
 done
 
 # Log all the failed deployments
-if [[ ${#failures[@]} -gt 0 ]]; then
+if [ ${#failures[@]} -gt 0 ]; then
   echo ""
   echo "Not all deployments successfully deployed!"
   echo "Please run the following commands to re-deploy failures:"
