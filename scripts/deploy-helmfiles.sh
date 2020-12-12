@@ -35,7 +35,7 @@ done
 if [ ${#failures[@]} -gt 0 ]; then
   echo ""
   echo "Not all deployments successfully deployed!"
-  echo "Please run the following commands to re-deploy failures:"
+  echo "Please run the following commands in the Shell to re-deploy failures:"
   echo ""
   for failure in ${failures[@]}; do
     echo "    helmfile -l name=${failure} sync"
