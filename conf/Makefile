@@ -10,7 +10,7 @@ create: \
   $(CLOUD_PROVIDER)/create/all \
   helmfile/create/all \
   kubectl/display/ip
-	@kubens deepcell
+	@kubens deepcell 1>/dev/null
 	@echo "DeepCell Kiosk has been created successfully."
 
 ## Destroy cluster
