@@ -38,14 +38,11 @@ kubectl/display/ip:
 	@echo " "
 	@echo export CLUSTER_ADDRESS=${IP_VAR} > ./cluster_address
 
-kubectl/destroy/pvc: NAMESPACES = $(shell sh -c "kubectl get ns -o json | jq '.items[].metadata.name' -r")
+## Destroy persistent volume claims
 kubectl/destroy/pvc:
 	@echo " "
 	@echo "Destroying all Persistent Volume Claims."
-	@for ns in $(NAMESPACES); do \
-		kubectl get pvc -n $$ns -o json | jq '.items[].metadata.name' -r | xargs kubectl describe pvc -n $$ns \
-			|| echo "No PVCs to delete in namespace $(ns)." ; \
-	done
+	@kubectl delete pvc --all -A
 	@echo " "
 
 ## Tear down prometheus-operator and it's CRDs
