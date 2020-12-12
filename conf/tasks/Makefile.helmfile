@@ -26,4 +26,3 @@ helmfile/destroy/all:
 	@echo "Helmfile destruction finished."
 	@echo " "
 	@echo " "
-	
