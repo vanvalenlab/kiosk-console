@@ -1,8 +1,3 @@
-helmDefaults:
-  wait: true
-  timeout: 600
-  force: true
-
 repositories:
   # Stable repo of official helm charts
   - name: stable
@@ -11,7 +6,7 @@ repositories:
 releases:
 
 ################################################################################
-## prometheus-adapter                                                         ##
+## Prometheus Adapter                                                         ##
 ## exports data for the cutom metrics API                                     ##
 ################################################################################
 
@@ -32,6 +27,9 @@ releases:
   chart: stable/prometheus-adapter
   version: 2.5.0
   wait: true
+  timeout: 600
+  atomic: true
+  cleanupOnFail: true
   values:
     - logLevel: 4
 

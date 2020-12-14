@@ -10,15 +10,15 @@ create: \
   $(CLOUD_PROVIDER)/create/all \
   helmfile/create/all \
   kubectl/display/ip
-	@kubens deepcell
-	@echo "DeepCell Kiosk has been created successfully."
+	@kubens deepcell 1>/dev/null
+	@echo "DeepCell Kiosk has been created."
 
 ## Destroy cluster
 destroy: \
   helmfile/destroy/all \
   kubectl/destroy/pvc \
   $(CLOUD_PROVIDER)/destroy/all
-	@echo "DeepCell Kiosk has been destroyed successfully."
+	@echo "DeepCell Kiosk has been destroyed."
 
 # Unit tests
 test/unit:

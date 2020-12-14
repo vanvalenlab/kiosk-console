@@ -1,58 +1,61 @@
-helmDefaults:
-  wait: true
-  timeout: 600
-  force: true
-
-################################################################################
-## Redis Data Store ############################################################
-################################################################################
-
 repositories:
   - name: bitnami
     url: https://charts.bitnami.com/bitnami
 
 releases:
-  # Redis
-  - name: redis
-    labels:
-      chart: redis
-      component: database
-    chart: bitnami/redis
-    version: 10.5.7
-    namespace: deepcell
-    values:
-      - resources:
-          requests:
-            cpu: 200m
-            memory: 256Mi
 
-        usePassword: false
+################################################################################
+## Redis Data Store ############################################################
+################################################################################
 
-        cluster:
-          enabled: true
-          slaveCount: 3
+#
+# References:
+#   - https://github.com/bitnami/charts/blob/master/bitnami/redis/values.yaml
+#
+- name: redis
+  labels:
+    chart: redis
+    component: database
+  chart: bitnami/redis
+  version: 10.5.7
+  namespace: deepcell
+  wait: true
+  atomic: true
+  timeout: 600
+  cleanupOnFail: true
+  values:
+    - resources:
+        requests:
+          cpu: 200m
+          memory: 256Mi
 
-        sentinel:
-          enabled: true
+      usePassword: false
 
-        configmap: |-
-          # Enable AOF https://redis.io/topics/persistence#append-only-file
-          appendonly yes
-          # Disable RDB persistence, AOF persistence already enabled.
-          save ""
-          # Prevent fsync() from being called in the main process while a
-          # BGSAVE or BGREWRITEAOF is in progress.
-          # If you have latency problems turn this to "yes". Otherwise leave it as
-          # "no" that is the safest pick from the point of view of durability.
-          no-appendfsync-on-rewrite yes
+      cluster:
+        enabled: true
+        slaveCount: 3
 
-        sysctlImage:
-          enabled: true
-          mountHostSys: true
-          command:
-            - /bin/sh
-            - -c
-            - |-
-              install_packages systemd procps
-              sysctl -w net.core.somaxconn=10000
-              echo never > /host-sys/kernel/mm/transparent_hugepage/enabled
+      sentinel:
+        enabled: true
+
+      configmap: |-
+        # Enable AOF https://redis.io/topics/persistence#append-only-file
+        appendonly yes
+        # Disable RDB persistence, AOF persistence already enabled.
+        save ""
+        # Prevent fsync() from being called in the main process while a
+        # BGSAVE or BGREWRITEAOF is in progress.
+        # If you have latency problems turn this to "yes". Otherwise leave it as
+        # "no" that is the safest pick from the point of view of durability.
+        no-appendfsync-on-rewrite yes
+
+      sysctlImage:
+        enabled: true
+        mountHostSys: true
+        command:
+          - /bin/sh
+          - -c
+          - |-
+            install_packages systemd procps
+            sysctl -w net.core.somaxconn=10000
+            echo never > /host-sys/kernel/mm/transparent_hugepage/enabled

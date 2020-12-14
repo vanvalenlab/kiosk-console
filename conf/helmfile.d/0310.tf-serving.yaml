@@ -1,8 +1,3 @@
-helmDefaults:
-  wait: true
-  timeout: 600
-  force: true
-
 releases:
 
 ################################################################################
@@ -11,7 +6,7 @@ releases:
 
 #
 # References:
-#   - [web address of Helm chart's YAML file]
+#   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/tf-serving/values.yaml
 #
 - name: tf-serving
   namespace: deepcell
@@ -23,6 +18,10 @@ releases:
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/tf-serving'
   version: 0.4.0
+  wait: true
+  timeout: 300
+  atomic: true
+  cleanupOnFail: true
   values:
     - replicas: 0
 

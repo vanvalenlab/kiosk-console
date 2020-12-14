@@ -1,17 +1,12 @@
-helmDefaults:
-  wait: true
-  timeout: 600
-  force: true
-
 releases:
 
 ################################################################################
-## Redis-Consumer ##############################################################
+## Segmentation Consumer #######################################################
 ################################################################################
 
 #
 # References:
-#   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
+#   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
 - name: segmentation-consumer
   namespace: deepcell
@@ -23,6 +18,10 @@ releases:
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
   version: 0.2.0
+  wait: true
+  timeout: 300
+  atomic: true
+  cleanupOnFail: true
   values:
     - replicas: 1
 
