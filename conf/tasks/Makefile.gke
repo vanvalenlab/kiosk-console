@@ -292,7 +292,6 @@ gke/create/all: \
 
 ## Destroy Cluster
 gke/destroy/all: \
-	gke/destroy/node-pools \
 	gke/destroy/cluster \
 	gke/destroy/certifiate-manager-secret \
 	gke/destroy/service-account
@@ -320,7 +319,6 @@ gke/test/create/all: \
 
 ## Destroy Cluster
 gke/test/destroy/all: \
-	gke/destroy/node-pools \
 	gke/destroy/cluster
 	@echo "GKE cluster destroyed"
 	@exit 0
