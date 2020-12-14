@@ -16,6 +16,7 @@ create: \
 ## Destroy cluster
 destroy: \
   helmfile/destroy/all \
+  kubectl/destroy/pvc \
   $(CLOUD_PROVIDER)/destroy/all
 	@echo "DeepCell Kiosk has been destroyed successfully."
 
@@ -41,6 +42,7 @@ test/create: \
 ## Destroy cluster
 test/destroy: \
   helmfile/destroy/all \
+  kubectl/destroy/pvc \
   $(CLOUD_PROVIDER)/test/destroy/all
 	@echo "Cluster destroyed"
 

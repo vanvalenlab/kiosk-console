@@ -33,6 +33,13 @@ kubectl/display/ip:
 	@echo " "
 	@echo export CLUSTER_ADDRESS=${IP_VAR} > ./cluster_address
 
+## Destroy persistent volume claims
+kubectl/destroy/pvc:
+	@echo " "
+	@echo "Destroying all Persistent Volume Claims."
+	@kubectl delete pvc --all -A
+	@echo " "
+
 ## Tear down prometheus-operator and it's CRDs
 kubectl/destroy/prometheus/operator:
 	@echo "Deleting prometheus-operator..."
