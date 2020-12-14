@@ -9,7 +9,6 @@ helmfile/create/all:
 		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
 	fi
 	@deploy-helmfiles.sh
-	@echo "Helmfile deployment finished."
 	@echo " "
 	@echo " "
 

@@ -34,11 +34,15 @@ done
 # Log all the failed deployments
 if [ ${#failures[@]} -gt 0 ]; then
   echo ""
-  echo "Not all deployments successfully deployed!"
-  echo "Please run the following commands in the Shell to re-deploy failures:"
+  echo "Some deployments failed!"
+  echo "Please re-deploy the failures by running the following commands from the Shell:"
   echo ""
   for failure in ${failures[@]}; do
     echo "    helmfile -l name=${failure} sync"
   done
   echo ""
+  echo "Helmfile destruction finished with errors."
+else
+  echo ""
+  echo "Helmfile destruction finished."
 fi
