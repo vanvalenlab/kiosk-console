@@ -41,8 +41,8 @@ if [ ${#failures[@]} -gt 0 ]; then
     echo "    helmfile -l name=${failure} sync"
   done
   echo ""
-  echo "Helmfile destruction finished with errors."
+  echo "Helmfile deployment finished with errors."
 else
   echo ""
-  echo "Helmfile destruction finished."
+  echo "Helmfile deployment finished."
 fi
