@@ -39,16 +39,8 @@ releases:
 
       service:
         type: "ClusterIP"
-
         httpIngressEnabled: true
-        internalHttpPort: 8080
-        httpTargetPort: 8080
-        externalHttpPort: 8080
-
         httpsIngressEnabled: true
-        internalHttpsPort: 8443
-        httpsTargetPort: 8443
-        externalHttpsPort: 8443
 
       ingress:
         enabled: true
