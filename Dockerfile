@@ -54,6 +54,8 @@ ENV CONSUMER_MACHINE_TYPE="n1-standard-2"
 # Deployment config
 ENV CLOUD_PROVIDER=""
 ENV ELK_DEPLOYMENT_TOGGLE=""
+ENV CERTIFICATE_MANAGER_ENABLED=""
+ENV CERTIFICATE_MANAGER_CLUSTER_ISSUER="letsencrypt-staging"
 
 # Filesystem entry for tfstate
 RUN s3 fstab '${KOPS_STATE_STORE}' '/' '/s3'

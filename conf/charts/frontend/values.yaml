@@ -6,7 +6,7 @@ replicas: 1
 
 image:
   repository: vanvalenlab/kiosk-frontend
-  tag: latest
+  tag: 0.6.0
   pullPolicy: IfNotPresent
 
 ingress:
@@ -17,6 +17,12 @@ ingress:
     #nginx.ingress.kubernetes.io/rewrite-target: /
     #nginx.ingress.kubernetes.io/ssl-redirect: "false"
     #nginx.ingress.kubernetes.io/proxy-body-size: "25m"
+  hosts: []
+  # - example.com
+  tls: []
+  #  - hosts:
+  #      - example.com
+  #    secretName: tls-cert
 
 service:
   type: "ClusterIP"
@@ -31,6 +37,12 @@ service:
   httpsTargetPort: 8443
   externalHttpsPort: 8443
 
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 2
+  metrics: {}
+
 resources: {}
 
 env:
@@ -40,11 +52,9 @@ env:
   REDIS_PORT: "6379"
   MODEL_PREFIX: "models/"
   AWS_REGION: "us-east-1"
-  CLOUD_PROVIDER: "aws"
 
 secrets:
-  AWS_ACCESS_KEY_ID: "change_me"
-  AWS_SECRET_ACCESS_KEY: "change_me"
-  AWS_S3_BUCKET: "change_me"
-  GCLOUD_STORAGE_BUCKET: "change_me"
-  GCLOUD_PROJECT_ID: "change_me"
+  AWS_ACCESS_KEY_ID: ""
+  AWS_SECRET_ACCESS_KEY: ""
+  GCLOUD_PROJECT_ID: ""
+  STORAGE_BUCKET: "s3://example-bucket"

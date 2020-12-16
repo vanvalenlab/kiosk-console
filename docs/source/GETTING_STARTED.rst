@@ -55,6 +55,7 @@ One of the enabling technologies the DeepCell Kiosk utilizes is `Docker <https:/
 If you plan on maintaining the DeepCell Kiosk as a persistent tool, we recommend using the jumpbox workflow, which allows you to manage the system from a Google Cloud VM. This prevents unexpected or accidental computer shutdowns that occur locally from interfering with your ability to manage the Kiosk.
 
 .. _DOCKER_INSTALLATION:
+
 **Select the docker installation that is best for you:**
 
    * `Local Docker Installation - Windows`_
@@ -113,7 +114,7 @@ You are now ready to start the Kiosk!
 
 .. code-block:: bash
 
-    docker run -e DOCKER_TAG=1.3.0 vanvalenlab/kiosk-console:1.3.0 | sudo bash
+    docker run -e DOCKER_TAG=1.4.0 vanvalenlab/kiosk-console:1.4.0 | sudo bash
 
 .. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings. This will require you to enter your password.
 
@@ -136,6 +137,11 @@ DeepCell Kiosk Usage
 * To complete cluster configuration, you have the option to choose between "Default 1 GPU", "Default 4 GPU", and "Advanced" configurations. The "Default 1 GPU" configuration option sets up a small cluster suitable for users looking to explore a sandbox. The "Default 4 GPU" option configures a cluster with 4 GPUs and nodes with more memory to handle larger inference jobs. The "Advanced" option allows users to configure each setting individually.
 
 * Once cluster configuration is complete, you will return to the home screen. There you can select the "Create" option to trigger cluster creation based on your configured values. This may take up to 10 minutes. Following successful creation, you will see a confirmation page.
+
+.. list-table::
+
+    * - Cluster Created Successfully
+    * - .. image:: ../images/Kiosk-Complete-Blur.png
 
 * Find the cluster's web address by choosing the ``View`` option form the Kiosk's main menu. (Depending on your chosen cloud provider and the cloud provider's settings, your cluster's address might be either a raw IP address, e.g., ``123.456.789.012``, or a URL, e.g., ``deepcellkiosk.cloudprovider.com``.)
 

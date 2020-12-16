@@ -1,9 +1,7 @@
-helmDefaults:
-  args:
-    - "--wait"
-    - "--timeout=600"
-    - "--force"
-    - "--reset-values"
+repositories:
+  # Stable repo of official helm charts
+  - name: stable
+    url: https://charts.helm.sh/stable
 
 releases:
 
@@ -13,91 +11,39 @@ releases:
 
 #
 # References:
-#   - [web address of Helm chart's YAML file]
+#   - https://github.com/helm/charts/tree/master/stable/logstash
 #
-- name: "logstash"
-  namespace: "elk"
+- name: logstash
+  namespace: elk
   labels:
-    chart: "logstash"
-    component: "logstash"
-    namespace: "elk"
-    vendor: "elastic.co"
-    default: "true"
-  chart: 'stable/logstash'
-  version: "1.5.2"
+    chart: logstash
+    component: logstash
+    namespace: elk
+    vendor: elastic.co
+    default: true
+  chart: stable/logstash
+  version: 2.4.3
+  wait: true
+  timeout: 300
+  atomic: true
+  cleanupOnFail: true
   values:
-    - appVersion: "6.6.0"
-
-      image:
-        repository: docker.elastic.co/logstash/logstash-oss
-        tag: 6.6.1
-        pullPolicy: IfNotPresent
-        ## Add secrets manually via kubectl on kubernetes cluster and reference here
-        #  pullSecrets:
-        #    - name: "myKubernetesSecret"
+    - replicaCount: 4
 
       service:
         type: ClusterIP
-        # clusterIP: None
-        # nodePort:
-        # Set this to local, to preserve client source ip.  Default stripes out the source ip
-        # externalTrafficPolicy: Local
-        annotations: {}
-          ## AWS example for use with LoadBalancer service type.
-          # external-dns.alpha.kubernetes.io/hostname: logstash.cluster.local
-          # service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-          # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
         ports:
-          # syslog-udp:
-          #   port: 1514
-          #   targetPort: syslog-udp
-          #   protocol: UDP
-          # syslog-tcp:
-          #   port: 1514
-          #   targetPort: syslog-tcp
-          #   protocol: TCP
           beats:
             port: 5044
             targetPort: beats
             protocol: TCP
-          # http:
-          #  port: 8080
-          #  targetPort: http
-          #  protocol: TCP
-          # loadBalancerIP: 10.0.0.1
 
       ports:
-        # - name: syslog-udp
-        #   containerPort: 1514
-        #   protocol: UDP
-        # - name: syslog-tcp
-        #   containerPort: 1514
-        #   protocol: TCP
         - name: beats
           containerPort: 5044
           protocol: TCP
-        # - name: http
-        #   containerPort: 8080
-        #   protocol: TCP
-
-      ingress:
-        enabled: false
-        annotations: {}
-          # kubernetes.io/ingress.class: nginx
-          # kubernetes.io/tls-acme: "true"
-        path: /
-        hosts:
-          - logstash.cluster.local
-        tls: []
-        #  - secretName: logstash-tls
-        #    hosts:
-        #      - logstash.cluster.local
 
       resources:
-        # We usually recommend not to specify default resources and to leave this as a conscious
-        # choice for the user. This also increases chances charts run on environments with little
-        # resources, such as Minikube. If you do want to specify resources, uncomment the following
-        # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
         # limits:
         #  cpu: 100m
         #  memory: 128Mi
@@ -112,8 +58,6 @@ releases:
       - key: logstash
         operator: Exists
         effect: NoSchedule
-
-      replicaCount: 4
 
       livenessProbe:
         httpGet:
@@ -148,44 +92,9 @@ releases:
         accessMode: ReadWriteOnce
         size: 2Gi
 
-      volumeMounts:
-        - name: data
-          mountPath: /usr/share/logstash/data
-        - name: patterns
-          mountPath: /usr/share/logstash/patterns
-        - name: pipeline
-          mountPath: /usr/share/logstash/pipeline
-
       exporter:
         logstash:
           enabled: false
-          image:
-            repository: bonniernews/logstash_exporter
-            tag: v0.1.2
-            pullPolicy: IfNotPresent
-          env: {}
-          resources: {}
-          path: /metrics
-          port: 9198
-          target:
-            port: 9600
-            path: /metrics
-          livenessProbe:
-            httpGet:
-              path: /metrics
-              port: ls-exporter
-            periodSeconds: 15
-            timeoutSeconds: 60
-            failureThreshold: 8
-            successThreshold: 1
-          readinessProbe:
-            httpGet:
-              path: /metrics
-              port: ls-exporter
-            periodSeconds: 15
-            timeoutSeconds: 60
-            failureThreshold: 8
-            successThreshold: 1
 
       elasticsearch:
         host: elasticsearch-client

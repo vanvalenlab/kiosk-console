@@ -186,14 +186,6 @@ gke/destroy/node-pools:
 	@echo " "
 	@echo " "
 
-## Destroy Orphaned GKE persistent disks
-gke/destroy/pds:
-	@echo "Destroying orphaned persistent disks."
-	@gke-pd-destruction.sh
-	@echo "Orphaned persistent disks destroyed."
-	@echo " "
-	@echo " "
-
 # https://cloud.google.com/storage/docs/access-control/iam-roles
 ## Create Service Account used by deepcell
 gke/create/service-account:
@@ -201,6 +193,12 @@ gke/create/service-account:
 	@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
 	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+	# @gcloud iam service-accounts add-iam-policy-binding $(GCP_SERVICE_ACCOUNT) \
+	# 	--role roles/iam.workloadIdentityUser \
+	# 	--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]"
+endif
 	@echo "GKE service account creation complete."
 	@echo " "
 	@echo " "
@@ -209,16 +207,41 @@ gke/create/service-account:
 gke/destroy/service-account:
 	@echo "Destroying GKE service-account..."
 	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+endif
 	@-gcloud iam service-accounts delete $(GCP_SERVICE_ACCOUNT) --quiet
 	@echo "GKE service-account destruction finished."
 	@echo " "
 	@echo " "
 
+## Create Certificate Manager Secret
+gke/create/certificate-manager-secret:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud iam service-accounts keys create key.json \
+		--iam-account $(GCP_SERVICE_ACCOUNT)
+	-@kubectl create namespace cert-manager
+	@kubectl -n cert-manager create secret generic clouddns-dns01-solver-svc-acct --from-file=key.json
+else
+	@echo "Certificate Manager is Disabled"
+endif
+
+## Remove Certifiate Manager Secret Key
+gke/destroy/certifiate-manager-secret: KEY_ID = $(shell sh -c "cat key.json | jq '.private_key_id' -r" )
+gke/destroy/certifiate-manager-secret:
+ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
+	@gcloud iam service-accounts keys delete $(KEY_ID) --quiet \
+		--iam-account $(GCP_SERVICE_ACCOUNT) || \
+		echo "Could not remove key from IAM account."
+else
+	@echo "Certificate Manager is Disabled"
+endif
+
 ## Create bucket used by deepcell
 gke/create/bucket:
-	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_CORE_PROJECT}..."
+	@echo "Creating Google Cloud Storage Bucket ${CLOUDSDK_BUCKET}..."
 	@gsutil mb -p $(CLOUDSDK_CORE_PROJECT) gs://$(CLOUDSDK_BUCKET) \
-		|| echo "Bucket ${CLOUDSDK_CODE_PROJECT} already exists. No need to create that bucket."
+		|| echo "Bucket ${CLOUDSDK_BUCKET} already exists. No need to create that bucket."
 	@-gsutil acl ch -u $(GCP_SERVICE_ACCOUNT):O gs://$(CLOUDSDK_BUCKET)
 	@echo "Google Cloud Storage Bucket creation finished."
 	@echo " "
@@ -254,6 +277,7 @@ gke/deploy/nvidia:
 ## Create cluster resources, after authentication
 gke/create/resources: \
 	gke/create/cluster \
+	gke/create/certificate-manager-secret \
 	gke/create/node-pools \
 	gke/create/elk-node-pools \
 	gke/create/bucket \
@@ -268,13 +292,11 @@ gke/create/all: \
 
 ## Destroy Cluster
 gke/destroy/all: \
-	gke/destroy/node-pools \
 	gke/destroy/cluster \
-	gke/destroy/service-account \
-	gke/destroy/pds
+	gke/destroy/certifiate-manager-secret \
+	gke/destroy/service-account
 	@echo "GKE cluster destroyed"
 	@exit 0
-
 
 
 # https://cloud.google.com/storage/docs/access-control/iam-roles
@@ -297,8 +319,7 @@ gke/test/create/all: \
 
 ## Destroy Cluster
 gke/test/destroy/all: \
-	gke/destroy/node-pools \
 	gke/destroy/cluster \
-	gke/destroy/pds
+	gke/destroy/certifiate-manager-secret
 	@echo "GKE cluster destroyed"
 	@exit 0

@@ -8,8 +8,7 @@ helmfile/create/all:
 	@if [ -n "${ELK_DEPLOYMENT_TOGGLE}" ]; then\
 		cp /conf/ELK_helmfiles/* /conf/helmfile.d;\
 	fi
-	@gke-helmfile-deployment.sh
-	@echo "Helmfile deployment finished."
+	@deploy-helmfiles.sh
 	@echo " "
 	@echo " "
 
@@ -22,7 +21,7 @@ helmfile/create/elk:
 helmfile/destroy/all:
 	@echo " "
 	@echo "Destroying all Kubernetes resources using helmfiles..."
-	@helm ls --all --short | xargs helm delete
+	-@helm ls -a -A | awk 'NR > 1 { print $$2, $$1 }' | sort -r | xargs -n2 helm delete -n $0 $1
 	@echo "Helmfile destruction finished."
 	@echo " "
 	@echo " "

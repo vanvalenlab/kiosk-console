@@ -1,7 +1,7 @@
-helmDefaults:
-  wait: true
-  timeout: 600
-  force: true
+repositories:
+  # Stable repo of official helm charts
+  - name: stable
+    url: https://charts.helm.sh/stable
 
 releases:
 
@@ -11,7 +11,7 @@ releases:
 
 #
 # References:
-#   - https://github.com/helm/charts/stable/openvpn
+#   - https://github.com/helm/charts/stable/openvpn/values.yaml
 #
 - name: openvpn
   namespace: kube-system
@@ -22,4 +22,8 @@ releases:
     vendor: openvpn
     default: true
   chart: stable/openvpn
-  version: 4.2.1
+  version: 4.2.3
+  wait: true
+  timeout: 600
+  atomic: true
+  cleanupOnFail: true

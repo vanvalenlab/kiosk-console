@@ -1,7 +1,7 @@
-helmDefaults:
-  wait: true
-  timeout: 600
-  force: true
+repositories:
+  # Stable repo of official helm charts
+  - name: stable
+    url: https://charts.helm.sh/stable
 
 releases:
 
@@ -25,96 +25,340 @@ releases:
     vendor: coreos
     default: true
   chart: stable/prometheus-operator
-  version: 8.12.3
+  version: 9.3.1
   wait: true
+  timeout: 600
+  atomic: true
+  cleanupOnFail: true
   values:
     # A list of all possible values can be found:
     # https://github.com/helm/charts/blob/master/stable/prometheus-operator/values.yaml
-    - additionalPrometheusRulesMap:
+    - additionalPrometheusRules:
       - name: custom-prometheus-rules
         groups:
-          - name: tf-serving-metrics
-            rules:
-            - record: tf_serving_gpu_usage
-              expr: |-
-                avg(
-                  container_accelerator_duty_cycle{container_name="tf-serving"}
+        # alerts
+        - name: prometheus-alerts
+          rules:
+          - alert: PrometheusAllTargetsMissing
+            expr: count by (job) (up) == 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Prometheus all targets missing`}}
+          - alert: PrometheusTooManyRestarts
+            expr: changes(process_start_time_seconds{job=~"prometheus|pushgateway|alertmanager"}[15m]) > 2
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Prometheus job {{ $labels.job }} restarted {{ $value }} times`}}
+          - alert: PrometheusRuleEvaluationSlow
+            expr: prometheus_rule_group_last_duration_seconds > prometheus_rule_group_interval_seconds
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Prometheus rule evaluation took more time than the scheduled interval. I indicates a slower storage backend access or too complex query. (rule_group {{ $labels.rule_group }})`}}
+          - alert: PrometheusNotificationsBacklog
+            expr: min_over_time(prometheus_notifications_queue_length[10m]) > 0
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`The Prometheus notification queue has not been empty for 10 minutes`}}
+          - alert: PrometheusNotConnectedToAlertmanager
+            expr: prometheus_notifications_alertmanagers_discovered < 1
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`{{ $labels.pod }} cannot connect the alertmanager (pod {{ $labels.pod }})`}}
+          - alert: PrometheusTemplateTextExpansionFailures
+            expr: increase(prometheus_template_text_expansion_failures_total[3m]) > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`{{ $labels.pod }} encountered {{ $value }} template text expansion failures`}}
+          - alert: PrometheusAlertmanagerNotificationFailing
+            expr: rate(alertmanager_notifications_failed_total[1m]) > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`{{ $labels.service}} is failing to send {{ $labels.integration }} notifications`}}
+        - name: redis-alerts
+          rules:
+          - alert: RedisDown
+            expr: redis_up == 0
+            for: 5m
+            labels:
+              severity: error
+            annotations:
+              summary: |-
+                {{`Redis is down (instance {{ $labels.instance }})`}}
+          - alert: RedisMissingMaster
+            expr: count(redis_instance_info{role="master"}) == 0
+            for: 5m
+            labels:
+              severity: error
+            annotations:
+              summary: |-
+                {{`Redis missing master`}}
+          - alert: RedisTooManyMasters
+            expr: count(redis_instance_info{role="master"}) > 1
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Redis has {{ $value }} masters.`}}
+          - alert: RedisDisconnectedSlaves
+            expr: count without (instance, job) (redis_connected_slaves) - sum without (instance, job) (redis_connected_slaves) - 1 > 1
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Redis has {{ $value }} disconnected slaves.`}}
+          # TODO: Flapping alert keeps going off, usually with values from 4 - 10.
+          # - alert: RedisClusterFlapping
+          #   expr: changes(redis_connected_slaves[5m]) > 3
+          #   for: 5m
+          #   labels:
+          #     severity: critical
+          #   annotations:
+          #     summary: |-
+          #       {{`Redis replica connection flapping. Redis slaves have connected to {{ $value }} times in last 5 minutes (instance {{ $labels.instance }})`}}
+          - alert: RedisTooManyConnections
+            expr: redis_connected_clients > 100
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Redis instance has too many ({{ $value }}) connections`}}
+          - alert: RedisRejectedConnections
+            expr: increase(redis_rejected_connections_total[1m]) > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Redis rejected {{ $value }} connections`}}
+        - name: kubernetes-alerts
+          rules:
+          - alert: KubernetesPodNotHealthy
+            expr: min_over_time(sum by (namespace, pod) (kube_pod_status_phase{phase=~"Pending|Unknown|Failed"})[1h:]) > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Kubernetes Pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has been unhealthy for more than an hour`}}
+          - alert: KubernetesPodCrashLooping
+            expr: rate(kube_pod_container_status_restarts_total[15m]) * 60 * 5 > 5
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Kubernetes pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is crash looping`}}
+          - alert: KubernetesPersistentvolumeError
+            expr: kube_persistentvolume_status_phase{phase=~"Failed|Pending",job="kube-state-metrics"} > 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Kubernetes PersistentVolume {{ $labels.persistentvolume }} in state {{ $labels.phase }}`}}
+          - alert: KubernetesNodeReady
+            expr: kube_node_status_condition{condition="Ready",status="true"} == 0
+            for: 5m
+            labels:
+              severity: critical
+            annotations:
+              summary: |-
+                {{`Kubernetes Node {{ $labels.node }} has condition {{ $labels.condition }}`}}
+        - name: host-alerts
+          rules:
+          - alert: HostOutOfMemory
+            expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Host out of memory for (pod {{ $labels.pod }}, instance {{ $labels.instance }})`}}
+          - alert: HostOomKillDetected
+            expr: increase(node_vmstat_oom_kill[5m]) > 0
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: |-
+                {{`Host OOM kill detected (pod {{ $labels.pod }}, instance {{ $labels.instance }})`}}
+        # recording rules
+        - name: tf-serving-metrics
+          rules:
+          - record: tf_serving_gpu_usage
+            expr: |-
+              avg(
+                container_accelerator_duty_cycle{container_name="tf-serving"}
+              ) or vector(0)
+            labels:
+              deployment: tf-serving
+              namespace: deepcell
+          - record: tf_serving_up
+            expr: |-
+              max(
+                clamp_max(
+                  kube_deployment_status_replicas_available{deployment="tf-serving"},
+                  1
                 ) or vector(0)
-              labels:
-                deployment: tf-serving
-                namespace: deepcell
-            - record: tf_serving_up
-              expr: |-
-                max(
-                  clamp_max(
-                    kube_deployment_status_replicas_available{deployment="tf-serving"},
-                    1
-                  ) or vector(0)
-                )
-              labels:
-                deployment: tf-serving
-                namespace: deepcell
-          - name: consumer-metrics
-            rules:
-            - record: consumers_per_gpu
-              expr: |-
-                kube_deployment_status_replicas_available{deployment=~".*-consumer"}
-                / on() group_left
-                max(
-                  kube_deployment_status_replicas_available{deployment="tf-serving"}
-                  or vector(1)
-                )
-              labels:
-                namespace: deepcell
-            - record: consumer_key_ratio
-              expr: |-
-                redis_script_values
-                / on(deployment)
-                kube_deployment_spec_replicas
-              labels:
-                namespace: deepcell
-            - record: segmentation_consumer_key_ratio
-              # COMPLICATED scaling metric that prevents too many consumers
-              # per GPU.  If too many consumers, scale down slightly.
-              # Structural outline follows:
-              # (
-              #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
-              #   +
-              #   .75 * target * is_too_many_consumers)
-              # ) * is_tf_up
-              expr: |-
+              )
+            labels:
+              deployment: tf-serving
+              namespace: deepcell
+        - name: consumer-metrics
+          rules:
+          - record: consumers_per_gpu
+            expr: |-
+              kube_deployment_status_replicas_available{deployment=~".*-consumer"}
+              / on() group_left
+              max(
+                kube_deployment_status_replicas_available{deployment="tf-serving"}
+                or vector(1)
+              )
+            labels:
+              namespace: deepcell
+          - record: consumer_key_ratio
+            expr: |-
+              redis_script_values
+              / on(deployment)
+              kube_deployment_spec_replicas
+            labels:
+              namespace: deepcell
+          - record: segmentation_consumer_key_ratio
+            # COMPLICATED scaling metric that prevents too many consumers
+            # per GPU.  If too many consumers, scale down slightly.
+            # Structural outline follows:
+            # (
+            #   min(1 - GPU, keys/consumers) * !is_too_many_consumers
+            #   +
+            #   .75 * target * is_too_many_consumers)
+            # ) * is_tf_up
+            expr: |-
+              (
                 (
-                  (
-                    min(
-                      1 - tf_serving_gpu_usage / 100
-                      < on(namespace)
+                  min(
+                    1 - tf_serving_gpu_usage / 100
+                    < on(namespace)
+                    consumer_key_ratio{deployment="segmentation-consumer"} / 100
+                    or
+                    clamp_max(
                       consumer_key_ratio{deployment="segmentation-consumer"} / 100
-                      or
-                      clamp_max(
-                        consumer_key_ratio{deployment="segmentation-consumer"} / 100
-                      , 1)
-                    ) *
-                    scalar(consumers_per_gpu{deployment="segmentation-consumer"} <= bool 150)
-                  ) + (
-                    scalar(consumers_per_gpu{deployment="segmentation-consumer"} > bool 150)
-                  ) * .75 * .15
-                ) * scalar(tf_serving_up > bool 0)
-              labels:
-                deployment: segmentation-consumer
-                namespace: deepcell
-            - record: segmentation_zip_consumer_key_ratio
-              expr: |-
-                consumer_key_ratio{deployment="segmentation-zip-consumer"}
-              labels:
-                deployment: zip-consumer
-                namespace: deepcell
-            - record: tracking_consumer_key_ratio
-              expr: |-
-                consumer_key_ratio{deployment="tracking-consumer"}
-                * on() tf_serving_up
-              labels:
-                deployment: tracking-consumer
-                namespace: deepcell
+                    , 1)
+                  ) *
+                  scalar(consumers_per_gpu{deployment="segmentation-consumer"} <= bool 150)
+                ) + (
+                  scalar(consumers_per_gpu{deployment="segmentation-consumer"} > bool 150)
+                ) * .75 * .15
+              ) * scalar(tf_serving_up > bool 0)
+            labels:
+              deployment: segmentation-consumer
+              namespace: deepcell
+          - record: segmentation_zip_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="segmentation-zip-consumer"}
+            labels:
+              deployment: zip-consumer
+              namespace: deepcell
+          - record: tracking_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="tracking-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: tracking-consumer
+              namespace: deepcell
+
+      ## Configuration for alertmanager
+      ## ref: https://prometheus.io/docs/alerting/alertmanager/
+      ##
+      alertmanager:
+        enabled: {{ env "ALERTMANAGER_INSTALLED" | default "true" }}
+        config:
+          global:
+            resolve_timeout: 5m
+          route:
+            group_by:
+              - 'alertname'
+              - 'namespace'
+            group_wait: 30s
+            group_interval: 5m
+            repeat_interval: 12h
+            receiver: 'general'
+            routes:
+            - match:
+                alertname: Watchdog
+              receiver: 'null'
+            - match:
+                # AggregatedAPIDown fires constantly for kube < 1.18
+                # https://github.com/helm/charts/issues/22278
+                alertname: AggregatedAPIDown
+              receiver: 'null'
+            - match:
+                # CPUThrottlingHigh is too sensitive, could block all INFO level instead.
+                # https://github.com/kubernetes-monitoring/kubernetes-mixin/issues/108
+                alertname: CPUThrottlingHigh
+              receiver: 'null'
+
+          receivers:
+          - name: 'null'
+          - name: 'general'
+            {{ if not (env "KUBE_PROMETHEUS_ALERT_MANAGER_SLACK_WEBHOOK_URL" | empty ) }}
+            slack_configs:
+            - api_url: '{{ env "KUBE_PROMETHEUS_ALERT_MANAGER_SLACK_WEBHOOK_URL" }}'
+              channel: '{{ env "KUBE_PROMETHEUS_ALERT_MANAGER_SLACK_CHANNEL" | default "alerts" }}'
+              send_resolved: true
+              username: '{{`{{ template "slack.default.username" . }}`}}'
+              color: '{{`{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}`}}'
+              # title: '{{`{{ template "slack.custom.title" . }}`}}'
+              title_link: '{{`{{ template "slack.default.titlelink" . }}`}}'
+              pretext: '{{`{{ .CommonAnnotations.summary }}`}}'
+              fallback: '{{`{{ template "slack.default.fallback" . }}`}}'
+              icon_emoji: '{{`{{ template "slack.default.iconemoji" . }}`}}'
+              icon_url: https://avatars3.githubusercontent.com/u/3380462
+              # text: '{{`{{ template "slack.custom.text" . }}`}}'
+              title: |-
+                {{`[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }} for {{ .CommonLabels.job }}
+                {{- if gt (len .CommonLabels) (len .GroupLabels) -}}
+                  {{" "}}(
+                  {{- with .CommonLabels.Remove .GroupLabels.Names }}
+                    {{- range $index, $label := .SortedPairs -}}
+                      {{ if $index }}, {{ end }}
+                      {{- $label.Name }}="{{ $label.Value -}}"
+                    {{- end }}
+                  {{- end -}}
+                  )
+                {{- end }}`}}
+              text: |-
+                {{`{{ with index .Alerts 0 -}}
+                  :chart_with_upwards_trend: *<{{ .GeneratorURL }}|Graph>*{{- if .Annotations.runbook_url }}   :notebook: *<{{ .Annotations.runbook_url }}|Runbook>*{{ end }}{{- if .Labels.severity }}   `}}`{{`{{ .Labels.severity }}`}}`{{`{{ end }}
+                {{ end }}
+                {{ range .Alerts -}}
+                  {{- if .Annotations.message }}{{ .Annotations.message }}{{ end }}{{ if .Annotations.summary }}{{ .Annotations.summary }}
+                  {{ end }}
+                {{ end }}`}}
+            {{ end }}
 
       ## Manages Prometheus and Alertmanager components
       ##
@@ -283,3 +527,23 @@ releases:
               regex: apiserver_response_size_buckets
               replacement: $1
               action: drop
+
+      ## Component scraping kube scheduler
+      ##
+      kubeScheduler:
+        enabled: false
+
+      ## Component scraping the kube controller manager
+      ##
+      kubeControllerManager:
+        enabled: false
+
+      ## Component scraping coreDns. Use either this or kubeDns
+      ##
+      coreDns:
+        enabled: false
+
+      ## Component scraping kubeDns. Use either this or coreDns
+      ##
+      kubeDns:
+        enabled: true
