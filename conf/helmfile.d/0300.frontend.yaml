@@ -55,7 +55,6 @@ releases:
         path: /
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          nginx.ingress.kubernetes.io/ssl-redirect: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
           {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
           kubernetes.io/tls-acme: "true"
