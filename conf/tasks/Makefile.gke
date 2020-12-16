@@ -319,6 +319,7 @@ gke/test/create/all: \
 
 ## Destroy Cluster
 gke/test/destroy/all: \
-	gke/destroy/cluster
+	gke/destroy/cluster \
+	gke/destroy/certifiate-manager-secret
 	@echo "GKE cluster destroyed"
 	@exit 0

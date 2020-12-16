@@ -11,8 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     if: |
-      github.event_name == 'push' &&
-      contains(github.event.head_commit.message, '[build-integration-tests]')
+      github.event_name == 'pull_request' ||
+      (
+        github.event_name == 'push' &&
+        contains(github.event.head_commit.message, '[build-integration-tests]')
+      )
 
     strategy:
       matrix:
@@ -70,15 +73,18 @@ jobs:
           ${{ env.IMAGE }}
         docker exec kiosk make test/integration/${{ matrix.CLOUD_PROVIDER }}/deploy
         docker kill kiosk && docker rm kiosk
-  
+
   elk-integration-tests:
 
     runs-on: ubuntu-latest
 
     if: |
-      github.event_name == 'push' &&
-      contains(github.event.head_commit.message, '[build-integration-tests]') &&
-      contains(github.event.head_commit.message, '[test-elk]')
+      github.event_name == 'pull_request' ||
+      (
+        github.event_name == 'push' &&
+        contains(github.event.head_commit.message, '[build-integration-tests]') &&
+        contains(github.event.head_commit.message, '[test-elk]')
+      )
 
     strategy:
       matrix:
