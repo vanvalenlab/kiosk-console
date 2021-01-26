@@ -68,7 +68,6 @@ releases:
         TF_HOST: "tf-serving"
         TF_PORT: "8500"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
-        CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
         CONSUMER_TYPE: "zip"
         LABEL_DETECT_ENABLED: "true"
