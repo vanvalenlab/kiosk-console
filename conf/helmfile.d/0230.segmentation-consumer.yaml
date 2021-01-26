@@ -17,7 +17,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-  version: 0.2.1
+  version: 0.3.0
   wait: true
   timeout: 300
   atomic: true
@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.8.3
+        tag: 0.9.0
 
       nameOverride: segmentation-consumer
 
@@ -62,7 +62,6 @@ releases:
             targetValue: .15
 
       env:
-        DEBUG: "true"
         INTERVAL: 1
         QUEUE: "segmentation"
         CONSUMER_TYPE: "image"
@@ -102,5 +101,8 @@ releases:
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
         AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
-        AWS_S3_BUCKET: '{{ env "AWS_S3_BUCKET" | default "NA" }}'
-        GKE_BUCKET: '{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+        STORAGE_BUCKET: 's3://{{ env "AWS_S3_BUCKET" | default "NA" }}'
+{{ else }}
+        STORAGE_BUCKET: 'gs://{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
+{{ end }}

@@ -1,0 +1,51 @@
+repositories:
+  # Stable repo of official helm charts
+  - name: stable
+    url: https://charts.helm.sh/stable
+
+releases:
+
+################################################################################
+## Prometheus Adapter                                                         ##
+## exports data for the cutom metrics API                                     ##
+################################################################################
+
+#
+# References:
+#   - https://github.com/codecentric/helm-charts/tree/master/charts/keycloak
+#   - https://github.com/DirectXMan12/k8s-prometheus-adapter
+#
+- name: keycloak
+  namespace: monitoring
+  labels:
+    chart: keycloak
+    repo: codecentric
+    component: monitoring
+    namespace: monitoring
+    vendor: coreos
+    default: true
+  chart: stable/prometheus-adapter
+  version: 2.5.0
+  wait: true
+  timeout: 600
+  atomic: true
+  cleanupOnFail: true
+  values:
+    - postgresql:
+        enabled: false
+      
+      prometheusRule:
+        enabled: false
+      
+      extraEnv: |
+        - name: KEYCLOAK_USER
+          value: admin
+        - name: KEYCLOAK_PASSWORD
+          value: admin
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+
+      autoscaling:
+        enabled: false
+        minReplicas: 1
+        maxReplicas: 4
