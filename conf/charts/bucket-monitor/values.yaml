@@ -12,11 +12,10 @@ image:
 resources: {}
 
 env:
-  DEBUG: "true"
+  LOG_LEVEL: "DEBUG"
   INTERVAL: "21600"
   AGE_THRESHOLD: "604800"
   PREFIX: "uploads/,output/"
-  CLOUD_PROVIDER: "overwrite_this"
-  BUCKET: "overwrite_this"
+  STORAGE_BUCKET: "s3://default-bucket"
   REDIS_HOST: "redis-master"
   REDIS_PORT: "6379"
