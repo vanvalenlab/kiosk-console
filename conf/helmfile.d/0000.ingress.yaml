@@ -39,6 +39,8 @@ releases:
           requests:
             cpu: 50m
             memory: 128Mi
+        config:
+          proxy-body-size: 1g
         stats:
           ### Optional: NGINX_INGRESS_CONTROLLER_STATS_ENABLED;
           enabled: {{ env "NGINX_INGRESS_CONTROLLER_STATS_ENABLED" | default "true" }}

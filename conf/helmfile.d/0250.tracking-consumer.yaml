@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.8.3
+        tag: 0.8.4
 
       nameOverride: tracking-consumer
 
@@ -85,7 +85,7 @@ releases:
         CLOUD_PROVIDER: '{{ env "CLOUD_PROVIDER" | default "aws" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        NUCLEAR_MODEL: "NuclearSegmentation:0"
+        NUCLEAR_MODEL: "NuclearSegmentation:3"
         NUCLEAR_POSTPROCESS: "deep_watershed"
 
         PHASE_MODEL: "PhaseCytoSegmentation:0"
@@ -103,8 +103,8 @@ releases:
         DRIFT_CORRECT_ENABLED: "false"
         NORMALIZE_TRACKING: "true"
 
-        TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-        TRACKING_SEGMENT_MODEL: "NuclearSegmentation:0"
+        TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:2"
+        TRACKING_SEGMENT_MODEL: "NuclearSegmentation:3"
         TRACKING_POSTPROCESS_FUNCTION: "deep_watershed"
 
       secrets:
