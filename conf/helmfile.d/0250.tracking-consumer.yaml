@@ -98,12 +98,8 @@ releases:
         SCALE_DETECT_ENABLED: "true"
         SCALE_DETECT_MODEL: "ScaleDetection:0"
 
-        DRIFT_CORRECT_ENABLED: "false"
-        NORMALIZE_TRACKING: "true"
-
         TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-        TRACKING_SEGMENT_MODEL: "NuclearSegmentation:0"
-        TRACKING_POSTPROCESS_FUNCTION: "deep_watershed"
+        DRIFT_CORRECT_ENABLED: "false"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
