@@ -17,7 +17,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/bucket-monitor'
-  version: 0.1.0
+  version: 0.2.0
   wait: true
   timeout: 300
   atomic: true
@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-bucket-monitor
-        tag: 0.3.0
+        tag: 0.4.0
 
       resources:
         requests:
@@ -38,15 +38,13 @@ releases:
         #   memory: 64Mi
 
       env:
-        DEBUG: "true"
         AGE_THRESHOLD: "259200"
         PREFIX: "uploads/,output/"
         INTERVAL: "21600"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
-        CLOUD_PROVIDER: {{ env "CLOUD_PROVIDER" | default "broken_default" }}
 {{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
-        BUCKET: {{ env "BUCKET" | default "broken_default" }}
+        STORAGE_BUCKET: 's3://{{ env "BUCKET" | default "broken_default" }}'
 {{ else }}
-        BUCKET: {{ env "CLOUDSDK_BUCKET" | default "broken_default" }}
+        STORAGE_BUCKET: 'gs://{{ env "CLOUDSDK_BUCKET" | default "broken_default" }}'
 {{ end }}
