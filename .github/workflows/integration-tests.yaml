@@ -73,7 +73,7 @@ jobs:
           ${{ env.IMAGE }}
         docker exec kiosk make test/integration/${{ matrix.CLOUD_PROVIDER }}/deploy
         docker kill kiosk && docker rm kiosk
-  
+
   elk-integration-tests:
 
     runs-on: ubuntu-latest

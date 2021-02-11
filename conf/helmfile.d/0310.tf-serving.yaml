@@ -58,17 +58,8 @@ releases:
 
       service:
         type: ClusterIP
-
         httpIngressEnabled: true
-        internalHttpPort: 8501
-        httpTargetPort: 8501
-        externalHttpPort: 8501
-
         grpcIngressEnabled: true
-        internalGrpcPort: 8500
-        grpcTargetPort: 8500
-        externalGrpcPort: 8500
-
         httpsIngressEnabled: false
 
         annotations:
