@@ -38,7 +38,7 @@ releases:
         #   memory: 64Mi
 
       env:
-        QUEUES: "segmentation,tracking"
+        QUEUES: "multiplex,segmentation,tracking"
         DEBUG: "true"
         INTERVAL: "5"
         REDIS_HOST: "redis"

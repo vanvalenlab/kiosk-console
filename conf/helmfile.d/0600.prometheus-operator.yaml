@@ -296,6 +296,20 @@ releases:
             labels:
               deployment: tracking-zip-consumer
               namespace: deepcell
+          - record: multiplex_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="multiplex-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: multiplex-consumer
+              namespace: deepcell
+          - record: multiplex_zip_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="multiplex-zip-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: multiplex-zip-consumer
+              namespace: deepcell
 
       ## Configuration for alertmanager
       ## ref: https://prometheus.io/docs/alerting/alertmanager/
