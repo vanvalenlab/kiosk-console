@@ -1,0 +1,80 @@
+releases:
+
+################################################################################
+## Multiplex Zip Consumer ######################################################
+################################################################################
+
+#
+# References:
+#   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
+#
+- name: multiplex-zip-consumer
+  namespace: deepcell
+  labels:
+    chart: redis-consumer
+    component: deepcell
+    namespace: deepcell
+    vendor: vanvalenlab
+    default: true
+  chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
+  version: 0.3.0
+  values:
+    - replicas: 1
+
+      image:
+        repository: vanvalenlab/kiosk-redis-consumer
+        tag: 0.9.0
+
+      nameOverride: multiplex-zip-consumer
+
+      resources:
+        requests:
+          cpu: 200m
+          memory: 128Mi
+        # limits:
+        #   cpu: 100m
+        #   memory: 1024Mi
+
+      tolerations:
+        - key: consumer
+          operator: Exists
+          effect: NoSchedule
+
+      nodeSelector:
+        consumer: "yes"
+
+      hpa:
+        enabled: true
+        minReplicas: 1
+        maxReplicas: {{ mul (int (env "GPU_NODE_MAX_SIZE" | default 1)) 50 }}
+        metrics:
+        - type: Object
+          object:
+            metricName: multiplex_zip_consumer_key_ratio
+            target:
+              apiVersion: v1
+              kind: Namespace
+              name: multiplex_zip_consumer_key_ratio
+            targetValue: 1
+
+      env:
+        QUEUE: "multiplex"
+        REDIS_HOST: "redis"
+        REDIS_PORT: "26379"
+        TF_HOST: "tf-serving"
+        TF_PORT: "8500"
+        DEBUG: "true"
+        AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
+        GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
+        CONSUMER_TYPE: "zip"
+        LABEL_DETECT_ENABLED: "true"
+        SCALE_DETECT_ENABLED: "true"
+
+      secrets:
+        AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
+        AWS_SECRET_ACCESS_KEY: '{{ env "AWS_SECRET_ACCESS_KEY" | default "NA" }}'
+{{ if eq (env "CLOUD_PROVIDER" | default "aws") "aws" }}
+        STORAGE_BUCKET: 's3://{{ env "AWS_S3_BUCKET" | default "NA" }}'
+{{ else }}
+        STORAGE_BUCKET: 'gs://{{ env "CLOUDSDK_BUCKET" | default "NA" }}'
+{{ end }}
