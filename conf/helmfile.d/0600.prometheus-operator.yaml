@@ -296,19 +296,19 @@ releases:
             labels:
               deployment: tracking-zip-consumer
               namespace: deepcell
-          - record: multiplex_consumer_key_ratio
+          - record: mesmer_consumer_key_ratio
             expr: |-
-              consumer_key_ratio{deployment="multiplex-consumer"}
+              consumer_key_ratio{deployment="mesmer-consumer"}
               * on() tf_serving_up
             labels:
-              deployment: multiplex-consumer
+              deployment: mesmer-consumer
               namespace: deepcell
-          - record: multiplex_zip_consumer_key_ratio
+          - record: mesmer_zip_consumer_key_ratio
             expr: |-
-              consumer_key_ratio{deployment="multiplex-zip-consumer"}
+              consumer_key_ratio{deployment="mesmer-zip-consumer"}
               * on() tf_serving_up
             labels:
-              deployment: multiplex-zip-consumer
+              deployment: mesmer-zip-consumer
               namespace: deepcell
 
       ## Configuration for alertmanager

@@ -25,7 +25,7 @@ releases:
         repository: vanvalenlab/kiosk-redis-consumer
         tag: 0.9.0
 
-      nameOverride: multiplex-zip-consumer
+      nameOverride: mesmer-zip-consumer
 
       resources:
         requests:
@@ -50,15 +50,15 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: multiplex_zip_consumer_key_ratio
+            metricName: mesmer_zip_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: multiplex_zip_consumer_key_ratio
+              name: mesmer_zip_consumer_key_ratio
             targetValue: 1
 
       env:
-        QUEUE: "multiplex"
+        QUEUE: "mesmer"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
         TF_HOST: "tf-serving"

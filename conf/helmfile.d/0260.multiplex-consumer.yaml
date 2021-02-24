@@ -25,7 +25,7 @@ releases:
         repository: vanvalenlab/kiosk-redis-consumer
         tag: 0.9.0
 
-      nameOverride: multiplex-consumer
+      nameOverride: mesmer-consumer
 
       resources:
         requests:
@@ -50,16 +50,16 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: multiplex_consumer_key_ratio
+            metricName: mesmer_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: multiplex_consumer_key_ratio
+              name: mesmer_consumer_key_ratio
             targetValue: 1
 
       env:
         INTERVAL: 1
-        QUEUE: multiplex
+        QUEUE: mesmer
         CONSUMER_TYPE: multiplex
         EMPTY_QUEUE_TIMEOUT: 5
         GRPC_TIMEOUT: 20
