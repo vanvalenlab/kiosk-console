@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Multiplex Consumer ##########################################################
+## Mesmer Consumer #############################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: multiplex-consumer
+- name: mesmer-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer

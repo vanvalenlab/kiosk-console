@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Multiplex Zip Consumer ######################################################
+## Mesmer Zip Consumer #########################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: multiplex-zip-consumer
+- name: mesmer-zip-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
