@@ -23,7 +23,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.9.0
+        tag: 0.10.0
 
       nameOverride: mesmer-consumer
 
@@ -60,7 +60,7 @@ releases:
       env:
         INTERVAL: 1
         QUEUE: mesmer
-        CONSUMER_TYPE: multiplex
+        CONSUMER_TYPE: mesmer
         EMPTY_QUEUE_TIMEOUT: 5
         GRPC_TIMEOUT: 20
         GRPC_BACKOFF: 3
@@ -77,7 +77,8 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        MULTIPLEX_MODEL: MultiplexSegmentation:7
+        MESMER_MODEL: MultiplexSegmentation:7
+        MESMER_COMPARTMENT: both
 
         LABEL_DETECT_ENABLED: "false"
         SCALE_DETECT_ENABLED: "false"
