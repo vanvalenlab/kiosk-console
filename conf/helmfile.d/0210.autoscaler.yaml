@@ -38,7 +38,7 @@ releases:
         #   memory: 64Mi
 
       env:
-        QUEUES: "multiplex,segmentation,tracking"
+        QUEUES: "mesmer,segmentation,tracking"
         QUEUE_DELIMITER: ","
         RESOURCE_NAME: "tf-serving"
         RESOURCE_TYPE: "deployment"

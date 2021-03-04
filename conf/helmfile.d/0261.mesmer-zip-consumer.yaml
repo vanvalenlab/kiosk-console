@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Multiplex Consumer ##########################################################
+## Mesmer Zip Consumer #########################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: multiplex-consumer
+- name: mesmer-zip-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
@@ -25,15 +25,15 @@ releases:
         repository: vanvalenlab/kiosk-redis-consumer
         tag: 0.9.0
 
-      nameOverride: multiplex-consumer
+      nameOverride: mesmer-zip-consumer
 
       resources:
         requests:
-          cpu: 300m
-          memory: 256Mi
+          cpu: 200m
+          memory: 128Mi
         # limits:
         #   cpu: 100m
-        #   memory: 2Gi
+        #   memory: 1024Mi
 
       tolerations:
         - key: consumer
@@ -50,37 +50,25 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: multiplex_consumer_key_ratio
+            metricName: mesmer_zip_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: multiplex_consumer_key_ratio
+              name: mesmer_zip_consumer_key_ratio
             targetValue: 1
 
       env:
-        INTERVAL: 1
-        QUEUE: multiplex
-        CONSUMER_TYPE: multiplex
-        EMPTY_QUEUE_TIMEOUT: 5
-        GRPC_TIMEOUT: 20
-        GRPC_BACKOFF: 3
-
-        REDIS_HOST: redis
-        REDIS_PORT: 26379
-        REDIS_TIMEOUT: 3
-
+        QUEUE: "mesmer"
+        REDIS_HOST: "redis"
+        REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
-        TF_PORT: 8500
-        TF_MAX_BATCH_SIZE: 32
-        TF_MIN_MODEL_SIZE: 128
-
+        TF_PORT: "8500"
+        DEBUG: "true"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
-
-        MULTIPLEX_MODEL: MultiplexSegmentation:7
-
-        LABEL_DETECT_ENABLED: "false"
-        SCALE_DETECT_ENABLED: "false"
+        CONSUMER_TYPE: "zip"
+        LABEL_DETECT_ENABLED: "true"
+        SCALE_DETECT_ENABLED: "true"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'

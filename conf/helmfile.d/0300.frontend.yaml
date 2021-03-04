@@ -85,7 +85,7 @@ releases:
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         UPLOAD_PREFIX: "uploads/"
-        JOB_TYPES: "multiplex,segmentation,tracking"
+        JOB_TYPES: "mesmer,segmentation,tracking"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
