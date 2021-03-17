@@ -17,7 +17,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-  version: 0.3.0
+  version: 0.4.0
   wait: true
   timeout: 300
   atomic: true
@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.9.0
+        tag: 0.10.0
 
       nameOverride: tracking-zip-consumer
 
@@ -63,15 +63,13 @@ releases:
 
       env:
         QUEUE: "tracking"
+        CONSUMER_TYPE: "zip"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
         TF_PORT: "8500"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
-        CONSUMER_TYPE: "zip"
-        LABEL_DETECT_ENABLED: "true"
-        SCALE_DETECT_ENABLED: "true"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
