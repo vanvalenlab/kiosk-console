@@ -49,7 +49,7 @@ Tracked Image
 Start a terminal shell and install the DeepCell Kiosk wrapper script:
 
 ```bash
-docker run -e DOCKER_TAG=1.4.0 vanvalenlab/kiosk-console:1.4.0 | sudo bash
+docker run -e DOCKER_TAG=1.5.0 vanvalenlab/kiosk-console:1.5.0 | sudo bash
 ```
 
 To start the kiosk, just run `kiosk-console` from the terminal shell.
@@ -106,5 +106,5 @@ This kiosk was developed with [Cloud Posse, LLC](https://cloudposse.com). They c
 
 ## Copyright
 
-Copyright © 2018-2020 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Shurl and Kay Curci Foundation, the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
+Copyright © 2018-2021 [The Van Valen Lab](http://www.vanvalen.caltech.edu/) at the California Institute of Technology (Caltech), with support from the Shurl and Kay Curci Foundation, the Paul Allen Family Foundation, Google, & National Institutes of Health (NIH) under Grant U24CA224309-01.
 All rights reserved.

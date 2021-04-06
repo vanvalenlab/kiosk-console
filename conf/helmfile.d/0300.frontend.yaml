@@ -17,7 +17,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend'
-  version: 0.2.1
+  version: 0.3.0
   wait: true
   timeout: 300
   atomic: true
@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.6.0
+        tag: 0.7.0
 
       resources:
         requests:
@@ -39,23 +39,14 @@ releases:
 
       service:
         type: "ClusterIP"
-
         httpIngressEnabled: true
-        internalHttpPort: 8080
-        httpTargetPort: 8080
-        externalHttpPort: 8080
-
         httpsIngressEnabled: true
-        internalHttpsPort: 8443
-        httpsTargetPort: 8443
-        externalHttpsPort: 8443
 
       ingress:
         enabled: true
         path: /
         annotations:
           kubernetes.io/ingress.class: "nginx"
-          nginx.ingress.kubernetes.io/ssl-redirect: "false"
           nginx.ingress.kubernetes.io/proxy-body-size: "1g"
           {{ if ne (env "CERTIFICATE_MANAGER_ENABLED" | default "") "" }}
           kubernetes.io/tls-acme: "true"
@@ -94,7 +85,7 @@ releases:
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         UPLOAD_PREFIX: "uploads/"
-        JOB_TYPES: "segmentation,tracking"
+        JOB_TYPES: "mesmer,segmentation,tracking"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'

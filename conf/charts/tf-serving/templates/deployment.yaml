@@ -16,7 +16,11 @@ spec:
   template:
     metadata:
       annotations:
-{{ toYaml .Values.annotations | indent 8 }}
+{{- range $name, $value := .Values.annotations }}
+{{- if not ( empty $value) }}
+        {{ $name }}: {{ $value | quote }}
+{{- end }}
+{{- end }}
       labels:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}

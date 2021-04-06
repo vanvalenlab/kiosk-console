@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-autoscaler
-        tag: 0.4.1
+        tag: 0.5.0
 
       resources:
         requests:
@@ -38,7 +38,7 @@ releases:
         #   memory: 64Mi
 
       env:
-        QUEUES: "segmentation,tracking"
+        QUEUES: "mesmer,segmentation,tracking"
         QUEUE_DELIMITER: ","
         RESOURCE_NAME: "tf-serving"
         RESOURCE_TYPE: "deployment"

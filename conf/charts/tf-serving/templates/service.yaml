@@ -7,9 +7,11 @@ metadata:
     release: {{ .Release.Name | quote }}
     chart: {{ template "chart" . }}
     app: {{ template "name" . }}
-{{- if .Values.service.annotations }}
   annotations:
-{{ toYaml .Values.service.annotations | indent 4 }}
+{{- range $name, $value := .Values.service.annotations }}
+{{- if not ( empty $value) }}
+    {{ $name }}: {{ $value | quote }}
+{{- end }}
 {{- end }}
 spec:
   type: {{ .Values.service.type }}

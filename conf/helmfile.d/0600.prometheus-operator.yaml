@@ -289,6 +289,27 @@ releases:
             labels:
               deployment: tracking-consumer
               namespace: deepcell
+          - record: tracking_zip_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="tracking-zip-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: tracking-zip-consumer
+              namespace: deepcell
+          - record: mesmer_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="mesmer-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: mesmer-consumer
+              namespace: deepcell
+          - record: mesmer_zip_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="mesmer-zip-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: mesmer-zip-consumer
+              namespace: deepcell
 
       ## Configuration for alertmanager
       ## ref: https://prometheus.io/docs/alerting/alertmanager/
