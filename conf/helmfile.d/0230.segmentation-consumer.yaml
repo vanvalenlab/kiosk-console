@@ -76,7 +76,7 @@ releases:
 
         TF_HOST: "tf-serving"
         TF_PORT: 8500
-        TF_MAX_BATCH_SIZE: 64
+        TF_MAX_BATCH_SIZE: 32
         TF_MIN_MODEL_SIZE: 128
 
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
