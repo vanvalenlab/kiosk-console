@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.7.0
+        tag: dev
 
       resources:
         requests:
@@ -85,7 +85,10 @@ releases:
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         UPLOAD_PREFIX: "uploads/"
-        JOB_TYPES: "mesmer,segmentation,tracking"
+        JOB_TYPES: "mesmer"
+        GA_TRACKING_ID: "UA-169034632-1"
+        REACT_APP_LABEL_BACKEND: "https://api-viewer.deepcell.org"
+        REACT_APP_LABEL_FRONTEND: "https://viewer.deepcell.org"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'

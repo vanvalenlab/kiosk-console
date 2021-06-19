@@ -23,7 +23,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.11.0
+        tag: dim_ordering
 
       nameOverride: mesmer-consumer
 
