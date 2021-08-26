@@ -17,7 +17,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-  version: 0.5.0
+  version: 0.6.0
   values:
     - replicas: 1
 
