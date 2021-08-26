@@ -95,8 +95,10 @@ releases:
         SCALE_DETECT_ENABLED: "false"
         SCALE_DETECT_MODEL: "ScaleDetection:1"
 
-        TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:2"
+        TRACKING_MODEL: "TrackingModelInf:4"
+        NEIGHBORHOOD_ENCODER: "TrackingModelNE:2"
         DRIFT_CORRECT_ENABLED: "false"
+        TRACK_LENGTH: 8
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
