@@ -6,7 +6,7 @@ replicas: 1
 
 image:
   repository: vanvalenlab/kiosk-redis-consumer
-  tag: 0.11.0
+  tag: 0.12.0
   pullPolicy: IfNotPresent
 
 resources: {}
@@ -71,12 +71,11 @@ env:
   SCALE_DETECT_ENABLED: "false"
   SCALE_DETECT_MODEL: "ScaleDetection:1"
 
+  TRACKING_MODEL: "TrackingModelInf:4"
+  NEIGHBORHOOD_ENCODER: "TrackingModelNE:2"
+  SEGMENTATION_QUEUE: "segmentation"
+  TRACK_LENGTH: 8
   DRIFT_CORRECT_ENABLED: "false"
-  NORMALIZE_TRACKING: "false"
-
-  TRACKING_MODEL: "tracking_model_benchmarking_757_step5_20epoch_80split_9tl:1"
-  TRACKING_SEGMENT_MODEL: "NuclearSegmentation:0"
-  TRACKING_POSTPROCESS_FUNCTION: "deep_watershed"
 
 secrets:
   AWS_ACCESS_KEY_ID: ""
