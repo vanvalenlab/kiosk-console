@@ -8,11 +8,7 @@ keywords:
 home: https://www.github.com/vanvalenlab/kiosk-frontend
 sources:
     - https://hub.docker.com/vanvalenlab/kiosk-frontend
-maintainers:
-  - name: Dylan Bannon
-    email: bbannon@caltech.edu
-    url: vanvalen.caltech.edu
 engine: gotpl
-appVersion: 0.7.0
+appVersion: 0.8.1
 deprecated: false
 tillerVersion: ^2.9.1
