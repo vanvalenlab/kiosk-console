@@ -17,7 +17,7 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/frontend'
-  version: 0.3.0
+  version: 0.4.0
   wait: true
   timeout: 300
   atomic: true
@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.8.0
+        tag: 0.8.1
 
       resources:
         requests:
@@ -86,6 +86,9 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         UPLOAD_PREFIX: "uploads/"
         JOB_TYPES: "mesmer,segmentation,tracking"
+        REACT_APP_LABEL_BACKEND: "example.com"
+        REACT_APP_LABEL_FRONTEND: "example.com"
+        REACT_APP_GA_TRACKING_ID: "UA-XXXXXXXXX-X"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
