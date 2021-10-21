@@ -52,6 +52,9 @@ env:
   REDIS_PORT: "6379"
   MODEL_PREFIX: "models/"
   AWS_REGION: "us-east-1"
+  REACT_APP_LABEL_BACKEND: "example.com"
+  REACT_APP_LABEL_FRONTEND: "example.com"
+  REACT_APP_GA_TRACKING_ID: "UA-XXXXXXXXX-X"
 
 secrets:
   AWS_ACCESS_KEY_ID: ""
