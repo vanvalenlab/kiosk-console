@@ -1,3 +1,6 @@
 m2r
 mock==3.0.5
 Sphinx==2.3.1
+# mistune 2 and m2r 0.2.1 seem to not play well
+# https://github.com/miyakogi/m2r/issues/66
+mistune<2.0.0
