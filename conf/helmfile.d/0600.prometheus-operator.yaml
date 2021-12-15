@@ -282,19 +282,19 @@ releases:
             labels:
               deployment: zip-consumer
               namespace: deepcell
-          - record: tracking_consumer_key_ratio
+          - record: caliban_consumer_key_ratio
             expr: |-
-              consumer_key_ratio{deployment="tracking-consumer"}
+              consumer_key_ratio{deployment="caliban-consumer"}
               * on() tf_serving_up
             labels:
-              deployment: tracking-consumer
+              deployment: caliban-consumer
               namespace: deepcell
-          - record: tracking_zip_consumer_key_ratio
+          - record: caliban_zip_consumer_key_ratio
             expr: |-
-              consumer_key_ratio{deployment="tracking-zip-consumer"}
+              consumer_key_ratio{deployment="caliban-zip-consumer"}
               * on() tf_serving_up
             labels:
-              deployment: tracking-zip-consumer
+              deployment: caliban-zip-consumer
               namespace: deepcell
           - record: mesmer_consumer_key_ratio
             expr: |-
