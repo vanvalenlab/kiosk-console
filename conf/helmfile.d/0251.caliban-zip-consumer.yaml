@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Tracking Zip Consumer #######################################################
+## Caliban Zip Consumer ########################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: tracking-zip-consumer
+- name: caliban-zip-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
@@ -27,9 +27,9 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.12.0
+        tag: 0.13.0
 
-      nameOverride: tracking-zip-consumer
+      nameOverride: caliban-zip-consumer
 
       resources:
         requests:
@@ -54,15 +54,15 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: tracking_zip_consumer_key_ratio
+            metricName: caliban_zip_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: tracking_zip_consumer_key_ratio
+              name: caliban_zip_consumer_key_ratio
             targetValue: 2
 
       env:
-        QUEUE: "tracking"
+        QUEUE: "caliban"
         CONSUMER_TYPE: "zip"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"

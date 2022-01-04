@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Tracking Consumer ###########################################################
+## Caliban Consumer ############################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: tracking-consumer
+- name: caliban-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
@@ -27,9 +27,9 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.12.0
+        tag: 0.13.0
 
-      nameOverride: tracking-consumer
+      nameOverride: caliban-consumer
 
       resources:
         requests:
@@ -54,18 +54,18 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: tracking_consumer_key_ratio
+            metricName: caliban_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: tracking_consumer_key_ratio
+              name: caliban_consumer_key_ratio
             targetValue: 1
 
       env:
         INTERVAL: 1
-        QUEUE: "tracking"
+        QUEUE: "caliban"
         SEGMENTATION_QUEUE: "segmentation"
-        CONSUMER_TYPE: "tracking"
+        CONSUMER_TYPE: "caliban"
         EMPTY_QUEUE_TIMEOUT: 5
         GRPC_TIMEOUT: 20
         GRPC_BACKOFF: 3

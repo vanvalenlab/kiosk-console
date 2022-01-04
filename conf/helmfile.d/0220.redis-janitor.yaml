@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-janitor
-        tag: 0.6.0
+        tag: 0.8.0
 
       resources:
         requests:
@@ -38,7 +38,7 @@ releases:
         #   memory: 64Mi
 
       env:
-        QUEUES: "mesmer,segmentation,tracking"
+        QUEUES: "mesmer,segmentation,caliban"
         DEBUG: "true"
         INTERVAL: "5"
         REDIS_HOST: "redis"
