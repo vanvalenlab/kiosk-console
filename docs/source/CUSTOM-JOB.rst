@@ -12,7 +12,7 @@ Rationale
 
 In the kubernetes environment created by the kiosk, the task of processing images is coordinated by the redis-consumer. The number of consumers at work in any point in time is automatically scaled to match the number of images waiting in a work queue since each redis-consumer can only process one image at a time. Ultimately the redis-consumer is responsible for sending data to tf-serving containers to retrieve model predictions, but it also handles any pre- and post-processing steps that are required by a particular model.
 
-Currently, `deepcell.org <http://www.deepcell.org>`_ supports a cell tracking feature which is facilitated by the ``tracking-consumer``, which handles the multi-step process of cell tracking:
+Currently, `deepcell.org <http://www.deepcell.org>`_ supports a cell tracking feature which is facilitated by the ``caliban-consumer``, which handles the multi-step process of cell tracking:
 
 1. Send each frame of the dataset for segmentation. Frames are processed in parallel utilizing scalability and drastically reducing processing time.
 2. Retrieve model predictions and run post-processing to generate cell segmentation masks
@@ -29,11 +29,11 @@ The following variables will be used throughout the setup of the custom consumer
 
 .. py:data:: consumer_name
 
-    Name of custom consumer, e.g. ``'tracking-consumer'``
+    Name of custom consumer, e.g. ``'caliban-consumer'``
 
 .. py:data:: consumer_type
 
-    Name of consumer job, e.g. ``'tracking'``
+    Name of consumer job, e.g. ``'caliban'``
 
 Designing a custom consumer
 ---------------------------
@@ -53,7 +53,7 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
 
 2. From the root of the ``kiosk-redis-consumer`` folder, run ``docker build <image>:<tag>`` and then ``docker push <image>:<tag>``.
 
-3. In the ``/conf/helmfile.d/`` folder in your kiosk environment, add a new helmfile following the convention ``02##.custom-consumer.yaml``. The text for the helmfile can be copied from ``0250.tracking-consumer.yaml`` as shown below. Then make the following changes to customize the helmfile to your consumer.
+3. In the ``/conf/helmfile.d/`` folder in your kiosk environment, add a new helmfile following the convention ``02##.custom-consumer.yaml``. The text for the helmfile can be copied from ``0250.caliban-consumer.yaml`` as shown below. Then make the following changes to customize the helmfile to your consumer.
 
    * Change ``releases.name`` to :data:`consumer_name`
    * Change ``releases.values.image.repository`` and ``releases.values.image.tag``
@@ -75,7 +75,7 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
       # References:
       #   - https://github.com/vanvalenlab/kiosk-console/tree/master/conf/charts/redis-consumer
       #
-      - name: tracking-consumer
+      - name: caliban-consumer
         namespace: deepcell
         labels:
           chart: redis-consumer
@@ -92,7 +92,7 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
               repository: vanvalenlab/kiosk-redis-consumer
               tag: 0.5.1
 
-            nameOverride: tracking-consumer
+            nameOverride: caliban-consumer
 
             resources:
               requests:
@@ -117,18 +117,18 @@ The DeepCell Kiosk uses |helm| and |helmfile| to coordinate Docker containers. T
               metrics:
               - type: Object
                 object:
-                  metricName: tracking_consumer_key_ratio
+                  metricName: caliban_consumer_key_ratio
                   target:
                     apiVersion: v1
                     kind: Namespace
-                    name: tracking_consumer_key_ratio
+                    name: caliban_consumer_key_ratio
                   targetValue: 1
 
             env:
               DEBUG: "true"
               INTERVAL: 1
-              QUEUE: "track"
-              CONSUMER_TYPE: "tracking"
+              QUEUE: "caliban"
+              CONSUMER_TYPE: "caliban"
               EMPTY_QUEUE_TIMEOUT: 5
               GRPC_TIMEOUT: 20
               GRPC_BACKOFF: 3
@@ -216,7 +216,7 @@ To effectively scale your new consumer, some small edits will be needed in the f
       local queues = {}
 
       queues[#queues+1] = "segmentation"
-      queues[#queues+1] = "tracking"
+      queues[#queues+1] = "caliban"
       queues[#queues+1] = "Your New QUEUE"
 
       for _,queue in ipairs(queues) do
@@ -226,25 +226,25 @@ To effectively scale your new consumer, some small edits will be needed in the f
 
    Add a new ``record`` under ``- name: custom-redis-metrics``. In the example below, make the following modifications.
 
-   * Line 1: replace ``tracking`` with :data:`consumer_type`
-   * Line 3: replace ``track`` with :data:`queue_name`
-   * Line 12: replace ``tracking`` with :data:`consumer_type`
+   * Line 1: replace ``caliban`` with :data:`consumer_type`
+   * Line 3: replace ``caliban`` with :data:`queue_name`
+   * Line 12: replace ``caliban`` with :data:`consumer_type`
 
    .. code-block:: yaml
       :linenos:
 
-      - record: tracking_consumer_key_ratio
+      - record: caliban_consumer_key_ratio
         expr: |-
-          avg_over_time(redis_script_value{key="track_image_keys"}[15s])
+          avg_over_time(redis_script_value{key="caliban_image_keys"}[15s])
           / on()
           (
-              avg_over_time(kube_deployment_spec_replicas{deployment="tracking-consumer"}[15s])
+              avg_over_time(kube_deployment_spec_replicas{deployment="caliban-consumer"}[15s])
               +
               1
           )
         labels:
           namespace: deepcell
-          service: tracking-scaling-service
+          service: caliban-scaling-service
 
 3. ``/conf/helmfile.d/02##.custom-consumer.yaml``
 
@@ -263,11 +263,11 @@ To effectively scale your new consumer, some small edits will be needed in the f
       metrics:
       - type: Object
         object:
-          metricName: tracking_consumer_key_ratio
+          metricName: caliban_consumer_key_ratio
           target:
             apiVersion: v1
             kind: Namespace
-            name: tracking_consumer_key_ratio
+            name: caliban_consumer_key_ratio
           targetValue: 1
 
 .. |/conf/addons/hpa.yaml| raw:: html
@@ -298,7 +298,7 @@ A number of Kiosk components will need the new queue name in order to fully inte
    .. code-block:: yaml
 
        env:
-           JOB_TYPES: "segmentation,tracking,<new job name>"
+           JOB_TYPES: "segmentation,caliban,<new job name>"
 
 2. |redis-janitor.yaml|
 
@@ -307,7 +307,7 @@ A number of Kiosk components will need the new queue name in order to fully inte
    .. code-block:: yaml
 
        env:
-           QUEUES: "segmentation,tracking,<new job name>"
+           QUEUES: "segmentation,caliban,<new job name>"
 
 3. |autoscaler.yaml|
 
@@ -316,7 +316,7 @@ A number of Kiosk components will need the new queue name in order to fully inte
    .. code-block:: yaml
 
       env:
-          QUEUES: "segmentation,tracking,<new job name>"
+          QUEUES: "segmentation,caliban,<new job name>"
 
 You will need to sync your helmfile in order to update your frontend website to reflect the change to the helmfile. Please run the following:
 
