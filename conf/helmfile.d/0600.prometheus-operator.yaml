@@ -310,6 +310,20 @@ releases:
             labels:
               deployment: mesmer-zip-consumer
               namespace: deepcell
+          - record: polaris_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="polaris-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: polaris-consumer
+              namespace: deepcell
+          - record: polaris_zip_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="polaris-zip-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: polaris-zip-consumer
+              namespace: deepcell
 
       ## Configuration for alertmanager
       ## ref: https://prometheus.io/docs/alerting/alertmanager/

@@ -38,7 +38,7 @@ releases:
         #   memory: 64Mi
 
       env:
-        QUEUES: "mesmer,segmentation,caliban"
+        QUEUES: "mesmer,segmentation,caliban,polaris"
         DEBUG: "true"
         INTERVAL: "5"
         REDIS_HOST: "redis"

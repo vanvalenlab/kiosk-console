@@ -1,7 +1,7 @@
 releases:
 
 ################################################################################
-## Mesmer Consumer #############################################################
+## Polaris Consumer #############################################################
 ################################################################################
 
 #
@@ -50,11 +50,11 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: mesmer_consumer_key_ratio
+            metricName: polaris_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: mesmer_consumer_key_ratio
+              name: polaris_consumer_key_ratio
             targetValue: 1
 
       env:
