@@ -1,7 +1,7 @@
 export CLUSTER ?= kiosk-console
 export DOCKER_ORG ?= vanvalenlab
 export DOCKER_IMAGE ?= $(DOCKER_ORG)/$(CLUSTER)
-export DOCKER_TAG ?= emily-test
+export DOCKER_TAG ?= latest
 export DOCKER_IMAGE_NAME ?= $(DOCKER_IMAGE):$(DOCKER_TAG)
 export DOCKER_BUILD_FLAGS =
 export README_DEPS ?= docs/targets.md
