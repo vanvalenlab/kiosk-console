@@ -77,7 +77,7 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        POLARIS_MODEL: SpotDetection:4
+        POLARIS_MODEL: SpotDetection:3
 
         LABEL_DETECT_ENABLED: "false"
         SCALE_DETECT_ENABLED: "false"
