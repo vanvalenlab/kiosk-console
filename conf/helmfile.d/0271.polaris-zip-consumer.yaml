@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Mesmer Zip Consumer #########################################################
+## Polaris Zip Consumer #########################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: mesmer-zip-consumer
+- name: polaris-zip-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
@@ -25,7 +25,7 @@ releases:
         repository: vanvalenlab/kiosk-redis-consumer
         tag: 0.14.0
 
-      nameOverride: mesmer-zip-consumer
+      nameOverride: polaris-zip-consumer
 
       resources:
         requests:
@@ -50,15 +50,15 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: mesmer_zip_consumer_key_ratio
+            metricName: polaris_zip_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: mesmer_zip_consumer_key_ratio
+              name: polaris_zip_consumer_key_ratio
             targetValue: 1
 
       env:
-        QUEUE: "mesmer"
+        QUEUE: "polaris"
         CONSUMER_TYPE: "zip"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"

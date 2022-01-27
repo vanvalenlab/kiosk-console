@@ -38,7 +38,7 @@ releases:
         #   memory: 64Mi
 
       env:
-        QUEUES: "mesmer,segmentation,caliban"
+        QUEUES: "mesmer,segmentation,caliban,polaris"
         QUEUE_DELIMITER: ","
         RESOURCE_NAME: "tf-serving"
         RESOURCE_TYPE: "deployment"
