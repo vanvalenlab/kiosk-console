@@ -23,7 +23,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: latest
+        tag: 0.14.0
 
       nameOverride: polaris-zip-consumer
 
