@@ -27,7 +27,8 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.9.0
+        tag: emily-test
+        pullPolicy: Always
 
       resources:
         requests:

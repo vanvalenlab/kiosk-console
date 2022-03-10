@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Polaris Consumer #############################################################
+## Spot Detection Consumer #############################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: polaris-consumer
+- name: spot-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
@@ -26,7 +26,7 @@ releases:
         tag: emily-test
         pullPolicy: Always
 
-      nameOverride: polaris-consumer
+      nameOverride: spot-consumer
 
       resources:
         requests:
@@ -51,17 +51,17 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: polaris_consumer_key_ratio
+            metricName: spot_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: polaris_consumer_key_ratio
+              name: spot_consumer_key_ratio
             targetValue: 1
 
       env:
         INTERVAL: 1
-        QUEUE: polaris
-        CONSUMER_TYPE: polaris
+        QUEUE: spot
+        CONSUMER_TYPE: spot
         EMPTY_QUEUE_TIMEOUT: 5
         GRPC_TIMEOUT: 20
         GRPC_BACKOFF: 3

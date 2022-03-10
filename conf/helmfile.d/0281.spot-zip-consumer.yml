@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Polaris Consumer #############################################################
+## Spot Detection Zip Consumer #########################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: polaris-consumer
+- name: spot-zip-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
@@ -23,18 +23,17 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: emily-test
-        pullPolicy: Always
+        tag: 0.14.0
 
-      nameOverride: polaris-consumer
+      nameOverride: spot-zip-consumer
 
       resources:
         requests:
-          cpu: 300m
-          memory: 256Mi
+          cpu: 200m
+          memory: 128Mi
         # limits:
         #   cpu: 100m
-        #   memory: 2Gi
+        #   memory: 1024Mi
 
       tolerations:
         - key: consumer
@@ -51,37 +50,23 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: polaris_consumer_key_ratio
+            metricName: spot_zip_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: polaris_consumer_key_ratio
+              name: spot_zip_consumer_key_ratio
             targetValue: 1
 
       env:
-        INTERVAL: 1
-        QUEUE: polaris
-        CONSUMER_TYPE: polaris
-        EMPTY_QUEUE_TIMEOUT: 5
-        GRPC_TIMEOUT: 20
-        GRPC_BACKOFF: 3
-
-        REDIS_HOST: redis
-        REDIS_PORT: 26379
-        REDIS_TIMEOUT: 3
-
+        QUEUE: "spot"
+        CONSUMER_TYPE: "zip"
+        REDIS_HOST: "redis"
+        REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
-        TF_PORT: 8500
-        TF_MAX_BATCH_SIZE: 32
-        TF_MIN_MODEL_SIZE: 128
-
+        TF_PORT: "8500"
+        DEBUG: "true"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
-
-        POLARIS_MODEL: SpotDetection:3
-
-        LABEL_DETECT_ENABLED: "false"
-        SCALE_DETECT_ENABLED: "false"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
