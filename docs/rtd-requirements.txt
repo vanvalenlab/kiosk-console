@@ -5,3 +5,5 @@ docutils==0.16
 # mistune 2 and m2r 0.2.1 seem to not play well
 # https://github.com/miyakogi/m2r/issues/66
 mistune<2.0.0
+# Jinja2 imports for sphinx are deprecated over 3.1
+Jinja2<3.1
