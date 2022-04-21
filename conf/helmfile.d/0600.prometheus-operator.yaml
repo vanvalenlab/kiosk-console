@@ -324,6 +324,20 @@ releases:
             labels:
               deployment: polaris-zip-consumer
               namespace: deepcell
+          - record: spot_detection_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="spot-detection-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: spot-detection-consumer
+              namespace: deepcell
+          - record: spot_zip_consumer_key_ratio
+            expr: |-
+              consumer_key_ratio{deployment="spot-zip-consumer"}
+              * on() tf_serving_up
+            labels:
+              deployment: spot-zip-consumer
+              namespace: deepcell
 
       ## Configuration for alertmanager
       ## ref: https://prometheus.io/docs/alerting/alertmanager/
