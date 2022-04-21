@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.14.0
+        tag: 0.15.0
 
       nameOverride: caliban-consumer
 
