@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Caliban Consumer ############################################################
+## Spot Detection Zip Consumer #########################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: caliban-consumer
+- name: spot-zip-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
@@ -18,10 +18,6 @@ releases:
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
   version: 0.6.0
-  wait: true
-  timeout: 300
-  atomic: true
-  cleanupOnFail: true
   values:
     - replicas: 1
 
@@ -29,12 +25,12 @@ releases:
         repository: vanvalenlab/kiosk-redis-consumer
         tag: 0.15.0
 
-      nameOverride: caliban-consumer
+      nameOverride: spot-zip-consumer
 
       resources:
         requests:
-          cpu: 300m
-          memory: 256Mi
+          cpu: 200m
+          memory: 128Mi
         # limits:
         #   cpu: 100m
         #   memory: 1024Mi
@@ -54,51 +50,23 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: caliban_consumer_key_ratio
+            metricName: spot_zip_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: caliban_consumer_key_ratio
+              name: spot_zip_consumer_key_ratio
             targetValue: 1
 
       env:
-        INTERVAL: 1
-        QUEUE: "caliban"
-        SEGMENTATION_QUEUE: "segmentation"
-        CONSUMER_TYPE: "caliban"
-        EMPTY_QUEUE_TIMEOUT: 5
-        GRPC_TIMEOUT: 20
-        GRPC_BACKOFF: 3
-        MAX_RETRY: 5
-
+        QUEUE: "spot"
+        CONSUMER_TYPE: "zip"
         REDIS_HOST: "redis"
-        REDIS_PORT: 26379
-        REDIS_TIMEOUT: 3
-
+        REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
-        TF_PORT: 8500
-        TF_MAX_BATCH_SIZE: 64
-        TF_MIN_MODEL_SIZE: 128
-
+        TF_PORT: "8500"
+        DEBUG: "true"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
-
-        NUCLEAR_MODEL: "NuclearSegmentation:3"
-
-        PHASE_MODEL: "PhaseCytoSegmentation:0"
-
-        CYTOPLASM_MODEL: "FluoCytoSegmentation:1"
-
-        LABEL_DETECT_ENABLED: "false"
-        LABEL_DETECT_MODEL: "LabelDetection:1"
-
-        SCALE_DETECT_ENABLED: "false"
-        SCALE_DETECT_MODEL: "ScaleDetection:1"
-
-        TRACKING_MODEL: "TrackingModelInf:4"
-        NEIGHBORHOOD_ENCODER: "TrackingModelNE:2"
-        DRIFT_CORRECT_ENABLED: "false"
-        TRACK_LENGTH: 8
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
