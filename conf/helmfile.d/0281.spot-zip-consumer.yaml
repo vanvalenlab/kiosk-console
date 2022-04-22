@@ -1,14 +1,14 @@
 releases:
 
 ################################################################################
-## Segmentation Zip Consumer ###################################################
+## Spot Detection Zip Consumer #########################################################
 ################################################################################
 
 #
 # References:
 #   - https://github.com/vanvalenlab/kiosk-console/blob/master/conf/charts/redis-consumer/values.yaml
 #
-- name: segmentation-zip-consumer
+- name: spot-zip-consumer
   namespace: deepcell
   labels:
     chart: redis-consumer
@@ -18,10 +18,6 @@ releases:
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
   version: 0.6.0
-  wait: true
-  timeout: 300
-  atomic: true
-  cleanupOnFail: true
   values:
     - replicas: 1
 
@@ -29,7 +25,7 @@ releases:
         repository: vanvalenlab/kiosk-redis-consumer
         tag: 0.15.0
 
-      nameOverride: segmentation-zip-consumer
+      nameOverride: spot-zip-consumer
 
       resources:
         requests:
@@ -50,24 +46,25 @@ releases:
       hpa:
         enabled: true
         minReplicas: 1
-        maxReplicas: {{ mul (int (env "GPU_NODE_MAX_SIZE" | default 1)) 100 }}
+        maxReplicas: {{ mul (int (env "GPU_NODE_MAX_SIZE" | default 1)) 50 }}
         metrics:
         - type: Object
           object:
-            metricName: segmentation_zip_consumer_key_ratio
+            metricName: spot_zip_consumer_key_ratio
             target:
               apiVersion: v1
               kind: Namespace
-              name: segmentation_zip_consumer_key_ratio
-            targetValue: 2
+              name: spot_zip_consumer_key_ratio
+            targetValue: 1
 
       env:
-        QUEUE: "segmentation"
+        QUEUE: "spot"
         CONSUMER_TYPE: "zip"
         REDIS_HOST: "redis"
         REDIS_PORT: "26379"
         TF_HOST: "tf-serving"
         TF_PORT: "8500"
+        DEBUG: "true"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 

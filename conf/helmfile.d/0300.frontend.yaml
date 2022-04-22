@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.8.2
+        tag: 0.10.0
 
       resources:
         requests:
@@ -85,7 +85,7 @@ releases:
         MODEL_PREFIX: "models/"
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         UPLOAD_PREFIX: "uploads/"
-        JOB_TYPES: "mesmer,segmentation,caliban"
+        JOB_TYPES: "mesmer,segmentation,caliban,polaris"
         REACT_APP_LABEL_BACKEND: "example.com"
         REACT_APP_LABEL_FRONTEND: "example.com"
         REACT_APP_GA_TRACKING_ID: "UA-XXXXXXXXX-X"

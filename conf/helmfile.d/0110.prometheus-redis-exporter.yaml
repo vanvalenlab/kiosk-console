@@ -74,6 +74,8 @@ releases:
             queues[#queues+1] = "segmentation"
             queues[#queues+1] = "mesmer"
             queues[#queues+1] = "caliban"
+            queues[#queues+1] = "polaris"
+            queues[#queues+1] = "spot"
 
             for _,queue in ipairs(queues) do
               local zip_queue = queue .. "-zip"
