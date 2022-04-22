@@ -49,6 +49,7 @@ version-resolver:
       - 'hotfix'
       - 'packages'
       - 'documentation'
+      - 'chore'
   default: minor
 
 template: |
