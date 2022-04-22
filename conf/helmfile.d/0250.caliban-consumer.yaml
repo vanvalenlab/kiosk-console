@@ -95,10 +95,13 @@ releases:
         SCALE_DETECT_ENABLED: "false"
         SCALE_DETECT_MODEL: "ScaleDetection:1"
 
-        TRACKING_MODEL: "TrackingModelInf:4"
-        NEIGHBORHOOD_ENCODER: "TrackingModelNE:2"
+        TRACKING_MODEL: "TrackingModelInf:5"  # from model-registry#24
+        NEIGHBORHOOD_ENCODER: "TrackingModelNE:3"  # from model-registry#24
         DRIFT_CORRECT_ENABLED: "false"
         TRACK_LENGTH: 8
+        BIRTH: 0.99
+        DEATH: 0.99
+        DIVISION: 0.01
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
