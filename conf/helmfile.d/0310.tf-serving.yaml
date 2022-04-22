@@ -100,7 +100,7 @@ releases:
         MODEL_CONFIG_FILE: /config/models.conf
         BATCHING_CONFIG_FILE: /config/batching_config.txt
         ENABLE_BATCHING: "true"
-        MAX_BATCH_SIZE: 128
+        MAX_BATCH_SIZE: 32
         BATCH_TIMEOUT_MICROS: 0
         MAX_ENQUEUED_BATCHES: 512
         GRPC_CHANNEL_ARGS: ""
