@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-frontend
-        tag: 0.10.1
+        tag: tracking-update
 
       resources:
         requests:
