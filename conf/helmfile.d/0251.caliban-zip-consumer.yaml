@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: tracking-update
+        tag: 0.16.0
 
       nameOverride: caliban-zip-consumer
 
