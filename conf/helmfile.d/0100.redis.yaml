@@ -1,6 +1,6 @@
 repositories:
-  - name: bitnami
-    url: https://charts.bitnami.com/bitnami
+  - name: bitnami-pre-2022
+    url: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
 
 releases:
 
@@ -16,7 +16,7 @@ releases:
   labels:
     chart: redis
     component: database
-  chart: bitnami/redis
+  chart: bitnami-pre-2022/redis
   version: 10.5.7
   namespace: deepcell
   wait: true
