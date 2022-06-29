@@ -24,7 +24,7 @@ kubectl/create/all: \
 	@echo "Kubectl provisioned"
 
 ## Display the cluster IP or URL
-kubectl/display/ip: IP_VAR = $(shell sh -c "kubectl describe service --namespace=kube-system ingress-nginx-ingress-controller | grep 'LoadBalancer Ingress:' | sed 's/\([[:graph:]]\+[[:space:]]\+\)\+\([0-9.]\+\|[[:graph:]]\+amazon[[:graph:]]\+\)/\2/'")
+kubectl/display/ip: IP_VAR=$(kubectl get svc --namespace=kube-system ingress-ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 kubectl/display/ip:
 	@echo " "
 	@echo Cluster address: ${IP_VAR}
@@ -39,13 +39,15 @@ kubectl/destroy/pvc:
 	@kubectl delete pvc --all -A
 	@echo " "
 
-## Tear down prometheus-operator and it's CRDs
-kubectl/destroy/prometheus/operator:
-	@echo "Deleting prometheus-operator..."
-	-@helm delete prometheus-operator
+## Tear down kube-prometheus-stack and it's CRDs
+kubectl/destroy/prometheus/stack:
+	@echo "Deleting kube-prometheus-stack..."
+	-@helm delete kube-prometheus-stack
 	-@kubectl delete crd prometheuses.monitoring.coreos.com
 	-@kubectl delete crd prometheusrules.monitoring.coreos.com
 	-@kubectl delete crd servicemonitors.monitoring.coreos.com
 	-@kubectl delete crd alertmanagers.monitoring.coreos.com
+	-@kubectl delete crd alertmanagerconfigs.monitoring.coreos.com
 	-@kubectl delete crd podmonitors.monitoring.coreos.com
+	-@kubectl delete crd probes.monitoring.coreos.com
 	-@kubectl delete crd thanosrulers.monitoring.coreos.com
