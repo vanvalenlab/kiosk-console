@@ -111,7 +111,7 @@ releases:
     namespace: monitoring
   needs:
     - monitoring/prometheus-redis-exporter-script
-  version: 3.7.0
+  version: 4.8.0
   wait: true
   timeout: 120
   atomic: true
