@@ -37,7 +37,7 @@ releases:
 
       # Url to access prometheus
       prometheus:
-        url: http://prometheus-operator-prometheus
+        url: http://kube-prometheus-stack-prometheus.monitoring.svc
         port: 9090
 
       replicas: 1
