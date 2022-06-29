@@ -23,8 +23,10 @@ spec:
           - path: {{ .Values.ingress.path }}
             pathType: ImplementationSpecific
             backend:
-              serviceName: {{ template "fullname" . }}
-              servicePort: http
+              service:
+                name: {{ template "fullname" . }}
+                port:
+                  name: http
   {{- range .Values.ingress.hosts }}
     - host: {{ . }}
       http:
@@ -34,7 +36,8 @@ spec:
             backend:
               service:
                 name: {{ $fullName }}
-                port: http
+                port:
+                  name: http
   {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
