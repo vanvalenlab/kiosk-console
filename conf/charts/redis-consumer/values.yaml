@@ -6,7 +6,7 @@ replicas: 1
 
 image:
   repository: vanvalenlab/kiosk-redis-consumer
-  tag: 0.12.0
+  tag:  0.15.0
   pullPolicy: IfNotPresent
 
 resources: {}
@@ -16,16 +16,6 @@ tolerations: {}
 affinity: {}
 
 nodeSelector: {}
-
-service:
-  type: "ClusterIP"
-
-  httpIngressEnabled: true
-  internalHttpPort: 8080
-  httpTargetPort: 8080
-  externalHttpPort: 8080
-
-  httpsIngressEnabled: false
 
 hpa:
   enabled: false
@@ -47,7 +37,7 @@ env:
   DO_NOTHING_TIMEOUT: 0.5
   STORAGE_MAX_BACKOFF: 60
 
-  REDIS_HOST: "redis-master"
+  REDIS_HOST: "redis"
   REDIS_PORT: "6379"
   REDIS_TIMEOUT: 3
 
