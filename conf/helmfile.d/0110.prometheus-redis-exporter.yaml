@@ -1,7 +1,7 @@
 repositories:
-  # Stable repo of official helm charts
-  - name: stable
-    url: https://charts.helm.sh/stable
+  # Stable repo of official prometheus helm charts
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
   # Kubernetes incubator repo of helm charts
   - name: incubator
     url: https://charts.helm.sh/incubator
@@ -103,7 +103,7 @@ releases:
 #   - https://github.com/helm/charts/blob/master/stable/prometheus-redis-exporter/values.yaml
 #
 - name: prometheus-redis-exporter
-  chart: stable/prometheus-redis-exporter
+  chart: prometheus-community/prometheus-redis-exporter
   namespace: monitoring
   labels:
     chart: prometheus-redis-exporter
@@ -111,7 +111,7 @@ releases:
     namespace: monitoring
   needs:
     - monitoring/prometheus-redis-exporter-script
-  version: 3.5.0
+  version: 3.7.0
   wait: true
   timeout: 120
   atomic: true
