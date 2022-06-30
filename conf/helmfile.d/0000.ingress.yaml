@@ -1,7 +1,7 @@
 repositories:
 # Stable repo of official helm charts
-- name: stable
-  url: https://charts.helm.sh/stable
+- name: ingress-nginx
+  url: https://kubernetes.github.io/ingress-nginx
 
 releases:
 
@@ -17,13 +17,13 @@ releases:
   namespace: kube-system
   labels:
     chart: nginx-ingress
-    repo: stable
+    repo: ingress-nginx
     component: ingress
     namespace: kube-system
-    vendor: kubernetes
+    vendor: ingress-nginx
     default: "false"
-  chart: stable/nginx-ingress
-  version: 1.40.2
+  chart: ingress-nginx/ingress-nginx
+  version: 4.1.4
   wait: true
   timeout: 300
   atomic: true
@@ -33,16 +33,13 @@ releases:
         ### Optional: NGINX_INGRESS_CONTROLLER_REPLICA_COUNT; e.g. 2
         replicaCount: {{ env "NGINX_INGRESS_CONTROLLER_REPLICA_COUNT" | default "4" }}
         resources:
-          limits:
-            cpu: 200m
-            memory: 3Gi
           requests:
             cpu: 50m
             memory: 128Mi
         config:
           proxy-body-size: 1g
         metrics:
-          ### Optional: NGINX_INGRESS_CONTROLLER_METRICS_ENABLED; enable Prometheus metrics (controller.stats.enabled must be true as well)
+          ### Optional: NGINX_INGRESS_CONTROLLER_METRICS_ENABLED; enable Prometheus metrics
           enabled: {{ env "NGINX_INGRESS_CONTROLLER_METRICS_ENABLED" | default "true" }}
         service:
           annotations:
@@ -50,7 +47,9 @@ releases:
             external-dns.alpha.kubernetes.io/hostname: '{{ env "NGINX_INGRESS_HOSTNAME" }}'
             ### Optional: NGINX_INGRESS_TTL; e.g. 60
             external-dns.alpha.kubernetes.io/ttl: '{{ env "NGINX_INGRESS_TTL" | default "60" }}'
+
       defaultBackend:
+        enabled: true
         ### Optional: NGINX_INGRESS_BACKEND_REPLICA_COUNT; e.g. 2
         replicaCount: {{ env "NGINX_INGRESS_DEFAULT_BACKEND_REPLICA_COUNT" | default "2" }}
         resources:
@@ -66,9 +65,11 @@ releases:
             external-dns.alpha.kubernetes.io/hostname: '{{ env "NGINX_INGRESS_HOSTNAME" }}'
             ### Optional: NGINX_INGRESS_TTL; e.g. 60
             external-dns.alpha.kubernetes.io/ttl: '{{ env "NGINX_INGRESS_TTL" | default "60" }}'
+
       rbac:
         ### Optional: NGINX_INGRESS_RBAC_CREATE;
         create: {{ env "NGINX_INGRESS_RBAC_CREATE" | default "true" }}
+
       serviceAccount:
         ### Optional: NGINX_INGRESS_SERVICE_ACCOUNT_CREATE;
         create: {{ env "NGINX_INGRESS_SERVICE_ACCOUNT_CREATE" | default "true" }}

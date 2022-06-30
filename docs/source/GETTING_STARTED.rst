@@ -114,7 +114,7 @@ You are now ready to start the Kiosk!
 
 .. code-block:: bash
 
-    docker run -e DOCKER_TAG=1.7.0 vanvalenlab/kiosk-console:1.7.0 | sudo bash
+    docker run -e DOCKER_TAG=1.8.0 vanvalenlab/kiosk-console:1.8.0 | sudo bash
 
 .. note:: This command and the one that follows may need to be preceded by `sudo` depending on your permission settings. This will require you to enter your password.
 
