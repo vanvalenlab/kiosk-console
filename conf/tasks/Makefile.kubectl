@@ -24,7 +24,7 @@ kubectl/create/all: \
 	@echo "Kubectl provisioned"
 
 ## Display the cluster IP or URL
-kubectl/display/ip: IP_VAR=$(kubectl get svc --namespace=kube-system ingress-ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+kubectl/display/ip: IP_VAR=$(shell sh -c "kubectl get svc --namespace=kube-system ingress-ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].ip}'")
 kubectl/display/ip:
 	@echo " "
 	@echo Cluster address: ${IP_VAR}
