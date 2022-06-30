@@ -1,6 +1,6 @@
 repositories:
-  - name: bitnami-pre-2022
-    url: https://raw.githubusercontent.com/bitnami/charts/pre-2022/bitnami
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
 
 releases:
 
