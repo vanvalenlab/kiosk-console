@@ -77,7 +77,7 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        MESMER_MODEL: MultiplexSegmentation:7
+        MESMER_MODEL: MultiplexSegmentation:8  # From model-registry#15
         MESMER_COMPARTMENT: both
 
         LABEL_DETECT_ENABLED: "false"
