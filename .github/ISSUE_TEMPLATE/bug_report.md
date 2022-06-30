@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Ennvironment:**
 
 - OS: [e.g. macOS, Ubuntu]
-- Kiosk version: [e.g. 1.7.0]
+- Kiosk version: [e.g. 1.8.0]
 - `kubectl version`:
 - `helm version`:
 - `helmfile version`:
