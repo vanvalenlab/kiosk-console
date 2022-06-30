@@ -17,13 +17,13 @@ releases:
     vendor: vanvalenlab
     default: true
   chart: '{{ env "CHARTS_PATH" | default "/conf/charts" }}/redis-consumer'
-  version: 0.6.0
+  version: 0.7.0
   values:
     - replicas: 1
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.15.0
+        tag: 0.16.2
 
       nameOverride: spot-consumer
 

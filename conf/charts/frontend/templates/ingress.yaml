@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "fullname" . -}}
 {{- $ingressPath := .Values.ingress.path -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ template "fullname" . }}
@@ -21,17 +21,23 @@ spec:
     - http:
         paths:
           - path: {{ .Values.ingress.path }}
+            pathType: ImplementationSpecific
             backend:
-              serviceName: {{ template "fullname" . }}
-              servicePort: http
+              service:
+                name: {{ template "fullname" . }}
+                port:
+                  name: http
   {{- range .Values.ingress.hosts }}
     - host: {{ . }}
       http:
         paths:
           - path: {{ $ingressPath }}
+            pathType: ImplementationSpecific
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+              service:
+                name: {{ $fullName }}
+                port:
+                  name: http
   {{- end }}
   {{- if .Values.ingress.tls }}
   tls:
