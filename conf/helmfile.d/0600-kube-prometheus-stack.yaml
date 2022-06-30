@@ -323,12 +323,12 @@ releases:
             labels:
               deployment: polaris-zip-consumer
               namespace: deepcell
-          - record: spot_detection_consumer_key_ratio
+          - record: spot_consumer_key_ratio
             expr: |-
-              consumer_key_ratio{deployment="spot-detection-consumer"}
+              consumer_key_ratio{deployment="spot-consumer"}
               * on() tf_serving_up
             labels:
-              deployment: spot-detection-consumer
+              deployment: spot-consumer
               namespace: deepcell
           - record: spot_zip_consumer_key_ratio
             expr: |-
