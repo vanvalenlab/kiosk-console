@@ -83,22 +83,19 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        NUCLEAR_MODEL: "NuclearSegmentation:3"
-
-        PHASE_MODEL: "PhaseCytoSegmentation:0"
-
-        CYTOPLASM_MODEL: "FluoCytoSegmentation:1"
-
         LABEL_DETECT_ENABLED: "false"
         LABEL_DETECT_MODEL: "LabelDetection:1"
 
         SCALE_DETECT_ENABLED: "false"
         SCALE_DETECT_MODEL: "ScaleDetection:1"
 
-        TRACKING_MODEL: "TrackingModelInf:4"
-        NEIGHBORHOOD_ENCODER: "TrackingModelNE:2"
+        TRACKING_MODEL: "TrackingModelInf:5"  # from model-registry#24
+        NEIGHBORHOOD_ENCODER: "TrackingModelNE:3"  # from model-registry#24
         DRIFT_CORRECT_ENABLED: "false"
         TRACK_LENGTH: 8
+        BIRTH: 0.99
+        DEATH: 0.99
+        DIVISION: 0.01
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
