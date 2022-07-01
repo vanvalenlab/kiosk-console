@@ -54,13 +54,15 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: segmentation_zip_consumer_key_ratio
-            target:
-              apiVersion: v1
+            describedObject:
               kind: Namespace
-              name: segmentation_zip_consumer_key_ratio
-            targetValue: 2
-
+              name: segmentation_consumer_key_ratio
+              apiVersion: v1
+            metric:
+              name: segmentation_consumer_key_ratio
+            target:
+              type: Value
+              value: .15
       env:
         QUEUE: "segmentation"
         CONSUMER_TYPE: "zip"

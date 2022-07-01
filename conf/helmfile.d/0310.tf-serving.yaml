@@ -73,12 +73,15 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: tf_serving_gpu_usage
-            target:
-              apiVersion: v1
+            describedObject:
               kind: Namespace
               name: tf_serving_gpu_usage
-            targetValue: 70
+              apiVersion: v1
+            metric:
+              name: tf_serving_gpu_usage
+            target:
+              type: Value
+              value: 70
 
       annotations:
         prometheus.io/path: /monitoring/prometheus/metrics

@@ -50,12 +50,15 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: mesmer_zip_consumer_key_ratio
-            target:
-              apiVersion: v1
+            describedObject:
               kind: Namespace
               name: mesmer_zip_consumer_key_ratio
-            targetValue: 1
+              apiVersion: v1
+            metric:
+              name: mesmer_zip_consumer_key_ratio
+            target:
+              type: Value
+              value: 1
 
       env:
         QUEUE: "mesmer"
