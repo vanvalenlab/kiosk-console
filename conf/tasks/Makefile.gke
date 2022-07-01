@@ -192,9 +192,9 @@ gke/create/service-account:
 	@echo "Creating GKE service account..."
 	@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin --no-user-output-enabled
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin --no-user-output-enabled
 	# @gcloud iam service-accounts add-iam-policy-binding $(GCP_SERVICE_ACCOUNT) \
 	# 	--role roles/iam.workloadIdentityUser \
 	# 	--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]"
@@ -206,9 +206,9 @@ endif
 ## Delete Service Account used by deepcell
 gke/destroy/service-account:
 	@echo "Destroying GKE service-account..."
-	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin --no-user-output-enabled
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin --no-user-output-enabled
 endif
 	@-gcloud iam service-accounts delete $(GCP_SERVICE_ACCOUNT) --quiet
 	@echo "GKE service-account destruction finished."
@@ -252,6 +252,7 @@ gke/create/authplugin:
 	@echo "Installing the GKE Auth Plugin..."
 	@gcloud components install gke-gcloud-auth-plugin --quiet \
 		|| echo "Failed to install the GKE Auth Plugin"
+	@echo "GKE Auth Plugin install complete."
 	@echo " "
 	@echo " "
 
