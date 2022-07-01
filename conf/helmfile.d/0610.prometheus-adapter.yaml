@@ -1,7 +1,7 @@
 repositories:
-  # Stable repo of official helm charts
-  - name: stable
-    url: https://charts.helm.sh/stable
+  # Stable repo of official prometheus helm charts
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
 
 releases:
 
@@ -19,13 +19,13 @@ releases:
   namespace: monitoring
   labels:
     chart: prometheus-adapter
-    repo: stable
+    repo: prometheus-community
     component: monitoring
     namespace: monitoring
     vendor: coreos
     default: true
-  chart: stable/prometheus-adapter
-  version: 2.5.0
+  chart: prometheus-community/prometheus-adapter
+  version: 3.3.1
   wait: true
   timeout: 600
   atomic: true
@@ -37,7 +37,7 @@ releases:
 
       # Url to access prometheus
       prometheus:
-        url: http://prometheus-operator-prometheus
+        url: http://kube-prometheus-stack-prometheus.monitoring.svc
         port: 9090
 
       replicas: 1

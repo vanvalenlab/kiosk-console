@@ -25,7 +25,7 @@ releases:
     namespace: cert-manager
     vendor: kubernetes
   chart: jetstack/cert-manager
-  version: 1.1.0
+  version: v1.8.2
   wait: true
   timeout: 300
   atomic: true

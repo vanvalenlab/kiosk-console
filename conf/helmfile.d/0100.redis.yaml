@@ -17,28 +17,20 @@ releases:
     chart: redis
     component: database
   chart: bitnami/redis
-  version: 10.5.7
+  version: 16.13.0
   namespace: deepcell
   wait: true
   atomic: true
   timeout: 600
   cleanupOnFail: true
   values:
-    - resources:
-        requests:
-          cpu: 200m
-          memory: 256Mi
+    - architecture: replication
 
-      usePassword: false
+      auth:
+        enabled: false
+        sentinel: false
 
-      cluster:
-        enabled: true
-        slaveCount: 3
-
-      sentinel:
-        enabled: true
-
-      configmap: |-
+      commonConfiguration: |-
         # Enable AOF https://redis.io/topics/persistence#append-only-file
         appendonly yes
         # Disable RDB persistence, AOF persistence already enabled.
@@ -49,8 +41,23 @@ releases:
         # "no" that is the safest pick from the point of view of durability.
         no-appendfsync-on-rewrite yes
 
-      sysctlImage:
+      master:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+
+      replica:
+        replicaCount: 3
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+
+      sentinel:
         enabled: true
+
+      sysctl:
         mountHostSys: true
         command:
           - /bin/sh
