@@ -6,7 +6,7 @@ retries=3
 
 for filename in /conf/helmfile.d/*.yaml; do
   deployment_names=$(helmfile -f $filename build | \
-                     yq r - -- releases[*].name | awk '{print $NF}')
+                     yq .releases[].name | awk '{print $NF}')
   for name in $deployment_names; do
     for ((i=0; i<retries; i++)); do
       # Try to deploy and break out of retry loop if successful
