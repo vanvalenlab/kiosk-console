@@ -1,18 +1,32 @@
-FROM cloudposse/build-harness:0.39.0 as build-harness
+FROM cloudposse/build-harness:1.3.0 as build-harness
 
-FROM cloudposse/geodesic:0.135.0
+FROM cloudposse/geodesic:1.2.1-alpine
 
 RUN apk add --update dialog libqrencode
 
 ENV DOCKER_IMAGE="vanvalenlab/kiosk-console"
 ENV DOCKER_TAG="latest"
 
-# Geodesic banner
+# Banner is what is displayed at startup and on every command line
+# in order to distinguish this image from other similar images
 ENV BANNER="deepcell"
 ENV BANNER_FONT="Larry 3D 2.flf"
 
-# Disable cloudposse motd
+# Disable message of the day
 ENV MOTD_URL=""
+
+# Shell customization
+# options for `less`. `R` allows ANSI color codes to be displayed while stripping out
+# other control codes that can cause `less` to mess up the screen formatting
+ENV LESS=R
+
+# Enable `direnv`
+# TODO: Use preferring YAML configuration files instead.
+ENV DIRENV_ENABLED=true
+
+# only set it for trusted directories under `/conf` and therefore it will not affect
+# `make` outside of this directory tree.
+ENV MAKE_INCLUDES="Makefile /conf/Makefile /conf/tasks/Makefile.*"
 
 # Silence make
 ENV MAKE="make -s"
@@ -78,4 +92,4 @@ COPY rootfs/ /
 # Enable the menu
 RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/ΩΩ.menu.sh
 
-WORKDIR /conf/
+ENV GEODESIC_WORKDIR=/conf

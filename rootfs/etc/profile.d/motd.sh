@@ -1,6 +1,6 @@
 # overriding https://github.com/cloudposse/geodesic/blob/master/rootfs/etc/profile.d/motd.sh
 
-if [[ -z "${ASSUME_ROLE}" && "${SHLVL}" == "2" ]]; then
+if [[ $SHLVL -eq 2 ]]; then
 	if [ -f "/etc/motd" ]; then
 		cat "/etc/motd"
 	fi
