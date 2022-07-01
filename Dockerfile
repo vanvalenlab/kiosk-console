@@ -64,6 +64,9 @@ ENV GCP_TRAINING_GPU_TYPE="nvidia-tesla-v100"
 ENV GKE_MACHINE_TYPE="n1-standard-1"
 ENV GPU_MACHINE_TYPE="n1-highmem-2"
 ENV CONSUMER_MACHINE_TYPE="n1-standard-2"
+# gcp auth plugin is deprecated as of k8s 1.22, use the gke auth plugin instead
+# https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+ENV USE_GKE_GCLOUD_AUTH_PLUGIN="true"
 
 # Deployment config
 ENV CLOUD_PROVIDER=""

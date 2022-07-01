@@ -247,6 +247,14 @@ gke/create/bucket:
 	@echo " "
 	@echo " "
 
+## Install GKE Auth Plugin for kubectl
+gke/create/authplugin:
+	@echo "Installing the GKE Auth Plugin..."
+	@gcloud components install gke-gcloud-auth-plugin --quiet \
+		|| echo "Failed to install the GKE Auth Plugin"
+	@echo " "
+	@echo " "
+
 ## Destroy bucket used by deepcell
 gke/destroy/bucket:
 	gsutil rm -r gs://$(CLOUDSDK_BUCKET) || echo "Bucket not destroyed."
@@ -285,6 +293,7 @@ gke/create/resources: \
 
 ## Create Cluster
 gke/create/all: \
+	gke/create/authplugin \
 	gke/create/service-account \
 	gke/create/resources
 	@echo "GKE cluster created"
