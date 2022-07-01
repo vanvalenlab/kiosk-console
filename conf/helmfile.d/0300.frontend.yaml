@@ -85,9 +85,9 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         UPLOAD_PREFIX: "uploads/"
         JOB_TYPES: "mesmer,segmentation,caliban,polaris,spot"
-        REACT_APP_LABEL_BACKEND: "example.com"
-        REACT_APP_LABEL_FRONTEND: "example.com"
-        REACT_APP_GA_TRACKING_ID: "UA-XXXXXXXXX-X"
+        REACT_APP_LABEL_BACKEND: "https://api-viewer.deepcell.org"
+        REACT_APP_LABEL_FRONTEND: "https://viewer.deepcell.org"
+        REACT_APP_GA_TRACKING_ID: "UA-169034632-1"
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
