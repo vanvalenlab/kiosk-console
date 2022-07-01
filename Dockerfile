@@ -24,10 +24,6 @@ ENV LESS=R
 # TODO: Use preferring YAML configuration files instead.
 ENV DIRENV_ENABLED=true
 
-# only set it for trusted directories under `/conf` and therefore it will not affect
-# `make` outside of this directory tree.
-ENV MAKE_INCLUDES="Makefile /conf/Makefile /conf/tasks/Makefile.*"
-
 # Silence make
 ENV MAKE="make -s"
 
