@@ -1,18 +1,28 @@
-FROM cloudposse/build-harness:0.39.0 as build-harness
+FROM cloudposse/build-harness:1.3.0 as build-harness
 
-FROM cloudposse/geodesic:0.135.0
+FROM cloudposse/geodesic:1.2.1-alpine
 
 RUN apk add --update dialog libqrencode
 
 ENV DOCKER_IMAGE="vanvalenlab/kiosk-console"
 ENV DOCKER_TAG="latest"
 
-# Geodesic banner
+# Banner is what is displayed at startup and on every command line
+# in order to distinguish this image from other similar images
 ENV BANNER="deepcell"
 ENV BANNER_FONT="Larry 3D 2.flf"
 
-# Disable cloudposse motd
+# Disable message of the day
 ENV MOTD_URL=""
+
+# Shell customization
+# options for `less`. `R` allows ANSI color codes to be displayed while stripping out
+# other control codes that can cause `less` to mess up the screen formatting
+ENV LESS=R
+
+# Enable `direnv`
+# TODO: Use preferring YAML configuration files instead.
+ENV DIRENV_ENABLED=true
 
 # Silence make
 ENV MAKE="make -s"
@@ -50,6 +60,9 @@ ENV GCP_TRAINING_GPU_TYPE="nvidia-tesla-v100"
 ENV GKE_MACHINE_TYPE="n1-standard-1"
 ENV GPU_MACHINE_TYPE="n1-highmem-2"
 ENV CONSUMER_MACHINE_TYPE="n1-standard-2"
+# gcp auth plugin is deprecated as of k8s 1.22, use the gke auth plugin instead
+# https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+ENV USE_GKE_GCLOUD_AUTH_PLUGIN="false"
 
 # Deployment config
 ENV CLOUD_PROVIDER=""
@@ -78,4 +91,4 @@ COPY rootfs/ /
 # Enable the menu
 RUN ln -s /usr/local/bin/menu.sh /etc/profile.d/ΩΩ.menu.sh
 
-WORKDIR /conf/
+ENV GEODESIC_WORKDIR=/conf
