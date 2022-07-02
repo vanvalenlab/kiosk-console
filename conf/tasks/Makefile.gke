@@ -248,11 +248,15 @@ gke/create/bucket:
 	@echo " "
 
 ## Install GKE Auth Plugin for kubectl
+gke/create/authplugin: INSTALL_AUTH_PLUGIN = $(shell echo ${USE_GKE_GCLOUD_AUTH_PLUGIN} | tr "[:upper:]" "[:lower:]")
 gke/create/authplugin:
-	@echo "Installing the GKE Auth Plugin..."
-	@gcloud components install gke-gcloud-auth-plugin --quiet \
-		|| echo "Failed to install the GKE Auth Plugin"
-	@echo "GKE Auth Plugin install complete."
+	@if [ "true" = "${INSTALL_AUTH_PLUGIN}" ]; then \
+		echo "Installing the GKE Auth Plugin..."; \
+		gcloud components install gke-gcloud-auth-plugin --quiet; \
+		echo "GKE Auth Plugin install complete."; \
+	else \
+		echo "GKE Auth Plugin is disabled."; \
+	fi
 	@echo " "
 	@echo " "
 
