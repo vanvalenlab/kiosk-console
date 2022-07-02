@@ -192,9 +192,9 @@ gke/create/service-account:
 	@echo "Creating GKE service account..."
 	@gcloud iam service-accounts create $(CLOUDSDK_CONTAINER_CLUSTER) --display-name "Deepcell" || \
 		echo "No need to create service account; it probably already exists."
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin --no-user-output-enabled
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+	@gcloud projects add-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin --no-user-output-enabled
 	# @gcloud iam service-accounts add-iam-policy-binding $(GCP_SERVICE_ACCOUNT) \
 	# 	--role roles/iam.workloadIdentityUser \
 	# 	--member "serviceAccount:$(CLOUDSDK_CORE_PROJECT).svc.id.goog[cert-manager/cert-manager]"
@@ -206,9 +206,9 @@ endif
 ## Delete Service Account used by deepcell
 gke/destroy/service-account:
 	@echo "Destroying GKE service-account..."
-	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/storage.admin --no-user-output-enabled
 ifneq "" "${CERTIFICATE_MANAGER_ENABLED}"
-	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin
+	@gcloud projects remove-iam-policy-binding $(CLOUDSDK_CORE_PROJECT) --member serviceAccount:$(GCP_SERVICE_ACCOUNT) --role roles/dns.admin --no-user-output-enabled
 endif
 	@-gcloud iam service-accounts delete $(GCP_SERVICE_ACCOUNT) --quiet
 	@echo "GKE service-account destruction finished."
@@ -244,6 +244,19 @@ gke/create/bucket:
 		|| echo "Bucket ${CLOUDSDK_BUCKET} already exists. No need to create that bucket."
 	@-gsutil acl ch -u $(GCP_SERVICE_ACCOUNT):O gs://$(CLOUDSDK_BUCKET)
 	@echo "Google Cloud Storage Bucket creation finished."
+	@echo " "
+	@echo " "
+
+## Install GKE Auth Plugin for kubectl
+gke/create/authplugin: INSTALL_AUTH_PLUGIN = $(shell echo ${USE_GKE_GCLOUD_AUTH_PLUGIN} | tr "[:upper:]" "[:lower:]")
+gke/create/authplugin:
+	@if [ "true" = "${INSTALL_AUTH_PLUGIN}" ]; then \
+		echo "Installing the GKE Auth Plugin..."; \
+		gcloud components install gke-gcloud-auth-plugin --quiet; \
+		echo "GKE Auth Plugin install complete."; \
+	else \
+		echo "GKE Auth Plugin is disabled."; \
+	fi
 	@echo " "
 	@echo " "
 
@@ -285,6 +298,7 @@ gke/create/resources: \
 
 ## Create Cluster
 gke/create/all: \
+	gke/create/authplugin \
 	gke/create/service-account \
 	gke/create/resources
 	@echo "GKE cluster created"

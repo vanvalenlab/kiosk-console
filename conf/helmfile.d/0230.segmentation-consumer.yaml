@@ -54,12 +54,15 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: segmentation_consumer_key_ratio
-            target:
-              apiVersion: v1
+            describedObject:
               kind: Namespace
               name: segmentation_consumer_key_ratio
-            targetValue: .15
+              apiVersion: v1
+            metric:
+              name: segmentation_consumer_key_ratio
+            target:
+              type: Value
+              value: .15
 
       env:
         INTERVAL: 1

@@ -54,12 +54,15 @@ releases:
         metrics:
         - type: Object
           object:
-            metricName: caliban_consumer_key_ratio
-            target:
-              apiVersion: v1
+            describedObject:
               kind: Namespace
               name: caliban_consumer_key_ratio
-            targetValue: 1
+              apiVersion: v1
+            metric:
+              name: caliban_consumer_key_ratio
+            target:
+              type: Value
+              value: 1
 
       env:
         INTERVAL: 1
