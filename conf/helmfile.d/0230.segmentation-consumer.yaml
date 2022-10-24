@@ -85,11 +85,11 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        NUCLEAR_MODEL: "NuclearSegmentation:5"  # data-registry #188
+        NUCLEAR_MODEL: "NuclearSegmentation:6"  # data-registry #188
 
-        PHASE_MODEL: "CytoplasmSegmentation:4"  # data-registry #164
+        PHASE_MODEL: "CytoplasmSegmentation:5"  # data-registry #164
 
-        CYTOPLASM_MODEL: "CytoplasmSegmentation:4"  # data-registry #164
+        CYTOPLASM_MODEL: "CytoplasmSegmentation:5"  # data-registry #164
 
         LABEL_DETECT_ENABLED: "false"
         LABEL_DETECT_MODEL: "LabelDetection:1"
