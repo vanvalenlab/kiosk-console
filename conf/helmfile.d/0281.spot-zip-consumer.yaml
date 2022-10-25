@@ -23,7 +23,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.16.2
+        tag: 0.17.1
 
       nameOverride: spot-zip-consumer
 

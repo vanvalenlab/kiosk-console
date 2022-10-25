@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.16.2
+        tag: 0.17.1
 
       nameOverride: segmentation-consumer
 
@@ -85,11 +85,11 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        NUCLEAR_MODEL: "NuclearSegmentation:5"  # data-registry #188
+        NUCLEAR_MODEL: "NuclearSegmentation:6"  # model-registry PR 17
 
-        PHASE_MODEL: "CytoplasmSegmentation:4"  # data-registry #164
+        PHASE_MODEL: "CytoplasmSegmentation:5"  # model-registry PR 17
 
-        CYTOPLASM_MODEL: "CytoplasmSegmentation:4"  # data-registry #164
+        CYTOPLASM_MODEL: "CytoplasmSegmentation:5"  # model-registry PR 17
 
         LABEL_DETECT_ENABLED: "false"
         LABEL_DETECT_MODEL: "LabelDetection:1"

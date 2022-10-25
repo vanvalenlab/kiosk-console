@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.16.2
+        tag: 0.17.1
 
       nameOverride: caliban-consumer
 
@@ -80,7 +80,7 @@ releases:
 
         TF_HOST: "tf-serving"
         TF_PORT: 8500
-        TF_MAX_BATCH_SIZE: 64
+        TF_MAX_BATCH_SIZE: 32
         TF_MIN_MODEL_SIZE: 128
 
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
@@ -92,8 +92,8 @@ releases:
         SCALE_DETECT_ENABLED: "false"
         SCALE_DETECT_MODEL: "ScaleDetection:1"
 
-        TRACKING_MODEL: "TrackingModelInf:5"  # from model-registry#24
-        NEIGHBORHOOD_ENCODER: "TrackingModelNE:3"  # from model-registry#24
+        TRACKING_MODEL: "NuclearTrackingInf:6"  # from model-registry PR 17
+        NEIGHBORHOOD_ENCODER: "NuclearTrackingNE:6"  # from model-registry PR 17
         DRIFT_CORRECT_ENABLED: "false"
         TRACK_LENGTH: 8
         BIRTH: 0.99
