@@ -13,6 +13,6 @@ maintainers:
     email: bbannon@caltech.edu
     url: vanvalen.caltech.edu
 engine: gotpl
-appVersion: 0.16.2
+appVersion: 0.17.1
 deprecated: false
 tillerVersion: ^2.9.1

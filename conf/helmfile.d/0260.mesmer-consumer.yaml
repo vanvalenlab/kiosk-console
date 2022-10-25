@@ -23,7 +23,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.16.2
+        tag: 0.17.1
 
       nameOverride: mesmer-consumer
 
@@ -80,7 +80,7 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        MESMER_MODEL: MultiplexSegmentation:8  # From model-registry#15
+        MESMER_MODEL: MultiplexSegmentation:9  # From model-registry PR 17
         MESMER_COMPARTMENT: both
 
         LABEL_DETECT_ENABLED: "false"
