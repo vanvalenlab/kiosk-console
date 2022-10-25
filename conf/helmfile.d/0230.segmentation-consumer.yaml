@@ -89,7 +89,7 @@ releases:
 
         PHASE_MODEL: "CytoplasmSegmentation:5"  # model-registry PR 17
 
-        CYTOPLASM_MODEL: "CytoplasmSegmentation:5"  # data-registry #164
+        CYTOPLASM_MODEL: "CytoplasmSegmentation:5"  # model-registry PR 17
 
         LABEL_DETECT_ENABLED: "false"
         LABEL_DETECT_MODEL: "LabelDetection:1"
