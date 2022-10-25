@@ -87,7 +87,7 @@ releases:
 
         NUCLEAR_MODEL: "NuclearSegmentation:6"  # model-registry PR 17
 
-        PHASE_MODEL: "CytoplasmSegmentation:5"  # data-registry #164
+        PHASE_MODEL: "CytoplasmSegmentation:5"  # model-registry PR 17
 
         CYTOPLASM_MODEL: "CytoplasmSegmentation:5"  # data-registry #164
 
