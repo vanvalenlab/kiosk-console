@@ -9,8 +9,11 @@ export CLOUDSDK_CONFIG ?= /localhost/.config/gcloud/
 # Increase quotas: https://console.cloud.google.com/iam-admin/quotas
 
 ## Login to Google Cloud
+## setting all text to white as a workaround for readability issues in menu
 gke/login:
+	@tput setaf 7
 	@gcloud-login.sh
+	@tput sgr0
 
 ## Create a new project
 gke/create/project:
