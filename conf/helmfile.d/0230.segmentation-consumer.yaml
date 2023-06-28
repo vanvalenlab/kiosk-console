@@ -85,7 +85,7 @@ releases:
         AWS_REGION: '{{ env "AWS_REGION" | default "us-east-1" }}'
         GKE_COMPUTE_ZONE: '{{ env "GKE_COMPUTE_ZONE" | default "us-west1-b" }}'
 
-        NUCLEAR_MODEL: "NuclearSegmentation:6"  # model-registry PR 17
+        NUCLEAR_MODEL: "NuclearSegmentation:75"  # tracking paper version
 
         PHASE_MODEL: "CytoplasmSegmentation:5"  # model-registry PR 17
 
