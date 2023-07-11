@@ -100,7 +100,7 @@ releases:
         DEATH: 0.99
         DIVISION: 0.01
         MAX_DISTANCE: 60
-        APPERANCE_DIM: 32
+        APPEARANCE_DIM: 32
         CROP_MODE: "resize"
         CALIBAN_NORM: True
 
