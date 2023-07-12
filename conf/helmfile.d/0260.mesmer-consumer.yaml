@@ -23,7 +23,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.17.1
+        tag: 0.17.2
 
       nameOverride: mesmer-consumer
 

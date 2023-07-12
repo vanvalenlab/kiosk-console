@@ -27,7 +27,7 @@ releases:
 
       image:
         repository: vanvalenlab/kiosk-redis-consumer
-        tag: 0.17.1
+        tag: 0.17.2
 
       nameOverride: caliban-consumer
 
@@ -92,13 +92,17 @@ releases:
         SCALE_DETECT_ENABLED: "false"
         SCALE_DETECT_MODEL: "ScaleDetection:1"
 
-        TRACKING_MODEL: "NuclearTrackingInf:6"  # from model-registry PR 17
-        NEIGHBORHOOD_ENCODER: "NuclearTrackingNE:6"  # from model-registry PR 17
+        TRACKING_MODEL: "NuclearTrackingInf:75" # tracking paper version
+        NEIGHBORHOOD_ENCODER: "NuclearTrackingNE:75" # tracking paper version
         DRIFT_CORRECT_ENABLED: "false"
         TRACK_LENGTH: 8
         BIRTH: 0.99
         DEATH: 0.99
         DIVISION: 0.01
+        MAX_DISTANCE: 60
+        APPEARANCE_DIM: 32
+        CROP_MODE: "resize"
+        CALIBAN_NORM: True
 
       secrets:
         AWS_ACCESS_KEY_ID: '{{ env "AWS_ACCESS_KEY_ID" | default "NA" }}'
